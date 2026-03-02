@@ -1,0 +1,16 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "STAT-302 Homepage",
+    "section": "",
+    "text": "Book: Statistical Sleuth\n\nChapter 1:\n\nR Quarto\nR Data Frames\nR Graphics\n202 Review\n\nChapter 2:\n\nOne- and Two-sample t-tests\n\nChapter 3:\n\nt-assumptions\n\nChapter 4:\n\nNonparameterics\n\nChapter 5:\n\nOne-way ANOVA\n\nChapter 13:\n\nTwo-way ANOVA\n\nChapter 6:\n\nMultiple Comparisons\n\nChapters 7–9\n\nSimple Linear Regression\n\nChapters 9–11:\n\nMultiple Regression\n\nChapter 20:\n\nLogistic Regression\n\nChapter 18:\n\nProportions/odds\n\nChapter 19:\n\nTwo-way Tables"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2"
+  }
+]

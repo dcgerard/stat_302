@@ -1,0 +1,22 @@
+project:
+  type: website
+
+website:
+  title: "STAT-302: Intermediate Statistics"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - data.qmd
+      - about.qmd
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+    toc: true
+
+
+

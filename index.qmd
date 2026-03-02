@@ -1,0 +1,34 @@
+---
+title: "STAT-302 Homepage"
+author: David Gerard
+---
+
+Book: Statistical Sleuth
+
+- Chapter 1:
+  - R Quarto
+  - R Data Frames
+  - R Graphics
+  - 202 Review
+- Chapter 2:
+  - One- and Two-sample t-tests
+- Chapter 3: 
+  - t-assumptions
+- Chapter 4: 
+  - Nonparameterics
+- Chapter 5:
+  - One-way ANOVA
+- Chapter 13:
+  - Two-way ANOVA
+- Chapter 6:
+  - Multiple Comparisons
+- Chapters 7--9
+  - Simple Linear Regression
+- Chapters 9--11:
+  - Multiple Regression
+- Chapter 20:
+  - Logistic Regression
+- Chapter 18:
+  - Proportions/odds
+- Chapter 19:
+  - Two-way Tables
