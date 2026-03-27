@@ -36,14 +36,32 @@ This course builds on the basic tools of data analysis and methods of statistica
 
 - There will be occasional readings from other sources, such as journal articles, for class discussion or for homework assignments. These will be posted in Canvas or links will be given to find these online.
 
+# Tentative Schedule of Topics
+
+- Week 1: Introduction to R
+- Week 2: Chapters 2 and 3 (*t*-tools and *t*-tools assumptions)
+  - This should be mostly review of Introductory Statistics, so we'll go quick.
+- Week 3: Chapter 4 (non-parametrics)
+- Week 4: Chapter 5 (One-way ANOVA)
+- Week 5: Chapter 13 (Two-way ANOVA)
+- Week 6: Sections 6.3--6.4 and supplemental readings (Multiple Comparisons, Family-wise Error Rate, Bonferroni/Holm, False Discovery Rate, Benjamini-Hochberg).
+- Exam 1
+- Week 7: Chapters 7 and 8 (Simple Linear Regression)
+  - This should also be mostly review of Introductory Statistics, so we'll go quick.
+- Week 8--10: Chapter 9--11 (Multiple Linear Regression)
+- Week 11: Chapter 20--21 (Logistic Regression)
+- Week 13: Sections 19.3--19.4 (Chi-squared and Fisher's Exact Tests)
+- Exam 2
+- Week 14: Chapter 17 (PCA)
+
 # Grading
 
 - 10% Homework
-- 10% Participation
+- 15% Participation
   - Pretty standard stuff. Pay attention, come to class, answer questions.
-  - I'll take of a percent each time I see you reading the news, on social media, playing video games, etc.
-- 30% Final Project
-- 50% Exams
+  - I'll take of a percentage-point each time I see you reading the news, on social media, playing video games, etc.
+- 25% Final Project
+- 50% In-class Exams (likely 2 of them)
 
 Usual grade cutoffs will be used:
 ```{r, echo = FALSE}
@@ -70,7 +88,16 @@ These snapshots are provided solely to indicate your current standing in the cou
 
 # Computing and Software
 
-We will use the R computing language to complete some assignment questions. R is free and may be downloaded from the R website (<http://cran.r-project.org/>). In addition, I highly recommend you interface with R through the free RStudio IDE (<https://www.rstudio.com/>). R and RStudio are also available on computers in the Anderson Computing Complex in addition to various labs across campus. R Studio may also be run from your web browser using American University's [Virtual Applications System](https://americanuniversity.service-now.com/help/?id=sc_cat_item&sys_id=1fdf972fdbb3db00771cfce9af961985). Please see me during office hours if you have questions regarding R.
+We will use the R computing language to complete some assignment questions. R is free and may be downloaded from the R website (<http://cran.r-project.org/>). 
+
+As an IDE to work with R, I would recommend either RStudio or Positron:
+
+- RStudio: <https://www.rstudio.com/>
+- Positron: <https://positron.posit.co/>
+
+I'll be using RStudio in class. But Positron is built on top of VS Code. So if you have used Python in that environment, you might find Positron more intuitive.
+
+R and RStudio are also available on computers in the Anderson Computing Complex in addition to various labs across campus. R Studio may also be run from your web browser using American University's [Virtual Applications System](https://americanuniversity.service-now.com/help/?id=sc_cat_item&sys_id=1fdf972fdbb3db00771cfce9af961985). Please see me during office hours if you have questions regarding R.
 
 # Academic Integrity
 
