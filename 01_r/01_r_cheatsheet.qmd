@@ -1,0 +1,86 @@
+---
+title: "R Cheat Sheet"
+author: "David Gerard"
+---
+
+# At the top of a File
+
+Always have the following as your first two lines of code:
+
+```{r}
+#| message: false
+library(tidyverse)
+library(broom)
+```
+
+# Read in Data
+
+You load in data with 
+
+```r
+df <- read_csv("url")
+```
+
+- Make sure the url is in quotes
+- Change `df` to be something meaninful, like "`birthdata`" or "`economicdata`".
+
+# Creating New Variables
+
+You change variables or create new ones with
+
+```r
+df <- mutate(df, new_var = operation)
+```
+
+- `operation` can be any operation using old variables. Common ones are
+  - `log(old_var)`
+  - `sqrt(old_var)`
+  - `old_var - mean(old_var)`
+  - `old_var1 / old_var2`
+  - `if_else(old_var > value, "high", "low")`
+
+# Filtering Observations
+
+You filter for certain observations with
+
+```r
+df_sub <- filter(df, predicate)
+```
+
+- `predicate` is something that returns `TRUE` or `FALSE`. Common predicates are
+  - `variable < value`
+  - `variable > value`
+  - `variable == value`
+  - `variable <= value`
+  - `variable >= value`
+  - `!is.na(variable)`
+  
+# Plotting
+
+One continuous variable: histogram
+
+```r
+ggplot(df, aes(x = var)) +
+  geom_histogram(bins = 30)
+```
+
+One categorical variable: barplot
+
+```r
+ggplot(df, aes(x = var)) +
+  geom_bar()
+```
+
+Two continuous variables: scatterplot
+
+```r
+ggplot(df, aes(x = var1, y = var2)) +
+  geom_point()
+```
+
+One continuous, one categorical: boxplot
+
+```r
+ggplot(df, aes(x = var1, y = var2)) +
+  geom_boxplot()
+```

@@ -25,23 +25,18 @@ set.seed(1)
 
 - `{ggplot2}` is very powerful, so I am just going to show you the most important and basic plots that are necessary for data analysis.
 
--   Before using the plotting functions from `{ggplot2}` in a new R session, always first load the `{ggplot2}` library.
-
-    ```{r}
-    library(ggplot2)
-    ```
-
--   In this vignette, we'll also make some variable transformations, so we will need the tidyverse
+-   Before using the plotting functions from `{ggplot2}` in a new R session, always first load the `{tidyverse}` library that has `{ggplot2}` as part of it.
 
     ```{r, message=FALSE}
     library(tidyverse)
     ```
 
--   I will use the `lead` dataset to demonstrate plots (description [here](../data.qmd#lead))
-
+-   For this lecture, let's consider the data [ex1027.csv](https://dcgerard.github.io/stat_302/data.html#chapter-10), from @pimm1988risk. They were interested in if nesting pair size was related to rate of extinction. They measured the average nesting pair size and time to extinction across 16 islands for 62 bird species. They also measued the size of the species (large/small) and the migratory status of the species (migratory/resident).
+  
     ```{r}
     #| message: false
-    lead <- read_csv("https://dcgerard.github.io/stat_320/data/lead.csv")
+    birds <- read_csv("https://dcgerard.github.io/stat_302/data/ex1027.csv")
+    head(birds)
     ```
 
 # `ggplot()`
@@ -56,11 +51,11 @@ set.seed(1)
 
 - You place all aesthetic maps inside an `aes()` function.
 
--   E.g. here, we are mapping `iqf` to be on the $x$-axis, and different values of `lead_grp` should be different colors.
+-   E.g. here, we are mapping `Time` to be on the $x$-axis, and different values of `Size` should be different colors.
 
     ```{r, eval = FALSE}
     #| fig-alt: "Basic ggplot graphic."
-    ggplot(data = lead, mapping = aes(x = iqf, color = lead_grp))
+    ggplot(data = birds, mapping = aes(x = Time, color = Size))
     ```
 
 - This function just sets the data and the aesthetic mapping, but it won't produce any useful plot by itself.
@@ -77,8 +72,8 @@ set.seed(1)
 
     ```{r, message=FALSE}
     #| warning: false
-    #| fig-alt: "Histogram of IQF."
-    ggplot(data = lead, mapping = aes(x = iqf)) +
+    #| fig-alt: "Histogram of Time."
+    ggplot(data = birds, mapping = aes(x = Time)) +
       geom_histogram()
     ```
 
@@ -87,23 +82,24 @@ set.seed(1)
     ```{r}
     #| warning: false
     #| fig-alt: "Histogram of IQF with white fill and block color."
-    ggplot(data = lead, mapping = aes(x = iqf)) +
+    ggplot(data = birds, mapping = aes(x = Time)) +
       geom_histogram(bins = 20, color = "black", fill = "white")
     ```
 
 ::: {.panel-tabset}
 ## Exercise
-Load in the [boneden](../data/boneden.csv) data (see [here](../data.qmd#boneden) for a description) and make a histogram of lumbar spine density for the lighter smoking twin with 20 bins. Make the bins red.
+Load in the "ex0223.csv" data from the [course website](https://dcgerard.github.io/stat_302/data.html#chapter-2). Call the resulting data frame `highway`. 
+
+Make a histogram of the 1996 fatalities.
 
 ## Solution
 
 ```{r}
-#| fig-alt: "Histogram of ls1 with red fill."
-library(readr)
-library(ggplot2)
-boneden <- read_csv("https://dcgerard.github.io/stat_320/data/boneden.csv")
-ggplot(data = boneden, mapping = aes(x = ls1)) +
-  geom_histogram(bins = 20, fill = "red")
+#| eval: true
+#| message: false
+highway <- read_csv("https://dcgerard.github.io/stat_302/data/ex0223.csv")
+ggplot(highway, aes(x = Fatalities1996)) +
+  geom_histogram(bins = 20)
 ```
 :::
 
@@ -114,45 +110,20 @@ ggplot(data = boneden, mapping = aes(x = ls1)) +
     - Use `geom_bar()`.
   
     ```{r}
-    #| warning: false
     #| fig-alt: "Barplot of hyperactivity rating."
-    ggplot(data = lead, mapping = aes(x = hyperact)) +
+    ggplot(data = birds, mapping = aes(x = Size)) +
       geom_bar()
     ```
 
 ::: {.panel-tabset}
 ## Exercise 
-What variables from the `lead` data are appropriately plotted using a bar plot? Plot a couple of them.
+What variable(s) from the `highway` data is(are) appropriately plotted using a bar plot? Plot them.
 
 ## Solution
+
+Just the `SpeedLimit` variable
 ```{r}
-#| eval: false
-#| fig-alt: "Barplots of various variables from the lead data."
-ggplot(data = lead, mapping = aes(x = sex)) +
-  geom_bar()
-ggplot(data = lead, mapping = aes(x = area)) +
-  geom_bar()
-ggplot(data = lead, mapping = aes(x = lead_grp)) +
-  geom_bar()
-ggplot(data = lead, mapping = aes(x = Group)) +
-  geom_bar()
-ggplot(data = lead, mapping = aes(x = fst2yrs)) +
-  geom_bar()
-ggplot(data = lead, mapping = aes(x = iq_type)) +
-  geom_bar()
-ggplot(data = lead, mapping = aes(x = pica)) +
-  geom_bar()
-ggplot(data = lead, mapping = aes(x = colic)) +
-  geom_bar()
-ggplot(data = lead, mapping = aes(x = clumsi)) +
-  geom_bar()
-ggplot(data = lead, mapping = aes(x = irrit)) +
-  geom_bar()
-ggplot(data = lead, mapping = aes(x = convul)) +
-  geom_bar()
-ggplot(data = lead, mapping = aes(x = hyperact)) +
-  geom_bar()
-ggplot(data = lead, mapping = aes(x = maxfwt)) +
+ggplot(highway, aes(x = SpeedLimit)) +
   geom_bar()
 ```
 :::
@@ -166,40 +137,25 @@ ggplot(data = lead, mapping = aes(x = maxfwt)) +
     - Use `geom_point()`.
   
     ```{r}
-    #| warning: false
-    #| fig-alt: "Scatterplot of IQF and ld73."
-    ggplot(data = lead, mapping = aes(x = ld73, y = iqf)) +
+    ggplot(data = birds, mapping = aes(x = Pairs, y = Time)) +
       geom_point()
     ```
 
--   Jitter points to account for overlaying points.
-    - Use `geom_jitter()` instead of `geom_point()`.
-  
+-   Add a Loess Smoother by adding `geom_smooth()`. (Don't take the loess smoother too seriously)
+
     ```{r}
-    #| warning: false
-    #| fig-alt: "Jitterplot of totyrs and hyperact"
-    ggplot(data = lead, mapping = aes(x = totyrs, y = hyperact)) +
-      geom_jitter()
-    ```
-
--   Add a Loess Smoother by adding `geom_smooth()`.
-
-    ```{r, message=FALSE}
-    #| warning: false
-    #| fig-alt: "Scatterplot of iqf and ld73 with a smoother."
-    ggplot(data = lead, mapping = aes(x = ld73, y = iqf)) +
+    ggplot(data = birds, mapping = aes(x = Pairs, y = Time)) +
       geom_point() +
-      geom_smooth(se = FALSE)
+      geom_smooth(formula = y ~ x, method = "loess", se = FALSE)
     ```
 
 ::: {.panel-tabset}
 ## Exercise
-Using the `boneden` data, make a scatterplot exploring the association between the lumbar spine densities for the two twin types (smoking status).
+Using the `highway` data, make a scatterplot exploring the association between the fatility numbers of the two years.
 
 ## Solution
 ```{r}
-#| fig-alt: "Scatterplot of ls1 and ls2."
-ggplot(data = boneden, mapping = aes(x = ls1, y = ls2)) +
+ggplot(data = highway, mapping = aes(x = Fatalities1995, y = Fatalities1996)) +
   geom_point()
 ```
 :::
@@ -212,21 +168,17 @@ ggplot(data = boneden, mapping = aes(x = ls1, y = ls2)) +
     - Use `geom_boxplot()`.
   
     ```{r}
-    #| warning: false
-    #| fig-alt: "Boxplot of IQF by group."
-    ggplot(data = lead, mapping = aes(x = Group, y = iqf)) +
+    ggplot(data = birds, mapping = aes(x = Size, y = Time)) +
       geom_boxplot()
     ```
 
 ::: {.panel-tabset}
 ## Exercise
-Using the `boneden` data, first calculate the difference in lumbar spine densities between the two twins (you'll need to use `mutate()` here). Then plot this difference versus zygosity (monozygotic versus dizygotic).
+Using the `highway` data, explore the association between increasing the speedlimit and the percent change.
 
 ## Solution
 ```{r}
-#| fig-alt: "Boxplot of ls_diff by zyg."
-boneden <- mutate(boneden, ls_diff = ls1 - ls2)
-ggplot(data = boneden, mapping = aes(x = zyg, y = ls_diff)) +
+ggplot(data = highway, mapping = aes(x = SpeedLimit, y = PctChange)) +
   geom_boxplot()
 ```
 :::
@@ -237,21 +189,18 @@ ggplot(data = boneden, mapping = aes(x = zyg, y = ls_diff)) +
     - Just add a color mapping.
   
     ```{r}
-    #| warning: false
-    #| fig-alt: "Scatterplot of iqf by ld73 color-coded by lead_grp."
-    ggplot(data = lead, mapping = aes(x = ld73, y = iqf, color = lead_grp)) +
+    ggplot(data = birds, mapping = aes(x = Pairs, y = Time, color = Size)) +
       geom_point()
     ```
 
 ::: {.panel-tabset}
 ## Exercise 
 
-Using the `boneden` data, create a scatterplot between the lumbar spine densities of the two twin types (smoking status), color coding by zygosity.
+Using the `highway` data, create a scatterplot between the fatality rates of the two years and color code by speed limit policy.
 
 ## Solution
 ```{r}
-#| fig-alt: "Scatterplot of ls1 and ls2 color coded by zyg."
-ggplot(data = boneden, mapping = aes(x = ls1, y = ls2, color = zyg)) +
+ggplot(data = highway, mapping = aes(x = Fatalities1995, y = Fatalities1996, color = SpeedLimit)) +
   geom_point()
 ```
 :::
@@ -261,59 +210,19 @@ ggplot(data = boneden, mapping = aes(x = ls1, y = ls2, color = zyg)) +
 -   Add a `scale_*()` call to change the name:
 
     ```{r}
-    #| warning: false
-    #| fig-alt: "Scatterplot of iqf and ld37, color coded by lead_grp, with a new name on the legend."
-    ggplot(data = lead, mapping = aes(x = ld73, y = iqf, color = lead_grp)) +
+    ggplot(data = birds, mapping = aes(x = Pairs, y = Time, color = Size)) +
       geom_point() +
-      scale_color_discrete(name = "New Name")
+      scale_color_discrete(name = "Bird Size")
     ```
-
-# Faceting
-
-- You can facet by a categorical variable by adding a `facet_grid()` or `facet_wrap()` function.
-
--   The variable to the left of the tilde ("`~`") indexes the row facets, the variable to the right of the tilde indexes the column facets. Using a dot ("`.`") in place of a variable means that there will only be one row/column facet.
-
-    ```{r}
-    #| warning: false
-    #| fig-alt: "Faceting by area scatterplots of iqf and ld73."
-    ggplot(data = lead, mapping = aes(x = ld73, y = iqf)) +
-      geom_point() +
-      facet_grid(. ~ area)
-    ggplot(data = lead, mapping = aes(x = ld73, y = iqf)) +
-      geom_point() +
-      facet_grid(area ~ .)
-    ```
-  
-    ```{r, fig.height=2.7, fig.width=3.5}
-    #| warning: false
-    #| fig-alt: "Scatterplot of iqf and ld73 faceted by area and group."
-    ggplot(data = lead, mapping = aes(x = ld73, y = iqf)) +
-      geom_point() +
-      facet_grid(area ~ Group)
-    ```
-
-::: {.panel-tabset}
-## Exercise
-Using the `boneden` data, create a histogram of the difference in lumbar spine densities, faceting by zygosity.
-
-## Solution
-```{r}
-#| fig-alt: "Histogram of ls_diff, faceted by zyg."
-ggplot(data = boneden, mapping = aes(x = ls_diff)) +
-  geom_histogram(bins = 10) +
-  facet_wrap(. ~ zyg)
-```
-:::
 
 # Change Theme
 
 -   Add a `theme_*()` function to change the theme:
+    - I always use `theme_bw()`.
 
     ```{r}
-    #| warning: false
-    #| fig-alt: "Scatterplot if iqf and ld73 with a classic theme."
-    ggplot(data = lead, mapping = aes(x = ld73, y = iqf)) +
+    ggplot(data = birds, mapping = aes(x = Pairs, y = Time, color = Size)) +
       geom_point() +
+      scale_color_discrete(name = "Bird Size") +
       theme_classic()
     ```

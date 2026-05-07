@@ -81,10 +81,26 @@ What do you think the following will evaluate to? Try to guess before running it
 14
 :::
 
-- R consists of two things: variables and functions (computer scientists would probably disagree with
-this categorization).
+
+## R Script
+
+- You typically don't write R code in the console, but in an R script.
+
+- Open up an R script with File > New File > R Script 
+  - Or with CTRL+SHIFT+N
+
+- You write some R code, then evaluate it by having yoru cursor on the same line as the R code and hitting CTRL+ENTER
+
+-   You can add *comments* (unevaluated R code) by putting a hashtag before the comment.
+
+    ```{r}
+    # This is a comment and will not be evaluated by R even if you hit CTRL+ENTER
+    ```
+
 
 ## Variables
+
+- R consists of two things: variables and functions (computer scientists would probably disagree with this categorization).
 
 - A variable stores a value. You use the **assignment operator** "`<-`" to assign values to variables. For example, we can assign the value of `10` to the variable `x`.
 
@@ -299,17 +315,19 @@ seq(1, 10, by = 2)
 
 - Using `install.packages()`, you can install packages that contain functions 
   and datasets that are not available by default. Do this now with the 
-  tidyverse package:
+  `{tidyverse}` and `{broom}` packages
   
   ```{r, eval = FALSE}
   install.packages("tidyverse")
+  install.packages("broom")
   ```
 
 - You will only need to install a package once per computer. Once it is 
   installed you can gain access to all of the functions and datasets in a
   package by using the `library()` function. 
   
-  ```{r, eval=FALSE}
+  ```{r}
+  #| message: false
   library(tidyverse)
   ```
 
@@ -342,16 +360,12 @@ seq(1, 10, by = 2)
 - You can explore these in a spreadsheet format using `View()` (note the capital "V"). Don't ever have this in a file though, directly write it in the console.
 
   ```{r, eval = FALSE}
-  View(airquality)
+  view(airquality)
   ```
 
 ## Reading in Data Frames
 
-- Most datasets will nead to be loaded into R. To do so, we will use the `{readr}` package.
-
-  ```{r}
-  library(readr)
-  ```
+- Most datasets will nead to be loaded into R. To do so, we will use the `{readr}` package. This is loaded automatically when you load the tidyverse, so we don't need to do it again for now.
 
 - The only function I will require you to know from this package is `read_csv()`, which loads in data from a [CSV file](https://en.wikipedia.org/wiki/Comma-separated_values) ("Comma-separated values"), a very popular format for storing data.
 
@@ -360,123 +374,118 @@ seq(1, 10, by = 2)
 - For other file formats, you need to use other functions, such as `read_tsv()`, `read_table()`, `read_fwf()`, etc. I will try to make sure `read_csv()` works for all datasets in this course.
 
 - I will typicaly post course datasets at <https://dcgerard.github.io/stat_302/data.html>. You can load those data into R by pasting their URL's into `read_csv()`.
+
+-   For this lecture, let's consider the data [ex1027.csv](https://dcgerard.github.io/stat_302/data.html#chapter-10), from @pimm1988risk. They were interested in if nesting pair size was related to rate of extinction. They measured the average nesting pair size and time to extinction across 16 islands for 62 bird species. They also measued the size of the species (large/small) and the migratory status of the species (migratory/resident).
   
-  ```{r}
-  #| message: false
-  lead <- read_csv("https://dcgerard.github.io/stat_320/data/lead.csv")
-  head(lead)
-  ```
+    ```{r}
+    #| message: false
+    birds <- read_csv("https://dcgerard.github.io/stat_302/data/ex1027.csv")
+    head(birds)
+    ```
   
 ::: {.panel-tabset}
 ## Exercise
-Load in the `birthweight` data into R and print out the first six rows.
+Load in the "ex0223.csv" data from the [course website](https://dcgerard.github.io/stat_302/data.html#chapter-2). Call the resulting data frame `highway`.
 
 ## Solution
 
 ```{r}
 #| eval: true
-birthweight <- read_csv("https://dcgerard.github.io/stat_320/data/birthweight.csv")
-head(birthweight)
+highway <- read_csv("https://dcgerard.github.io/stat_302/data/ex0223.csv")
+head(highway)
 ```
 
 :::
 
 ## Basic Data Frame Manipulations
 
-- You will need to know just a few data frame manipulations, which we will perform using the `{dplyr}` package.
-
-  ```{r, message = FALSE}
-  library(dplyr)
-  ```
+- You will need to know just a few data frame manipulations, which we will perform using the `{dplyr}` package. This is already loaded into R if you loaded in the `{tidyverse}`.
   
 - The first argument for `{dplyr}` functions is always the data frame you are modifying. The following arguments typically involve the columns of that data frame.
 
-- Use the `mutate()` function from the `{dplyr}` package to make variable transformations.
+-   Use the `mutate()` function from the `{dplyr}` package to make variable transformations.
 
-  ```{r}
-  lead <- mutate(lead, log_iqv_inf = log(iqv_inf))
-  head(lead)
-  ```
+    ```{r}
+    birds <- mutate(birds, log_time = log(Time))
+    head(birds)
+    ```
 
-- Use `glimpse()` to get a brief look at the data frame.
+-   Use `glimpse()` to get a brief look at the data frame.
 
-  ```{r}
-  glimpse(lead)
-  ```
+    ```{r}
+    glimpse(birds)
+    ```
 
-- Use `View()` to see a spreadsheet of the data frame (**never** put this in a Quarto file). Note the capital "V".
+-   Use `view()` to see a spreadsheet of the data frame (**never** put this in a Quarto file).
   
-  ```{r, eval=FALSE}
-  View(lead)
-  ```
+    ```{r, eval=FALSE}
+    view(birds)
+    ```
 
-- Use `rename()` to rename variables.
+-   Use `rename()` to rename variables.
 
-  ```{r}
-  lead <- rename(lead, ID = id)
-  head(lead)
-  ```
+    ```{r}
+    birds <- rename(birds, l_time = log_time)
+    head(birds)
+    ```
 
-- Use `filter()` to remove rows.
+-   Use `filter()` to remove rows.
 
-  - Use `==` to select rows based on equality
-  - Use `<` and `>` to select rows based on inequality
-  - Use `<=` and `>=` to select rows based on inequality/equality.
-
-  ```{r}
-  filter(lead, Group == "control")
+    - Use `==` to select rows based on equality
+    - Use `<` and `>` to select rows based on inequality
+    - Use `<=` and `>=` to select rows based on inequality/equality.
   
-  filter(lead, ageyrs < 4)  
-  
-  filter(lead, ageyrs > 4, ageyrs < 5)
-  ```
+    ```{r}
+    filter(birds, Size == "L")
+    
+    filter(birds, Pairs < 2)  
+    
+    filter(birds, Size == "L", Pairs < 2) # both conditions met
+    ```
   
 ::: {.panel-tabset}
 ## Exercise
 
-The `birthweight` data is in ounces. There are abour 28.3495 grams in an ounce. Create a new variable called `weight_g` that is the weight of the baby in grams.
+In the highway data, calculate the ratio of 1996 to 1995 fatalities.
 
 ## Solution
 ```{r}
-#| eval: false
-birthweight <- mutate(birthweight, weight_g = 28.3495 * weight)
-glimpse(birthweight)
-```
-
-:::
-
-::: {.panel-tabset}
-## Exercise
-From the birthweight data, select just babies that are greater than or equal to 150 ounces.
-
-## Solution
-```{r}
-#| eval: false
-filter(birthweight, weight >= 150)
+highway <- mutate(highway, ratio = Fatalities1996 / Fatalities1995)
+glimpse(highway)
 ```
 :::
 
 ::: {.panel-tabset}
 ## Exercise
-From the `lead` data, select individuals who are both in the control group and are at least 15.
+Even though it is already in the data frame, you can calculate the percent change yourself by taking the ratio, subtracting 1, and multiplying by 100. Do so now. Call the new variable `PctChange_2` and compare it to `PctChange`.
+
+## Solution
+
+```{r}
+highway <- mutate(highway, PctChange_2 = (ratio - 1) * 100)
+glimpse(highway)
+```
+They are the same up to rounding.
+:::
+
+::: {.panel-tabset}
+## Exercise
+From the highway data, filter for just the states that increased the speed limit.
 
 ## Solution
 ```{r}
-#| eval: false
-filter(lead, Group == "control", ageyrs >= 15)
+filter(highway, SpeedLimit == "Inc")
 ```
 :::
 
 ::: {.panel-tabset}
 ## Exercise
-From the `lead` data, rename `ageyrs` to just `age`
+From the `highway` data, filter for states that increased the speed limit and had a reduced fatality rate.
 
 ## Solution
 ```{r}
-#| eval: false
-rename(lead, age = ageyrs)
+filter(highway, SpeedLimit == "Inc", PctChange < 0)
 ```
-
 :::
   
 # Summary

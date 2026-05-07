@@ -5,9 +5,11 @@ author: David Gerard
 
 [Syllabus](./syllabus.qmd)
 
-- Chapter 1:
+- Chapter 0: R
   - [R and Data Frames](./01_r/01_r_intro.qmd)
   - [R Graphics](./01_r/01_ggplot.qmd)
+  - [R Cheat Sheet](./01_r/01_r_cheatsheet.qmd)
+- Chapter 1: 
   - [202 Review](./02_review/02_stat_202_review.qmd)
 - Chapter 2:
   - One- and Two-sample t-tests

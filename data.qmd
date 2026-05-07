@@ -234,9 +234,9 @@ These data were almost all taken from the [companion website](https://www.cengag
     - `"Group3"`: homosexual male with AIDS death
     - `"Group4"`: heterosexual female with AIDS death
     - `"Group5"`: heterosexual female with Non-AIDS death
-  - `Sex`: a factor with levels "Female" and "Male"
-  - `Orientation`: a factor with levels "Heterosexual" and "Homosexual"
-  - `Death`: a factor with levels "AIDS" and "Non-AIDS"
+  - `Sex`: a factor with levels `"Female"` and `"Male"`
+  - `Orientation`: a factor with levels `"Heterosexual"` and `"Homosexual"`
+  - `Death`: a factor with levels `"AIDS"` and `"Non-AIDS"`
 
 # Chapter 7
 
@@ -417,7 +417,7 @@ These data were almost all taken from the [companion website](https://www.cengag
 
 - [ex0923.csv](./data/ex0923.csv): These data are a subset of the National Longitudinal Study of Youth data, with annual incomes in 2005, intelligence test scores (AFQT) measured in 1981, and years of education completed by 2006 for 1,306 males and 1,278 females who were between the ages of 14 and 22 when selected for the survey in 1979, who were available for re-interview in 2006, and who had paying jobs in 2005. Is there any evidence that the mean salary for males exceeds the mean salary for females with the same years of education and AFQT scores? By how many dollars or by what percent is the male mean larger? [@bls2011world]
   - `Subject`: the subject identification number
-  - `Gender`: a factor with levels "female" and "male"
+  - `Gender`: a factor with levels `"female"` and `"male"`
   - `AFQT`: percentile score on the AFQT intelligence test
   - `Educ`: years of education achieved by 2005
   - `Income2005`: annual income in 2005
