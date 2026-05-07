@@ -60,7 +60,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -251,7 +270,7 @@ window.Quarto = {
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
-<li><p>For this lecture, let’s consider the data <a href="https://dcgerard.github.io/stat_302/data.html#chapter-10">ex1027.csv</a>, from <span class="citation" data-cites="pimm1988risk">@pimm1988risk</span>. They were interested in if nesting pair size was related to rate of extinction. They measured the average nesting pair size and time to extinction across 16 islands for 62 bird species. They also measued the size of the species (large/small) and the migratory status of the species (migratory/resident).</p>
+<li><p>For this lecture, let’s consider the data <a href="https://dcgerard.github.io/stat_302/data.html#chapter-10">ex1027.csv</a>, from <span class="citation" data-cites="pimm1988risk">Pimm et al. (<a href="#ref-pimm1988risk" role="doc-biblioref">1988</a>)</span>. They were interested in if nesting pair size was related to rate of extinction. They measured the average nesting pair size and time to extinction across 16 islands for 62 bird species. They also measued the size of the species (large/small) and the migratory status of the species (migratory/resident).</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>birds <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/ex1027.csv"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(birds)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -573,9 +592,14 @@ window.Quarto = {
 </ul>
 
 
+
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-pimm1988risk" class="csl-entry" role="listitem">
+Pimm, Stuart L, H Lee Jones, and Jared Diamond. 1988. <span>“On the Risk of Extinction.”</span> <em>The American Naturalist</em> 132 (6): 757–85. <a href="https://doi.org/10.1086/284889">https://doi.org/10.1086/284889</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

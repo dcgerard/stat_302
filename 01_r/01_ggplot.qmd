@@ -3,6 +3,7 @@ title: "R Graphics with `{ggplot2}`"
 author: "David Gerard"
 date: today
 format: html
+bibliography: "../bib.bib"
 ---
 
 ```{r setup, include=FALSE}
