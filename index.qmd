@@ -21,7 +21,7 @@ author: David Gerard
   - Two-way ANOVA
 - Chapter 6:
   - Multiple Comparisons
-- Chapters 7--9
+- Chapters 7--8
   - Simple Linear Regression
 - Chapters 9--11:
   - Multiple Regression

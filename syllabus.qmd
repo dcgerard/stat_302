@@ -49,7 +49,7 @@ This course builds on the basic tools of data analysis and methods of statistica
 - Week 8--9: Chapters 7 and 8 (Simple Linear Regression)
   - This should also be mostly review of Introductory Statistics, so we'll go quick.
 - Week 10--12: Chapter 9--11 (Multiple Linear Regression)
-- Week 13--14: Chapter 20--21 (Logistic Regression)
+- Week 13--14: Chapter 20 (Logistic Regression)
 - Exam 2
 
 # Grading

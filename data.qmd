@@ -146,15 +146,30 @@ These data were almost all taken from the [companion website](https://www.cengag
   - `Treatment`: factor variable with two levels---`"Modified"` and `"Conventional"`
   - `Censored`: `1` if the individual did not complete the problem in 5 minutes, `0` if they did
 
-- [ex0428.csv](./data/ex0428.csv): 
+- [ex0428.csv](./data/ex0428.csv): Plant heights (inches) for 15 pairs of plants of the same age, one of which was grown from a seed from a cross-fertilized flower and the other of which was grown from a seed from a self-fertilized flower. [@andrews2012data]
+  - `Cross`: height (inches) of cross-fertilized plant
+  - `Self`: height (inches) of self-fertilized plant
 
-- [ex0429.csv](./data/ex0429.csv): 
+- [ex0429.csv](./data/ex0429.csv): The data are the number of tree seedlings per transect in nine logged (L) and seven unlogged (U) plots affected by the Oregon Biscuit Fire, in 2004 and 2005, and the percentage of seedlings lost between 2004 and 2005. The goal is to see whether the distribution of seedlings lost differs in logged and unlogged plots. [@donato2006post]
+  - `Plot`: an identification code for plot
+  - `Action`: a factor with levels "L" for logged and "U" for unlogged
+  - `Seedlings2004`: the number of seedlings in the plot in 2004
+  - `Seedlings2005`: the number of seedlings in the plot in 2005
+  - `PercentLost`: the percentage of 2004 seedlngs that were lost
 
-- [ex0430.csv](./data/ex0430.csv): 
+- [ex0430.csv](./data/ex0430.csv): Tolerance to sunlight (in minutes) for 13 patients prior to and after treatment with a sunscreen. [@fusaro1974sunlight]
+  - `PreTreatment`: tolerance to sunlight (minutes) prior to sunscreen application
+  - `Sunscreen`: tolerance to sunlight (minutes) after sunscreen application
 
-- [ex0431.csv](./data/ex0431.csv): 
+- [ex0431.csv](./data/ex0431.csv): Researchers randomly assigned metastatic breast cancer patients to either a control group or a group that received weekly 90 minute sessions of group therapy and self-hypnosis, to see whether the latter treatment improved the patients' quality of life. [@spiegel1989effect]
+  - `Survival`: months of survival after beginning of study
+  - `Group`: a factor with levels `"Control"` and `"Therapy"`
+  - `Censor`: `0` if entire lifetime observed, `1` if patient known to have lived at least 122 months
 
-- [ex0432.csv](./data/ex0432.csv): 
+- [ex0432.csv](./data/ex0432.csv): To investigate the capacity of marijuana to reduce the side effects of cancer chemotherapy, researchers performed a double-blind, randomized, crossover trial. Fifteen cancer patients on chemotherapy were randomly assigned to receive either a marijuana treatment or a placebo treatment after their first three sessions of chemotherapy. They were then crossed over to the opposite treatment for their next 3 sessions. [@chang1979delta]
+  - `Subject`: subject number 1–15
+  - `Marijuana`: total number of vomiting and retching episodes under marijuana treatment
+  - `Placebo`: total number of vomiting and retching episodes under placebo treatment
 
 # Chapter 5
 
@@ -175,13 +190,25 @@ These data were almost all taken from the [companion website](https://www.cengag
   - `Percent`: is the percent of women on the venire's of the Spock trial judge and 6 other Boston area judges
   - `Judge`: is a factor with levels `"Spock's"`, `"A"`, `"B"`, `"C"`, `"D"`, `"E"`, and `"F"`.
 
-- [ex0518.csv](./data/ex0518.csv): 
+- [ex0518.csv](./data/ex0518.csv): A randomized experiment was performed to estimate the effect of a certain fatty acid CPFA on the level of a certain protein in rat livers.
+  - `Protein`: levels of protein (x 10) found in rat livers
+  - `Treatment`: a factor with levels `"Control"`, `"CPFA50"`, `"CPFA150"`, `"CPFA300"`, `"CPFA450"`, and `"CPFA600"`
+  - `Day`: a factor with levels `"Day1"`, `"Day2"`, `"Day3"`, `"Day4"`, and `"Day5"`
+  - `TrtDayGroup`: a factor with levels `"Group1"`, `"Group2"`, ..., `"Group10"`; the observed levels of the Treatment and Day interaction
 
-- [ex0523.csv](./data/ex0523.csv): 
+- [ex0523.csv](./data/ex0523.csv): Data frame with measurements of oxygen isotopic composition of vertebrate bone phosphate (per mil deviations from SMOW) in 12 bones of a singe Tyrannosaurus rex specimen [barrick1994thermophysiology]
+  - `Oxygen`: oxygen isotopic composition
+  - `Bone`: a factor with levels `"Bone1"`, `"Bone2"`, ..., `"Bone12"`
 
-- [ex0524.csv](./data/ex0524.csv): 
+- [ex0524.csv](./data/ex0524.csv): These data are annual incomes in 2005 for 2,584 Americans who were selected in the National Longitudinal Study of Youth 1979, who were available for re- interview in 2006, and who had paying jobs in 2005, along with the quartile of their AFQT (IQ) test score taken in 1981. How strong is the evidence that the distributions of 2005 annual incomes differ in the four populations? By how many dollars or by what percent does the distribution of 2005 incomes for those within the highest (fourth) quartile of IQ test scores exceed the distribution for the lowest (first) quartile? [@bls2011world]
+  - `Subject`: subject identification number
+  - `IQquartile`: a factor with levels `"1stQuartile"`, `"2ndQuartile"`, `"3rdQuartile"`, and `"4thQuartile"`
+  - `Income2005`: annual income in U.S. dollars, 2005
 
-- [ex0525.csv](./data/ex0525.csv): 
+  - [ex0525.csv](./data/ex0525.csv): These data are annual incomes in 2005 of a random sample of 2,584 Americans who were selected for the National Longitudinal Survey of Youth in 1979 and who had paying jobs in 2005. The data set also includes a code for the number of years of education that each individual had completed by 2006: <12, 12, 13–15, 16, and >16. How strong is the evidence that at least one of the five population distributions (corresponding to the different years of education) is different from the others? By how many dollars or by what percent does the mean or median for each of the last four categories exceed that of the next lowest category? [@bls2011world]
+  - `Subject`: subject identification number
+  - `Educ`: a factor for years of education category with levels `"<12"`, `"12"`, `"13-15"`, `"16"`, and `">16"`
+  - `Income2005`: Annual income in 2005, in U.S. dollars
 
 # Chapter 6
 
@@ -194,121 +221,347 @@ These data were almost all taken from the [companion website](https://www.cengag
   - `Pair`: Factor variable with 6 levels—`"Pair1"`, `"Pair2"`, `"Pair3"`, `"Pair4"`, `"Pair5"`, and `"Pair6"`
   - `Length`: Body size of the males
 
-- [ex0623.csv](./data/ex0623.csv): 
+- [ex0623.csv](./data/ex0623.csv): These data are simulated to match the summary and conclusions of a real study of overweight employees who were randomly assigned to three diet groups: a low-fat diet, a low-carb diet (similar to the Atkins diet), and a Mediterranean diet. The study ran for two years, with 272 employees completing the entire protocol. Is there evidence of differences in average weight loss among these diets? If so, which diets appear to be better than which others?
+  - `Subject`: subject identification number
+  - `Group`: a factor with levels `"Low-Carbohydrate"`, `"Low-Fat"`, and `"Meditrranean"`
+  - `WtLoss24`: the amount of weight lost in 24 months on the diet, in kg
 
-- [ex0624.csv](./data/ex0624.csv): 
+- [ex0624.csv](./data/ex0624.csv): Is there a physiological basis for sexual preference? Researchers measured the volumes of four cell groups in the interstitial nuclei of the anterior hypothalamus in postmortem tissue from 41 subjects at autopsy from seven metropolitan hospitals in New York and California. [@levay1991difference]
+  - `Volume`: volumes of INAH3 (1000 × mm$^3$) cell clusters from 41 humans
+  - `Group`: a factor with levels
+    - `"Group1"`: heterosexual male with AIDS death
+    - `"Group2"`: heterosexual male with Non-AIDS death
+    - `"Group3"`: homosexual male with AIDS death
+    - `"Group4"`: heterosexual female with AIDS death
+    - `"Group5"`: heterosexual female with Non-AIDS death
+  - `Sex`: a factor with levels "Female" and "Male"
+  - `Orientation`: a factor with levels "Heterosexual" and "Homosexual"
+  - `Death`: a factor with levels "AIDS" and "Non-AIDS"
 
 # Chapter 7
 
-- [case0701.csv](./data/case0701.csv): 
+- [case0701.csv](./data/case0701.csv): Hubble's initial data on 24 nebulae outside the Milky Way. [@hubble1929relation]
+  - `Velocity`: recession velocity (in kilometres per second)
+  - `Distance`: distance from earth (in magaparsec)
 
-- [case0702.csv](./data/case0702.csv): 
+- [case0702.csv](./data/case0702.csv): A certain kind of meat processing may begin once the pH in postmortem muscle of a steer carcass has decreased sufficiently. To estimate the timepoint at which pH has dropped sufficiently, 10 steer carcasses were assigned to be measured for pH at one of five times after slaughter. [@schwenke1991calibration]
+  - `Time`: time after slaughter (hours)
+  - `pH`: pH level in postmortem muscle
 
-- [ex0721.csv](./data/ex0721.csv): 
+- [ex0721.csv](./data/ex0721.csv): The first three columns are the names, orders of distance from the sun and distances from the sun (scaled so that earth is 1) of the 8 planets in our solar system and the dwarf planet, Pluto. The next three columns are the same, but also include the asteroid belt.
+  - `Name`: name of object in solar system, 9 objects
+  - `Order`: order of object's distance from the sun
+  - `Distance`: distance of object from sun, with earth = 1
+  - `Name2`: name of object in solar system, including asteroid belt
+  - `Order2`: order of object's distance from the sun
+  - `Distance2`: distance of object from sun, with earth = 1
 
-- [ex0722.csv](./data/ex0722.csv): 
+- [ex0722.csv](./data/ex0722.csv): As part of a study of the effects of predatory intertidal crab species on snail populations, researchers measured the mean closing forces and the propdus heights of the claws on several crabs of three species. [@yamada1998claw]
+  - `Force`: closing strength of claw of the crab
+  - `Height`: propodus height of claw of the crab
+  - `Species`: species to which the crab belongs
 
-- [ex0724.csv](./data/ex0724.csv): 
+- [ex0724.csv](./data/ex0724.csv): The data are on the proportion of male birts in Denmark, The Netherlands, Canada and the United States for a number of yeras. Notice that the proportions for Canada and the United States are only provided for the years 1970 to 1990, while Denmark and The Netherlands have data listed for 1950 to 1994. [@davis1998reduced]
+  - `Year`: year of observation
+  - `Denmark`: male birth rate of Denmark for given year
+  - `Netherlands`: male birth rate of The Netherlands for given year
+  - `Canada`: male birth rate of Canada for given year
+  - `USA`: male birth rate of the United States for given year
 
-- [ex0725.csv](./data/ex0725.csv): 
+- [ex0725.csv](./data/ex0725.csv): These data are measured distances and recession velocities for 10 clusters of nebulae, much farther from earth than the nebulae reported in `case0701`. [@hubble1929relation]
+  - `Distance`: distance from earth (in million parsec)
+  - `Velocity`: recession velocity (in kilometres per second)
 
-- [ex0726.csv](./data/ex0726.csv): 
+- [ex0726.csv](./data/ex0726.csv): These data are heights of 933 adults and their parents, as measured by Karl Pearson in 1885.
+  - `Gender`: a factor with levels "female" and "male"
+  - `Family`: an identification number for family, 1, 2,..., 205
+  - `Height`: adult height of the child, inches
+  - `Father`: height of the child's father, inches
+  - `Mother`: height of the child's mother, inches
 
-- [ex0727.csv](./data/ex0727.csv): 
+- [ex0727.csv](./data/ex0727.csv): Black wheatears are small birds in Spain and Morocco. Males of the species demonstrate an exaggerated sexual display by carrying many heavy stones to nesting cavities. This 35–gram bird transports, on average, 3.1 kg of stones per nesting season! Different males carry somewhat different sized stones, prompting a study on whether larger stones may be a signal of higher health status. Soler et al. calculated the average stone mass (g) carried by each of 21 male black wheatears, along with T-cell response measurements reflecting their immune systems' strengths. [@soler1999weight]
+  - `Mass`: average mass of stones carried by bird (in g)
+  - `Tcell`: T-cell response measurement (in mm)
 
-- [ex0728.csv](./data/ex0728.csv): 
+- [ex0728.csv](./data/ex0728.csv): Studies over the past two decades have shown that activity can effect the reorganisation of the human central nervous system. For example, it is known that the part of the brain associated with activity of a finger or limb is taken over for other purposes in individuals whose limb or finger has been lost. In one study, psychologists used magnetic source imaging (MSI) to measure neuronal activity in the brains of nine string players (six violinists, two cellists and one guitarist) and six controls who had never played a musical instrument, when the thumb and fifth finger of the left hand were exposed to mild stimulation. The researchers felt that stringed instrument players, who use the fingers of their left hand extensively, might show different behaviour—as a result of this extensive physical activity—than individuals who did not play stringed instruments. [@elbert1995increased]
+  - `Years`: years that the individual has been playing
+  - `Activity`: neuronal activity index
 
-- [ex0729.csv](./data/ex0729.csv): 
+- [ex0729.csv](./data/ex0729.csv): These data are the number of percentage points by which exit polls over estimated the actual vote for candidate John Kerry in the 2004 U.S. presidential election, grouped according to the distance of the exit poll interviewer from the door of the polling location. How strong is the evidence that the mean Kerry overestimate increases with increasing distance of interviewer from the door (thus lending evidence to the theory that supporters of the other candidate, George W Bush, were more inclined to avoid exit pollsters)? [@mitofsky2005evaluation]
+  - `OverEstimate`: number of percentage points by which the exit poll estimate exceeded the actual percentage voting for Kerry (in all precincts with a similar distance of interviewer from the door
+  - `Distance`: distance of the interviewer from the door of the polling location, in feet
 
-- [ex0730.csv](./data/ex0730.csv): 
+- [ex0730.csv](./data/ex0730.csv): These data are the average proportion of voters refusing to be interviewed by exit pollsters in the 2004 U.S. presidential election, grouped gby age of the interviewer, and the approximate age of the interviewer. What evidence do the data provide that the mean refusal rate decreased with incrasing age of interviewer? [@mitofsky2005evaluation]
+  - `Age`: age of the exit poll interviewer, years
+  - `Refusal`: average proportion of voters refusing to be interviewed
 
 # Chapter 8
 
-- [case0801.csv](./data/case0801.csv): 
+- [case0801.csv](./data/case0801.csv): The data are the numbers of reptile and amphibian species and the island areas for seven islands in the West Indies. [@wilson1999diversity]
+  - `Area`: area of island (in square miles)
+  - `Species`: number of reptile and amphibian species on island
 
-- [case0802.csv](./data/case0802.csv): 
+- [case0802.csv](./data/case0802.csv): In an industrial laboratory, under uniform conditions, batches of electrical insulating fluid were subjected to constant voltages until the insulating property of the fluids broke down. Seven different voltage levels were studied and the measured reponses were the times until breakdown. [@nelson1970technical]
+  - `Time`: times until breakdown (in minutes)
+  - `Voltage`: voltage applied (in kV)
+  - `Group`: factor variable (group number)
 
-- [ex0816.csv](./data/ex0816.csv): 
 
-- [ex0817.csv](./data/ex0817.csv): 
+- [ex0816.csv](./data/ex0816.csv): The data in case0702 are a subset of the complete data on postmortum pH in 12 steer carcasses. [@schwenke1991calibration]
+  - `Time`: time after slaughter (hours)
+  - `pH`: pH level in postmortem muscle
 
-- [ex0820.csv](./data/ex0820.csv): 
+- [ex0817.csv](./data/ex0817.csv): In a study of the effectiveness of biological control of the exotic weed tansy ragwort, researchers manipulated the exposure to the ragwort flea beetle on 15 plots that had been planted with a high density of ragwort. Harvesting the plots the next season, they measured the average dry mass of ragwort remaining (grams/plant) and the flea beetle load (beetles/gram of ragwort dry mass) to see if the ragwort plants in plots with high flea beetle loads were smaller as a result of herbivory by the beetles. [@mcevoy1991successful]
+  - `Load`: flee beetle load (in beetles/gram of ragwort dry mass)
+  - `Mass`: dry mass of ragwort weed
 
-- [ex0822.csv](./data/ex0822.csv): 
+- [ex0820.csv](./data/ex0820.csv): In a special election to fill a Pennsylvania State Senate seat in 1993, the Democrat, William Stinson, received 19,127 machine–counted votes and the Republican, Bruce Marks, received 19,691. In addition, there were 1,391 absentee ballots for Stinson and 366 absentee ballots for Marks, so that the total tally showed Stinson the winner by 461 votes. The large disparity between the machine–counted and absentee votes, and the resulting reversal of the outcome due to the absentee ballots caused some concern about possible illegal influence on the absentee votes. To see whether the discrepancy in absentee votes was larger than could be explained by chance, an econometrician considered the data given in this data frame (read from a graph in The New York Times, 11 April 1994). [@ashenfelter1994report]
 
-- [ex0823.csv](./data/ex0823.csv): 
+  The data are Democratic and Republican vote counts, by (a) absentee ballot and (b) voting machine, for 22 elections in Philadelphia's senatorial districts between 1982 and 1993.
+  
+  - `Year`: Year of election
+  - `District`: a factor with levels `"D1"`, `"D2"`, `"D3"`, `"D4"`, `"D5"`, `"D7"`, and `"D8"`
+  - `DemAbsenteeVotes`: Number of absentee ballots indicating a vote for the Democratic candidate
+  - `RepubAbsenteeVotes`: Number of absentee ballots indicating a vote for the Republican candidate
+  - `DemMachineVotes`: Number of machine-counted ballots indicating a vote for the Democratic candidate
+  - `RepubMachineVotes`: Number of machine-coutned ballots indicating a vote for the Republican candidate
+  - `DemPctOfAbsenteeVotes`: Percentage of absentee ballots indicating a vote for the Democratic candidate
+  - `DemPctOfMachineVotes`: Percentage of machine-counted ballots indicating a vote for the Democratic candidate
+  - `Disputed`: a factor taking on the value "yes" for the disputed election and "no" for all other elections
 
-- [ex0824.csv](./data/ex0824.csv): 
+- [ex0822.csv](./data/ex0822.csv): Data are the number of butterfly species in 16 islands of forest of various sizes in otherwise cleared areas in Brazil. [@lovejoy1984ecosystem]
+  - `Area`: area (ha) of forest patch
+  - `Species`: number of butterfly species
 
-- [ex0825.csv](./data/ex0825.csv): 
+- [ex0823.csv](./data/ex0823.csv): The data are the average wine consumption rates (in liters per person per year) and number of ischemic heart disease deaths (per 1000 men aged 55 to 64 years) for 18 industrialized countries. [@st1979factors]
+  - `Country`: a character vector indicating the country
+  - `Wine`: consumption of wine (liters per person per year)
+  - `Mortality`: heart disease mortality rate (deaths per 1,000)
 
-- [ex0826.csv](./data/ex0826.csv): 
+- [ex0824.csv](./data/ex0824.csv): A high respiratory rate is a potential diagnostic indicator of respiratory infection in children. To judge whether a respiratory rate is “high” however, a physician must have a clear picture of the distribution of normal rates. To this end, Italian researchers measured the respiratory rates of 618 children between the ages of 15 days and 3 years. [@rusconi1994reference]
+  - `Age`: age in months of child
+  - `Rate`: respiratory rate (breaths per minute)
 
-- [ex0828.csv](./data/ex0828.csv): 
+- [ex0825.csv](./data/ex0825.csv): Data set shows the number of votes for Buchanan and Bush in all 67 counties in Florida during the U.S. presidential election of November 7, 2000.
+  - `County`: a character vector indicating the county
+  - `Buchanan2000`: votes cast for P. Buchanan
+  - `Bush2000`: votes cast for G.W. Bush
 
-- [ex0829.csv](./data/ex0829.csv): 
+- [ex0826.csv](./data/ex0826.csv): The data are the average mass, metabolic rate, and lifespan for 95 species of mammals. Kleiber's law states that the metabolic rate of an animal species, on average, is proportional to its mass raised to the power of 3/4.
+  - `CommonName`: the common name of the mammal species
+  - `Species`: the scientific name of the mammal species
+  - `Mass`: the average body mass in kg
+  - `Metab`: the average metabolic rate in kJ per day
+  - `Life`: the average lifespan in years
+
+- [ex0828.csv](./data/ex0828.csv): These data are armed Forces Qualifying Test (AFQT) score percentiles, years of education, and annual income in 2005 for a subset of a random sample of 2,584 Americans selected in 1979 who were working in 2005 and re-interviewed in 2006. [@bls2011world]
+  - `Subject`: the subject identification number
+  - `AFQT`: percentile score on the AFQT test
+  - `Educ`: years of education achieved by 2005
+  - `Income2005`: annual income in 2005
+
+- [ex0829.csv](./data/ex0829.csv): These data are the prevalence of autism per 10,000 ten-year old children in the United States in 1992, 1994, 1996, 1998, and 2000. [@newschaffer2005national]
+  - `Year`: year
+  - `Prevalence`: the number of autism cases per 10,000 ten-year old children
 
 # Chapter 9 
 
-- [case0901.csv](./data/case0901.csv): 
+- [case0901.csv](./data/case0901.csv): Meadowfoam is a small plant found growing in moist meadows of the US Pacific Northwest. Researchers reported the results from one study in a series designed to find out how to elevate meadowfoam production to a profitable crop. In a controlled growth chamber, they focused on the effects of two light–related factors: light intensity and the timeing of the onset of the ligth treatment.
+  - `Flowers`: average number of flowers per meadowfoam plant
+  - `Time`: time light intensity regiments started; `1`=Late, `2`=Early
+  - `Intensity`: light intensity (in *μ*mol/m$^2$/sec)
 
-- [case0902.csv](./data/case0902.csv): 
+- [case0902.csv](./data/case0902.csv): The data are the average values of brain weight, body weight, gestation lengths (length of pregnancy) and litter size for 96 species of mammals.
+  - `Species`: species
+  - `Brain`: average brain weight (in grams)
+  - `Body`: average body weight (in kilograms)
+  - `Gestation`: gestation period (in days)
+  - `Litter`: average litter size
 
-- [ex0914.csv](./data/ex0914.csv): 
+- [ex0914.csv](./data/ex0914.csv): In four regions of the US (Northeast, Midwest, South and West), in three different sized metropolitan regions, researchers measured indicators of pace of life. [@levine1990pace]
+  - `Bank`: bank clerk speed
+  - `Walk`: pedestrian walking speed
+  - `Talk`: postal clerk talking speed
+  - `Heart`: age adjusted death rate due to heart disease
 
-- [ex0915.csv](./data/ex0915.csv): 
+- [ex0915.csv](./data/ex0915.csv): Data on corn yield and rainfall in six U.S. corn–producing states (Iowa, Nebraska, Illinois, Indiana, Missouri and Ohio), recorded for each year from 1890 to 1927. [@ezekiel1959methods]
+  - `Year`: year of observation (1890–1927)
+  - `Yield`: average corn yield for the six states (in bu/acre)
+  - `Rainfall`: average rainfall in the six states (in in/year)
 
-- [ex0918.csv](./data/ex0918.csv): 
+- [ex0918.csv](./data/ex0918.csv): Researchers studied the development of a fly (Drosophila subobscura) that had been accidentally introduced from the Old World into North America around 1980. [@huey2000rapid]
+  - `Continent`: a factor with levels "NA" and "EU"
+  - `Latitude`: latitude (degrees)
+  - `Females`: average wing size (10$^3$ × log mm) of female flies on log scale
+  - `SE_Females`: standard error of wing size (10$^3$ × log mm) of female flies on log scale
+  - `Males`: average wing size (10$^3$ × log mm) of male flies on log scale
+  - `SE_Males`: standard error of wing size (10$^3$ × log mm) of male flies on log scale
+  - `Ratio`: average basal length to wing size ratios of female flies
+  - `SE_Ratio`: standard error of average basal length to wing size ratio of female flies
 
-- [ex0920.csv](./data/ex0920.csv): 
+- [ex0920.csv](./data/ex0920.csv): Data set contains the year of the Kentucky Derby, the winning horse, the condition of the track and the average speed of the winner for years 1896–2011.
+  - `Year`: year of Kentucky Derby
+  - `Winner`: a character vector with the name of the winning horse
+  - `Starters`: number of horses that started the race
+  - `NetToWinner`: the net winnings of the winner, in U.S. dollars
+  - `Time`: the winning time in seconds
+  - `Speed`: the winning average speed, n miles per hour
+  - `Track`: a factor indicating track condition with levels `"Fast"`, `"Good"`, `"Dusty"`, `"Slow"`, `"Heavy"`, `"Muddy"`, and `"Sloppy"`
+  - `Conditions`: a factor with with 2 levels of track condition, with levels `"Fast"` and `"Slow"`
 
-- [ex0921.csv](./data/ex0921.csv): 
+- [ex0921.csv](./data/ex0921.csv): The data are the typical dry weight in mg, the typical ingestion rate (weight of food intake per day for one animal) in mg/day, and the percentage of the food that is composed of organic matter for 19 species of deposit feeders. The goal is to see whether the distribution of species' ingestion rates depends on the percentage of organic matter in the food, after accounting for the effect of species weight and to describe the association. [@cammen1979ingestion]
+  - `Species`: a character variable with the name of the species
+  - `Weight`: the dry weight of the species, in mg
+  - `Ingestion`: ingestion rate in mg per day
+  - `Organic`: percentage of organic matter in the food
 
-- [ex0923.csv](./data/ex0923.csv): 
+- [ex0923.csv](./data/ex0923.csv): These data are a subset of the National Longitudinal Study of Youth data, with annual incomes in 2005, intelligence test scores (AFQT) measured in 1981, and years of education completed by 2006 for 1,306 males and 1,278 females who were between the ages of 14 and 22 when selected for the survey in 1979, who were available for re-interview in 2006, and who had paying jobs in 2005. Is there any evidence that the mean salary for males exceeds the mean salary for females with the same years of education and AFQT scores? By how many dollars or by what percent is the male mean larger? [@bls2011world]
+  - `Subject`: the subject identification number
+  - `Gender`: a factor with levels "female" and "male"
+  - `AFQT`: percentile score on the AFQT intelligence test
+  - `Educ`: years of education achieved by 2005
+  - `Income2005`: annual income in 2005
 
 # Chapter 10
 
-- [case1001.csv](./data/case1001.csv): 
+- [case1001.csv](./data/case1001.csv): In 1609 Galileo proved mathematically that the trajectory of a body falling with a horizontal velocity component is a parabola. His search for an experimental setting in which horizontal motion was not affected appreciably (to study inertia) let him to construct a certain apparatus. The data comes from one of his experiments.
+  - `Distance`: horizontal distances (in punti)
+  - `Height`: initial height (in punti)
 
-- [case1002.csv](./data/case1002.csv): 
+- [case1002.csv](./data/case1002.csv): The data are on in–flight energy expenditure and body mass from 20 energy studies on three types of flying vertebrates: echolocating bats, non–echolocating bats and non–echolocating birds. [@speakman1991no]
+  - `Mass`: mass (in grams)
+  - `Type`: a factor with 3 levels indicating the type of flying vertebrate: `non-echolocating bats`, `non-echolocating birds`, `echolocating bats`
+  - `Energy`: in–flight energy expenditure (in W)
 
-- [ex1014.csv](./data/ex1014.csv): 
+- [ex1014.csv](./data/ex1014.csv): Researchers randomly allocated 25 beakers containing minnow larvae to receive one of 25 treatment combinations of 5 levels of zinc and 5 levels of copper. [@ryan1992reduced]
+  - `Copper`: amount of copper received (in ppm)
+  - `Zinc`: amount of zinc received (in ppm)
+  - `Protein`: protein in minnow larvae exposed to copper and zinc (μg/larva)
 
-- [ex1026.csv](./data/ex1026.csv): 
+- [ex1026.csv](./data/ex1026.csv): Depletion of the ozone layer allows the most damaging ultraviolet radiation to reach the Earth's surface. To measure the relationship, researchers sampled the ocean column at various depths at 17 locations around Antarctica during the austral spring of 1990. [@smith1992ozone]
+  - `Inhibit`: percent inhibition of primary phytoplankton production in water
+  - `UVB`: UVB exposure
+  - `Surface`: a factor with levels `"Deep"` and `"Surface"`
 
-- [ex1027.csv](./data/ex1027.csv): 
+- [ex1027.csv](./data/ex1027.csv): Data are measurements on breeding pairs of land-bird species collected from 16 islands around Britain over the course of several decades. For each species, the data set contains an average time of extinction on those islands where it appeared, the average number of nesting pairs, the size of the species and the migratory status of the species. [@pimm1988risk]
+  - `Species`: a character vector indicating the species
+  - `Time`: average extinction time in years
+  - `Pairs`: average number of nesting pairs
+  - `Size`: a factor with levels `"L"` and `"S"`
+  - `Status`: a factor with levels `"M"` and `"R"`
 
-- [ex1028.csv](./data/ex1028.csv): 
+- [ex1028.csv](./data/ex1028.csv): Data set with the numbers of Atlantic Basin tropical storms and hurricanes for each year from 1950–1997. The variable storm index is an index of overall intensity of hurricane season. Also listed are whether the year was a cold, warm or neutral El Nino year and a variable indicating whether West Africa was wet or dry that year.
+  - `Year`: year
+  - `ElNino`: a factor with levels `"cold"`, `"neutral"` and `"warm"`
+  - `Temperature`: numeric variable with values `-1` if ElNino is "cold", `0` if "neutral" and `1` if "warm"
+  - `WestAfrica`: numeric variable indicating whether West Africa was wet (`1`) or dry (`0`)
+  - `Storms`: number of storms
+  - `Hurricanes`: number of hurricanes
+  - `StormIndex`: index of overall intensity of hurricane season
 
-- [ex1029.csv](./data/ex1029.csv): 
+- [ex1029.csv](./data/ex1029.csv): Data set contains weekly wages in 1987 for a sample of 25,632 males between the age of 18 and 70 who worked full-time along with their years of education, years of experience, indicator variable for whether they were black, indicator variable for whether they worked in or near a city, and a code for the region in the US where they worked. [@bierens2001integrated]
+  - `Region`: a factor with levels `"Midwest"`, `"Northeast"`, `"South"` and `"West"`
+  - `MetropolitanStatus`: a factor with levels `"MetopolitanArea"` and `"NotMetropolitanArea"`
+  - `Exper`: experience in years
+  - `Educ`: education in years
+  - `Race`: a factor with levels `"Black"` and `"NotBlack"`
+  - `WeeklyEarnings`: weekly wage in dollars
 
-- [ex1030.csv](./data/ex1030.csv): 
+- [ex1030.csv](./data/ex1030.csv): A data set with weekly earnings for 4,952 males between the age of 18 and 70 sampled in the March 2011 Current Population Survey (CPS). These males are a subset who had reported earnings and who responded as having race as either “Only White” or “Only Black.” Also recorded are the region of the country (with four categories: Northeast, Midwest, South, and West), the metropolitan status of the men's employment (with three categories: Metropolitan, Not Metropolitan, and Not Identified), age, education category (with 16 categories ranging from “Less than first grade” to “doctorate Degree”), and education code, which is a numerical value that corresponds roughly to increasing levels of education (and so may be useful for plotting). What evidence do the data provide that the distributions of weekly earnings differ in the populations of white and black workers after accounting for the other variables? By how many dollars or by what percent does the White population mean (or median) exceed the Black population mean (or median)? [@bls2011current]
+  - `Region`: a factor with levels `"Midwest"`, `"Northeast"`, `"South"` and `"West"`
+  - `MetropolitanStatus`: a factor with levels `"Metopolitan"`, `"Not Metropolitan"` and `"Not Identified"`
+  - `Age`: age in years
+  - `EducationCategory`: a factor with 16 levels: `"SomeCollegeButNoDegree"`, `"AssocDegAcadem"`, `"NinthGrade"`, `"BachelorsDegree"`, `"TenthGrade"`, `"HighSchoolDiploma"`, `"AssocDegOccupVocat"`, `"DoctorateDegree"`, `"TwelthButNoDiploma"`, `"LessThanFirstGrade"`, `"EleventhGrade"`, `"ProfSchoolDegree"`, `"FifthorSixthGrade"`,`"SeventhOrEighthGrade"`, `"FirstSecondThirdOrFourthGrade"`
+  - `EducationCode`: a numerical variable indicating the approximate ordering of EducationCategory, with higher numbers indicating more education
+  - `Race`: a factor with levels `"Black"` and `"White"`
+  - `WeeklyEarnings`: weekly wage in dollars
 
-- [ex1031.csv](./data/ex1031.csv): 
+- [ex1031.csv](./data/ex1031.csv): A data set with Clutch Volume (cubic milimeters) and adult Body Mass (kg) in six different groups of animals: modern maternal-care bird species (Mat), modern paternal-care bird species (Pat), modern biparental-care bird species (BiPI), modern maternal-care crocodiles (Croc), non-avian maniraptoran dinosaurs thought to be ancestors of modern birds (Mani), and other non-avian dinosaurs (Othr). The question of interest was which group of modern creatures most closely matches the relationship in the maniraptoran dinosaurs. [@varricchio2008avian]
+  - `CommonName`: the common name of the species
+  - `Genus`: species genus
+  - `Species`: species name
+  - `Group`: a factor with 6 levels corresponding to the 6 groups of animals: `"BiP"`, `"Croc"`, `"Mani"`, `"Mat"`, `"Othr"`, and `"Pat"`
+  - `BodyMass`:the average body mass of individuals in the species (kg)
+  - `ClutchVolume`: the total volume of all eggs in a clutch (average value for the species)
 
-- [ex1033.csv](./data/ex1033.csv): 
+- [ex1033.csv](./data/ex1033.csv): This is a subset of the National Longitudinal Study of Youth (NLSY79) data, with annual incomes in 2005 (in U.S. dollars, as Recorded in a 2006 interview); scores on the Word Knowledge, Paragraph Comprehension, Arithmetic Reasoning, and Mathematics Knowledge portions of the Armed Forces Vocational Aptitude Battery (ASVAB) of tests taken in 1981; and the percentile score of the Armed Forces Qualifying Test (AFQT), which is a linear combination of the four component tests mentioned above (but note that AFQT reported here is the percentile, which is not a linear combination of the four component scores). Which of the five test scores seem to be the most important predictors of 2005 income? Is the AFQT sufficient by itself? [@bls2011world]
+  - `Subject`: the subject identification number
+  - `Arith`: score on the Arithmetic Reasoning test in 1981
+  - `Word`: score on the Word Knowledge Test in 1981
+  - `Parag`: score on the Paragraph Comprehension test in 1981
+  - `Math`: score on the Mathematics Knowledge test in 1981
+  - `AFQT`: percentile score on the AFQT intelligence test in 1981
+  - `Income2005`: annual income in 2005
 
 # Chapter 11
 
-- [case1101.csv](./data/case1101.csv): 
+- [case1101.csv](./data/case1101.csv): These data were collected on 18 women and 14 men to investigate a certain theory on why women exhibit a lower tolerance for alcohol and develop alcohol–related liver disease more readily than men.
+  - `Subject`: subject number in the study
+  - `Metabol`: first–pass metabolism of alcohol in the stomach (in mmol/liter-hour)
+  - `Gastric`: gastric alcohol dehydrogenase activity in the stomach (in μmol/min/g of tissue)
+  - `Sex`: sex of the subject
+  - `Alcohol`: whether the subject is alcoholic or not
 
-- [case1102.csv](./data/case1102.csv): 
 
-- [ex1111.csv](./data/ex1111.csv): 
+- [case1102.csv](./data/case1102.csv): The human brain is protected from bacteria and toxins, which course through the blood–stream, by a single layer of cells called the blood–brain barrier. These data come from an experiment (on rats, which possess a similar barrier) to study a method of disrupting the barrier by infusing a solution of concentrated sugars.
+  - `Brain`: Brain tumor count (per gm)
+  - `Liver`: Liver count (per gm)
+  - `Time`: Sacrifice time (in hours)
+  - `Treatment`: Treatment received
+  - `Days`: Days post inoculation
+  - `Sex`: Sex of the rat
+  - `Weight`: Initial weight (in grams)
+  - `Loss`: Weight loss (in grams)
+  - `Tumor`: Tumor weight (in 10$^{-4}$grams)
 
-- [ex1120.csv](./data/ex1120.csv): 
+- [ex1111.csv](./data/ex1111.csv): The data are are the cesium concentrations (in Bq/kg) in soil and in mushrooms at 17 wooded locations in Umbria, Central Italy, from August 1986 to November 1989. Researchers wished to investigate the cesium transfer from contaminated soil to plants after the Chernobyl nuclear power plant accident in April 1986 by describing the distribution of the mushroom concentration as a function of soil concentration.
+  - `Mushroom`: the cesium concentration in mushrooms, Bq/kg
+  - `Soil`: the cesium concentration in soil, Bq/kg
 
-- [ex1122.csv](./data/ex1122.csv): 
+- [ex1120.csv](./data/ex1120.csv): Data are the isotopic composition of structural bone carbonate (*X*) and the isotopic composition of the coexisting calcite cements (*Y*) in 18 bone samples from a specimen of the dinosaur Tyrannosaurus rex. Evidence that the mean of *Y* is positively associated with *X* was used in an argument that the metabolic rate of this dinosaur resembled warm-blooded more than cold-blooded animals. [@barrick1994thermophysiology]
+  - `Carbonate`: isotopic composition of bone carbonate
+  - `Calcite`: isotopic composition of calcite cements
 
-- [ex1123.csv](./data/ex1123.csv): 
+- [ex1122.csv](./data/ex1122.csv): It has been theorized that developing countries cut down their forests to pay off foreign debt. Data are debt, deforestation, and population from 11 Latin American nations. [@gullison1993role]
+  - `Country`: a character vector indicating the country
+  - `Debt`: debt (millions of dollars)
+  - `Deforest`: deforestation (thousands of ha)
+  - `Pop`: population (thousands of people)
 
-- [ex1124.csv](./data/ex1124.csv): 
+- [ex1123.csv](./data/ex1123.csv): Does pollution kill people? Data in one early study designed to explore this issue from 5 Standard Metropolitan Statistical Areas in the U.S between 1959–1961. [@mcdonald1978some]
+  - `City`: a character vector indicating the city
+  - `Mort`: total age-adjusted mortality from all causes
+  - `Precip`: mean annual precipitation (inches)
+  - `Educ`: median number of school years completed for persons 25 years or older
+  - `NonWhite`: percentage of population that is nonwhite
+  - `NOX`: relative pollution potential of oxides of nitrogen
+  - `SO2`: relative pollution potential of sulfur dioxide
 
-- [ex1125.csv](./data/ex1125.csv): 
+
+- [ex1124.csv](./data/ex1124.csv): An assessment of the factors affecting dispersal distances is important for understanding population spread, recolonization and gene flow which are central issues for conservation of many vertebrate species. Researchers gathered data on body weight, diet type and maximum natal dispersal distance for various animals. [@sutherland2000scaling]
+  - `Species`: a character vector indicating the species
+  - `BodyMass`: bodymass (kg)
+  - `MaxDist`: maximum dispersal distance (km)
+  - `Type`: a factor with levels "C", "H" and "O" indicating carnivore, herbivore, or omnivore
+
+- [ex1125.csv](./data/ex1125.csv): The data are the typical dry weight in mg, the typical ingestion rate (weight of food intake per day for one animal) in mg/day, and the percentage of the food that is composed of organic matter for 22 species of deposit feeders. The goal is to see whether the distribution of species' ingestion rates depends on the percentage of organic matter in the food, after accounting for the effect of species weight and to describe the association. The last three species happen to be Bivalves, so may behave differently from the others. [@cammen1979ingestion]
+  - `Species`: a character variable with the name of the species
+  - `Weight`: the dry weight of the species, in mg
+  - `Ingestion`: ingestion rate in mg per day
+  - `Organic`: percentage of organic matter in the food
+  - `Bivalve`: a factor with levels `"no"` and `"yes"` to indicate whether a species is a bivalve
 
 # Chapter 12
 
-- [case1201.csv](./data/case1201.csv): 
+- [case1201.csv](./data/case1201.csv): Data on the average SAT scores for US states in 1982 and possible associated factors.
+  - `State`: US state
+  - `SAT`: state averages of the total SAT (verbal + quantitative) scores
+  - `Takers`: the percentage of the total eligible students (high school seniors) in the state who took the exam
+  - `Income`: the median income of families of test–takers (in hundreds of dollars)
+  - `Years`: the average number of years that the test–takers had formal studies in social sciences, natural sciences and humanities
+  - `Public`: the percentage of the test–takers who attended public secondary schools
+  - `Expend`: the total state expenditure on secondary schools (in hundreds of dollars per student)
+  - `Rank`: the median percentile ranking of the test–takers within their secondary school classes
 
 - [case1202.csv](./data/case1202.csv):  Data on employees from one job category (skilled, entry–level clerical) of a bank that was sued for sex discrimination. The data are on 32 male and 61 female employees, hired between 1965 and 1975. [@roberts1979harris]
   - `Bsal`: Annual salary at time of hire
@@ -319,17 +572,108 @@ These data were almost all taken from the [companion website](https://www.cengag
   - `Educ`: Education (in years)
   - `Exper`: Work experience prior to employment with the bank (months)
 
-- [ex1217.csv](./data/ex1217.csv): 
+- [ex1217.csv](./data/ex1217.csv): Complete data set for problem introduced in ex1123. Data from early study designed to explore the relationship between air pollution and mortality. [@mcdonald1978some]
+  - `CITY`: a character vector indicating the city
+  - `Mortality`: total age-adjusted mortality from all causes
+  - `Precip`: mean annual precipitation (inches)
+  - `Humidity`: percent relative humidity (annual average at 1:00pm)
+  - `JanTemp`: mean January temperature (degrees F)
+  - `JulyTemp`: mean July temperature (degrees F)
+  - `Over65`: percentage of the population aged 65 years or over
+  - `House`: population per household
+  - `Educ`: median number of school years completed for persons 25 years or older
+  - `Sound`: percentage of the housing that is sound with all facilities
+  - `Density`: population density (in persons per square mile of urbanized area)
+  - `NonWhite`: percentage of population that is nonwhite
+  - `WhiteCol`: percentage of employment in white collar occupations
+  - `Poor`: percentage of households with annual income under \$3,000 in 1960
+  - `HC`: relative pollution potential of hydrocarbons
+  - `NOX`: relative pollution potential of oxides of nitrogen
+  - `SO2`: relative pollution potential of sulfur dioxide
 
-- [ex1220.csv](./data/ex1220.csv): 
+- [ex1220.csv](./data/ex1220.csv): The number of species on an island is known to be related to the island's area. Of interest is what other variables are also related to the number of species, after island area is accounted for, and whether the answer differs for native and non native species. [@johnson1973species]
+  - `Island`: a character vector indicating the island
+  - `Total`: total number of observed species
+  - `Native`: number of native species
+  - `Area`: area (km$^2$)
+  - `Elev`: elevation (m)
+  - `DistNear`:distance from nearest island (km)
+  - `DistSc`: distance from Santa Cruz (km)
+  - `AreaNear`: area of nearest island (km$^2$)
 
-- [ex1221.csv](./data/ex1221.csv): 
+- [ex1221.csv](./data/ex1221.csv): These data are monthly rainfalls from September to March and the subjectively rated quality of the following spring wildflower display for each of a number of years at each of four desert locations in the southwestern United States (Upland Sonoran Desert near Tucson, the lower Colorado River Valley section of the Sonoran Desert, the Baja California region of the Sonoran Desert, and the Mojave Desert). The quality of the display was judged subjectively with ordered rating categories of poor, fair, good, great, and spectacular. The variable Score is numerical variable corresponding to these ordered categories. A goal is to find an equation for predicting quality of wildflower blooms from the rainfall variables. [@arizona2011wildflower]
+  - `Year`: year of observed wildflower season
+  - `Region`: a factor variable with 4 levels: `"baja"`, `"colorado"`, `"mojave"`, and `"upland"`
+  - `Sep`: the September rainfall, in inches
+  - `Oct`: the October rainfall, in inches
+  - `Nov`: the November rainfall, in inches
+  - `Dec`: the December rainfall, in inches
+  - `Jan`: the January rainfall, in inches
+  - `Feb`: the February rainfall, in inches
+  - `Mar`: the March rainfall, in inches
+  - `Total`: the total rainfall from September through March, in inches
+  - `Rating`: a factor with a subjective assessment of the quality of wildflower bloom with levels `"FAIR"`, `"GOOD"`, `"GREAT"`, `"POOR"`, and `"SPECTACULAR"`
+  - `Score`: a numerical variable corresponding to the order of rating categories, with Poor=`0`, Fair=`1`, Good=`2`, Great=`3`, and Spectacular=`4`
 
-- [ex1222.csv](./data/ex1222.csv): 
+- [ex1222.csv](./data/ex1222.csv): This data set contains the vote counts by county in Florida for Buchanan and for four other presidential candidates in 2000, along with the total vote counts in 2000, the presidential vote counts for three presidential candidates in 1996, the vote count for Buchanan in his only other campaign in Florida—the 1996 Republican primary, the registration in Buchanan's Reform party and the total political party registration in the county.
+  - `County`: a character vector indicating the county
+  - `Buchanan2000`: votes cast for Buchanan in 2000 presidential election
+  - `Gore2000`: votes cast for Gore in 2000 presidential election
+  - `Bush2000`: votes cast for Bush in 2000 presidential election
+  - `Nader2000`: votes cast for Nader in 2000 presidential election
+  - `Browne2000`: votes cast for Browne in 2000 presidential election
+  - `Total2000`: total vostes cast in 2000 presidential election
+  - `Clinton96`: votes cast for Clinton in 1996 presidential election
+  - `Dole96`: votes cast for Dole in 1996 presidential election
+  - `Perot96`: votes cast for Perot in 1996 presidential election
+  - `Buchanan96p`: votes cast for Buchanan in 1996 Republican primary
+  - `ReformReg`: the registration in Buchanan's Reform party
+  - `TotalReg`: the total political party registration
 
-- [ex1223.csv](./data/ex1223.csv): 
+- [ex1223.csv](./data/ex1223.csv): This is a subset of 2,584 individuals from the 1979 National Longitudinal Study of Youth (NLSY79) survey who were re-interviewed in 2006, who had paying jobs in 2005, and who had complete values for the variables listed below. A goal is to see whether intelligence (as measured by the ASVAB intelligence test score, AFQT, and its Components, Word, Parag, Math, and Arith) is a better predictor of 2005 income than education and socioeconomic status. [@bls2011world]
+  - `Subject`: the subject identification number
+  - `Imagazine`: a variable taking on the value `1` if anyone in the respondent's household regularly read magazines in 1979, otherwise `0`
+  - `Inewspaper`: a variable taking on the value `1` if anyone in the respondent's household regularly read newspapers in 1979, otherwise `0`
+  - `Ilibrary`: a variable taking on the value `1` if anyone in the respondent's household had a library card in 1979, otherwise `0`
+  - `MotherEd`: mother's years of education
+  - `FatherEd`: father's years of education
+  - `FamilyIncome78`: family's total net income in 1978
+  - `Race`: `1` = Hispanic, `2` = Black, `3` = Not Hispanic or Black
+  - `Gender`: a factor with levels `"female"` and `"male"`
+  - `Educ1`: years of education completed by 2006
+  - `Science`: score on the General Science test in 1981
+  - `Arith`: score on the Arithmetic Reasoning test in 1981
+  - `Word`: score on the Word Knowledge Test in 1981
+  - `Parag`: score on the Paragraph Comprehension test in 1981
+  - `Numer`: score on the Numerical Operations test in 1981
+  - `Coding`: score on the Coding Speed test in 1981
+  - `Auto`: score on the Automotive and Shop test in 1981
+  - `Math`: score on the Mathematics Knowledge test in 1981
+  - `Mechanic`: score on the Electronics Information test in 1981
+  - `Elec`: score on the Paragraph Comprehension test in 1981
+  - `AFQT`: percentile score on the AFQT intelligence test in 1981
+  - `Income2005`: total annual income in 2005
+  - `Esteem1`: self reported answer to 1st self esteem question, 2005
+  - `Esteem2`: self reported answer to 2md self esteem question, 2005
+  - `Esteem3`: self reported answer to 3rd self esteem question, 2005
+  - `Esteem4`: self reported answer to 4th self esteem question, 2005
+  - `Esteem5`: self reported answer to 5th self esteem question, 2005
+  - `Esteem6`: self reported answer to 6th self esteem question, 2005
+  - `Esteem7`: self reported answer to 7th self esteem question, 2005
+  - `Esteem8`: self reported answer to 8th self esteem question, 2005
+  - `Esteem9`: self reported answer to 9th self esteem question, 2005
+  - `Esteem10`: self reported answer to 10th self esteem question, 2005
 
-- [ex1225.csv](./data/ex1225.csv): 
+- [ex1225.csv](./data/ex1225.csv): These data are weekly earnings for 9,835 Americans surveyed in the March 2011 Current Population Survey (CPS). What evidence is there from these data that males tend to receive higher earnings than females with the same values of the other variables? By how many dollars or by what percent does the male distribution exceed the female distribution? [@bls2011current]
+  - `Region`: a factor with levels `"Midwest"`, `"Northeast"`, `"South"`, and `"West"`
+  - `MetropolitanStatus`: a a factor with levels `"Metropolitan"`, `"Not Identified"`, and `"Not Metropolitan"`
+  - `Age`: age in years
+  - `Sex`: a factor with levels `"Female"` and `"Male"`
+  - `MaritalStatus`: a factor with levels `"Married"` and `"NotMarried"`
+  - `EdCode`: a numerical variable representing educational attainment, with higher numbers corresponding to higher educational categories
+  - `Education`: a factor with 16 levels of educational category
+  - `JobClass`: a a factor with levels `"FedGov"`, `"LocalGov"`, `"Private"`,and `"StateGov"`
+  - `WeeklyEarnings`: weekly wages in U.S. dollars
 
 # Chapter 13
 
@@ -343,13 +687,30 @@ These data were almost all taken from the [companion website](https://www.cengag
   - `Treat`: a factor indicating treatment with two levels, `"Pygmalion"` and `"Control"`
   - `Score`: average score on practical specialty test of all soldiers in the platoon
 
-- [ex1317.csv](./data/ex1317.csv): 
+- [ex1317.csv](./data/ex1317.csv): About 65 million years ago, the dinosaurs suffered a mass extinction virtually overnight (in geologic time). Among many clues, one that all scientists regard as crucial is a layer of iridium-rich dust that was deposited over much of the earth at that time. The theory is that an event like a volcanic eruption or meteor impact caused a massive dust cloud that blanketed the earth for years killing off animals and their food sources. Dataset has Iridium depths by type of deposit. [@alvarez1990extraterrestrial;@courtillot1990volcanic]
+  - `Iridium`: Iridium in samples (ppt)
+  - `Strata`: a factor with levels `"Limestone"` and `"Shale"`
+  - `DepthCat`: a factor with six levels: `"1"`, `"2"`, ..., `"6"`
 
-- [ex1319.csv](./data/ex1319.csv): 
+- [ex1319.csv](./data/ex1319.csv): A 1989 study investigated the effect of heredity and environment on intelligence. Data are the IQ scores for adopted children whose biological and adoptive parents were categorized either in the highest or the lowest socioeconomic status category. [@capron1991children]
+  - `IQ`: IQ scores of adopted children
+  - `Adoptive`: a factor with levels `"High"` and `"Low"`; the socioeconomic status of the adoptive parents
+  - `Biological`: a factor with levels `"High"` and `"Low"`; the socioeconomic status of the biological parents
 
-- [ex1320.csv](./data/ex1320.csv): 
+- [ex1320.csv](./data/ex1320.csv): Data set on 861 ACT Assessment Mathematics Usage Test scores from 1987. The test was given to a sample of high school seniors who met one of three profiles of high school mathematics course work: (a) Algebra I only; (b) two Algebra courses and Geometry; and (c) two Algebra courses, Geometry, Trigonometry, Advanced Mathematics and Beginning Calculus.
 
-- [ex1321.csv](./data/ex1321.csv): 
+  These data were generated from summary statistics for one particular form of the test as reported by @doolittle1989gender.
+  
+  - `Sex`: a factor with levels `"female"` and `"male"`
+  - `Background`: a factor with levels `"a"`, `"b"`, and `"c"`
+  - `Score`: ACT mathematics test score
+
+- [ex1321.csv](./data/ex1321.csv): A data set simulated to match the summary statistics and conclusions from Rosenthal and Jacobson's Pygmalion study on elementary school students. The researchers assigned students at random to a pygmalion or control treatment group. They supplied information to the teachers of those in the pygmalion group with the false information that an intelligence test had indicated that the student was likely to excel. The researchers wished to see if the change in intelligence test scores for the students tended to be larger for those students labeled as likely to excel. [@rosenthal1968pygmalion]
+  - `Student`: a student identification number
+  - `Grade`: the student's grade, 1 through 6
+  - `Class`: a factor with 17 levels `"1a"`, `"1b"`, and so on, to indicate the 17 distinct teacher/classrooms.
+  - `Treatment`: a factor with levels `"pygmalion"` and `"control"` corresponding to whether the researchers had told the teacher that the student was "likely to succeed" or not
+  - `Gain`: the intelligence test score taken at the end of the school year minus the intelligence test score taken at the begging of the school year
 
 # Chapter 14
 
@@ -451,23 +812,78 @@ These data were almost all taken from the [companion website](https://www.cengag
 
 # Chapter 20
 
-- [case2001.csv](./data/case2001.csv): 
+- [case2001.csv](./data/case2001.csv): In 1846 the Donner and Reed families left Springfield, Illinois, for California by covered wagon. In July, the Donner Party, as it became known, reached Fort Bridger, Wyoming. There its leaders decided to attempt a new and untested rote to the Sacramento Valley. Having reached its full size of 87 people and 20 wagons, the party was delayed by a difficult crossing of the Wasatch Range and again in the crossing of the desert west of the Great Salt Lake. The group became stranded in the eastern Sierra Nevada mountains when the region was hit by heavy snows in late October. By the time the last survivor was rescued on April 21, 1847, 40 of the 87 members had died from famine and exposure to extreme cold. [@grayson1990donner]
 
-- [case2002.csv](./data/case2002.csv): 
+  This data frame contains the ages and sexes of the adult (over 15 years) survivors and nonsurvivors of the Donner party.
 
-- [ex2011.csv](./data/ex2011.csv): 
+  - `Age`: Age of person
+  - `Sex`: Sex of person
+  - `Status`: Whether the person survived or died
 
-- [ex2012.csv](./data/ex2012.csv): 
 
-- [ex2015.csv](./data/ex2015.csv): 
+- [case2002.csv](./data/case2002.csv): A 1972–1981 health survey in The Hague, Netherlands, discovered an association between keeping pet birds and increased risk of lung cancer. To investigate birdkeeping as a risk factor, researchers conducted a case–control study of patients in 1985 at four hospitals in The Hague (population 450,000). They identified 49 cases of lung cancer among the patients who were registered with a general practice, who were age 65 or younger and who had resided in the city since 1965. They also selected 98 controls from a population of residents having the same general age structure. [@holst1988debate]
+  - `LC`: Whether subject has lung cancer
+  - `FM`: Sex of subject
+  - `SS`: Socioeconomic status, determined by occupation of the household's principal wage earner
+  - `BK`: Indicator for birdkeeping (caged birds in the home for more that 6 consecutive months from 5 to 14 years before diagnosis (cases) or examination (control))
+  - `AG`: Age of subject (in years)
+  - `YR`: Years of smoking prior to diagnosis or examination
+  - `CD`: Average rate of smoking (in cigarettes per day)
 
-- [ex2016.csv](./data/ex2016.csv): 
+- [ex2011.csv](./data/ex2011.csv): This data frame contains the launch temperatures (degrees Fahrenheit) and an indicator of O-ring failures for 24 space shuttle launches prior to the space shuttle Challenger disaster of January 28, 1986.
+  - `Temperature`: Launch temperature (in degrees Fahrenheit)
+  - `Failure`: Indicator of O-ring failure
 
-- [ex2017.csv](./data/ex2017.csv): 
+- [ex2012.csv](./data/ex2012.csv): Duchenne Muscular Dystrophy (DMD) is a genetically transmitted disease, passed from a mother to her children. Boys with the disease usually die at a young age; but affected girls usually do not suffer symptoms, may unknowingly carry the disease and may pass it to their offspring. It is believed that about 1 in 3,300 women are DMD carriers. A woman might suspect she is a carrier when a related male child develops the disease. Doctors must rely on some kind of test to detect the presence of the disease. This data frame contains data on two enzymes in the blood, creatine kinase (CK) and hemopexin (H) for 38 known DMD carriers and 82 women who are not carriers. It is desired to use these data to obtain an equation for indicating whether a women is a likely carrier. [@andrews2012data]
+  - `Group`: Indicator whether the woman has DMD (`"Case"`) or not (`"Control"`)
+  - `CK`: Creatine kinase reading
+  - `H`: Hemopexin reading
 
-- [ex2018.csv](./data/ex2018.csv): 
+- [ex2015.csv](./data/ex2015.csv): A study examined the association between nesting locations of the Northern Spotted Owl and availability of mature forests. Wildlife biologists identified 30 nest sites. The researchers selected 30 other sites at random coordinates in the same forest. On the basis of aerial photographs, the percentage of mature forest (older than 80 years) was measured in various rings around each of the 60 sites. [@ripple1991old]
+  - `Site`: Site, a factor with levels `"Random"` and `"Nest"`
+  - `PctRing1`: Percentage of mature forest in ring with outer radius 0.91 km
+  - `PctRing2`: Percentage of mature forest in ring with outer radius 1.18 km
+  - `PctRing3`: Percentage of mature forest in ring with outer radius 1.40 km
+  - `PctRing4`: Percentage of mature forest in ring with outer radius 1.60 km
+  - `PctRing5`: Percentage of mature forest in ring with outer radius 1.77 km
+  - `PctRing6`: Percentage of mature forest in ring with outer radius 2.41 km
+  - `PctRing7`: Percentage of mature forest in ring with outer radius 3.38 km
 
-- [ex2019.csv](./data/ex2019.csv): 
+- [ex2016.csv](./data/ex2016.csv): Hermon Bumpus analysed various characteristics of some house sparrows that were found on the ground after a severe winter storm in 1898. Some of the sparrows survived and some perished. This data set contains the survival status, age, the length from tip of beak to tip of tail (in mm), the alar extent (length from tip to tip of the extended wings, in mm), the weight in grams, the length of the head in mm, the length of the humerus (arm bone, in inches), the length of the femur (thigh bones, in inches), the length of the tibio–tarsus (leg bone, in inches), the breadth of the skull in inches and the length of the sternum in inches.
+  - `Status`: Survival status, factor with levels `"Perished"` and `"Survived"`
+  - `AG`: a numerical code corresponding to two categories of age, with `1` = "adult" and `2` = "juvenile"
+  - `TL`: total length (in mm)
+  - `AE`: alar extent (in mm)
+  - `WT`: weight (in grams)
+  - `BH`: length of beak and head (in mm)
+  - `HL`: length of humerus (in inches)
+  - `FL`: length of femur (in inches)
+  - `TT`: length of tibio–tarsus (in inches)
+  - `SK`: width of skull (in inches)
+  - `KL`: length of keel of sternum (in inches)
+
+- [ex2017.csv](./data/ex2017.csv): The Catholic church has explicitly opposed authoritarian rule in some (but not all) Latin American countries. Although such action could be explained as a desire to counter repression or to increase the quality of life of its parishioners, A.J. Gill supplies evidence that the underlying reason may be competition from evangelical Protestant denominations. He compiled the data given in this data frame. [@gill1994rendering]
+  - `Stance`: Catholic church stance, factor with levels `"Pro"` and `"Anti"`
+  - `Country`: Latin American country
+  - `PQLI`: Physical Quality of Life Index in the mid-1970s; Average of live expectancy at age 1, infant mortality and literacy at age 15+.
+  - `Repression`: Average civil rights score for the period of authoritarian rule until 1979
+  - `Competition`: Percentage increase of competitive religious groups during the period 1900–1970
+
+- [ex2018.csv](./data/ex2018.csv): The Ford Explorer is a popular sports utility vehicle made in the United States and sold throughout the world. Early in its production concern arose over a potential accident risk associated with tires of the prescribed size when the vehicle was carrying heavy loads, but the risk was thought to be acceptable if a low tire pressure was recommended. The problem was apparently exacerbated by a particular type of Firestone tire that was overly prone to separation, especially in warm temperatures. This type of tire was a common one used on Explorers in model years 1995 and later. By the end of 1999 more than 30 lawsuits had been filed over accidents that were thought to be associated with this problem. U.S. federal data on fatal car accidents were analysed at that time, showing that the odds of a fatal accident being associated with tire failure were three times as great for Explorers as for other sports utility vehicles.
+
+  Additional data from 1999 and additional variables may be used to further explore the odds ratio. It is of interest to see whether the odds that a fatal accident is tire-related depend on whether the vehicle is a Ford, after accounting for age of the car and number of passengers. Since the Ford tire problem may be due to the load carried, there is some interest in seeing whether the odds associated with a Ford depend on the number of passengers.
+
+  This data frame contains data on 1995 and later model compact sports utility vehicles involved in fatal accidents in the United States between 1995 and 1999, excluding those that were struck by another car and excluding accidents that, according to police reports, involved alcohol.
+  
+  - `Make`: Type of sports utility vehicle, factor with levels `"Other"` and `"Ford"`
+  - `VehicleAge`: Vehicle age (in years); surrogate for age of tires
+  - `Passengers`: Number of passengers
+  - `Cause`: Cause of fatal accident, factor with levels `"NotTire"` and `"Tire"`
+
+- [ex2019.csv](./data/ex2019.csv): Following a successful test of an anti-ballistic missile (ABM) in July 1999, many prominent U.S. politicians called for the early deployment of a full ABM system. The scientific community was less enthusiastic about the efficacy of such a system. This data set contains the success or failure of ABM tests between March 1983 and May 1995. Do these data suggest any improvement in ABM test success probability over time? [@lewis1999national]
+  - `Date`: date of an ABM test
+  - `Months`: number of months after March 1983
+  - `Result`: a factor with levels `"Failure"` and `"Success"`
 
 # Chapter 21
 
