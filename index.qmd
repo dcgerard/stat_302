@@ -3,13 +3,12 @@ title: "STAT-302 Homepage"
 author: David Gerard
 ---
 
-Book: Statistical Sleuth
+[Syllabus](./syllabus.qmd)
 
 - Chapter 1:
-  - R Quarto
-  - R Data Frames
-  - R Graphics
-  - 202 Review
+  - [R and Data Frames](./01_r/01_r_intro.qmd)
+  - [R Graphics](./01_r/01_ggplot.qmd)
+  - [202 Review](./02_review/02_stat_202_review.qmd)
 - Chapter 2:
   - One- and Two-sample t-tests
 - Chapter 3: 

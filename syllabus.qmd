@@ -39,20 +39,18 @@ This course builds on the basic tools of data analysis and methods of statistica
 # Tentative Schedule of Topics
 
 - Week 1: Introduction to R
-- Week 2: Chapters 2 and 3 (*t*-tools and *t*-tools assumptions)
+- Week 2--3: Chapters 2 and 3 (*t*-tools and *t*-tools assumptions)
   - This should be mostly review of Introductory Statistics, so we'll go quick.
-- Week 3: Chapter 4 (non-parametrics)
-- Week 4: Chapter 5 (One-way ANOVA)
-- Week 5: Chapter 13 (Two-way ANOVA)
-- Week 6: Sections 6.3--6.4 and supplemental readings (Multiple Comparisons, Family-wise Error Rate, Bonferroni/Holm, False Discovery Rate, Benjamini-Hochberg).
+- Week 4: Chapter 4 (non-parametrics)
+- Week 5: Chapter 5 (One-way ANOVA)
+- Week 6: Chapter 13 (Two-way ANOVA)
+- Week 7: Sections 6.3--6.4 and supplemental readings (Multiple Comparisons, Family-wise Error Rate, Bonferroni/Holm, False Discovery Rate, Benjamini-Hochberg).
 - Exam 1
-- Week 7: Chapters 7 and 8 (Simple Linear Regression)
+- Week 8--9: Chapters 7 and 8 (Simple Linear Regression)
   - This should also be mostly review of Introductory Statistics, so we'll go quick.
-- Week 8--10: Chapter 9--11 (Multiple Linear Regression)
-- Week 11: Chapter 20--21 (Logistic Regression)
-- Week 13: Sections 19.3--19.4 (Chi-squared and Fisher's Exact Tests)
+- Week 10--12: Chapter 9--11 (Multiple Linear Regression)
+- Week 13--14: Chapter 20--21 (Logistic Regression)
 - Exam 2
-- Week 14: Chapter 17 (PCA)
 
 # Grading
 
@@ -61,7 +59,7 @@ This course builds on the basic tools of data analysis and methods of statistica
   - Pretty standard stuff. Pay attention, come to class, answer questions.
   - I'll take of a percentage-point each time I see you reading the news, on social media, playing video games, etc.
 - 25% Final Project
-- 50% In-class Exams (likely 2 of them)
+- 50% In-class Exams
 
 Usual grade cutoffs will be used:
 ```{r, echo = FALSE}
@@ -72,6 +70,14 @@ knitr::kable(curve_df)
 ```
 
 Individual assignments will not be curved. However, at the discretion of the instructor, the overall course grade at the end of the semester may be curved.
+
+# Electronic Devices
+
+**The use of electronic devices during class time will only be allowed with the instructor's permission.** I expect you to not be on your computer (even to take notes) most of the time. Please buy a dedicated notebook for this course.
+
+There will be specific times when we will use the computer as a statistical tool during class, but I expect that during those times you will not surf the net, do other class work, email or text.
+
+Exceptions to this policy will be made for those with an official [ASAC](https://www.american.edu/provost/academic-access/) accommodation.
 
 # Grade Snapshots
 

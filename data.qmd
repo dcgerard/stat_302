@@ -1,5 +1,513 @@
 ---
 title: "Data"
 author: "David Gerard"
+bibliography: "bib.bib"
 ---
 
+These data were almost all taken from the [companion website](https://www.cengage.com/cgi-wadsworth/course_products_wp.pl?fid=M20b&product_isbn_issn=978113349067) of the fantastic *Statistical Sleuth*. I am putting them here because using a dataset from the web is more common than loading one from an R package, so it's good practice for my students.
+
+# Chapter 1
+
+- [case0101.csv](./data/case0101.csv): Data from an experiment concerning the effects of intrinsic and extrinsic motivation on creativity. Subjects with considerable experience in creative writing were randomly assigned to on of two treatment groups. [@amabile1985motivation]
+  - `Score`: creativity score
+  - `Treatment`: factor denoting the treatment group, with levels `"Extrinsic"` and `"Intrinsic"`
+  
+- [case0102.csv](./data/case0102.csv): The data are the beginning salaries for all 32 male and all 61 female skilled, entry–level clerical employees hired by a bank between 1969 and 1977. [@roberts1979harris]
+  - `Salary`: starting salaries (in USD)
+  - `Sex`: sex of the clerical employee, with levels `"Female"` and `"Male"`
+
+- [ex0112.csv](./data/ex0112.csv): Researchers used 7 red and 7 black playing cards to randomly assign 14 volunteer males with high blood pressure to one of two diets for four weeks: a fish oil diet and a standard oil diet. These data are the reductions in diastolic blood pressure. [@knapp1989antihypertensive]
+  - `BP`: reduction in diastolic blood pressure (in mm of mercury)
+  - `Diet`: factor variable indicating the diet that the subject followed, with levels `"FishOil"` and `"RegularOil"`
+
+- [ex0116.csv](./data/ex0116.csv): The data are the gross domestic product per capita for 228 countries in 2010. [@cia2011world]
+  - `Rank`: rank order of country from highest to lowest GDP
+  - `Country`: name of country
+  - `PerCapitaGDP`: per capita GDP in USD
+
+- [ex0125.csv](./data/ex0125.csv): The data are the zinc concentrations (in mg/ml) in the blood of rats that received a dietary supplement and rats that did not receive the supplement.
+  - `Group`: a factor representing the group, with levels `"A"` for the dietary supplement group and `"B"` for the control group
+  - `Zinc`: measured zinc concentration in mg/ml
+
+- [ex0126.csv](./data/ex0126.csv): The data are the number of pro- and anti-environmental votes, according to the League of Conservation Voters, for each member of the U.S. House of Representatives in 2005, 2006, or 2007.
+  - `State`: the state that the member represented
+  - `Representative`: name of the representative
+  - `Party`: a factor representing political party, with levels `"R"` for Republican, `"D"` for Democratic, and `"I"` for Independent
+  - `Pro05`: the number of pro-environmental votes in 2005
+  - `Anti05`: the number of anti-environmental votes in 2005
+  - `Pro06`: the number of pro-environmental votes in 2006
+  - `Anti06`: the number of anti-environmental votes in 2006
+  - `Pro07`: the number of pro-environmental votes in 2007
+  - `Anti07`: the number of anti-environmental votes in 2007
+  - `PctPro`: the total percentage of a representative's votes between 2005 and 2007 that were deemd to be pro-environmental
+
+- [ex0127.csv](./data/ex0127.csv): The data are the number of pro- and anti-environmental votes, according to the League of Conservation Voters, for each member of the U.S. Senate in 2005, 2006, or 2007.
+  - `State`: the state that the member represented
+  - `Senator`: name of the senator
+  - `Party`: a factor representing political party, with levels `"R"` for Republican, `"D"` for Democratic, and `"I"` for Independent
+  - `Pro2005`: the number of pro-environmental votes in 2005
+  - `Anti2005`: the number of anti-environmental votes in 2005
+  - `Pro2006`: the number of pro-environmental votes in 2006
+  - `Anti2006`: the number of anti-environmental votes in 2006
+  - `Pro2007`: the number of pro-environmental votes in 2007
+  - `Anti2007`: the number of anti-environmental votes in 2007
+  - `PctPro`: the total percentage of a representative's votes between 2005 and 2007 that were deemd to be pro-environmental
+
+# Chapter 2
+
+- [case0201.csv](./data/case0201.csv): In the 1980s, biologists Peter and Rosemary Grant caught and measured all the birds from more than 20 generations of finches on the Galapagos island of Daphne Major. In one of those years, 1977, a severe drought caused vegetation to wither, and the only remaining food source was a large, tough seed, which the finches ordinarily ignored. Were the birds with larger and stronger beaks for opening these tough seeds more likely to survive that year, and did they tend to pass this characteristic to their offspring? The data are beak depths (height of the beak at its base) of 89 finches caught the year before the drought (1976) and 89 finches captured the year after the drought (1978). [@grant1986ecology]
+  - `Year`: Year the finch was caught, 1976 or 1978
+  - `Depth`: Beak depth of the finch (mm)
+
+- [case0202.csv](./data/case0202.csv): Are any physiological indicators associated with schizophrenia? In a 1990 article, researchers reported the results of a study that controlled for genetic and socioeconomic differences by examining 15 pairs of monozygotic twins, where one of the twins was schizophrenic and the other was not. The researchers used magnetic resonance imaging to measure the volumes (in cm$^3$) of several regions and subregions of the twins' brains. [@suddath1990anatomical]
+  - `Unaffected`: volume of left hippocampus of unaffected twin (in cm$^3$)
+  - `Affected`: volume of left hippocampus of affected twin (in cm$^3$)
+
+- [ex0211.csv](./data/ex0211.csv): The data are survival times (in days) of guinea pigs that were randomly assigned either to a control group or to a treatment group that received a dose of tubercle bacilli. [@doksum1974empirical]
+  - `Lifetime`: survival time of guinea pig (in days)
+  - `Group`: a factor with levels "Bacilli" and "Control", indicating the group to which the guinea pig was assigned
+
+- [ex0218.csv](./data/ex0218.csv): In the 1980s, biologists Peter and Rosemary Grant caught and measured all the birds from more than 20 generations of finches on the Galapagos island of Daphne Major. In one of those years, 1977, a severe drought caused vegetation to wither, and the only remaining food source was a large, tough seed, which the finches ordinarily ignored. Were the birds with larger and stronger beaks for opening these tough seeds more likely to survive that year, and did they tend to pass this characteristic to their offspring? The data are beak depths (height of the beak at its base) of 751 finches caught the year before the drought (1976) and 89 finches captured the year after the drought (1978). [@grant1986ecology]
+  - `Year`: Year the finch was caught, 1976 or 1978
+  - `Depth`: Beak depth of the finch (mm)
+
+- [ex0221.csv](./data/ex0221.csv): As evidence in support of natural selection, Bumpus presented measurements on house sparrows brought to the Anatomical Laboratory of Brown University after an uncommonly severe winter storm. Some of these birds had survived and some had perished. Bumpus asked whether those that perished did so because they lacked physical characteristics enabling them to withstand the intensity of that particular instance of selective elimination. The data are on the the weights, in grams, for the 24 adult male sparrows that perished and for the 35 adult males that survived.
+  - `Humerus`: humerus length of adult male sparrows (inches)
+  - `Status`: factor variable indicating whether the sparrow perished or survived in a winter storm, with levels `"Perished"` and `"Survived"`
+
+- [ex0222.csv](./data/ex0222.csv): These data are armed Forces Qualifying Test (AFQT) score percentiles and component test scores in arithmetic reasoning, word knowledge, paragraph comprehension, and mathematical knowledge for a sample of 1,278 U.S. women and 1,306 U.S. men in 1981. [@bls2011world]
+  - `Gender`: a factor with levels `"female"` and `"male"`
+  - `Arith`: score on the arithmetic reasoning component of the AFQT test
+  - `Word`: score on the word knowledge component
+  - `Parag`: score on the paragraph comprehension component
+  - `Math`: score on the mathematical knowledge component
+  - `AFQT`: percentile score on the AFQT test
+
+- [ex0223.csv](./data/ex0223.csv): The National Highway System Designation Act was signed into law in the United States on November 28, 1995. Among other things, the act abolished the federal mandate of 55 mile per hour maximum speed limits on roads in the United States and permitted states to establish their own limits. Of the 50 states (plus the District of Columbia), 32 increased their speed limits at the beginning of 1996 or sometime during 1996. These data are the percentage changes in interstate highway traffic fatalities from 1995 to 1996. [@national1998effect]
+  - `State`: US state
+  - `Fatalities1995`: number of traffic fatalities in 1995
+  - `Fatalities1996`: number of traffic fatalities in 1996
+  - `PctChange`: percentage change in interstate traffic fatalities between 1995 and 1996
+  - `SpeedLimit`: a factor with levels `"Inc"` and `"Ret"`, indicating whether the state increased or retained its speed limit
+
+# Chapter 3
+
+- [case0301.csv](./data/case0301.csv): Does dropping silver iodide onto clouds increase the amount of rainfall they produce? In a randomized experiment, researchers measured the volume of rainfall in a target area (in acre-feet) on 26 suitable days in which the clouds were seeded and on 26 suitble days in which the clouds were not seeded. [@simpson1975bayesian]
+  - `Rainfall`: the volume of rainfall in the target area (in acre-feet)
+  - `Treatment`: a factor with levels `"Unseeded"` and `"Seeded"` indicating whether the clouds were unseeded or seeded.
+
+- [case0302.csv](./data/case0302.csv): In 1987, researchers measured the TCDD concentration in blood samples from 646 U.S. veterans of the Vietnam War and from 97 U.S. veterans who did not serve in Vietnam. TCDD is a carcinogenic dioxin in the herbicide called Agent Orange, which was used to clear jungle hiding areas by the U.S. military in the Vietnam War between 1962 and 1970. [@centers1988serum]
+  - `Dioxin`: the concentration of TCDD, in parts per trillion
+  - `Veteran`: factor variable with two levels, `"Vietnam"` and `"Other"`, to indicate the type of veteran
+
+- [ex0321.csv](./data/ex0321.csv): Researchers collected historical and current data on umpires to investigate their life expectancies following the collapse and death of a U.S. major league baseball umpire. They were investigating speculation that stress associated with the job posed a health risk. Data were found on 227 umpires who had died or had retired and were still living. The data set includes the dates of birth and death. [@cohen2000life]
+  - `Lifelength`: observed lifetime for those umpires who had died by the time of the study or current age of those still living
+  - `Censored`: `0` for those who had died by the time of the study or `1` for those who were still living
+  - `Expected`: length from actuarial life tables for individuals who were alive at the time the person first became an umpire
+
+- [ex0323.csv](./data/ex0323.csv): Data contains yearly skin cancer rates (per 100,000 people) in Connecticut from 1938 to 1972 with a code indicating those years that came two years after higher than average sunspot activity and those years that came two years after lower than average sunspot activity. [@andrews2012data]
+  - `Year`: year
+  - `CancerRate`: skin cancer rate per 100,000 people
+  - `SunspotActivity`: a factor with levels `"High"` and `"Low"`
+
+- [ex0327.csv](./data/ex0327.csv): As part of a study to investigate reproductive strategies in plants, biologists recorded the time spent at sources of pollen and the proportions of pollen removed by bumblebee queens and honeybee workers pollinating a species of lily. [@harder1989evolutionary]
+  - `PollenRemoved`: proportion of pollen removed
+  - `DurationOfVisit`: duration of visit (in seconds)
+  - `BeeType`: factor variable with levels `"Queen"` and `"Worker"`
+
+- [ex0330.csv](./data/ex0330.csv): The data are incomes in U.S. dollars for 1,020 working Americans who had 12 years of education and 406 working Americans who had 16 years of education, in 2005. [@bls2011world]
+  - `Subject`: a subject identification number
+  - `Educ`: number of years of education–either `12` or `16`
+  - `Income2005`: income, in dollars
+
+- [ex0331.csv](./data/ex0331.csv): The data are incomes in U.S. dollars for 406 working Americans who had 16 years of education and 374 working Americans who had more than 16 years of education, in 2005. [@bls2011world]
+  - `Subject`: a subject identification number
+  - `Educ`: factor with levels `"16"` and `">16"`
+  - `Income2005`: income, in dollars
+
+- [ex0332.csv](./data/ex0332.csv): In-state and out-of-state tuition in dollars for random samples of 25 private and 25 public U.S. colleges and universities in 2011-2012. [@collegeboard2011]
+  - `College`: name of the college
+  - `Type`: a factor with levels `"Private"` and `"Public"`
+  - `InState`: in-state tuition in dollars
+  - `OutOfState`: out-of-state tuition in dollars
+
+- [ex0333.csv](./data/ex0333.csv): Relative brain weights for 51 species of mammal whose average litter size is less than 2 and for 45 species of mammal whose average litter size is greater than or equal to 2. [@sacher1974relation]
+  - `BrainSize`: relative brain sizes (1000 * Brain weight/Body weight) for 96 species of mammals
+  - `LitterSize`: factor variable with levels `"Small"` and `"Large"`
+
+# Chapter 4
+
+- [case0401.csv](./data/case0401.csv): The number of space shuttle O-ring incidents for 4 space shuttle launches when the air temperatures was below 65 degrees F and for 20 space shuttle launches when the air temperature was above 65 degrees F. [@feynman2001you]
+  - `Incidents`: the number of O-ring incidents
+  - `Launch`: factor variable with two levels---`"Cool"` and `"Warm"`
+
+- [case0402.csv](./data/case0402.csv): Educational researchers randomly assigned 28 ninth-year students in Australia to receive coordinate geometry training in one of two ways: a conventional way and a modified way. After the training, the students were asked to solve a coordinate geometry problem. The time to complete the problem was recorded, but five students in the “conventional” group did not complete the solution in the five minute alloted time. [@sweller1990cognitive]
+  - `Time`: the time (in seconds) that the student worked on the problem
+  - `Treatment`: factor variable with two levels---`"Modified"` and `"Conventional"`
+  - `Censored`: `1` if the individual did not complete the problem in 5 minutes, `0` if they did
+
+- [ex0428.csv](./data/ex0428.csv): 
+
+- [ex0429.csv](./data/ex0429.csv): 
+
+- [ex0430.csv](./data/ex0430.csv): 
+
+- [ex0431.csv](./data/ex0431.csv): 
+
+- [ex0432.csv](./data/ex0432.csv): 
+
+# Chapter 5
+
+- [case0501.csv](./data/case0501.csv):  Female mice were randomly assigned to six treatment groups to investigate whether restricting dietary intake increases life expectancy. [@weindruch1986retardation] Diet treatments were:
+  1. `"NP"`—mice ate unlimited amount of nonpurified, standard diet
+  2. `"N/N85"`—mice fed normally before and after weaning. After weaning, ration was controlled at 85 kcal/wk
+  3. `"N/R50"`—normal diet before weaning and reduced calorie diet (50 kcal/wk) after weaning
+  4. `"R/R50"`—reduced calorie diet of 50 kcal/wk both before and after weaning
+  5. `"N/R50 lopro"`—normal diet before weaning, restricted diet (50 kcal/wk) after weaning and dietary protein content decreased with advancing age
+  6. `"N/R40"`—normal diet before weaning and reduced diet (40 Kcal/wk) after weaning.
+  
+  Variables include:
+  
+  - `Lifetime`: the lifetime of the mice (in months)
+  - `Diet`: factor variable with six levels—`"NP"`, `"N/N85"`, `"lopro"`, `"N/R50"`, `"R/R50"` and `"N/R40"`
+
+- [case0502.csv](./data/case0502.csv): In 1968, Dr. Benjamin Spock was tried in Boston on charges of conspiring to violate the Selective Service Act by encouraging young men to resist being drafted into military service for Vietnam. The defence in the case challenged the method of jury selection claiming that women were underrepresented. Boston juries are selected in three stages. First 300 names are selected at random from the City Directory, then a venire of 30 or more jurors is selected from the initial list of 300 and finally, an actual jury is selected from the venire in a nonrandom process allowing each side to exclude certain jurors. There was one woman on the venire and no women on the final list. The defence argued that the judge in the trial had a history of venires in which women were systematically underrepresented and compared the judge's recent venires with the venires of six other Boston area district judges. [@zeisel1972parking]
+  - `Percent`: is the percent of women on the venire's of the Spock trial judge and 6 other Boston area judges
+  - `Judge`: is a factor with levels `"Spock's"`, `"A"`, `"B"`, `"C"`, `"D"`, `"E"`, and `"F"`.
+
+- [ex0518.csv](./data/ex0518.csv): 
+
+- [ex0523.csv](./data/ex0523.csv): 
+
+- [ex0524.csv](./data/ex0524.csv): 
+
+- [ex0525.csv](./data/ex0525.csv): 
+
+# Chapter 6
+
+- [case0601.csv](./data/case0601.csv): Study explores how physical handicaps affect people's perception of employment qualifications. Researchers prepared 5 videotaped job interviews using actors with a script designed to reflect an interview with an applicant of average qualifications. The 5 tapes differed only in that the applicant appeared with a different handicap in each one. Seventy undergraduate students were randomly assigned to view the tapes and rate the qualification of the applicant on a 0-10 point scale. [@cesare1990interviewers]
+  - `Score`: is the score each student gave to the applicant
+  - `Handicap`: is a factor variable with 5 levels—`"None"`, `"Amputee"`, `"Crutches"`, `"Hearing"`, and `"Wheelchair"`
+
+- [case0602.csv](./data/case0602.csv): Do female Platyfish prefer male Platyfish with yellow swordtails? A.L. Basolo proposed and tested a selection model in which females have a pre-existing bias for a male trait even before the males possess it. Six pairs of males were surgically given artificial, plastic swordtails—one pair received a bright yellow sword, the other a transparent sword. Females were given the opportunity to engage in courtship activity with either of the males. Of the total time spent by each female engaged in courtship during a 20 minute observation period, the percentages of time spent with the yellow-sword male were recorded. [@basolo1990female]
+  - `Percentage`: The percentage of courtship time spent by 84 females with the yellow-sword males
+  - `Pair`: Factor variable with 6 levels—`"Pair1"`, `"Pair2"`, `"Pair3"`, `"Pair4"`, `"Pair5"`, and `"Pair6"`
+  - `Length`: Body size of the males
+
+- [ex0623.csv](./data/ex0623.csv): 
+
+- [ex0624.csv](./data/ex0624.csv): 
+
+# Chapter 7
+
+- [case0701.csv](./data/case0701.csv): 
+
+- [case0702.csv](./data/case0702.csv): 
+
+- [ex0721.csv](./data/ex0721.csv): 
+
+- [ex0722.csv](./data/ex0722.csv): 
+
+- [ex0724.csv](./data/ex0724.csv): 
+
+- [ex0725.csv](./data/ex0725.csv): 
+
+- [ex0726.csv](./data/ex0726.csv): 
+
+- [ex0727.csv](./data/ex0727.csv): 
+
+- [ex0728.csv](./data/ex0728.csv): 
+
+- [ex0729.csv](./data/ex0729.csv): 
+
+- [ex0730.csv](./data/ex0730.csv): 
+
+# Chapter 8
+
+- [case0801.csv](./data/case0801.csv): 
+
+- [case0802.csv](./data/case0802.csv): 
+
+- [ex0816.csv](./data/ex0816.csv): 
+
+- [ex0817.csv](./data/ex0817.csv): 
+
+- [ex0820.csv](./data/ex0820.csv): 
+
+- [ex0822.csv](./data/ex0822.csv): 
+
+- [ex0823.csv](./data/ex0823.csv): 
+
+- [ex0824.csv](./data/ex0824.csv): 
+
+- [ex0825.csv](./data/ex0825.csv): 
+
+- [ex0826.csv](./data/ex0826.csv): 
+
+- [ex0828.csv](./data/ex0828.csv): 
+
+- [ex0829.csv](./data/ex0829.csv): 
+
+# Chapter 9 
+
+- [case0901.csv](./data/case0901.csv): 
+
+- [case0902.csv](./data/case0902.csv): 
+
+- [ex0914.csv](./data/ex0914.csv): 
+
+- [ex0915.csv](./data/ex0915.csv): 
+
+- [ex0918.csv](./data/ex0918.csv): 
+
+- [ex0920.csv](./data/ex0920.csv): 
+
+- [ex0921.csv](./data/ex0921.csv): 
+
+- [ex0923.csv](./data/ex0923.csv): 
+
+# Chapter 10
+
+- [case1001.csv](./data/case1001.csv): 
+
+- [case1002.csv](./data/case1002.csv): 
+
+- [ex1014.csv](./data/ex1014.csv): 
+
+- [ex1026.csv](./data/ex1026.csv): 
+
+- [ex1027.csv](./data/ex1027.csv): 
+
+- [ex1028.csv](./data/ex1028.csv): 
+
+- [ex1029.csv](./data/ex1029.csv): 
+
+- [ex1030.csv](./data/ex1030.csv): 
+
+- [ex1031.csv](./data/ex1031.csv): 
+
+- [ex1033.csv](./data/ex1033.csv): 
+
+# Chapter 11
+
+- [case1101.csv](./data/case1101.csv): 
+
+- [case1102.csv](./data/case1102.csv): 
+
+- [ex1111.csv](./data/ex1111.csv): 
+
+- [ex1120.csv](./data/ex1120.csv): 
+
+- [ex1122.csv](./data/ex1122.csv): 
+
+- [ex1123.csv](./data/ex1123.csv): 
+
+- [ex1124.csv](./data/ex1124.csv): 
+
+- [ex1125.csv](./data/ex1125.csv): 
+
+# Chapter 12
+
+- [case1201.csv](./data/case1201.csv): 
+
+- [case1202.csv](./data/case1202.csv):  Data on employees from one job category (skilled, entry–level clerical) of a bank that was sued for sex discrimination. The data are on 32 male and 61 female employees, hired between 1965 and 1975. [@roberts1979harris]
+  - `Bsal`: Annual salary at time of hire
+  - `Sal77`: Salary as of March 1975
+  - `Sex`: Sex of employee
+  - `Senior`: Seniority (months since first hired)
+  - `Age`: Age of employee (in months)
+  - `Educ`: Education (in years)
+  - `Exper`: Work experience prior to employment with the bank (months)
+
+- [ex1217.csv](./data/ex1217.csv): 
+
+- [ex1220.csv](./data/ex1220.csv): 
+
+- [ex1221.csv](./data/ex1221.csv): 
+
+- [ex1222.csv](./data/ex1222.csv): 
+
+- [ex1223.csv](./data/ex1223.csv): 
+
+- [ex1225.csv](./data/ex1225.csv): 
+
+# Chapter 13
+
+- [case1301.csv](./data/case1301.csv): To study the influence of ocean grazers on regeneration rates of seaweed in the intertidal zone, a researcher scraped rock plots free of seaweed and observed the degree of regeneration when certain types of seaweed-grazing animals were denied access. The grazers were limpets (L), small fishes (f) and large fishes (F). Each plot received one of six treatments named by which grazers were allowed access. In addition, the researcher applied the treatments in eight blocks of 12 plots each. Within each block she randomly assigned treatments to plots. The blocks covered a wide range of tidal conditions. [@olson1992evolutionary]
+  - `Cover`: percent of regenerated seaweed cover
+  - `Block`: a factor with levels `"B1"`, `"B2"`, `"B3"`, `"B4"`, `"B5"`, `"B6"`, `"B7"`, and `"B8"`.
+  - `Treat`: a factor indicating treatment, with levels `"C"`, `"f"`, `"fF"`, `"L"`, `"Lf"`, and `"LfF"`.
+
+- [case1302.csv](./data/case1302.csv): One company of soldiers in each of 10 platoons was assigned to a Pygmalion treatment group, with remaining companies in the platoon assigned to a control group. Leaders of the Pygmalion platoons were told their soldiers had done particularly well on a battery of tests which were, in fact, non-existent. In this randomised block experiment, platoons are experimental units, companies are blocks, and average Practical Specialty test score for soldiers in a platoon is the response. The researchers wished to see if the platoon response was affected by the artificially-induced expectations of the platoon leader. [@eden1990pygmalion]
+  - `Company`: a factor indicating company identification, with levels `"C1"`, `"C2"`, ..., `"C10"`
+  - `Treat`: a factor indicating treatment with two levels, `"Pygmalion"` and `"Control"`
+  - `Score`: average score on practical specialty test of all soldiers in the platoon
+
+- [ex1317.csv](./data/ex1317.csv): 
+
+- [ex1319.csv](./data/ex1319.csv): 
+
+- [ex1320.csv](./data/ex1320.csv): 
+
+- [ex1321.csv](./data/ex1321.csv): 
+
+# Chapter 14
+
+- [case1401.csv](./data/case1401.csv): 
+
+- [case1402.csv](./data/case1402.csv): 
+
+- [ex1416.csv](./data/ex1416.csv): 
+
+- [ex1417.csv](./data/ex1417.csv): 
+
+- [ex1419.csv](./data/ex1419.csv): 
+
+- [ex1420.csv](./data/ex1420.csv): 
+
+# Chapter 15
+
+- [case1501.csv](./data/case1501.csv): 
+
+- [case1502.csv](./data/case1502.csv): 
+
+- [ex1507.csv](./data/ex1507.csv): 
+
+- [ex1509.csv](./data/ex1509.csv): 
+
+- [ex1514.csv](./data/ex1514.csv): 
+
+- [ex1515.csv](./data/ex1515.csv): 
+
+- [ex1516.csv](./data/ex1516.csv): 
+
+- [ex1517.csv](./data/ex1517.csv): 
+
+- [ex1518.csv](./data/ex1518.csv): 
+
+- [ex1519.csv](./data/ex1519.csv): 
+
+# Chapter 16
+
+- [case1601.csv](./data/case1601.csv): 
+
+- [case1602.csv](./data/case1602.csv): 
+
+- [ex1605.csv](./data/ex1605.csv): 
+
+- [ex1611.csv](./data/ex1611.csv): 
+
+- [ex1612.csv](./data/ex1612.csv): 
+
+- [ex1613.csv](./data/ex1613.csv): 
+
+- [ex1614.csv](./data/ex1614.csv): 
+
+- [ex1615.csv](./data/ex1615.csv): 
+
+- [ex1620.csv](./data/ex1620.csv): 
+
+# Chapter 17
+
+- [case1701.csv](./data/case1701.csv): 
+
+- [case1702.csv](./data/case1702.csv): 
+
+- [ex1708.csv](./data/ex1708.csv): 
+
+- [ex1715.csv](./data/ex1715.csv): 
+
+- [ex1716.csv](./data/ex1716.csv): 
+
+# Chapter 18
+
+- [case1801.csv](./data/case1801.csv): 
+
+- [case1802.csv](./data/case1802.csv): 
+
+- [case1803.csv](./data/case1803.csv): 
+
+# Chapter 19
+
+- [case1901.csv](./data/case1901.csv): 
+
+- [case1902.csv](./data/case1902.csv): 
+
+- [ex1914.csv](./data/ex1914.csv): 
+
+- [ex1916.csv](./data/ex1916.csv): 
+
+- [ex1917.csv](./data/ex1917.csv): 
+
+- [ex1918.csv](./data/ex1918.csv): 
+
+- [ex1919.csv](./data/ex1919.csv): 
+
+- [ex1921.csv](./data/ex1921.csv): 
+
+- [ex1922.csv](./data/ex1922.csv): 
+
+- [ex1923.csv](./data/ex1923.csv):  
+
+# Chapter 20
+
+- [case2001.csv](./data/case2001.csv): 
+
+- [case2002.csv](./data/case2002.csv): 
+
+- [ex2011.csv](./data/ex2011.csv): 
+
+- [ex2012.csv](./data/ex2012.csv): 
+
+- [ex2015.csv](./data/ex2015.csv): 
+
+- [ex2016.csv](./data/ex2016.csv): 
+
+- [ex2017.csv](./data/ex2017.csv): 
+
+- [ex2018.csv](./data/ex2018.csv): 
+
+- [ex2019.csv](./data/ex2019.csv): 
+
+# Chapter 21
+
+- [case2101.csv](./data/case2101.csv): 
+
+- [case2102.csv](./data/case2102.csv): 
+- [ex2113.csv](./data/ex2113.csv): 
+
+- [ex2115.csv](./data/ex2115.csv): 
+
+- [ex2116.csv](./data/ex2116.csv): 
+
+- [ex2117.csv](./data/ex2117.csv): 
+
+- [ex2118.csv](./data/ex2118.csv): 
+
+- [ex2119.csv](./data/ex2119.csv): 
+
+- [ex2120.csv](./data/ex2120.csv): 
+
+# Chapter 22
+
+- [case2201.csv](./data/case2201.csv): 
+
+- [case2202.csv](./data/case2202.csv): 
+
+- [ex2216.csv](./data/ex2216.csv): 
+
+- [ex2220.csv](./data/ex2220.csv): 
+
+- [ex2222.csv](./data/ex2222.csv): 
+
+- [ex2223.csv](./data/ex2223.csv): 
+
+- [ex2224.csv](./data/ex2224.csv): 
+
+- [ex2225.csv](./data/ex2225.csv): 
+
+- [ex2226.csv](./data/ex2226.csv): 
+
+- [ex2414.csv](./data/ex2414.csv): 
+
+# References

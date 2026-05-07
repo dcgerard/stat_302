@@ -1,0 +1,319 @@
+---
+title: "R Graphics with `{ggplot2}`"
+author: "David Gerard"
+date: today
+format: html
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+            fig.width = 4,
+            fig.height = 3,
+            fig.align = "center")
+ggplot2::theme_set(ggplot2::theme_bw() + ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white")))
+```
+
+```{r, echo=FALSE}
+set.seed(1)
+```
+
+# Learning objectives
+
+- Basic plotting in R using the `{ggplot2}` package.
+
+# Introduction
+
+- `{ggplot2}` is very powerful, so I am just going to show you the most important and basic plots that are necessary for data analysis.
+
+-   Before using the plotting functions from `{ggplot2}` in a new R session, always first load the `{ggplot2}` library.
+
+    ```{r}
+    library(ggplot2)
+    ```
+
+-   In this vignette, we'll also make some variable transformations, so we will need the tidyverse
+
+    ```{r, message=FALSE}
+    library(tidyverse)
+    ```
+
+-   I will use the `lead` dataset to demonstrate plots (description [here](../data.qmd#lead))
+
+    ```{r}
+    #| message: false
+    lead <- read_csv("https://dcgerard.github.io/stat_320/data/lead.csv")
+    ```
+
+# `ggplot()`
+
+- The first function you use in making a plot is always `ggplot()`.
+
+- It takes two main arguments:
+  - `data`: The data frame that holds the variables you want to plot.
+  - `mapping`: The "aesthetic map"
+
+- An "aesthetic map" says what variables go on the $x$-axis, what variables go on the $y$-axis, what variables are represented by color, or size, or point shape, etc...
+
+- You place all aesthetic maps inside an `aes()` function.
+
+-   E.g. here, we are mapping `iqf` to be on the $x$-axis, and different values of `lead_grp` should be different colors.
+
+    ```{r, eval = FALSE}
+    #| fig-alt: "Basic ggplot graphic."
+    ggplot(data = lead, mapping = aes(x = iqf, color = lead_grp))
+    ```
+
+- This function just sets the data and the aesthetic mapping, but it won't produce any useful plot by itself.
+
+- You add additional functions to the plot to state the type of plot you want.
+
+# One Variable
+
+## Continuous
+
+-   Histogram:
+    - Variable should be on the $x$-axis.
+    - Use the `geom_histogram()` function.
+
+    ```{r, message=FALSE}
+    #| warning: false
+    #| fig-alt: "Histogram of IQF."
+    ggplot(data = lead, mapping = aes(x = iqf)) +
+      geom_histogram()
+    ```
+
+-   Make the bin lines black and the fill white, and change the number of bins.
+
+    ```{r}
+    #| warning: false
+    #| fig-alt: "Histogram of IQF with white fill and block color."
+    ggplot(data = lead, mapping = aes(x = iqf)) +
+      geom_histogram(bins = 20, color = "black", fill = "white")
+    ```
+
+::: {.panel-tabset}
+## Exercise
+Load in the [boneden](../data/boneden.csv) data (see [here](../data.qmd#boneden) for a description) and make a histogram of lumbar spine density for the lighter smoking twin with 20 bins. Make the bins red.
+
+## Solution
+
+```{r}
+#| fig-alt: "Histogram of ls1 with red fill."
+library(readr)
+library(ggplot2)
+boneden <- read_csv("https://dcgerard.github.io/stat_320/data/boneden.csv")
+ggplot(data = boneden, mapping = aes(x = ls1)) +
+  geom_histogram(bins = 20, fill = "red")
+```
+:::
+
+## Discrete
+
+-   Barplot:
+    - Put the variable on the $x$-axis.
+    - Use `geom_bar()`.
+  
+    ```{r}
+    #| warning: false
+    #| fig-alt: "Barplot of hyperactivity rating."
+    ggplot(data = lead, mapping = aes(x = hyperact)) +
+      geom_bar()
+    ```
+
+::: {.panel-tabset}
+## Exercise 
+What variables from the `lead` data are appropriately plotted using a bar plot? Plot a couple of them.
+
+## Solution
+```{r}
+#| eval: false
+#| fig-alt: "Barplots of various variables from the lead data."
+ggplot(data = lead, mapping = aes(x = sex)) +
+  geom_bar()
+ggplot(data = lead, mapping = aes(x = area)) +
+  geom_bar()
+ggplot(data = lead, mapping = aes(x = lead_grp)) +
+  geom_bar()
+ggplot(data = lead, mapping = aes(x = Group)) +
+  geom_bar()
+ggplot(data = lead, mapping = aes(x = fst2yrs)) +
+  geom_bar()
+ggplot(data = lead, mapping = aes(x = iq_type)) +
+  geom_bar()
+ggplot(data = lead, mapping = aes(x = pica)) +
+  geom_bar()
+ggplot(data = lead, mapping = aes(x = colic)) +
+  geom_bar()
+ggplot(data = lead, mapping = aes(x = clumsi)) +
+  geom_bar()
+ggplot(data = lead, mapping = aes(x = irrit)) +
+  geom_bar()
+ggplot(data = lead, mapping = aes(x = convul)) +
+  geom_bar()
+ggplot(data = lead, mapping = aes(x = hyperact)) +
+  geom_bar()
+ggplot(data = lead, mapping = aes(x = maxfwt)) +
+  geom_bar()
+```
+:::
+
+# Two Variables
+
+## Continuous X, Continuous Y
+
+-   Scatterplot:
+    - Say what variables should be on the $x$- and $y$-axes.
+    - Use `geom_point()`.
+  
+    ```{r}
+    #| warning: false
+    #| fig-alt: "Scatterplot of IQF and ld73."
+    ggplot(data = lead, mapping = aes(x = ld73, y = iqf)) +
+      geom_point()
+    ```
+
+-   Jitter points to account for overlaying points.
+    - Use `geom_jitter()` instead of `geom_point()`.
+  
+    ```{r}
+    #| warning: false
+    #| fig-alt: "Jitterplot of totyrs and hyperact"
+    ggplot(data = lead, mapping = aes(x = totyrs, y = hyperact)) +
+      geom_jitter()
+    ```
+
+-   Add a Loess Smoother by adding `geom_smooth()`.
+
+    ```{r, message=FALSE}
+    #| warning: false
+    #| fig-alt: "Scatterplot of iqf and ld73 with a smoother."
+    ggplot(data = lead, mapping = aes(x = ld73, y = iqf)) +
+      geom_point() +
+      geom_smooth(se = FALSE)
+    ```
+
+::: {.panel-tabset}
+## Exercise
+Using the `boneden` data, make a scatterplot exploring the association between the lumbar spine densities for the two twin types (smoking status).
+
+## Solution
+```{r}
+#| fig-alt: "Scatterplot of ls1 and ls2."
+ggplot(data = boneden, mapping = aes(x = ls1, y = ls2)) +
+  geom_point()
+```
+:::
+
+## Discrete X, Continuous Y
+
+-   Boxplot
+    - Place one variable on $x$-axis and other on $y$-axis.
+    - Typically, but not always, continuous goes on $y$-axis.
+    - Use `geom_boxplot()`.
+  
+    ```{r}
+    #| warning: false
+    #| fig-alt: "Boxplot of IQF by group."
+    ggplot(data = lead, mapping = aes(x = Group, y = iqf)) +
+      geom_boxplot()
+    ```
+
+::: {.panel-tabset}
+## Exercise
+Using the `boneden` data, first calculate the difference in lumbar spine densities between the two twins (you'll need to use `mutate()` here). Then plot this difference versus zygosity (monozygotic versus dizygotic).
+
+## Solution
+```{r}
+#| fig-alt: "Boxplot of ls_diff by zyg."
+boneden <- mutate(boneden, ls_diff = ls1 - ls2)
+ggplot(data = boneden, mapping = aes(x = zyg, y = ls_diff)) +
+  geom_boxplot()
+```
+:::
+
+# Color Coding and Legends
+
+-   Color code a scatterplot by a categorical variable and add a legend.
+    - Just add a color mapping.
+  
+    ```{r}
+    #| warning: false
+    #| fig-alt: "Scatterplot of iqf by ld73 color-coded by lead_grp."
+    ggplot(data = lead, mapping = aes(x = ld73, y = iqf, color = lead_grp)) +
+      geom_point()
+    ```
+
+::: {.panel-tabset}
+## Exercise 
+
+Using the `boneden` data, create a scatterplot between the lumbar spine densities of the two twin types (smoking status), color coding by zygosity.
+
+## Solution
+```{r}
+#| fig-alt: "Scatterplot of ls1 and ls2 color coded by zyg."
+ggplot(data = boneden, mapping = aes(x = ls1, y = ls2, color = zyg)) +
+  geom_point()
+```
+:::
+
+# Changing a legend title
+
+-   Add a `scale_*()` call to change the name:
+
+    ```{r}
+    #| warning: false
+    #| fig-alt: "Scatterplot of iqf and ld37, color coded by lead_grp, with a new name on the legend."
+    ggplot(data = lead, mapping = aes(x = ld73, y = iqf, color = lead_grp)) +
+      geom_point() +
+      scale_color_discrete(name = "New Name")
+    ```
+
+# Faceting
+
+- You can facet by a categorical variable by adding a `facet_grid()` or `facet_wrap()` function.
+
+-   The variable to the left of the tilde ("`~`") indexes the row facets, the variable to the right of the tilde indexes the column facets. Using a dot ("`.`") in place of a variable means that there will only be one row/column facet.
+
+    ```{r}
+    #| warning: false
+    #| fig-alt: "Faceting by area scatterplots of iqf and ld73."
+    ggplot(data = lead, mapping = aes(x = ld73, y = iqf)) +
+      geom_point() +
+      facet_grid(. ~ area)
+    ggplot(data = lead, mapping = aes(x = ld73, y = iqf)) +
+      geom_point() +
+      facet_grid(area ~ .)
+    ```
+  
+    ```{r, fig.height=2.7, fig.width=3.5}
+    #| warning: false
+    #| fig-alt: "Scatterplot of iqf and ld73 faceted by area and group."
+    ggplot(data = lead, mapping = aes(x = ld73, y = iqf)) +
+      geom_point() +
+      facet_grid(area ~ Group)
+    ```
+
+::: {.panel-tabset}
+## Exercise
+Using the `boneden` data, create a histogram of the difference in lumbar spine densities, faceting by zygosity.
+
+## Solution
+```{r}
+#| fig-alt: "Histogram of ls_diff, faceted by zyg."
+ggplot(data = boneden, mapping = aes(x = ls_diff)) +
+  geom_histogram(bins = 10) +
+  facet_wrap(. ~ zyg)
+```
+:::
+
+# Change Theme
+
+-   Add a `theme_*()` function to change the theme:
+
+    ```{r}
+    #| warning: false
+    #| fig-alt: "Scatterplot if iqf and ld73 with a classic theme."
+    ggplot(data = lead, mapping = aes(x = ld73, y = iqf)) +
+      geom_point() +
+      theme_classic()
+    ```
