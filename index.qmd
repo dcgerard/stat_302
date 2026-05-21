@@ -19,8 +19,6 @@ author: David Gerard
   - Nonparameterics
 - Chapter 5:
   - One-way ANOVA
-- Chapter 13:
-  - Two-way ANOVA
 - Chapter 6:
   - Multiple Comparisons
 - Chapters 7--8
@@ -29,7 +27,4 @@ author: David Gerard
   - Multiple Regression
 - Chapter 20:
   - Logistic Regression
-- Chapter 18:
-  - Proportions/odds
-- Chapter 19:
-  - Two-way Tables
+  
