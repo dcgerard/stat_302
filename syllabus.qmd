@@ -43,23 +43,39 @@ This course builds on the basic tools of data analysis and methods of statistica
   - This should be mostly review of Introductory Statistics, so we'll go quick.
 - Week 4: Chapter 4 (non-parametrics)
 - Week 5: Chapter 5 (One-way ANOVA)
-- Week 6: Chapter 13 (Two-way ANOVA)
-- Week 7: Sections 6.3--6.4 and supplemental readings (Multiple Comparisons, Family-wise Error Rate, Bonferroni/Holm, False Discovery Rate, Benjamini-Hochberg).
-- Exam 1
-- Week 8--9: Chapters 7 and 8 (Simple Linear Regression)
+- Week 6: Sections 6.3--6.4 and supplemental readings (Multiple Comparisons, Family-wise Error Rate, Bonferroni/Holm, False Discovery Rate, Benjamini-Hochberg).
+- Midterm 1
+- Week 7--8: Chapters 7 and 8 (Simple Linear Regression)
   - This should also be mostly review of Introductory Statistics, so we'll go quick.
-- Week 10--12: Chapter 9--11 (Multiple Linear Regression)
+- Week 9--12: Chapter 9--11 (Multiple Linear Regression)
 - Week 13--14: Chapter 20 (Logistic Regression)
-- Exam 2
+- Midterm 2
+
+# Important Dates
+
+- *Tuesday, 10/13/2026: Midterm 1
+- Friday, 10/16/2026: No class (Fall break).
+- Friday, 11/06/2026: Last day to withdraw or change a grade option
+- Tuesday, 11/24/2026: Class meets via Zoom (Thanksgiving)
+- Friday, 11/27/2026: No class (Thanksgiving)
+- *Friday, 12/11/2026: Midterm 2
+- Friday, 12/18/2026: Final project presentations (11:20AM-01:50PM)
+
+*These dates are VERY tentative and subject to change.
 
 # Grading
 
 - 10% Homework
+  - These will be self-graded.
 - 15% Participation
-  - Pretty standard stuff. Pay attention, come to class, answer questions.
-  - I'll take of a percentage-point each time I see you reading the news, on social media, playing video games, etc.
+  - Pay attention
+  - Come to class
+  - Answer questions
+  - Stay off your phones, stay off social media, etc
 - 25% Final Project
+  - Apply these statistical methods to a real-world dataset of your choice.
 - 50% In-class Exams
+  - We'll have two midterms, each worth about 25%.
 
 Usual grade cutoffs will be used:
 ```{r, echo = FALSE}
