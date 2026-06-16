@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 260" width="560" height="260">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#c0392b"/>
+    </marker>
+  </defs>
+
+  <!-- ── Top panel: Observed association ── -->
+  <text x="20" y="22" font-family="Ubuntu Mono, monospace" font-size="12" fill="#555" font-style="italic">Observed:</text>
+
+  <!-- Sex oval -->
+  <ellipse cx="120" cy="55" rx="44" ry="24" fill="#e8f4f8" stroke="#333" stroke-width="1.5"/>
+  <text x="120" y="60" text-anchor="middle" font-family="Ubuntu Mono, monospace" font-size="13" fill="#333">Sex</text>
+
+  <!-- Dashed arrow Sex -> Income -->
+  <line x1="165" y1="55" x2="315" y2="55" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="6 3" marker-end="url(#arrow-red)"/>
+  <text x="240" y="46" text-anchor="middle" font-family="Ubuntu Mono, monospace" font-size="10" fill="#c0392b">observed association</text>
+
+  <!-- Income oval -->
+  <ellipse cx="365" cy="55" rx="54" ry="24" fill="#e8f4f8" stroke="#333" stroke-width="1.5"/>
+  <text x="365" y="60" text-anchor="middle" font-family="Ubuntu Mono, monospace" font-size="13" fill="#333">Income</text>
+
+  <!-- Divider -->
+  <line x1="20" y1="100" x2="540" y2="100" stroke="#ccc" stroke-width="1" stroke-dasharray="4 4"/>
+
+  <!-- ── Bottom panel: Possible (confounder) ── -->
+  <text x="20" y="122" font-family="Ubuntu Mono, monospace" font-size="12" fill="#555" font-style="italic">Possible (confounder):</text>
+
+  <!-- Sex oval -->
+  <ellipse cx="120" cy="185" rx="44" ry="24" fill="#e8f4f8" stroke="#333" stroke-width="1.5"/>
+  <text x="120" y="190" text-anchor="middle" font-family="Ubuntu Mono, monospace" font-size="13" fill="#333">Sex</text>
+
+  <!-- Experience oval (center) -->
+  <ellipse cx="280" cy="185" rx="66" ry="24" fill="#fff9e6" stroke="#333" stroke-width="1.5"/>
+  <text x="280" y="183" text-anchor="middle" font-family="Ubuntu Mono, monospace" font-size="12" fill="#333">Experience</text>
+  <text x="280" y="197" text-anchor="middle" font-family="Ubuntu Mono, monospace" font-size="10" fill="#777">(confounder)</text>
+
+  <!-- Income oval -->
+  <ellipse cx="440" cy="185" rx="54" ry="24" fill="#e8f4f8" stroke="#333" stroke-width="1.5"/>
+  <text x="440" y="190" text-anchor="middle" font-family="Ubuntu Mono, monospace" font-size="13" fill="#333">Income</text>
+
+  <!-- Arrow Experience -> Sex -->
+  <line x1="214" y1="185" x2="165" y2="185" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Arrow Experience -> Income -->
+  <line x1="346" y1="185" x2="386" y2="185" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Dashed "observed association" line Sex -> Income (faded) -->
+  <line x1="165" y1="185" x2="386" y2="185" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 4" opacity="0.3"/>
+</svg>

@@ -6,7 +6,8 @@ format: html
 bibliography: "../bib.bib"
 ---
 
-```{r setup, include=FALSE}
+```{r setup}
+#| include: false
 knitr::opts_chunk$set(echo = TRUE,
             fig.width = 4,
             fig.height = 3,
@@ -14,7 +15,8 @@ knitr::opts_chunk$set(echo = TRUE,
 ggplot2::theme_set(ggplot2::theme_bw() + ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white")))
 ```
 
-```{r, echo=FALSE}
+```{r}
+#| echo: false
 set.seed(1)
 ```
 
@@ -28,7 +30,8 @@ set.seed(1)
 
 -   Before using the plotting functions from `{ggplot2}` in a new R session, always first load the `{tidyverse}` library that has `{ggplot2}` as part of it.
 
-    ```{r, message=FALSE}
+    ```{r}
+    #| message: false
     library(tidyverse)
     ```
 
@@ -54,7 +57,8 @@ set.seed(1)
 
 -   E.g. here, we are mapping `Time` to be on the $x$-axis, and different values of `Size` should be different colors.
 
-    ```{r, eval = FALSE}
+    ```{r}
+    #| eval: false
     #| fig-alt: "Basic ggplot graphic."
     ggplot(data = birds, mapping = aes(x = Time, color = Size))
     ```
@@ -71,7 +75,8 @@ set.seed(1)
     - Variable should be on the $x$-axis.
     - Use the `geom_histogram()` function.
 
-    ```{r, message=FALSE}
+    ```{r}
+    #| message: false
     #| warning: false
     #| fig-alt: "Histogram of Time."
     ggplot(data = birds, mapping = aes(x = Time)) +

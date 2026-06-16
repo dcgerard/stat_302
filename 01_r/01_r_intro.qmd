@@ -6,8 +6,9 @@ format: html
 bibliography: "../bib.bib"
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, 
+```{r setup}
+#| include: false
+knitr::opts_chunk$set(echo = TRUE,
             fig.width = 4, 
             fig.height = 3, 
             fig.align = "center")
@@ -58,7 +59,8 @@ lot of what real data scientists do. Just append what you are Googling with "in 
 
 - You can use R as a powerful calculator. Try typing some of the following into the command prompt:
 
-  ```{r, eval = FALSE}
+  ```{r}
+  #| eval: false
   3 * 7
   9 / 3
   4 + 6
@@ -73,7 +75,8 @@ lot of what real data scientists do. Just append what you are Googling with "in 
 
 What do you think the following will evaluate to? Try to guess before running it in R:
   
-```{r, eval = FALSE}
+```{r}
+#| eval: false
 8 / 4 + 3 * 2 ^ 2
 ```
 
@@ -119,7 +122,8 @@ What do you think the following will evaluate to? Try to guess before running it
   
 - This is useful because you can reuse this value over and over again:
 
-  ```{r, eval = FALSE}
+  ```{r}
+  #| eval: false
   y <- 0
   x + y
   x * y
@@ -140,41 +144,47 @@ What do you think the following will evaluate to? Try to guess before running it
   new objects. Let's look at a 
   simple function that takes the log of a number:
   
-  ```{r, eval=FALSE}
+  ```{r}
+  #| eval: false
   log(x = 4, base = 2)
   ```
   
 - The inputs are called "arguments". Generally, every function will be for the
   form:
   
-  ```{r, eval = FALSE}
+  ```{r}
+  #| eval: false
   function_name(arg1 = val1, arg2 = val2, ...)
   ```
 
 - If you do not specify the name of the argument, R will assume you are 
   assigning in their order.
   
-  ```{r, eval = FALSE}
+  ```{r}
+  #| eval: false
   log(4, 2)
   ```
 
 - You can change the order of the arguments if you specify them.
 
-  ```{r, eval = FALSE}
+  ```{r}
+  #| eval: false
   log(base = 2, x = 4)
   ```
 
 - To see the list of all possible arguments of a function, use the `help()` 
   function:
   
-  ```{r, eval=FALSE}
+  ```{r}
+  #| eval: false
   help(log)
   ```
 
 - In the help file, there are often **default** values for an argument. For 
   example, the following indicates the the default value of `base` is `exp(1)`.
   
-  ```{r, eval = FALSE}
+  ```{r}
+  #| eval: false
   log(x, base = exp(1))
   ```
   
@@ -190,7 +200,8 @@ What do you think the following will evaluate to? Try to guess before running it
   
 - Type this:
 
-  ```{r, eval = FALSE}
+  ```{r}
+  #| eval: false
   log(x = 4,
   ```
 
@@ -318,7 +329,8 @@ seq(1, 10, by = 2)
   and datasets that are not available by default. Do this now with the 
   `{tidyverse}` and `{broom}` packages
   
-  ```{r, eval = FALSE}
+  ```{r}
+  #| eval: false
   install.packages("tidyverse")
   install.packages("broom")
   ```
@@ -360,7 +372,8 @@ seq(1, 10, by = 2)
 
 - You can explore these in a spreadsheet format using `View()` (note the capital "V"). Don't ever have this in a file though, directly write it in the console.
 
-  ```{r, eval = FALSE}
+  ```{r}
+  #| eval: false
   view(airquality)
   ```
 
@@ -419,7 +432,8 @@ head(highway)
 
 -   Use `view()` to see a spreadsheet of the data frame (**never** put this in a Quarto file).
   
-    ```{r, eval=FALSE}
+    ```{r}
+  #| eval: false
     view(birds)
     ```
 

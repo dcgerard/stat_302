@@ -1,0 +1,62 @@
+---
+title: "Confidence Interval Interpretation"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "metropolis"
+    slide_level: 2
+urlcolor: "blue"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.height = 2.7, 
+                      fig.width = 4, 
+                      fig.align = "center")
+```
+
+## Covering True Mean {.allowframebreaks}
+
+```{r, echo = FALSE}
+set.seed(2)
+par(mar = c(2.2, 2.2, 1, 0),
+    mgp = c(1.2, 0.5, 0))
+mu        <- 10
+sigma     <- 1
+n         <- 100
+simout    <- replicate(20, rnorm(n = n, mean = mu,
+                                 sd = sigma))
+xbar_vec  <- colMeans(simout)
+s_vec     <- apply(simout, 2, sd)
+lower_vec <- xbar_vec - 1.96 * s_vec / sqrt(n)
+upper_vec <- xbar_vec + 1.96 * s_vec / sqrt(n)
+
+for (plot_index in 1:length(xbar_vec)) {
+  which_miss <- upper_vec < mu | lower_vec > mu
+  plot(c(0), xlim = c(1, length(xbar_vec)),
+       ylim = c(min(lower_vec), max(upper_vec)),
+       type = "n", xlab = "sample", ylab = "value",
+       main = "95% Confidence Intervals")
+  arrows(x0 = 1:plot_index, y0 = lower_vec[1:plot_index],
+         x1 = 1:plot_index, y1 = upper_vec[1:plot_index],
+         length = 0, col = which_miss + 1, lwd = 4)
+  abline(h = mu, lty = 2, col = 4)
+}
+```
+
+## Correct/Incorrect Descriptions of CI
+
+Let $l$ and $u$ be the lower and upper bounds, respectively, of a 95\% confidence interval.
+
+What does ``With 95\% Confidence, $\mu$ is between $(l, u)$'' mean? Which interpretations are correct/incorrect?
+
+
+1. The probability of $\mu$ being between $l$ and $u$ is 95\%.
+2. Prior to sampling, the probability of $\mu$ being captured by our confidence interval is 95\%.
+3. 95\% of the population's distribution is between $l$ and $u$.
+4. If we were to draw another sample, the new $\bar{X}$ would be between $l$ and $u$ with 95\% probability.
+5. 95\% of new $\bar{X}$'s would lie between $l$ and $u$.
+6. We used a procedure that captures the true $\mu$ 95\% of the time in repeated samples.
+
+

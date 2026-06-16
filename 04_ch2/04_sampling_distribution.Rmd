@@ -1,0 +1,653 @@
+---
+title: "04 Sampling Distribution"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "metropolis"
+    slide_level: 2
+urlcolor: "blue"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.height = 2.3, fig.width = 3, fig.align = "center", cols.print = 4)
+```
+
+## Learning Objectives
+
+We will demonstrate the concept of a sampling distribution.
+
+## Population
+
+Suppose the population consists of 100 twins with the following histogram of differences
+
+```{r, echo = FALSE}
+set.seed(1)
+library(ggplot2)
+x <- rt(100, df = 10) + 1
+qplot(x, bins = 20) + theme_bw()
+```
+
+## Sample
+But we only observe one sample of 15 and calculated it's mean
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- mean(samp)
+```
+
+avearge = `r mean(samp)`.
+
+## Another Sample
+
+But we could have collected another sample
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+## Sampling Distribution
+
+What if collect many samples and collect the corresponding sample averages in a histogram? This would be the sampling distribution of the sample average.
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+
+## Keep collecting samples
+```{r, echo = FALSE}
+samp <- sample(x, size = 15)
+pander::pander(samp)
+mean_vec <- c(mean_vec, mean(samp))
+```
+
+average = `r mean(samp)`.
+
+```{r, echo=FALSE, warning=FALSE}
+qplot(mean_vec, xlim = c(-1, 3), ylim = c(0, 15), bins = 30, xlab = "Sample Averages") + theme_bw()
+```
+

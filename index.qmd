@@ -9,12 +9,12 @@ author: David Gerard
   - [R and Data Frames](./01_r/01_r_intro.qmd)
   - [R Graphics](./01_r/01_ggplot.qmd)
   - [R Cheat Sheet](./01_r/01_r_cheatsheet.qmd)
-- Chapter 1: 
-  - [202 Review](./02_review/02_stat_202_review.qmd)
+- Chapter 1:
+  - [Causality and Generalizability](./03_ch1/03_ch1.qmd)
 - Chapter 2:
-  - One- and Two-sample t-tests
-- Chapter 3: 
-  - t-assumptions
+  - [Paired and Two-Sample t-Tests](./04_ch2/04_ch2.qmd)
+- Chapter 3:
+  - [Assumptions of t-Tools](./05_ch3/05_ch3.qmd)
 - Chapter 4: 
   - Nonparameterics
 - Chapter 5:

@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 630 260"
+   width="630"
+   height="260"
+   version="1.1"
+   id="svg16"
+   sodipodi:docname="fig_confounder_icecream.svg"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview16"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.98052139"
+     inkscape:cx="464.03883"
+     inkscape:cy="104.02629"
+     inkscape:window-width="1512"
+     inkscape:window-height="921"
+     inkscape:window-x="0"
+     inkscape:window-y="33"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g16" />
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible"
+       id="Triangle"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135" />
+    </marker>
+    <marker
+       id="arrow"
+       markerWidth="10"
+       markerHeight="7"
+       refX="9"
+       refY="3.5"
+       orient="auto">
+      <polygon
+         points="10,3.5 0,7 0,0 "
+         fill="#333333"
+         id="polygon1" />
+    </marker>
+    <marker
+       id="arrow-red"
+       markerWidth="10"
+       markerHeight="7"
+       refX="9"
+       refY="3.5"
+       orient="auto">
+      <polygon
+         points="10,3.5 0,7 0,0 "
+         fill="#c0392b"
+         id="polygon2" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Triangle-3"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-9" />
+    </marker>
+  </defs>
+  <!-- ── Row 1: Observed ── -->
+  <!-- Divider -->
+  <!-- ── Row 2: Hypothesized ── -->
+  <!-- Ice cream -> Murder -->
+  <!-- Murder -> Ice cream -->
+  <!-- Divider -->
+  <!-- ── Row 3: Possible (confounder) ── -->
+  <!-- Weather oval at top-center -->
+  <!-- Arrow Weather -> Ice cream -->
+  <!-- Arrow Weather -> Murder -->
+  <g
+     id="g16"
+     transform="translate(-14.375,-12.162109)">
+    <text
+       x="16"
+       y="22"
+       font-family="'Ubuntu Mono', monospace"
+       font-size="12px"
+       fill="#555555"
+       font-style="italic"
+       id="text2">Observed:</text>
+    <ellipse
+       cx="130"
+       cy="50"
+       rx="68"
+       ry="24"
+       fill="#e8f4f8"
+       stroke="#333333"
+       stroke-width="1.5"
+       id="ellipse2" />
+    <text
+       x="130"
+       y="55"
+       text-anchor="middle"
+       font-family="'Ubuntu Mono', monospace"
+       font-size="13px"
+       fill="#333333"
+       id="text3">Ice cream</text>
+    <text
+       x="260"
+       y="55"
+       text-anchor="middle"
+       font-family="'Ubuntu Mono', monospace"
+       font-size="16px"
+       fill="#aaaaaa"
+       id="text4">and</text>
+    <ellipse
+       cx="390"
+       cy="50"
+       rx="76"
+       ry="24"
+       fill="#e8f4f8"
+       stroke="#333333"
+       stroke-width="1.5"
+       id="ellipse4" />
+    <text
+       x="390"
+       y="55"
+       text-anchor="middle"
+       font-family="'Ubuntu Mono', monospace"
+       font-size="13px"
+       fill="#333333"
+       id="text5">Murder rate</text>
+    <line
+       x1="16"
+       y1="92"
+       x2="640.41827"
+       y2="92"
+       stroke="#cccccc"
+       stroke-width="1.0305"
+       stroke-dasharray="4, 4"
+       id="line5" />
+    <text
+       x="16"
+       y="114"
+       font-family="'Ubuntu Mono', monospace"
+       font-size="12px"
+       fill="#555555"
+       font-style="italic"
+       id="text6">Hypothesized (two alternatives):</text>
+    <ellipse
+       cx="100"
+       cy="150"
+       rx="60"
+       ry="22"
+       fill="#fde8d0"
+       stroke="#333333"
+       stroke-width="1.5"
+       id="ellipse6" />
+    <text
+       x="100"
+       y="155"
+       text-anchor="middle"
+       font-family="'Ubuntu Mono', monospace"
+       font-size="12px"
+       fill="#333333"
+       id="text7">Ice cream</text>
+    <line
+       x1="161"
+       y1="150"
+       x2="213"
+       y2="150"
+       stroke="#c0392b"
+       stroke-width="1.5"
+       marker-end="url(#arrow-red)"
+       id="line7" />
+    <ellipse
+       cx="268"
+       cy="150"
+       rx="52"
+       ry="22"
+       fill="#fde8d0"
+       stroke="#333333"
+       stroke-width="1.5"
+       id="ellipse7" />
+    <text
+       x="268"
+       y="155"
+       text-anchor="middle"
+       font-family="'Ubuntu Mono', monospace"
+       font-size="12px"
+       fill="#333333"
+       id="text8">Murder</text>
+    <text
+       x="350"
+       y="155"
+       text-anchor="middle"
+       font-family="'Ubuntu Mono', monospace"
+       font-size="14px"
+       fill="#aaaaaa"
+       id="text9">or</text>
+    <ellipse
+       cx="430"
+       cy="150"
+       rx="52"
+       ry="22"
+       fill="#fde8d0"
+       stroke="#333333"
+       stroke-width="1.5"
+       id="ellipse9" />
+    <text
+       x="430"
+       y="155"
+       text-anchor="middle"
+       font-family="'Ubuntu Mono', monospace"
+       font-size="12px"
+       fill="#333333"
+       id="text10">Murder</text>
+    <line
+       x1="482"
+       y1="150"
+       x2="520.20978"
+       y2="150"
+       stroke="#c0392b"
+       stroke-width="1.33831"
+       marker-end="url(#arrow-red)"
+       id="line10" />
+    <ellipse
+       cx="582"
+       cy="150"
+       rx="60"
+       ry="22"
+       fill="#fde8d0"
+       stroke="#333333"
+       stroke-width="1.5"
+       id="ellipse10" />
+    <text
+       x="582"
+       y="155"
+       text-anchor="middle"
+       font-family="'Ubuntu Mono', monospace"
+       font-size="12px"
+       fill="#333333"
+       id="text11">Ice cream</text>
+    <line
+       x1="16"
+       y1="192"
+       x2="641.1394"
+       y2="192"
+       stroke="#cccccc"
+       stroke-width="1.03109"
+       stroke-dasharray="4, 4"
+       id="line11" />
+    <text
+       x="16"
+       y="214"
+       font-family="'Ubuntu Mono', monospace"
+       font-size="12px"
+       fill="#555555"
+       font-style="italic"
+       id="text12">Possible (confounder):</text>
+    <ellipse
+       cx="310"
+       cy="248"
+       rx="56"
+       ry="22"
+       fill="#fff9e6"
+       stroke="#333333"
+       stroke-width="1.5"
+       id="ellipse12" />
+    <text
+       x="310"
+       y="245"
+       text-anchor="middle"
+       font-family="'Ubuntu Mono', monospace"
+       font-size="12px"
+       fill="#333333"
+       id="text13">Weather</text>
+    <text
+       x="310"
+       y="259"
+       text-anchor="middle"
+       font-family="'Ubuntu Mono', monospace"
+       font-size="10px"
+       fill="#777777"
+       id="text14">(confounder)</text>
+    <line
+       x1="254"
+       y1="248"
+       x2="172"
+       y2="248"
+       stroke="#333333"
+       stroke-width="1.5"
+       marker-end="url(#arrow)"
+       id="line14" />
+    <ellipse
+       cx="110"
+       cy="248"
+       rx="60"
+       ry="22"
+       fill="#e8f4f8"
+       stroke="#333333"
+       stroke-width="1.5"
+       id="ellipse14" />
+    <text
+       x="110"
+       y="253"
+       text-anchor="middle"
+       font-family="'Ubuntu Mono', monospace"
+       font-size="12px"
+       fill="#333333"
+       id="text15">Ice cream</text>
+    <line
+       x1="366"
+       y1="248"
+       x2="448"
+       y2="248"
+       stroke="#333333"
+       stroke-width="1.5"
+       marker-end="url(#arrow)"
+       id="line15" />
+    <ellipse
+       cx="510"
+       cy="248"
+       rx="52"
+       ry="22"
+       fill="#e8f4f8"
+       stroke="#333333"
+       stroke-width="1.5"
+       id="ellipse15" />
+    <text
+       x="510"
+       y="253"
+       text-anchor="middle"
+       font-family="'Ubuntu Mono', monospace"
+       font-size="12px"
+       fill="#333333"
+       id="text16">Murder</text>
+    <path
+       style="fill:#000000;stroke-width:3.77953"
+       id="path1"
+       d="m 218.46321,73.24538 c 0.008,-2.206146 0.53732,-4.36911 1.0359,-6.504299 1.05046,-4.311627 2.24444,-8.587306 3.23221,-12.913959 0.65818,-3.098809 1.13158,-6.228566 1.37754,-9.386107 0.15571,-1.644969 0.33196,-3.288058 0.43442,-4.937459 0.0377,-0.652847 0.0521,-1.306616 0.0541,-1.96044 -0.002,-0.700757 -0.003,-1.401514 -0.003,-2.102273 -0.0237,-1.428666 -0.003,-2.851979 0.10158,-4.276863 0.10605,-2.048578 0.31749,-4.088881 0.45174,-6.135586 0.096,-2.036844 0.30413,-4.065786 0.42581,-6.101244 0.0117,-0.83587 0.13101,-1.663933 0.25658,-2.488584 0,0 -0.003,-0.0017 -0.003,-0.0017 v 0 c -0.12554,0.824674 -0.24483,1.652756 -0.25652,2.488646 -0.12166,2.035465 -0.32971,4.064414 -0.42578,6.101261 -0.13425,2.046698 -0.34569,4.086993 -0.45179,6.135561 -0.10428,1.424884 -0.12535,2.848196 -0.10164,4.276864 6.4e-4,0.700749 0.002,1.401497 0.003,2.102245 -0.002,0.653826 -0.0164,1.307598 -0.0541,1.960448 -0.10241,1.649419 -0.2786,3.292528 -0.43431,4.937513 -0.24589,3.157547 -0.71923,6.287314 -1.37738,9.386133 -0.98771,4.326661 -2.18166,8.602344 -3.23224,12.913938 -0.49864,2.135171 -1.02785,4.298096 -1.03621,6.504233 z" />
+    <path
+       style="fill:#000000;stroke:#000000;stroke-width:1.98;stroke-miterlimit:3.3;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle)"
+       d="M 170.86539,64.085187 V 41.729417"
+       id="path2"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:#000000;stroke:#000000;stroke-width:1.98;stroke-miterlimit:3.3;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Triangle-3)"
+       d="M 441.18998,64.385545 V 42.029775"
+       id="path2-7"
+       sodipodi:nodetypes="cc" />
+  </g>
+</svg>

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 180" width="460" height="180">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#c0392b"/>
+    </marker>
+  </defs>
+
+  <!-- ── Top row: Hypothesized ── -->
+  <text x="16" y="22" font-family="Ubuntu Mono, monospace" font-size="12" fill="#555" font-style="italic">Hypothesized:</text>
+
+  <ellipse cx="118" cy="58" rx="70" ry="24" fill="#fde8d0" stroke="#333" stroke-width="1.5"/>
+  <text x="118" y="63" text-anchor="middle" font-family="Ubuntu Mono, monospace" font-size="13" fill="#333">Self-esteem</text>
+
+  <line x1="189" y1="58" x2="255" y2="58" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+
+  <ellipse cx="318" cy="58" rx="54" ry="24" fill="#fde8d0" stroke="#333" stroke-width="1.5"/>
+  <text x="318" y="63" text-anchor="middle" font-family="Ubuntu Mono, monospace" font-size="13" fill="#333">Grades</text>
+
+  <!-- Divider -->
+  <line x1="16" y1="100" x2="444" y2="100" stroke="#ccc" stroke-width="1" stroke-dasharray="4 4"/>
+
+  <!-- ── Bottom row: Possible ── -->
+  <text x="16" y="122" font-family="Ubuntu Mono, monospace" font-size="12" fill="#555" font-style="italic">Possible:</text>
+
+  <ellipse cx="118" cy="155" rx="54" ry="24" fill="#e8f4f8" stroke="#333" stroke-width="1.5"/>
+  <text x="118" y="160" text-anchor="middle" font-family="Ubuntu Mono, monospace" font-size="13" fill="#333">Grades</text>
+
+  <line x1="173" y1="155" x2="237" y2="155" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <ellipse cx="318" cy="155" rx="70" ry="24" fill="#e8f4f8" stroke="#333" stroke-width="1.5"/>
+  <text x="318" y="160" text-anchor="middle" font-family="Ubuntu Mono, monospace" font-size="13" fill="#333">Self-esteem</text>
+</svg>

@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="David Gerard">
+<meta name="dcterms.date" content="2026-06-16">
+
+<title>Causality and Generalizability – Stat 302: Intermediate Statistics</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-33269adcf1721b81efc5ea7fcfe7f0ee.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">dHJ1ZQ==</script>
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-0e01d36e12aedd38e6bb7bd9a7358603.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Stat 302: Intermediate Statistics</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../data.html"> 
+<span class="menu-text">Data</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#case-study-1.1.1-creativity-and-motivation" id="toc-case-study-1.1.1-creativity-and-motivation" class="nav-link" data-scroll-target="#case-study-1.1.1-creativity-and-motivation">Case Study 1.1.1: Creativity and Motivation</a></li>
+  <li><a href="#case-study-1.1.2-sex-discrimination-at-a-bank" id="toc-case-study-1.1.2-sex-discrimination-at-a-bank" class="nav-link" data-scroll-target="#case-study-1.1.2-sex-discrimination-at-a-bank">Case Study 1.1.2: Sex Discrimination at a Bank</a></li>
+  <li><a href="#two-types-of-study-design" id="toc-two-types-of-study-design" class="nav-link" data-scroll-target="#two-types-of-study-design">Two Types of Study Design</a></li>
+  <li><a href="#generalizability" id="toc-generalizability" class="nav-link" data-scroll-target="#generalizability">Generalizability</a></li>
+  <li><a href="#summary-table" id="toc-summary-table" class="nav-link" data-scroll-target="#summary-table">Summary Table</a></li>
+  <li><a href="#general-setup-of-statistical-inference" id="toc-general-setup-of-statistical-inference" class="nav-link" data-scroll-target="#general-setup-of-statistical-inference">General Setup of Statistical Inference</a></li>
+  <li><a href="#randomization-distribution" id="toc-randomization-distribution" class="nav-link" data-scroll-target="#randomization-distribution">Randomization Distribution</a>
+  <ul class="collapse">
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">Exploratory Data Analysis</a></li>
+  <li><a href="#observed-difference" id="toc-observed-difference" class="nav-link" data-scroll-target="#observed-difference">Observed Difference</a></li>
+  <li><a href="#logic-of-the-randomization-test" id="toc-logic-of-the-randomization-test" class="nav-link" data-scroll-target="#logic-of-the-randomization-test">Logic of the Randomization Test</a></li>
+  <li><a href="#one-permutation" id="toc-one-permutation" class="nav-link" data-scroll-target="#one-permutation">One Permutation</a></li>
+  <li><a href="#building-the-randomization-distribution" id="toc-building-the-randomization-distribution" class="nav-link" data-scroll-target="#building-the-randomization-distribution">Building the Randomization Distribution</a></li>
+  <li><a href="#computing-the-p-value" id="toc-computing-the-p-value" class="nav-link" data-scroll-target="#computing-the-p-value">Computing the P-value</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Causality and Generalizability</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>David Gerard </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 16, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="learning-objectives" class="level1">
+<h1>Learning Objectives</h1>
+<ul>
+<li>Distinguish randomized experiments from observational studies.</li>
+<li>Understand when causation can and cannot be claimed.</li>
+<li>Understand when results generalize to a broader population.</li>
+<li>Describe the four-step general setup of statistical inference.</li>
+</ul>
+</section>
+<section id="case-study-1.1.1-creativity-and-motivation" class="level1">
+<h1>Case Study 1.1.1: Creativity and Motivation</h1>
+<ul>
+<li><strong>Design</strong>:
+<ul>
+<li>Conscript 47 undergraduates to participate.</li>
+<li>Randomly assign 24 to one group (Extrinsic motivation) and 23 to another (Intrinsic motivation).</li>
+<li>Apply treatments to each group.</li>
+<li>Measure creativity score within each group.</li>
+<li>Compare creativity scores between groups.</li>
+</ul></li>
+<li>The key question: Can differences in average creativity be attributed to the random assignment?</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01_fig/fig_study_design.svg" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption>Randomized experiment design for Case Study 1.1.1. Undergraduates are randomly assigned to the Extrinsic (A) or Intrinsic (B) group, and creativity is measured in each.</figcaption>
+</figure>
+</div>
+</section>
+<section id="case-study-1.1.2-sex-discrimination-at-a-bank" class="level1">
+<h1>Case Study 1.1.2: Sex Discrimination at a Bank</h1>
+<ul>
+<li><strong>Design</strong>:
+<ul>
+<li>Obtain all clerical employees at a bank and record their sex and income.</li>
+<li>Compare mean income between the sexes.</li>
+<li>Can differences be attributed to random assignment? <strong>No</strong> — sex is not determined by the investigators.</li>
+</ul></li>
+</ul>
+</section>
+<section id="two-types-of-study-design" class="level1">
+<h1>Two Types of Study Design</h1>
+<ul>
+<li><strong>Observational Study</strong>:
+<ul>
+<li>No treatment is imposed on the observational units.</li>
+<li>Goal: describe (or infer) properties of a population.</li>
+<li>Case 1.1.2 is an example.</li>
+<li><strong>Cannot claim causation.</strong>
+<ul>
+<li>A third variable (a <strong>confounder</strong>) might cause the observed association between the two variables of interest.</li>
+<li>Example: Sex and income have an observed association, but experience might cause both higher income and be associated with sex.</li>
+</ul></li>
+</ul></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01_fig/fig_confounder_sex.svg" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption>Observed association between sex and income (top) versus the possible confounding role of experience (bottom).</figcaption>
+</figure>
+</div>
+<ul>
+<li><strong>Side note</strong> — other ways causation can be mis-attributed:
+<ul>
+<li>Hypothesized: self-esteem <span class="math inline">\(\to\)</span> grades; possible: grades <span class="math inline">\(\to\)</span> self-esteem.</li>
+</ul></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01_fig/fig_reverse_causation.svg" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption>Hypothesized versus possible direction of causation between self-esteem and grades.</figcaption>
+</figure>
+</div>
+<ul>
+<li>Observed: ice cream sales and murder rates both rise together; possible explanation: weather <span class="math inline">\(\to\)</span> ice cream sales <em>and</em> weather <span class="math inline">\(\to\)</span> murder rate.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01_fig/fig_confounder_icecream.svg" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption>Observed co-occurrence of ice cream sales and murder rate, with hypothesized causal directions and the possible confounding role of weather.</figcaption>
+</figure>
+</div>
+<ul>
+<li><p>Causation <strong>can never be fully proven</strong> by an observational study.</p></li>
+<li><p><strong>Randomized Experiment</strong>:</p>
+<ul>
+<li>Treatment is randomly assigned to observational units.</li>
+<li>Case 1.1.1 is an example.</li>
+<li><strong>Can infer causation.</strong></li>
+<li>Why? All other variables (confounders) are balanced <em>on average</em> across groups because of random assignment.
+<ul>
+<li>E.g., it is possible by chance to place all good writers in the Intrinsic group, but it is unlikely because we assigned randomly.</li>
+</ul></li>
+</ul></li>
+<li><p><strong>Why do observational studies anyway?</strong></p>
+<ol type="1">
+<li>Goal is prediction, not causation. Confounding variables can still be conditioned on.</li>
+<li>Combined with scientific reasoning they can establish causation (e.g., smoking and cancer, animal trials).</li>
+</ol></li>
+</ul>
+</section>
+<section id="generalizability" class="level1">
+<h1>Generalizability</h1>
+<ul>
+<li><p><strong>How are observational units selected?</strong></p>
+<ul>
+<li><strong>Random sampling</strong>: results are generalizable to the population.</li>
+<li><strong>Non-random sampling</strong>: scope of inference is limited.</li>
+</ul></li>
+<li><p>Random sampling makes the sample look like the population — same percent women, race, experience level, etc.</p></li>
+<li><p>Example — Case 1.1.1: only good writers were recruited, so results may only hold for good writers.</p></li>
+</ul>
+</section>
+<section id="summary-table" class="level1">
+<h1>Summary Table</h1>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Randomized Experiment</strong></th>
+<th><strong>Observational Study</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Random selection</strong></td>
+<td>Causation; generalizable</td>
+<td>Association; possibly not generalizable</td>
+</tr>
+<tr class="even">
+<td><strong>Non-random selection</strong></td>
+<td>Causation; not generalizable</td>
+<td>Association; not generalizable</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="general-setup-of-statistical-inference" class="level1">
+<h1>General Setup of Statistical Inference</h1>
+<ul>
+<li><strong>Step 1: Posit a model with population parameters.</strong>
+<ul>
+<li>Parameters describe aspects of the population we are interested in.</li>
+<li>Let <span class="math inline">\(Y_i\)</span> = creativity score of subject <span class="math inline">\(i\)</span> in the Extrinsic group.</li>
+<li>Let <span class="math inline">\(Y_i^*\)</span> = creativity score of subject <span class="math inline">\(i\)</span> in the Intrinsic group.</li>
+<li><strong>Additive treatment effect model</strong>: <span class="math display">\[Y_i^* = Y_i + \delta\]</span></li>
+<li><span class="math inline">\(\delta\)</span> is a parameter, the same for all individuals.</li>
+<li><span class="math inline">\(\delta &gt; 0 \Rightarrow\)</span> Intrinsic improves creativity.</li>
+<li><span class="math inline">\(\delta &lt; 0 \Rightarrow\)</span> Extrinsic improves creativity.</li>
+<li><span class="math inline">\(\delta = 0 \Rightarrow\)</span> No effect.</li>
+</ul></li>
+<li><strong>Step 2: Set interpretable hypotheses in terms of parameters.</strong> <span class="math display">\[H_0: \delta = 0 \qquad H_A: \delta \neq 0\]</span>
+<ul>
+<li>The null hypothesis represents the “simpler state of affairs.”</li>
+</ul></li>
+<li><strong>Step 3: Choose a test statistic.</strong>
+<ul>
+<li>A <strong>test statistic</strong> is a function of the sample used to measure the plausibility of a hypothesis.</li>
+<li>Under <span class="math inline">\(H_0\)</span>, we expect <span class="math inline">\(\bar{Y}_1 \approx \bar{Y}_2\)</span>, so a natural test statistic is: <span class="math display">\[\text{test statistic} = \bar{Y}_2 - \bar{Y}_1\]</span></li>
+</ul></li>
+<li><strong>Step 4: Evaluate how rare our test statistic is under <span class="math inline">\(H_0\)</span>.</strong>
+<ul>
+<li>Look at <strong>null distribution</strong> of test statistic: Distribution of test statistic if <span class="math inline">\(H_0\)</span> were true.
+<ul>
+<li>In the case of a randomized experiment, this is the <strong>randomization distribution</strong>: re-assign treatment labels at random many times and compute the test statistic each time.</li>
+</ul></li>
+<li><strong>p-value</strong>: the probability of observing a test statistic as extreme or more extreme than what we observed, <em>assuming <span class="math inline">\(H_0\)</span> is true</em>.</li>
+<li>Small p-values provide evidence against <span class="math inline">\(H_0\)</span>.</li>
+</ul></li>
+</ul>
+</section>
+<section id="randomization-distribution" class="level1">
+<h1>Randomization Distribution</h1>
+<section id="exploratory-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Sleuth3)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"case0101"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0101, <span class="fu">aes</span>(<span class="at">x =</span> Treatment, <span class="at">y =</span> Score)) <span class="sc">+</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">coef =</span> <span class="cn">Inf</span>) <span class="sc">+</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Treatment"</span>) <span class="sc">+</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Creativity Score"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="03_ch1_files/figure-html/case0101-eda-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="observed-difference" class="level2">
+<h2 class="anchored" data-anchor-id="observed-difference">Observed Difference</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ext_scores <span class="ot">&lt;-</span> case0101<span class="sc">$</span>Score[case0101<span class="sc">$</span>Treatment <span class="sc">==</span> <span class="st">"Extrinsic"</span>]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>int_scores <span class="ot">&lt;-</span> case0101<span class="sc">$</span>Score[case0101<span class="sc">$</span>Treatment <span class="sc">==</span> <span class="st">"Intrinsic"</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>obs_diff <span class="ot">&lt;-</span> <span class="fu">mean</span>(int_scores) <span class="sc">-</span> <span class="fu">mean</span>(ext_scores)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>obs_diff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4.144</code></pre>
+</div>
+</div>
+<p>The intrinsic group scored 4.144 points higher on average. Is this a big difference or a small one? Two possibilities:</p>
+<ol type="1">
+<li><span class="math inline">\(H_A\)</span>: There is a genuine effect of treatment on creativity.</li>
+<li><span class="math inline">\(H_0\)</span>: There is no effect. The observed difference happened purely because, by chance, the intrinsic group happened to contain more creative people after random assignment.</li>
+</ol>
+</section>
+<section id="logic-of-the-randomization-test" class="level2">
+<h2 class="anchored" data-anchor-id="logic-of-the-randomization-test">Logic of the Randomization Test</h2>
+<ul>
+<li>Under <span class="math inline">\(H_0\)</span>, each person’s creativity score is fixed — it would have been the same no matter which group they were assigned to.</li>
+<li>The only source of variability between group means is the random assignment itself.</li>
+<li>We can simulate this: take the observed scores, randomly shuffle the treatment labels, and recompute the difference in means. This is one <strong>permutation</strong> of the data.</li>
+<li>Repeating this many times gives the <strong>randomization distribution</strong>: the distribution of differences we would see by chance alone if <span class="math inline">\(H_0\)</span> were true.</li>
+</ul>
+</section>
+<section id="one-permutation" class="level2">
+<h2 class="anchored" data-anchor-id="one-permutation">One Permutation</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>new_assign <span class="ot">&lt;-</span> <span class="fu">sample</span>(case0101<span class="sc">$</span>Treatment)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(case0101<span class="sc">$</span>Score[new_assign <span class="sc">==</span> <span class="st">"Intrinsic"</span>]) <span class="sc">-</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(case0101<span class="sc">$</span>Score[new_assign <span class="sc">==</span> <span class="st">"Extrinsic"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.309</code></pre>
+</div>
+</div>
+<p>Each permutation gives a different simulated difference. Most are near zero — the null hypothesis says there is no real effect.</p>
+</section>
+<section id="building-the-randomization-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="building-the-randomization-distribution">Building the Randomization Distribution</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>itermax <span class="ot">&lt;-</span> <span class="dv">5000</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>diffvec <span class="ot">&lt;-</span> <span class="fu">numeric</span>(itermax)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(itermax)) {</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  new_assign  <span class="ot">&lt;-</span> <span class="fu">sample</span>(case0101<span class="sc">$</span>Treatment)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  diffvec[i]  <span class="ot">&lt;-</span> <span class="fu">mean</span>(case0101<span class="sc">$</span>Score[new_assign <span class="sc">==</span> <span class="st">"Intrinsic"</span>]) <span class="sc">-</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">mean</span>(case0101<span class="sc">$</span>Score[new_assign <span class="sc">==</span> <span class="st">"Extrinsic"</span>])</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The animation below shows the distribution being built up one permutation at a time. The <strong>red dashed lines</strong> mark <span class="math inline">\(\pm\)</span> 4.14, the observed difference. The <strong>shaded tails</strong> are the region as extreme or more extreme than what we observed — each permutation landing there counts toward the p-value.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "/Users/dgerard/Documents/teaching/stat_302/03_ch1/01_fig/fig_rand_dist.gif"</code></pre>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01_fig/fig_rand_dist.gif" class="img-fluid figure-img" style="width:95.0%"></p>
+<figcaption>Randomization distribution for Case Study 1.1.1. Each frame adds more permutations of the treatment labels; the orange-shaded tails show values at least as extreme as the observed difference.</figcaption>
+</figure>
+</div>
+</section>
+<section id="computing-the-p-value" class="level2">
+<h2 class="anchored" data-anchor-id="computing-the-p-value">Computing the P-value</h2>
+<p>The p-value is the proportion of permutations that produced a difference as large in magnitude as what we observed.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## One-sided: what fraction were as large or larger?</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(diffvec <span class="sc">&gt;=</span> obs_diff)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0034</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Two-sided: what fraction were as or more extreme in either direction?</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">abs</span>(diffvec) <span class="sc">&gt;=</span> <span class="fu">abs</span>(obs_diff))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.007</code></pre>
+</div>
+</div>
+<p>The observed difference of 4.14 is very rarely produced by chance under <span class="math inline">\(H_0\)</span>. We have strong evidence to reject <span class="math inline">\(H_0\)</span> and conclude that intrinsic motivation improves creativity relative to extrinsic motivation.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="03_ch1_files/figure-html/rand-dist-final-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

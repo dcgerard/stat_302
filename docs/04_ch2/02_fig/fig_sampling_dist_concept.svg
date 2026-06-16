@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 230" width="600" height="230">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+  </defs>
+
+  <!-- ── Left column: three samples ── -->
+
+  <!-- Sample 1 -->
+  <text x="10" y="42" font-family="Ubuntu Mono, monospace" font-size="12" fill="#555">Sample 1 of 15 twins</text>
+  <circle cx="10"  cy="60" r="3" fill="#4a90d9"/>
+  <circle cx="22"  cy="58" r="3" fill="#4a90d9"/>
+  <circle cx="34"  cy="63" r="3" fill="#4a90d9"/>
+  <circle cx="46"  cy="57" r="3" fill="#4a90d9"/>
+  <circle cx="58"  cy="61" r="3" fill="#4a90d9"/>
+  <circle cx="70"  cy="59" r="3" fill="#4a90d9"/>
+  <text x="10" y="82" font-family="Ubuntu Mono, monospace" font-size="11" fill="#333">x̄₁ = avg difference</text>
+
+  <!-- Sample 2 -->
+  <text x="10" y="112" font-family="Ubuntu Mono, monospace" font-size="12" fill="#555">Sample 2 of 15 twins</text>
+  <circle cx="10"  cy="130" r="3" fill="#4a90d9"/>
+  <circle cx="22"  cy="127" r="3" fill="#4a90d9"/>
+  <circle cx="34"  cy="133" r="3" fill="#4a90d9"/>
+  <circle cx="46"  cy="128" r="3" fill="#4a90d9"/>
+  <circle cx="58"  cy="131" r="3" fill="#4a90d9"/>
+  <circle cx="70"  cy="129" r="3" fill="#4a90d9"/>
+  <text x="10" y="150" font-family="Ubuntu Mono, monospace" font-size="11" fill="#333">x̄₂ = avg difference</text>
+
+  <!-- Sample 3 -->
+  <text x="10" y="180" font-family="Ubuntu Mono, monospace" font-size="12" fill="#555">Sample 3 of 15 twins</text>
+  <circle cx="10"  cy="198" r="3" fill="#4a90d9"/>
+  <circle cx="22"  cy="201" r="3" fill="#4a90d9"/>
+  <circle cx="34"  cy="196" r="3" fill="#4a90d9"/>
+  <circle cx="46"  cy="200" r="3" fill="#4a90d9"/>
+  <circle cx="58"  cy="197" r="3" fill="#4a90d9"/>
+  <circle cx="70"  cy="199" r="3" fill="#4a90d9"/>
+  <text x="10" y="218" font-family="Ubuntu Mono, monospace" font-size="11" fill="#333">x̄₃ = avg difference</text>
+
+  <!-- ── Converging arrows ── -->
+  <!-- From sample 1 → histogram top -->
+  <line x1="192" y1="75"  x2="326" y2="108" stroke="#333" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <!-- From sample 2 → histogram middle -->
+  <line x1="192" y1="143" x2="328" y2="143" stroke="#333" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <!-- From sample 3 → histogram bottom -->
+  <line x1="192" y1="210" x2="326" y2="178" stroke="#333" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+  <!-- "..." dots to suggest many more samples -->
+  <text x="88" y="163" font-family="Ubuntu Mono, monospace" font-size="18" fill="#aaa">⋮</text>
+
+  <!-- ── Right: histogram (sampling distribution) ── -->
+  <text x="340" y="22" font-family="Ubuntu Mono, monospace" font-size="13" fill="#333" font-weight="bold">Sampling distribution of x̄</text>
+
+  <!-- Histogram bars (bottom baseline y=210) -->
+  <!-- bar heights (from left): 28, 52, 78, 90, 72, 44, 22 -->
+  <rect x="335" y="182" width="26" height="28"  fill="#b3d4e8" stroke="#333" stroke-width="1"/>
+  <rect x="363" y="158" width="26" height="52"  fill="#b3d4e8" stroke="#333" stroke-width="1"/>
+  <rect x="391" y="132" width="26" height="78"  fill="#b3d4e8" stroke="#333" stroke-width="1"/>
+  <rect x="419" y="120" width="26" height="90"  fill="#b3d4e8" stroke="#333" stroke-width="1"/>
+  <rect x="447" y="138" width="26" height="72"  fill="#b3d4e8" stroke="#333" stroke-width="1"/>
+  <rect x="475" y="166" width="26" height="44"  fill="#b3d4e8" stroke="#333" stroke-width="1"/>
+  <rect x="503" y="188" width="26" height="22"  fill="#b3d4e8" stroke="#333" stroke-width="1"/>
+
+  <!-- x-axis baseline -->
+  <line x1="333" y1="210" x2="540" y2="210" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="380" y="224" font-family="Ubuntu Mono, monospace" font-size="11" fill="#555">mean difference (x̄)</text>
+</svg>

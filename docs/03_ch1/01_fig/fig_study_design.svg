@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 660 220"
+   width="660"
+   height="220"
+   version="1.1"
+   id="svg12"
+   sodipodi:docname="fig_study_design.svg"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview12"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.8909091"
+     inkscape:cx="140.9375"
+     inkscape:cy="42.307692"
+     inkscape:window-width="1512"
+     inkscape:window-height="921"
+     inkscape:window-x="0"
+     inkscape:window-y="33"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg12" />
+  <defs
+     id="defs1">
+    <marker
+       id="arrow"
+       markerWidth="10"
+       markerHeight="7"
+       refX="9"
+       refY="3.5"
+       orient="auto">
+      <polygon
+         points="0 0, 10 3.5, 0 7"
+         fill="#333"
+         id="polygon1" />
+    </marker>
+  </defs>
+  <!-- Undergrads oval -->
+  <ellipse
+     cx="90"
+     cy="110"
+     rx="72"
+     ry="42"
+     fill="#e8f4f8"
+     stroke="#333"
+     stroke-width="1.5"
+     id="ellipse1" />
+  <text
+     x="90"
+     y="113.17065"
+     text-anchor="middle"
+     font-family="'Ubuntu Mono', monospace"
+     font-size="13px"
+     fill="#333333"
+     id="text1">Undergrads</text>
+  <!-- Upper branch arrow: undergrads -> A -->
+  <line
+     x1="162"
+     y1="88"
+     x2="268"
+     y2="58"
+     stroke="#333"
+     stroke-width="1.5"
+     marker-end="url(#arrow)"
+     id="line2" />
+  <!-- Lower branch arrow: undergrads -> B -->
+  <line
+     x1="162"
+     y1="132"
+     x2="268"
+     y2="162"
+     stroke="#333"
+     stroke-width="1.5"
+     marker-end="url(#arrow)"
+     id="line3" />
+  <!-- "Random assignment" label on upper arrow -->
+  <text
+     x="206.63461"
+     y="105.36539"
+     text-anchor="middle"
+     font-family="'Ubuntu Mono', monospace"
+     font-size="11px"
+     fill="#555555"
+     id="text3">Random</text>
+  <text
+     x="206.63461"
+     y="118.36539"
+     text-anchor="middle"
+     font-family="'Ubuntu Mono', monospace"
+     font-size="11px"
+     fill="#555555"
+     id="text4">assignment</text>
+  <!-- Group A oval -->
+  <ellipse
+     cx="310"
+     cy="50"
+     rx="38"
+     ry="24"
+     fill="#d5ecd4"
+     stroke="#333"
+     stroke-width="1.5"
+     id="ellipse4" />
+  <text
+     x="310"
+     y="55"
+     text-anchor="middle"
+     font-family="Ubuntu Mono, monospace"
+     font-size="14"
+     fill="#333"
+     id="text5">A</text>
+  <!-- Group B oval -->
+  <ellipse
+     cx="310"
+     cy="170"
+     rx="38"
+     ry="24"
+     fill="#fde8d0"
+     stroke="#333"
+     stroke-width="1.5"
+     id="ellipse5" />
+  <text
+     x="310"
+     y="175"
+     text-anchor="middle"
+     font-family="Ubuntu Mono, monospace"
+     font-size="14"
+     fill="#333"
+     id="text6">B</text>
+  <!-- Arrow A -> measure, labeled "Ext" -->
+  <line
+     x1="348"
+     y1="50"
+     x2="430"
+     y2="50"
+     stroke="#333"
+     stroke-width="1.5"
+     marker-end="url(#arrow)"
+     id="line6" />
+  <text
+     x="389"
+     y="44"
+     text-anchor="middle"
+     font-family="Ubuntu Mono, monospace"
+     font-size="11"
+     fill="#555"
+     id="text7">Ext</text>
+  <!-- Arrow B -> measure, labeled "Int" -->
+  <line
+     x1="348"
+     y1="170"
+     x2="430"
+     y2="170"
+     stroke="#333"
+     stroke-width="1.5"
+     marker-end="url(#arrow)"
+     id="line7" />
+  <text
+     x="389"
+     y="164"
+     text-anchor="middle"
+     font-family="Ubuntu Mono, monospace"
+     font-size="11"
+     fill="#555"
+     id="text8">Int</text>
+  <!-- Measure box A -->
+  <rect
+     x="432"
+     y="28"
+     width="210"
+     height="44"
+     rx="6"
+     fill="#f5f5f5"
+     stroke="#333"
+     stroke-width="1.5"
+     id="rect8" />
+  <text
+     x="547.07031"
+     y="53"
+     text-anchor="middle"
+     font-family="'Ubuntu Mono', monospace"
+     font-size="12px"
+     fill="#333333"
+     id="text9">ȳ₁, s₁</text>
+  <text
+     x="472.06732"
+     y="46.537354"
+     text-anchor="middle"
+     font-family="'Ubuntu Mono', monospace"
+     font-size="11px"
+     fill="#555555"
+     id="text10"><tspan
+       sodipodi:role="line"
+       id="tspan12"
+       x="472.06732"
+       y="46.537354">Measure</tspan><tspan
+       sodipodi:role="line"
+       id="tspan13"
+       x="472.06732"
+       y="60.287354">Creativity</tspan></text>
+  <!-- Measure box B -->
+  <rect
+     x="432"
+     y="148"
+     width="210"
+     height="44"
+     rx="6"
+     fill="#f5f5f5"
+     stroke="#333"
+     stroke-width="1.5"
+     id="rect10" />
+  <text
+     x="547"
+     y="173"
+     text-anchor="middle"
+     font-family="'Ubuntu Mono', monospace"
+     font-size="12px"
+     fill="#333333"
+     id="text11">ȳ₂, s₂</text>
+  <text
+     x="472.06732"
+     y="166.53735"
+     text-anchor="middle"
+     font-family="'Ubuntu Mono', monospace"
+     font-size="11px"
+     fill="#555555"
+     id="text10-5"><tspan
+       sodipodi:role="line"
+       id="tspan12-4"
+       x="472.06732"
+       y="166.53735">Measure</tspan><tspan
+       sodipodi:role="line"
+       id="tspan13-1"
+       x="472.06732"
+       y="180.28735">Creativity</tspan></text>
+</svg>

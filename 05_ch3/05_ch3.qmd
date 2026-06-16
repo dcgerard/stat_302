@@ -1,0 +1,240 @@
+---
+title: "Assumptions of t-Tools"
+author: "David Gerard"
+date: today
+bibliography: "../bib.bib"
+---
+
+```{r setup}
+#| include: false
+set.seed(1)
+knitr::opts_chunk$set(echo       = TRUE,
+                      fig.height = 3,
+                      fig.width  = 6,
+                      fig.align  = "center")
+ggplot2::theme_set(ggplot2::theme_bw())
+```
+
+# Learning Objectives
+
+- List the assumptions of the two-sample $t$-test in order of importance.
+- Detect and address violations of independence.
+- Detect and address violations of the equal-variance assumption.
+- Detect and address non-normality (skew and outliers).
+- Apply log transformations and interpret results on the original scale.
+
+# Assumptions of 2-Sample $t$-Tools
+
+- Assumptions in decreasing order of importance:
+  1. Independence between observational units.
+  2. Equal variance (if assuming $\sigma_1^2 = \sigma_2^2$).
+  3. Normality (no severe skew or outliers).
+
+- Each assumption can be checked, and solutions exist for each violation.
+
+# 1. Independence
+
+- **Definition**: Knowing the value of one observation does not give you
+  any information about the value of another observation.
+
+- **Example of violation — cluster effects**:
+  - Measuring gene expression levels in two groups (disease vs. control).
+  - Samples collected by two different technicians.
+  - Technician 1 tended to produce samples with systematically higher
+    levels.
+  - Observations within a technician are correlated.
+
+- **Example of violation — serial effects**:
+  - Measuring expression levels on the *same* individuals over time.
+  - Observations on the same person are correlated across time.
+
+![Serial effects: measurements within each individual (dashed lines) are correlated across time, violating independence.](02_fig/fig_serial_effects.svg){fig-align="center" width="85%"}
+
+## To Detect
+
+1. Think carefully about how the data were collected.
+   - Were different responses measured on the same subject?
+   - Were data collected in groups?
+   - Were groups treated differently in ways unrelated to treatment?
+2. Residual plots (covered in Chapter 8).
+
+## Issues When Independence Is Violated
+
+- Recall $\bar{X} - \bar{Y} \sim N(\mu_1 - \mu_2,\; \sigma_1^2/n_1 + \sigma_2^2/n_2)$.
+- If samples are not independent, the variance formula above is *too small*.
+- You have less information than you think.
+- Consequently: p-values are too small and confidence intervals are too narrow.
+
+- **Extreme example**:
+  - You have 4 people. Measure each one 50 times.
+  - Group 1: Person 1 always scores 0; Person 2 always scores 1.
+  - Group 2: Person 3 always scores 2; Person 4 always scores 3.
+  - Nominal $n = 100$ per group, but effective sample size is 2 per group.
+  - Correct variance estimate: $\sigma^2 \approx 0.25 / 2 = 0.125$.
+  - Incorrectly assumed variance: $\sigma^2 \approx 0.25 / 100 = 0.0025$.
+
+## Solutions
+
+- ANOVA with blocking (Chapters 12–13) for cluster effects.
+- Longitudinal analysis (Chapter 18) for serial effects.
+
+# 2. Unequal Variances
+
+- Sometimes people assume $\sigma_1^2 = \sigma_2^2$ (the *pooled*
+  variance $t$-test), because it generalizes more easily to more complex
+  methods.
+
+- Under the equal-variance assumption:
+  $$\bar{X} - \bar{Y} \;\sim\; N\!\left(\mu_1 - \mu_2,\; \sigma^2\!\left(\frac{1}{n_1} + \frac{1}{n_2}\right)\right)$$
+  Estimate $\sigma^2$ with the pooled variance:
+  $$s_p^2 = \frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}$$
+
+## To Detect
+
+- Make side-by-side boxplots; only worry if the spread looks very different.
+
+```{r unequal-var-example}
+#| echo: false
+library(tidyverse)
+set.seed(42)
+tibble(
+  group = rep(c("Group 1", "Group 2"), each = 50),
+  y     = c(rnorm(50, mean = 5, sd = 1), rnorm(50, mean = 5, sd = 4))
+) |>
+  ggplot(aes(x = group, y = y)) +
+  geom_boxplot(coef = Inf) +
+  labs(x = NULL, y = "Response", title = "Unequal spread across groups")
+```
+
+## Issues
+
+- If $\sigma_1^2 \neq \sigma_2^2$ but we assume they are equal, the
+  variance estimate of $\bar{X} - \bar{Y}$ is wrong.
+- This is mainly a problem when $n_1$ is very different from $n_2$.
+
+## Solution
+
+- Assume unequal variances — this is the default in `t.test()` in R,
+  which uses the Satterthwaite approximation for degrees of freedom.
+- Alternatively, transform the data.
+
+# 3. Normality (Skew)
+
+- The $t$-test assumes that $X_1, \ldots, X_{n_1}$ and
+  $Y_1, \ldots, Y_{n_2}$ are approximately normal, or that the sample
+  size is "large enough" (Central Limit Theorem).
+- More skew $\Rightarrow$ larger sample size needed.
+
+## Issues
+
+- Confidence intervals do not achieve 95% coverage.
+- p-values do not have the correct null interpretation.
+
+## To Detect
+
+- Make quantile-quantile (QQ) plots.
+
+## Solutions
+
+- Apply a transformation (see Section 5 below).
+- Perform a permutation test.
+
+# 4. Normality (Outliers)
+
+## To Detect
+
+- Histograms, boxplots, QQ-plots.
+
+## Issues
+
+- Results are unstable — removing a single point can change conclusions.
+
+## Solution
+
+- Run the analysis with and without the outlier.
+- If answers are the same, do not remove it.
+- If answers differ, either:
+  1. Use a robust analysis (Chapter 4).
+  2. Report both analyses.
+
+# 5. Transformations
+
+- Many transformations are possible: $\sqrt{y}$, $\arcsin(\sqrt{y})$,
+  $\log(y)$.
+- **Log is usually the only one used in practice.**
+
+- **When to use log**:
+  1. Values are positive.
+  2. Larger mean $\Rightarrow$ larger variance.
+  3. Data are skewed.
+  - Log makes such data symmetric and stabilizes variance.
+
+```{r rainfall-plots}
+#| message: false
+library(Sleuth3)
+library(patchwork)
+
+data("case0301")
+p_raw <- ggplot(case0301, aes(x = Treatment, y = Rainfall)) +
+  geom_boxplot() +
+  labs(title = "Raw scale")
+
+p_log <- ggplot(case0301, aes(x = Treatment, y = Rainfall)) +
+  geom_boxplot() +
+  scale_y_log10() +
+  labs(title = "Log scale")
+
+p_raw + p_log
+```
+
+## Interpreting Log Transformations
+
+- Let $W_i = \log(Y_i)$ and $Z_j = \log(X_j)$ in the two-sample model:
+  $$W_i = \mu + \varepsilon_i \qquad Z_j = \mu + \delta + \xi_j$$
+
+- Then:
+  $$\delta = \text{Average}(Z) - \text{Average}(W)
+           = \text{Average}(\log X) - \text{Average}(\log Y)$$
+
+- We want to interpret $\delta$ on the original $X, Y$ scale.
+
+- **Important caveat**: $\log(\text{Average}(X)) \neq \text{Average}(\log X)$.
+  - Example: $X = 2, 4$.
+  - $\log_2 X = 1, 2 \Rightarrow \text{Average}(\log_2 X) = 1.5$.
+  - $\text{Average}(X) = 3 \Rightarrow \log_2(3) \approx 1.58$.
+  - So $E[X] \neq e^\delta \cdot E[Y]$ in general.
+
+- **What is true**: if $\log(X)$ and $\log(Y)$ are both symmetric,
+  $$e^\delta = \frac{\text{Median}(X)}{\text{Median}(Y)}$$
+  - $e^\delta$ is the **multiplicative difference in medians**.
+
+- **Procedure**:
+  1. Log-transform the data.
+  2. Run `t.test()` on the log-transformed values to get $\hat{\delta}$
+     and a CI $(\hat{\delta}_L, \hat{\delta}_U)$.
+  3. Exponentiate: $e^{\hat{\delta}}$ estimates the ratio of medians;
+     $(e^{\hat{\delta}_L}, e^{\hat{\delta}_U})$ is the CI for the ratio.
+
+```{r rainfall-log-ttest}
+#| message: false
+library(broom)
+
+case0301 |>
+  mutate(logRainfall = log(Rainfall)) |>
+  t.test(logRainfall ~ Treatment, data = _) |>
+  tidy() ->
+  tout
+
+tout |> select(estimate, p.value, conf.low, conf.high)
+
+## Estimated ratio of median rainfall (Seeded / Unseeded):
+exp(tout$estimate)
+
+## 95% CI for the ratio of medians:
+exp(c(lower = tout$conf.low, upper = tout$conf.high))
+```
+
+- Estimated median rainfall in the seeded group is about
+  `r round(exp(tout$estimate), 1)` times that of the unseeded group,
+  with a 95% confidence interval of
+  (`r round(exp(tout$conf.low), 1)`, `r round(exp(tout$conf.high), 1)`).

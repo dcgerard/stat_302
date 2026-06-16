@@ -2,13 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
+<meta name="dcterms.date" content="2026-06-16">
 
-<title>R Cheat Sheet – Stat 302: Intermediate Statistics</title>
+<title>Assumptions of t-Tools – Stat 302: Intermediate Statistics</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -75,7 +76,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-cad2a2f8a56dfe71ee895a68e79c9b9a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-33269adcf1721b81efc5ea7fcfe7f0ee.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
 <script id="quarto-axe-checker-options" type="text/plain">dHJ1ZQ==</script>
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
@@ -109,6 +110,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -154,11 +184,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#at-the-top-of-a-file" id="toc-at-the-top-of-a-file" class="nav-link active" data-scroll-target="#at-the-top-of-a-file">At the top of a File</a></li>
-  <li><a href="#read-in-data" id="toc-read-in-data" class="nav-link" data-scroll-target="#read-in-data">Read in Data</a></li>
-  <li><a href="#creating-new-variables" id="toc-creating-new-variables" class="nav-link" data-scroll-target="#creating-new-variables">Creating New Variables</a></li>
-  <li><a href="#filtering-observations" id="toc-filtering-observations" class="nav-link" data-scroll-target="#filtering-observations">Filtering Observations</a></li>
-  <li><a href="#plotting" id="toc-plotting" class="nav-link" data-scroll-target="#plotting">Plotting</a></li>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#assumptions-of-2-sample-t-tools" id="toc-assumptions-of-2-sample-t-tools" class="nav-link" data-scroll-target="#assumptions-of-2-sample-t-tools">Assumptions of 2-Sample <span class="math inline">\(t\)</span>-Tools</a></li>
+  <li><a href="#independence" id="toc-independence" class="nav-link" data-scroll-target="#independence">1. Independence</a>
+  <ul class="collapse">
+  <li><a href="#to-detect" id="toc-to-detect" class="nav-link" data-scroll-target="#to-detect">To Detect</a></li>
+  <li><a href="#issues-when-independence-is-violated" id="toc-issues-when-independence-is-violated" class="nav-link" data-scroll-target="#issues-when-independence-is-violated">Issues When Independence Is Violated</a></li>
+  <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
+  </ul></li>
+  <li><a href="#unequal-variances" id="toc-unequal-variances" class="nav-link" data-scroll-target="#unequal-variances">2. Unequal Variances</a>
+  <ul class="collapse">
+  <li><a href="#to-detect-1" id="toc-to-detect-1" class="nav-link" data-scroll-target="#to-detect-1">To Detect</a></li>
+  <li><a href="#issues" id="toc-issues" class="nav-link" data-scroll-target="#issues">Issues</a></li>
+  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a></li>
+  </ul></li>
+  <li><a href="#normality-skew" id="toc-normality-skew" class="nav-link" data-scroll-target="#normality-skew">3. Normality (Skew)</a>
+  <ul class="collapse">
+  <li><a href="#issues-1" id="toc-issues-1" class="nav-link" data-scroll-target="#issues-1">Issues</a></li>
+  <li><a href="#to-detect-2" id="toc-to-detect-2" class="nav-link" data-scroll-target="#to-detect-2">To Detect</a></li>
+  <li><a href="#solutions-1" id="toc-solutions-1" class="nav-link" data-scroll-target="#solutions-1">Solutions</a></li>
+  </ul></li>
+  <li><a href="#normality-outliers" id="toc-normality-outliers" class="nav-link" data-scroll-target="#normality-outliers">4. Normality (Outliers)</a>
+  <ul class="collapse">
+  <li><a href="#to-detect-3" id="toc-to-detect-3" class="nav-link" data-scroll-target="#to-detect-3">To Detect</a></li>
+  <li><a href="#issues-2" id="toc-issues-2" class="nav-link" data-scroll-target="#issues-2">Issues</a></li>
+  <li><a href="#solution-1" id="toc-solution-1" class="nav-link" data-scroll-target="#solution-1">Solution</a></li>
+  </ul></li>
+  <li><a href="#transformations" id="toc-transformations" class="nav-link" data-scroll-target="#transformations">5. Transformations</a>
+  <ul class="collapse">
+  <li><a href="#interpreting-log-transformations" id="toc-interpreting-log-transformations" class="nav-link" data-scroll-target="#interpreting-log-transformations">Interpreting Log Transformations</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -167,7 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">R Cheat Sheet</h1>
+<h1 class="title">Assumptions of t-Tools</h1>
 </div>
 
 
@@ -181,6 +236,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 16, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -190,70 +251,288 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="at-the-top-of-a-file" class="level1">
-<h1>At the top of a File</h1>
-<p>Always have the following as your first two lines of code:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="learning-objectives" class="level1">
+<h1>Learning Objectives</h1>
+<ul>
+<li>List the assumptions of the two-sample <span class="math inline">\(t\)</span>-test in order of importance.</li>
+<li>Detect and address violations of independence.</li>
+<li>Detect and address violations of the equal-variance assumption.</li>
+<li>Detect and address non-normality (skew and outliers).</li>
+<li>Apply log transformations and interpret results on the original scale.</li>
+</ul>
+</section>
+<section id="assumptions-of-2-sample-t-tools" class="level1">
+<h1>Assumptions of 2-Sample <span class="math inline">\(t\)</span>-Tools</h1>
+<ul>
+<li>Assumptions in decreasing order of importance:
+<ol type="1">
+<li>Independence between observational units.</li>
+<li>Equal variance (if assuming <span class="math inline">\(\sigma_1^2 = \sigma_2^2\)</span>).</li>
+<li>Normality (no severe skew or outliers).</li>
+</ol></li>
+<li>Each assumption can be checked, and solutions exist for each violation.</li>
+</ul>
+</section>
+<section id="independence" class="level1">
+<h1>1. Independence</h1>
+<ul>
+<li><p><strong>Definition</strong>: Knowing the value of one observation does not give you any information about the value of another observation.</p></li>
+<li><p><strong>Example of violation — cluster effects</strong>:</p>
+<ul>
+<li>Measuring gene expression levels in two groups (disease vs.&nbsp;control).</li>
+<li>Samples collected by two different technicians.</li>
+<li>Technician 1 tended to produce samples with systematically higher levels.</li>
+<li>Observations within a technician are correlated.</li>
+</ul></li>
+<li><p><strong>Example of violation — serial effects</strong>:</p>
+<ul>
+<li>Measuring expression levels on the <em>same</em> individuals over time.</li>
+<li>Observations on the same person are correlated across time.</li>
+</ul></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="02_fig/fig_serial_effects.svg" class="img-fluid figure-img" style="width:85.0%"></p>
+<figcaption>Serial effects: measurements within each individual (dashed lines) are correlated across time, violating independence.</figcaption>
+</figure>
+</div>
+<section id="to-detect" class="level2">
+<h2 class="anchored" data-anchor-id="to-detect">To Detect</h2>
+<ol type="1">
+<li>Think carefully about how the data were collected.
+<ul>
+<li>Were different responses measured on the same subject?</li>
+<li>Were data collected in groups?</li>
+<li>Were groups treated differently in ways unrelated to treatment?</li>
+</ul></li>
+<li>Residual plots (covered in Chapter 8).</li>
+</ol>
+</section>
+<section id="issues-when-independence-is-violated" class="level2">
+<h2 class="anchored" data-anchor-id="issues-when-independence-is-violated">Issues When Independence Is Violated</h2>
+<ul>
+<li><p>Recall <span class="math inline">\(\bar{X} - \bar{Y} \sim N(\mu_1 - \mu_2,\; \sigma_1^2/n_1 + \sigma_2^2/n_2)\)</span>.</p></li>
+<li><p>If samples are not independent, the variance formula above is <em>too small</em>.</p></li>
+<li><p>You have less information than you think.</p></li>
+<li><p>Consequently: p-values are too small and confidence intervals are too narrow.</p></li>
+<li><p><strong>Extreme example</strong>:</p>
+<ul>
+<li>You have 4 people. Measure each one 50 times.</li>
+<li>Group 1: Person 1 always scores 0; Person 2 always scores 1.</li>
+<li>Group 2: Person 3 always scores 2; Person 4 always scores 3.</li>
+<li>Nominal <span class="math inline">\(n = 100\)</span> per group, but effective sample size is 2 per group.</li>
+<li>Correct variance estimate: <span class="math inline">\(\sigma^2 \approx 0.25 / 2 = 0.125\)</span>.</li>
+<li>Incorrectly assumed variance: <span class="math inline">\(\sigma^2 \approx 0.25 / 100 = 0.0025\)</span>.</li>
+</ul></li>
+</ul>
+</section>
+<section id="solutions" class="level2">
+<h2 class="anchored" data-anchor-id="solutions">Solutions</h2>
+<ul>
+<li>ANOVA with blocking (Chapters 12–13) for cluster effects.</li>
+<li>Longitudinal analysis (Chapter 18) for serial effects.</li>
+</ul>
+</section>
+</section>
+<section id="unequal-variances" class="level1">
+<h1>2. Unequal Variances</h1>
+<ul>
+<li><p>Sometimes people assume <span class="math inline">\(\sigma_1^2 = \sigma_2^2\)</span> (the <em>pooled</em> variance <span class="math inline">\(t\)</span>-test), because it generalizes more easily to more complex methods.</p></li>
+<li><p>Under the equal-variance assumption: <span class="math display">\[\bar{X} - \bar{Y} \;\sim\; N\!\left(\mu_1 - \mu_2,\; \sigma^2\!\left(\frac{1}{n_1} + \frac{1}{n_2}\right)\right)\]</span> Estimate <span class="math inline">\(\sigma^2\)</span> with the pooled variance: <span class="math display">\[s_p^2 = \frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}\]</span></p></li>
+</ul>
+<section id="to-detect-1" class="level2">
+<h2 class="anchored" data-anchor-id="to-detect-1">To Detect</h2>
+<ul>
+<li>Make side-by-side boxplots; only worry if the spread looks very different.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.1     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/unequal-var-example-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
-<section id="read-in-data" class="level1">
-<h1>Read in Data</h1>
-<p>You load in data with</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"url"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="issues" class="level2">
+<h2 class="anchored" data-anchor-id="issues">Issues</h2>
 <ul>
-<li>Make sure the url is in quotes</li>
-<li>Change <code>df</code> to be something meaninful, like “<code>birthdata</code>” or “<code>economicdata</code>”.</li>
+<li>If <span class="math inline">\(\sigma_1^2 \neq \sigma_2^2\)</span> but we assume they are equal, the variance estimate of <span class="math inline">\(\bar{X} - \bar{Y}\)</span> is wrong.</li>
+<li>This is mainly a problem when <span class="math inline">\(n_1\)</span> is very different from <span class="math inline">\(n_2\)</span>.</li>
 </ul>
 </section>
-<section id="creating-new-variables" class="level1">
-<h1>Creating New Variables</h1>
-<p>You change variables or create new ones with</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">mutate</span>(df, <span class="at">new_var =</span> operation)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="solution" class="level2">
+<h2 class="anchored" data-anchor-id="solution">Solution</h2>
 <ul>
-<li><code>operation</code> can be any operation using old variables. Common ones are
+<li>Assume unequal variances — this is the default in <code>t.test()</code> in R, which uses the Satterthwaite approximation for degrees of freedom.</li>
+<li>Alternatively, transform the data.</li>
+</ul>
+</section>
+</section>
+<section id="normality-skew" class="level1">
+<h1>3. Normality (Skew)</h1>
 <ul>
-<li><code>log(old_var)</code></li>
-<li><code>sqrt(old_var)</code></li>
-<li><code>old_var - mean(old_var)</code></li>
-<li><code>old_var1 / old_var2</code></li>
-<li><code>if_else(old_var &gt; value, "high", "low")</code></li>
+<li>The <span class="math inline">\(t\)</span>-test assumes that <span class="math inline">\(X_1, \ldots, X_{n_1}\)</span> and <span class="math inline">\(Y_1, \ldots, Y_{n_2}\)</span> are approximately normal, or that the sample size is “large enough” (Central Limit Theorem).</li>
+<li>More skew <span class="math inline">\(\Rightarrow\)</span> larger sample size needed.</li>
+</ul>
+<section id="issues-1" class="level2">
+<h2 class="anchored" data-anchor-id="issues-1">Issues</h2>
+<ul>
+<li>Confidence intervals do not achieve 95% coverage.</li>
+<li>p-values do not have the correct null interpretation.</li>
+</ul>
+</section>
+<section id="to-detect-2" class="level2">
+<h2 class="anchored" data-anchor-id="to-detect-2">To Detect</h2>
+<ul>
+<li>Make quantile-quantile (QQ) plots.</li>
+</ul>
+</section>
+<section id="solutions-1" class="level2">
+<h2 class="anchored" data-anchor-id="solutions-1">Solutions</h2>
+<ul>
+<li>Apply a transformation (see Section 5 below).</li>
+<li>Perform a permutation test.</li>
+</ul>
+</section>
+</section>
+<section id="normality-outliers" class="level1">
+<h1>4. Normality (Outliers)</h1>
+<section id="to-detect-3" class="level2">
+<h2 class="anchored" data-anchor-id="to-detect-3">To Detect</h2>
+<ul>
+<li>Histograms, boxplots, QQ-plots.</li>
+</ul>
+</section>
+<section id="issues-2" class="level2">
+<h2 class="anchored" data-anchor-id="issues-2">Issues</h2>
+<ul>
+<li>Results are unstable — removing a single point can change conclusions.</li>
+</ul>
+</section>
+<section id="solution-1" class="level2">
+<h2 class="anchored" data-anchor-id="solution-1">Solution</h2>
+<ul>
+<li>Run the analysis with and without the outlier.</li>
+<li>If answers are the same, do not remove it.</li>
+<li>If answers differ, either:
+<ol type="1">
+<li>Use a robust analysis (Chapter 4).</li>
+<li>Report both analyses.</li>
+</ol></li>
+</ul>
+</section>
+</section>
+<section id="transformations" class="level1">
+<h1>5. Transformations</h1>
+<ul>
+<li><p>Many transformations are possible: <span class="math inline">\(\sqrt{y}\)</span>, <span class="math inline">\(\arcsin(\sqrt{y})\)</span>, <span class="math inline">\(\log(y)\)</span>.</p></li>
+<li><p><strong>Log is usually the only one used in practice.</strong></p></li>
+<li><p><strong>When to use log</strong>:</p>
+<ol type="1">
+<li>Values are positive.</li>
+<li>Larger mean <span class="math inline">\(\Rightarrow\)</span> larger variance.</li>
+<li>Data are skewed.</li>
+</ol>
+<ul>
+<li>Log makes such data symmetric and stabilizes variance.</li>
 </ul></li>
 </ul>
-</section>
-<section id="filtering-observations" class="level1">
-<h1>Filtering Observations</h1>
-<p>You filter for certain observations with</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df_sub <span class="ot">&lt;-</span> <span class="fu">filter</span>(df, predicate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Sleuth3)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"case0301"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>p_raw <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(case0301, <span class="fu">aes</span>(<span class="at">x =</span> Treatment, <span class="at">y =</span> Rainfall)) <span class="sc">+</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Raw scale"</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>p_log <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(case0301, <span class="fu">aes</span>(<span class="at">x =</span> Treatment, <span class="at">y =</span> Rainfall)) <span class="sc">+</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Log scale"</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>p_raw <span class="sc">+</span> p_log</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/rainfall-plots-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="interpreting-log-transformations" class="level2">
+<h2 class="anchored" data-anchor-id="interpreting-log-transformations">Interpreting Log Transformations</h2>
 <ul>
-<li><code>predicate</code> is something that returns <code>TRUE</code> or <code>FALSE</code>. Common predicates are
+<li><p>Let <span class="math inline">\(W_i = \log(Y_i)\)</span> and <span class="math inline">\(Z_j = \log(X_j)\)</span> in the two-sample model: <span class="math display">\[W_i = \mu + \varepsilon_i \qquad Z_j = \mu + \delta + \xi_j\]</span></p></li>
+<li><p>Then: <span class="math display">\[\delta = \text{Average}(Z) - \text{Average}(W)
+         = \text{Average}(\log X) - \text{Average}(\log Y)\]</span></p></li>
+<li><p>We want to interpret <span class="math inline">\(\delta\)</span> on the original <span class="math inline">\(X, Y\)</span> scale.</p></li>
+<li><p><strong>Important caveat</strong>: <span class="math inline">\(\log(\text{Average}(X)) \neq \text{Average}(\log X)\)</span>.</p>
 <ul>
-<li><code>variable &lt; value</code></li>
-<li><code>variable &gt; value</code></li>
-<li><code>variable == value</code></li>
-<li><code>variable &lt;= value</code></li>
-<li><code>variable &gt;= value</code></li>
-<li><code>!is.na(variable)</code></li>
+<li>Example: <span class="math inline">\(X = 2, 4\)</span>.</li>
+<li><span class="math inline">\(\log_2 X = 1, 2 \Rightarrow \text{Average}(\log_2 X) = 1.5\)</span>.</li>
+<li><span class="math inline">\(\text{Average}(X) = 3 \Rightarrow \log_2(3) \approx 1.58\)</span>.</li>
+<li>So <span class="math inline">\(E[X] \neq e^\delta \cdot E[Y]\)</span> in general.</li>
 </ul></li>
+<li><p><strong>What is true</strong>: if <span class="math inline">\(\log(X)\)</span> and <span class="math inline">\(\log(Y)\)</span> are both symmetric, <span class="math display">\[e^\delta = \frac{\text{Median}(X)}{\text{Median}(Y)}\]</span></p>
+<ul>
+<li><span class="math inline">\(e^\delta\)</span> is the <strong>multiplicative difference in medians</strong>.</li>
+</ul></li>
+<li><p><strong>Procedure</strong>:</p>
+<ol type="1">
+<li>Log-transform the data.</li>
+<li>Run <code>t.test()</code> on the log-transformed values to get <span class="math inline">\(\hat{\delta}\)</span> and a CI <span class="math inline">\((\hat{\delta}_L, \hat{\delta}_U)\)</span>.</li>
+<li>Exponentiate: <span class="math inline">\(e^{\hat{\delta}}\)</span> estimates the ratio of medians; <span class="math inline">\((e^{\hat{\delta}_L}, e^{\hat{\delta}_U})\)</span> is the CI for the ratio.</li>
+</ol></li>
 </ul>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>case0301 <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">logRainfall =</span> <span class="fu">log</span>(Rainfall)) <span class="sc">|&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t.test</span>(logRainfall <span class="sc">~</span> Treatment, <span class="at">data =</span> _) <span class="sc">|&gt;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="ot">-&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  tout</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>tout <span class="sc">|&gt;</span> <span class="fu">select</span>(estimate, p.value, conf.low, conf.high)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 4
+  estimate p.value conf.low conf.high
+     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1     1.14  0.0141    0.241      2.05</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Estimated ratio of median rainfall (Seeded / Unseeded):</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(tout<span class="sc">$</span>estimate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.139</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 95% CI for the ratio of medians:</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">c</span>(<span class="at">lower =</span> tout<span class="sc">$</span>conf.low, <span class="at">upper =</span> tout<span class="sc">$</span>conf.high))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>lower upper 
+1.272 7.742 </code></pre>
+</div>
+</div>
+<ul>
+<li>Estimated median rainfall in the seeded group is about 3.1 times that of the unseeded group, with a 95% confidence interval of (1.3, 7.7).</li>
+</ul>
+
+
 </section>
-<section id="plotting" class="level1">
-<h1>Plotting</h1>
-<p>One continuous variable: histogram</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> var)) <span class="sc">+</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>One categorical variable: barplot</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> var)) <span class="sc">+</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Two continuous variables: scatterplot</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> var1, <span class="at">y =</span> var2)) <span class="sc">+</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>One continuous, one categorical: boxplot</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> var1, <span class="at">y =</span> var2)) <span class="sc">+</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-
-
 </section>
 
 </main> <!-- /main -->

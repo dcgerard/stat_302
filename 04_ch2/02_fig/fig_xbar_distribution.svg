@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 200" width="560" height="200">
+  <defs>
+    <marker id="arrow-up" markerWidth="10" markerHeight="7" refX="5" refY="0" orient="auto">
+      <polygon points="0 7, 5 0, 10 7" fill="#333"/>
+    </marker>
+    <marker id="arrow-down" markerWidth="10" markerHeight="7" refX="5" refY="7" orient="auto">
+      <polygon points="0 0, 5 7, 10 0" fill="#333"/>
+    </marker>
+  </defs>
+
+  <!-- ── Formula in center ── -->
+  <!-- Rendered as positioned text elements -->
+  <!-- "X̄  ~  N ( μ ,  σ² / n )" -->
+  <!-- positions (approx baseline y=90): -->
+  <!--   X̄  at x=80   -->
+  <!--   ~   at x=130  -->
+  <!--   N   at x=158  -->
+  <!--   (   at x=178  -->
+  <!--   μ   at x=192  -->
+  <!--   ,   at x=210  -->
+  <!--   σ²  at x=228  -->
+  <!--   /   at x=256  -->
+  <!--   n   at x=268  -->
+  <!--   )   at x=284  -->
+
+  <text x="72"  y="95" font-family="Ubuntu Mono, monospace" font-size="32" fill="#222">X̄</text>
+  <text x="118" y="95" font-family="Ubuntu Mono, monospace" font-size="32" fill="#222">~</text>
+  <text x="152" y="95" font-family="Ubuntu Mono, monospace" font-size="32" fill="#222">N(</text>
+  <text x="216" y="95" font-family="Ubuntu Mono, monospace" font-size="32" fill="#222">μ ,</text>
+  <!-- σ² / n as stacked fraction -->
+  <text x="296" y="78"  font-family="Ubuntu Mono, monospace" font-size="22" fill="#222">σ²</text>
+  <line x1="294" y1="84" x2="334" y2="84" stroke="#222" stroke-width="1.5"/>
+  <text x="305" y="103" font-family="Ubuntu Mono, monospace" font-size="22" fill="#222">n</text>
+  <text x="338" y="95" font-family="Ubuntu Mono, monospace" font-size="32" fill="#222">)</text>
+
+  <!-- ── Annotation arrows and labels ── -->
+
+  <!-- "Sample average" → X̄  (arrow from below-left) -->
+  <line x1="86"  y1="155" x2="86"  y2="104" stroke="#555" stroke-width="1.3" marker-end="url(#arrow-up)"/>
+  <text x="10"  y="170" font-family="Ubuntu Mono, monospace" font-size="11" fill="#555">Sample</text>
+  <text x="10"  y="183" font-family="Ubuntu Mono, monospace" font-size="11" fill="#555">average</text>
+
+  <!-- "E[X̄]" → μ  (arrow from below) -->
+  <line x1="228" y1="152" x2="228" y2="104" stroke="#555" stroke-width="1.3" marker-end="url(#arrow-up)"/>
+  <text x="203" y="167" font-family="Ubuntu Mono, monospace" font-size="11" fill="#555">E[X̄]</text>
+
+  <!-- "Var(X̄)" → σ²/n  (arrow from below) -->
+  <line x1="313" y1="152" x2="313" y2="110" stroke="#555" stroke-width="1.3" marker-end="url(#arrow-up)"/>
+  <text x="284" y="167" font-family="Ubuntu Mono, monospace" font-size="11" fill="#555">Var(X̄)</text>
+
+  <!-- "Sample size" → n  (arrow from below-right) -->
+  <line x1="315" y1="152" x2="315" y2="112" stroke="none"/>
+  <!-- separate arrow for n -->
+  <line x1="398" y1="152" x2="322" y2="112" stroke="#555" stroke-width="1.3" marker-end="url(#arrow-up)"/>
+  <text x="370" y="167" font-family="Ubuntu Mono, monospace" font-size="11" fill="#555">Sample</text>
+  <text x="370" y="180" font-family="Ubuntu Mono, monospace" font-size="11" fill="#555">size</text>
+</svg>

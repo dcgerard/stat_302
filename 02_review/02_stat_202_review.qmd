@@ -6,9 +6,10 @@ bibliography: "../bib.bib"
 ---
 
 
-```{r setup, include=FALSE}
+```{r setup}
+#| include: false
 set.seed(1)
-knitr::opts_chunk$set(echo       = TRUE, 
+knitr::opts_chunk$set(echo       = TRUE,
                       fig.height = 3, 
                       fig.width  = 6,
                       fig.align  = "center")
@@ -61,7 +62,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
   - Mean determines where the data are centered.
 
 -   Normal densities with different means.
-    ```{r, echo=FALSE}
+    ```{r}
+    #| echo: false
     library(ggplot2)
     library(ggthemes)
     x <- seq(-10, 10, length = 100)
@@ -81,7 +83,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
     ```
 
 -   Normal densities with different standard deviations
-    ```{r, echo=FALSE}
+    ```{r}
+    #| echo: false
     x <- seq(-10, 10, length = 100)
     y1 <- dnorm(x = x, mean = 0, sd = 1)
     y2 <- dnorm(x = x, mean = 0, sd = 2)
@@ -103,7 +106,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
     dnorm(x = 2, mean = 1, sd = 1)
     ```
     
-    ```{r, echo = FALSE}
+    ```{r}
+    #| echo: false
     x <- seq(-2, 4, length = 100)
     y <- dnorm(x, mean = 1, sd = 1)
     qplot(x, y, geom = "line", ylab = "f(x)") +
@@ -119,7 +123,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
     head(samp)
     ```
     
-    ```{r, echo = FALSE}
+    ```{r}
+    #| echo: false
     qplot(samp, geom = "histogram", fill = I("white"), color = I("black"), bins = 20)
     ```
   
@@ -130,7 +135,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
     pnorm(q = 2, mean = 1, sd = 1)
     ```
     
-    ```{r, echo = FALSE}
+    ```{r}
+    #| echo: false
     x <- seq(-2, 4, length = 500)
     y <- dnorm(x, mean = 1, sd = 1)
     polydf <- data.frame(x = c(min(x), x[x < 2], 2, 0), 
@@ -147,7 +153,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
     qnorm(p = 0.8413, mean = 1, sd = 1)
     ```
     
-    ```{r, echo = FALSE}
+    ```{r}
+    #| echo: false
     x <- seq(-2, 4, length = 500)
     y <- dnorm(x, mean = 1, sd = 1)
     polydf <- data.frame(x = c(min(x), x[x < 2], 2, 0), 
@@ -163,7 +170,9 @@ ggplot2::theme_set(ggplot2::theme_bw())
   less than 3? Can you think up a way to approximate this proportion using
   a different function?
   
-    ```{r, eval=FALSE, echo=FALSE}
+    ```{r}
+    #| eval: false
+    #| echo: false
     samp <- rnorm(n = 10000, mean = 5, sd = 2)
     mean(samp < 3)
     pnorm(q = 3, mean = 5, sd = 2)
@@ -173,7 +182,9 @@ ggplot2::theme_set(ggplot2::theme_bw())
   distributed with mean 171.5 cm and standard deviation 5.5 cm. What 
   proportion of the Hong Kong population is between 170 cm and 180 cm?
     
-    ```{r, echo = FALSE, eval = FALSE}
+    ```{r}
+    #| echo: false
+    #| eval: false
     pless180 <- pnorm(q = 180, mean = 171.5, sd = 5.5)
     pless170 <- pnorm(q = 170, mean = 171.5, sd = 5.5)
     pbetween <- pless180 - pless170
@@ -194,7 +205,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
       
 -   $t$-distributions with different degrees of freedom:
 
-    ```{r, echo=FALSE}
+    ```{r}
+    #| echo: false
     x <- seq(-4, 4, length = 200)
     data.frame(df = as.factor(c(rep(1, length(x)), rep(5, length(x)), rep(Inf, length(x)))),
                x = c(x, x, x),
@@ -214,7 +226,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
     dt(x = -6, df = 2)
     ```
     
-    ```{r, echo = FALSE}
+    ```{r}
+    #| echo: false
     x <- seq(-6, 6, length = 100)
     y <- dt(x, df = 1)
     qplot(x, y, geom = "line", ylab = "f(x)") +
@@ -230,7 +243,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
     head(samp)
     ```
     
-    ```{r, echo = FALSE}
+    ```{r}
+    #| echo: false
     qplot(samp, geom = "histogram", fill = I("white"), color = I("black"), bins = 20)
     ```
     
@@ -240,7 +254,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
     pt(q = 2, df = 2)
     ```
     
-    ```{r, echo = FALSE}
+    ```{r}
+    #| echo: false
     x <- seq(-6, 6, length = 500)
     y <- dt(x,  df = 2)
     polydf <- data.frame(x = c(min(x), x[x < 2], 2, 0), 
@@ -256,7 +271,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
     qt(p = 0.9082, df = 2)
     ```
     
-    ```{r, echo = FALSE}
+    ```{r}
+    #| echo: false
     x <- seq(-6, 6, length = 500)
     y <- dt(x, df = 2)
     polydf <- data.frame(x = c(min(x), x[x < 2], 2, 0), 
@@ -270,13 +286,16 @@ ggplot2::theme_set(ggplot2::theme_bw())
       
 -   There are many other distributions implemented in R. To see the most common, run:
   
-    ```{r,eval=FALSE}
+    ```{r}
+    #| eval: false
     help("Distributions")
     ```
   
 -   **Exercise**: Calculate the 0.75 quantile of the $t$-distribution for degrees of freedom $1, 2, 3,\ldots,50$. Reproduce this plot:
   
-    ```{r,echo=FALSE,message=FALSE}
+    ```{r}
+    #| echo: false
+    #| message: false
     library(tidyverse)
     tibble(df = seq_len(50)) %>%
       mutate(quant75 = qt(p = 0.75, df = df)) %>%
@@ -289,7 +308,9 @@ ggplot2::theme_set(ggplot2::theme_bw())
     Can you use a function to come up with the asymptotic value of the 0.75
     quantile as the degrees of freedom approaches infinity?
     
-    ```{r,echo=FALSE,eval=FALSE}
+    ```{r}
+    #| echo: false
+    #| eval: false
     qnorm(0.75)
     ```
     
@@ -354,7 +375,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
 
 -   For the examples below, we will use the data from the Sleuth3 package in R.
     
-    ```{r, message=FALSE}
+    ```{r}
+    #| message: false
     library(Sleuth3)
     library(tidyverse)
     library(broom)
@@ -496,7 +518,9 @@ ggplot2::theme_set(ggplot2::theme_bw())
       parameters, not observational units or statistics.
       
 -   Graphic:
-    ```{r, echo=FALSE,eval=FALSE}
+    ```{r}
+    #| echo: false
+    #| eval: false
     library(ggthemes)
     set.seed(1)
     ncoll <- 20
@@ -551,7 +575,9 @@ ggplot2::theme_set(ggplot2::theme_bw())
                                 12.03, -2.53,   4.33,  1.35))
     ```
 
-    ```{r, eval=FALSE, echo=FALSE}
+    ```{r}
+    #| eval: false
+    #| echo: false
     ggplot(stock, aes(x = return)) +
       geom_histogram(bins = 10, fill = "white", color = "black") +
       geom_vline(xintercept = 0, lty = 2, col = 2) +
@@ -569,7 +595,9 @@ ggplot2::theme_set(ggplot2::theme_bw())
     Alternative hypothesis: The broker's average rate of return is not 0.95%.
     ```
     
-    ```{r, eval=FALSE, echo=FALSE}
+    ```{r}
+    #| eval: false
+    #| echo: false
     t.test(stock$return, mu = 0.95) %>%
       tidy() ->
       tout
@@ -678,7 +706,9 @@ ggplot2::theme_set(ggplot2::theme_bw())
   evidence that the genders differ? Make appropriate exploratory plots, set up
   the appropriate hypotheses, and run appropriate hypothesis tests.
   
-    ```{r, echo=FALSE, eval=FALSE}
+    ```{r}
+    #| echo: false
+    #| eval: false
     data("ex0222")
     afqt <- ex0222
     afqt %>%
@@ -696,7 +726,9 @@ ggplot2::theme_set(ggplot2::theme_bw())
     genders.
     ```
     
-    ```{r, echo=FALSE, eval=FALSE}
+    ```{r}
+    #| echo: false
+    #| eval: false
     afqt %>%
       gather(-Gender, key = "Test", value = "Score") %>%
       group_by(Test) %>%
@@ -782,7 +814,9 @@ ggplot2::theme_set(ggplot2::theme_bw())
   if education level is associated with income. Interpret any estimates and
   confidence intervals you derive.
   
-    ```{r, echo=FALSE, eval=FALSE}
+    ```{r}
+    #| echo: false
+    #| eval: false
     data("ex0330")
     ex0330 %>%
       mutate(Educ = factor(Educ)) ->
@@ -895,7 +929,9 @@ ggplot2::theme_set(ggplot2::theme_bw())
     For part a, 0.48 is a sample statistic.
     ```
     
-    ```{r, eval = FALSE, echo = FALSE}
+    ```{r}
+    #| eval: false
+    #| echo: false
     binom.test(x = round(0.48 * 1259), n = 1259) %>%
       tidy() %>%
       select(conf.low, conf.high)
@@ -906,7 +942,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
 -   Example: 86 lung cancer patients and 86 controls were interviewed on their
   smoking history in a 1954 study. The data can be found at: 
   <https://data-science-master.github.io/lectures/data/smoke.csv>.
-    ```{r, message = FALSE}
+    ```{r}
+    #| message: false
     smoke <- read_csv(file = "https://data-science-master.github.io/lectures/data/smoke.csv")
     glimpse(smoke)
     ```
@@ -1002,7 +1039,9 @@ ggplot2::theme_set(ggplot2::theme_bw())
     sexual activity? Create a table to explore this association. Then
     run a hypothesis test. What is the null hypothesis?
     
-    ```{r, echo=FALSE, eval=FALSE}
+    ```{r}
+    #| echo: false
+    #| eval: false
     ## It seems like a very strong association.
     prop.table(tabdat, margin = 1)
     # Null hypothesis is independence.
