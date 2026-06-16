@@ -172,7 +172,7 @@
     "href": "04_ch2/04_ch2.html#significance",
     "title": "Paired and Two-Sample t-Tests",
     "section": "3. “Significance”",
-    "text": "3. “Significance”\n\nA p-value \\(\\leq 0.05\\) is not magical. Arbitrary cutoffs should not drive scientific conclusions.\nSee the XKCD comic on significance."
+    "text": "3. “Significance”\n\nA p-value \\(\\leq 0.05\\) is not magical. Arbitrary cutoffs should not drive scientific conclusions.\nXKCD (only half-joking):"
   },
   {
     "objectID": "04_ch2/04_ch2.html#reporting",
