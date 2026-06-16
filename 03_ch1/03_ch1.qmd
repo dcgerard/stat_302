@@ -222,95 +222,98 @@ counts toward the p-value.
 #| echo: false
 #| message: false
 #| warning: false
-library(gifski)
 
-# Fixed histogram bins so they are identical across every frame
+# Fixed histogram bins — defined unconditionally because rand-dist-final uses breaks
 bw     <- 0.4
 lo     <- -6.5
 hi     <-  6.5
 breaks <- seq(lo, hi, by = bw)
 
-# Pre-compute y-axis ceiling from the full distribution
-ymax <- max(hist(diffvec, breaks = breaks, plot = FALSE)$counts) * 1.12
+if (!file.exists("01_fig/fig_rand_dist.gif")) {
+  library(gifski)
 
-# Frame schedule: repeated values = longer pause on that state
-frame_schedule <- c(
-  seq(0, 1000, by = 50),
-  seq(1000, 5000, by = 200),                  # rapid fill-up
-  rep(5000, 15)                              # 2.25 s pause on final
-)
+  # Pre-compute y-axis ceiling from the full distribution
+  ymax <- max(hist(diffvec, breaks = breaks, plot = FALSE)$counts) * 1.12
 
-tmp_dir   <- tempdir()
-png_files <- character(length(frame_schedule))
+  # Frame schedule: repeated values = longer pause on that state
+  frame_schedule <- c(
+    seq(0, 1000, by = 50),
+    seq(1000, 5000, by = 200),                  # rapid fill-up
+    rep(5000, 15)                              # 2.25 s pause on final
+  )
 
-for (fi in seq_along(frame_schedule)) {
-  n <- frame_schedule[fi]
+  tmp_dir   <- tempdir()
+  png_files <- character(length(frame_schedule))
 
-  if (n == 0) {
-    sub_txt <- paste0(
-      "Shaded tails = values as extreme as the observed difference (",
-      round(obs_diff, 2), ")."
-    )
-  } else {
-    running_p <- mean(abs(diffvec[1:n]) >= abs(obs_diff))
-    sub_txt   <- paste0(
-      "Running two-sided p-value: ",
-      round(running_p, 3),
-      if (n == 5000) paste0("   (final answer: ", round(running_p, 3), ")") else ""
-    )
+  for (fi in seq_along(frame_schedule)) {
+    n <- frame_schedule[fi]
+
+    if (n == 0) {
+      sub_txt <- paste0(
+        "Shaded tails = values as extreme as the observed difference (",
+        round(obs_diff, 2), ")."
+      )
+    } else {
+      running_p <- mean(abs(diffvec[1:n]) >= abs(obs_diff))
+      sub_txt   <- paste0(
+        "Running two-sided p-value: ",
+        round(running_p, 3),
+        if (n == 5000) paste0("   (final answer: ", round(running_p, 3), ")") else ""
+      )
+    }
+
+    p <- ggplot() +
+      # Shaded tails (always visible so viewers know what we are counting)
+      annotate("rect",
+               xmin =  abs(obs_diff), xmax = hi,  ymin = 0, ymax = ymax,
+               fill = "#e07b3a", alpha = 0.18) +
+      annotate("rect",
+               xmin = lo, xmax = -abs(obs_diff), ymin = 0, ymax = ymax,
+               fill = "#e07b3a", alpha = 0.18)
+
+    if (n > 0) {
+      p <- p + geom_histogram(
+        data    = data.frame(x = diffvec[1:n]),
+        mapping = aes(x = x),
+        breaks  = breaks,
+        fill    = "#4a90d9", color = "white", alpha = 0.85
+      )
+    }
+
+    p <- p +
+      # Observed difference lines
+      geom_vline(xintercept =  abs(obs_diff),
+                 color = "#c0392b", linewidth = 1.1, linetype = "dashed") +
+      geom_vline(xintercept = -abs(obs_diff),
+                 color = "#c0392b", linewidth = 1.1, linetype = "dashed") +
+      # Label
+      annotate("text",
+               x = abs(obs_diff) + 0.15, y = ymax * 0.88,
+               label = paste0("obs.\n±", round(obs_diff, 2)),
+               hjust = 0, color = "#c0392b", size = 3.2, fontface = "bold") +
+      coord_cartesian(xlim = c(lo, hi), ylim = c(0, ymax)) +
+      labs(
+        title    = paste0("Randomization distribution — ", n, " permutations"),
+        subtitle = sub_txt,
+        x        = "Difference in means (Intrinsic − Extrinsic)",
+        y        = "Count"
+      ) +
+      theme_bw(base_size = 12) +
+      theme(
+        plot.title       = element_text(size = 12, face = "bold"),
+        plot.subtitle    = element_text(size = 10, color = "#555555"),
+        panel.grid.minor = element_blank()
+      )
+
+    fname          <- file.path(tmp_dir, sprintf("rnd_frame_%04d.png", fi))
+    ggsave(fname, p, width = 7, height = 4, dpi = 110)
+    png_files[fi]  <- fname
   }
 
-  p <- ggplot() +
-    # Shaded tails (always visible so viewers know what we are counting)
-    annotate("rect",
-             xmin =  abs(obs_diff), xmax = hi,  ymin = 0, ymax = ymax,
-             fill = "#e07b3a", alpha = 0.18) +
-    annotate("rect",
-             xmin = lo, xmax = -abs(obs_diff), ymin = 0, ymax = ymax,
-             fill = "#e07b3a", alpha = 0.18)
-
-  if (n > 0) {
-    p <- p + geom_histogram(
-      data    = data.frame(x = diffvec[1:n]),
-      mapping = aes(x = x),
-      breaks  = breaks,
-      fill    = "#4a90d9", color = "white", alpha = 0.85
-    )
-  }
-
-  p <- p +
-    # Observed difference lines
-    geom_vline(xintercept =  abs(obs_diff),
-               color = "#c0392b", linewidth = 1.1, linetype = "dashed") +
-    geom_vline(xintercept = -abs(obs_diff),
-               color = "#c0392b", linewidth = 1.1, linetype = "dashed") +
-    # Label
-    annotate("text",
-             x = abs(obs_diff) + 0.15, y = ymax * 0.88,
-             label = paste0("obs.\n±", round(obs_diff, 2)),
-             hjust = 0, color = "#c0392b", size = 3.2, fontface = "bold") +
-    coord_cartesian(xlim = c(lo, hi), ylim = c(0, ymax)) +
-    labs(
-      title    = paste0("Randomization distribution — ", n, " permutations"),
-      subtitle = sub_txt,
-      x        = "Difference in means (Intrinsic − Extrinsic)",
-      y        = "Count"
-    ) +
-    theme_bw(base_size = 12) +
-    theme(
-      plot.title       = element_text(size = 12, face = "bold"),
-      plot.subtitle    = element_text(size = 10, color = "#555555"),
-      panel.grid.minor = element_blank()
-    )
-
-  fname          <- file.path(tmp_dir, sprintf("rnd_frame_%04d.png", fi))
-  ggsave(fname, p, width = 7, height = 4, dpi = 110)
-  png_files[fi]  <- fname
+  gifski(png_files,
+         gif_file = "01_fig/fig_rand_dist.gif",
+         width = 770, height = 440, delay = 0.15)
 }
-
-gifski(png_files,
-       gif_file = "01_fig/fig_rand_dist.gif",
-       width = 770, height = 440, delay = 0.15)
 ```
 
 ![Randomization distribution for Case Study 1.1.1. Each frame adds more permutations of the treatment labels; the orange-shaded tails show values at least as extreme as the observed difference.](01_fig/fig_rand_dist.gif){fig-align="center" width="95%"}
