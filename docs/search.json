@@ -480,7 +480,7 @@
     "href": "index.html",
     "title": "STAT-302 Homepage",
     "section": "",
-    "text": "Syllabus\n\nChapter 0: R\n\nR and Data Frames\nR Graphics\nR Cheat Sheet\n\nReview:\n\nBasic Statistics Review\nProbability Review\n\nChapter 1:\n\nCausality and Generalizability\nChapter 1 Worksheet\n\nChapter 2:\n\nPaired and Two-Sample t-Tests\nChapter 2 Worksheet\n\nChapter 3:\n\nAssumptions of t-Tools\nChapter 3 Worksheet\n\nChapter 4:\n\nNonparameterics\n\nChapter 5:\n\nOne-way ANOVA\n\nChapter 6:\n\nMultiple Comparisons\n\nChapters 7–8\n\nSimple Linear Regression\n\nChapters 9–11:\n\nMultiple Regression\n\nChapter 20:\n\nLogistic Regression"
+    "text": "Syllabus\n\nChapter 0: R\n\nR and Data Frames\nR Graphics\nR Cheat Sheet\n\nReview:\n\nBasic Statistics Review\nProbability Review\n\nChapter 1:\n\nCausality and Generalizability\nChapter 1 Worksheet\n\nChapter 2:\n\nPaired and Two-Sample t-Tests\nChapter 2 Worksheet\n\nChapter 3:\n\nAssumptions of t-Tools\nReview: Logarithms and Exponentials\nChapter 3 Worksheet\n\nChapter 5:\n\nOne-Way ANOVA\n\nChapter 4:\n\nNonparameterics\n\nChapter 5:\n\nOne-way ANOVA\n\nChapter 6:\n\nMultiple Comparisons\n\nChapters 7–8\n\nSimple Linear Regression\n\nChapters 9–11:\n\nMultiple Regression\n\nChapter 20:\n\nLogistic Regression"
   },
   {
     "objectID": "03_ch1/03_worksheet.html",
@@ -523,5 +523,215 @@
     "title": "Chapter 3 Worksheet",
     "section": "",
     "text": "Case Study 3.1.2: Effects of Agent Orange on Troops in Vietnam\nMany Vietnam veterans are concerned that their health may have been affected by exposure to Agent Orange, a herbicide sprayed in South Vietnam between 1962 and 1970. The particularly worrisome component of Agent Orange is a dioxin called TCDD, which in high doses is known to be associated with certain cancers. Studies have shown that high levels of this dioxin can be detected 20 or more years after heavy exposure. Consequently, researchers from the Centers for Disease Control compared dioxin levels in Vietnam veterans to those in veterans who did not serve in Vietnam.\nThe 646 Vietnam veterans in the study were a sample of U.S. Army combat personnel who served in Vietnam during 1967 and 1968, in areas most heavily treated with Agent Orange. The 97 non-Vietnam veterans entered the Army between 1965 and 1971 and served only in the United States or Germany. Neither sample was randomly selected.\nBlood samples from each veteran were analyzed for the presence of dioxin.\n\nlibrary(tidyverse)\ncase0302 &lt;- read_csv(\"https://dcgerard.github.io/stat_302/data/case0302.csv\")\nglimpse(case0302)\n\nRows: 743\nColumns: 2\n$ Dioxin  &lt;dbl&gt; 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,…\n$ Veteran &lt;chr&gt; \"Vietnam\", \"Vietnam\", \"Vietnam\", \"Vietnam\", \"Vietnam\", \"Vietna…\n\n\n1. From the description, do you think there are any problems with independence between observations? Explain your reasoning.\n2. Make side-by-side boxplots of Dioxin by Veteran group. Do the variances look approximately equal?\n3. Based on the same plot, how does the symmetry assumption look?\n4. Are there any major outliers? Reference the plot from Question 2.\n5. Address any issues identified above and run a two-sample \\(t\\)-test. Follow these steps:\n\nPosit a model. Let \\(Y_i\\) denote the dioxin level for non-Vietnam veteran \\(i\\) and \\(X_j\\) denote the dioxin level for Vietnam veteran \\(j\\). Write the location-shift model and define all symbols.\nState the null and alternative hypotheses in symbols.\nRun the \\(t\\)-test on the full dataset and report the \\(p\\)-value.\n\n\nIdentify any extreme outliers and remove them, then re-run the \\(t\\)-test.\n\n\nReport your conclusions in plain language. Are the two analyses consistent? What do you conclude about dioxin levels in Vietnam vs. non-Vietnam veterans?\n\n\n\n\nQQ Plots\n\nlibrary(tidyverse)\ncase0301 &lt;- read_csv(\"https://dcgerard.github.io/stat_302/data/case0301.csv\")\ncase0201 &lt;- read_csv(\"https://dcgerard.github.io/stat_302/data/case0201.csv\")\n\n6. Make a QQ plot of Rainfall for the Unseeded group in case0301.\n7. Based on the QQ plot from Question 6, what type of departure from normality do you observe (right skew, left skew, heavy tails, light tails, or outliers)? Describe how the shape of the plotted points supports your conclusion.\n8. Make a QQ plot of beak Depth for finches measured in 1978 from case0201.\n9. Does the 1978 beak depth data appear approximately normal? What features of the QQ plot support your conclusion?\n\n\n\nLog Transformations — Rainfall Data\nResearchers randomly assigned days to receive cloud seeding (Seeded) or no seeding (Unseeded) and recorded the resulting rainfall (in acre-feet).\n10. The notes list three conditions that suggest a log transformation is appropriate. State all three and check whether each holds for the rainfall data. (Use plots to support your answer.)\n11. Create a new variable logRainfall = log(Rainfall). Make side-by-side boxplots and QQ plots of logRainfall by Treatment.\n12. Does the log transformation improve normality and stabilize the variance? What do you observe compared to Question 10?\n13. Posit a model for the log-scale analysis. Let \\(Y_i = \\log(\\text{Rainfall}_i)\\) for unseeded days and \\(Y_j^* = \\log(\\text{Rainfall}_j^*)\\) for seeded days. Write the location-shift model and state the null and alternative hypotheses.\n14. Run the \\(t\\)-test on the log-transformed data. Report the estimated \\(\\hat{\\delta}\\), its 95% CI, and the \\(p\\)-value.\n15. Exponentiate \\(\\hat{\\delta}\\) and the endpoints of the 95% CI to interpret the results on the original scale. Write a complete conclusion, including units and a statement about causality (is a causal claim warranted here?).\n\n\n\nConceptual Questions\n16. The chapter lists three assumptions of the two-sample \\(t\\)-test in decreasing order of importance. List them. Then explain why independence is the most critical — what specifically goes wrong with the \\(p\\)-value and confidence interval when independence is violated?\n17. Explain the difference between a “conservative” and “liberal” statistical method in terms of (a) confidence intervals and (b) \\(p\\)-values. If a \\(t\\)-test is applied to severely right-skewed data with a small sample size, which direction of error would you expect? Why is this hard to predict in general?\n18. In the Agent Orange study, neither sample was randomly selected.\n\nDoes the lack of random sampling affect whether we can generalize the results to all Vietnam veterans? Explain.\nDoes it affect whether we can draw causal conclusions? Explain.\n\n19. The Central Limit Theorem (CLT) guarantees that \\(\\bar{X}\\) is approximately normal for large \\(n\\), regardless of the population distribution. Describe a scenario where you would not want to rely on the CLT to justify a \\(t\\)-test, even with \\(n = 50\\). What would you do instead?\n20. An outlier is detected in a two-sample dataset. A student removes it, runs the \\(t\\)-test only on the cleaned data, and reports those results.\n\nWhat is the problem with this approach?\nWhat is the recommended procedure?\n\n21. Suppose you log-transform data and run a \\(t\\)-test. The 95% CI for \\(\\delta\\) (the difference in log-medians, Group A minus Group B) is \\((0.2,\\; 1.1)\\). Exponentiate the endpoints. What does this interval say about the ratio of medians (Group A to Group B) on the original scale? Is there strong evidence that Group A has higher values than Group B?"
+  },
+  {
+    "objectID": "05_ch3/05_log_review.html",
+    "href": "05_ch3/05_log_review.html",
+    "title": "Review: Logarithms and Exponentials",
+    "section": "",
+    "text": "In statistics, we sometimes transform data before analysis. The log transformation is the most common transformation used with \\(t\\)-tools because it can simultaneously:\n\nReduce right skew, making the data more symmetric.\nStabilize variance across groups.\nAllow us to interpret results as ratios rather than differences.\n\nThis review covers the mathematics behind the logarithm and exponential functions so that you can apply and interpret log transformations confidently."
+  },
+  {
+    "objectID": "05_ch3/05_log_review.html#visualizing-exp-and-log",
+    "href": "05_ch3/05_log_review.html#visualizing-exp-and-log",
+    "title": "Review: Logarithms and Exponentials",
+    "section": "Visualizing \\(\\exp\\) and \\(\\log\\)",
+    "text": "Visualizing \\(\\exp\\) and \\(\\log\\)\nThe functions \\(y = e^x\\) and \\(y = \\log(x)\\) are inverses of each other — they are mirror images across the line \\(y = x\\):\n\n\n\n\n\n\n\n\n\nNotice:\n\n\\(e^x\\) is always positive and grows rapidly.\n\\(\\log(x)\\) is only defined for \\(x &gt; 0\\) and grows slowly.\nThe log function stretches small values and compresses large values — exactly what we want when data are right-skewed."
+  },
+  {
+    "objectID": "05_ch3/05_log_review.html#log-properties",
+    "href": "05_ch3/05_log_review.html#log-properties",
+    "title": "Review: Logarithms and Exponentials",
+    "section": "Log properties",
+    "text": "Log properties\n\\[\\log(ab) = \\log(a) + \\log(b)\\] \\[\\log\\!\\left(\\frac{a}{b}\\right) = \\log(a) - \\log(b)\\] \\[\\log(a^r) = r\\,\\log(a)\\]"
+  },
+  {
+    "objectID": "05_ch3/05_log_review.html#exp-properties",
+    "href": "05_ch3/05_log_review.html#exp-properties",
+    "title": "Review: Logarithms and Exponentials",
+    "section": "Exp properties",
+    "text": "Exp properties\n\\[\\exp(a + b) = \\exp(a)\\,\\exp(b)\\] \\[\\exp(a - b) = \\frac{\\exp(a)}{\\exp(b)}\\]"
+  },
+  {
+    "objectID": "05_ch3/05_log_review.html#inverse-properties",
+    "href": "05_ch3/05_log_review.html#inverse-properties",
+    "title": "Review: Logarithms and Exponentials",
+    "section": "Inverse properties",
+    "text": "Inverse properties\n\\[\\log(\\exp(a)) = a \\qquad \\exp(\\log(a)) = a\\]\nThese last two are the most important: log and exp undo each other."
+  },
+  {
+    "objectID": "05_ch3/05_log_review.html#worked-examples",
+    "href": "05_ch3/05_log_review.html#worked-examples",
+    "title": "Review: Logarithms and Exponentials",
+    "section": "Worked examples",
+    "text": "Worked examples\n\nExample 1Solution\n\n\nSimplify \\(\\log(3 \\cdot 7)\\).\n\n\n\\[\\log(3 \\cdot 7) = \\log(3) + \\log(7) \\approx 1.099 + 1.946 = 3.045\\]\nCheck: \\(\\log(21) \\approx 3.045\\). \\(\\checkmark\\)\n\n\n\n\nExample 2Solution\n\n\nSimplify \\(\\log(20/4)\\).\n\n\n\\[\\log(20/4) = \\log(20) - \\log(4) \\approx 2.996 - 1.386 = 1.609\\]\nCheck: \\(\\log(5) \\approx 1.609\\). \\(\\checkmark\\)\n\n\n\n\nExample 3Solution\n\n\nSimplify \\(\\exp(\\log(7) - \\log(3))\\).\n\n\n\\[\\exp(\\log(7) - \\log(3)) = \\exp\\!\\left(\\log\\!\\left(\\frac{7}{3}\\right)\\right) = \\frac{7}{3} \\approx 2.333\\]\nThe key step: \\(\\exp(\\log(\\cdot)) = \\cdot\\).\n\n\n\n\nExample 4Solution\n\n\nIf \\(\\log(x) - \\log(y) = 1.4\\), what is \\(x/y\\)?\n\n\n\\[\\log(x) - \\log(y) = \\log\\!\\left(\\frac{x}{y}\\right) = 1.4\\]\n\\[\\frac{x}{y} = e^{1.4} \\approx 4.055\\]\nSo \\(x\\) is about 4 times larger than \\(y\\)."
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html",
+    "href": "07_ch5/07_ch5.html",
+    "title": "One-Way ANOVA",
+    "section": "",
+    "text": "Explain the one-way ANOVA model for observational studies and randomized experiments.\nState and interpret the three types of hypotheses: pairwise, omnibus, and one-group-vs-rest.\nCompute and interpret the pooled variance estimate \\(s_p^2\\).\nConduct pairwise \\(t\\)-tests using the pooled variance.\nSet up and interpret the ANOVA \\(F\\)-test using the extra-sum-of-squares framework.\nRead a nested ANOVA table produced by R.\nCheck ANOVA assumptions with residual plots.\nDescribe the random-effects model and the intraclass correlation."
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#case-study-5.1.1-diet-restriction-and-longevity",
+    "href": "07_ch5/07_ch5.html#case-study-5.1.1-diet-restriction-and-longevity",
+    "title": "One-Way ANOVA",
+    "section": "Case Study 5.1.1: Diet Restriction and Longevity",
+    "text": "Case Study 5.1.1: Diet Restriction and Longevity\nA series of studies found that restricting caloric intake can dramatically increase life expectancy in animals. In one randomized experiment, female mice were assigned at random to one of six diet groups:\n\n\n\n\n\n\n\nLabel\nDiet\n\n\n\n\nNP\nUnlimited nonpurified standard diet\n\n\nN/N85\nNormal diet before and after weaning; controlled at 85 kcal/wk after (serves as the control)\n\n\nN/R50\nNormal before weaning; restricted to 50 kcal/wk after\n\n\nR/R50\nRestricted to 50 kcal/wk both before and after weaning\n\n\nN/R50 lopro\nLike N/R50, but dietary protein decreased with advancing age\n\n\nN/R40\nNormal before weaning; severely restricted to 40 kcal/wk after\n\n\n\nThe response is lifetime in months. We are interested in:\n\nAre any of the diets different from each other in terms of longevity?\nWhich specific diets differ, and by how much?\n\n\nggplot(case0501, aes(x = Diet, y = Lifetime)) +\n  geom_boxplot() +\n  labs(y = \"Lifetime (months)\", x = \"Diet group\")\n\n\n\n\n\n\n\n\n\ncase0501 |&gt;\n  group_by(Diet) |&gt;\n  summarise(n       = n(),\n            Mean    = mean(Lifetime),\n            SD      = sd(Lifetime),\n            Median  = median(Lifetime)) |&gt;\n  knitr::kable(digits = 1)\n\n\n\n\nDiet\nn\nMean\nSD\nMedian\n\n\n\n\nN/N85\n57\n32.7\n5.1\n33.1\n\n\nN/R40\n60\n45.1\n6.7\n46.0\n\n\nN/R50\n71\n42.3\n7.8\n43.9\n\n\nNP\n49\n27.4\n6.1\n28.9\n\n\nR/R50\n56\n42.9\n6.7\n44.0\n\n\nlopro\n56\n39.7\n7.0\n41.0"
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#case-study-5.1.2-the-spock-conspiracy-trial",
+    "href": "07_ch5/07_ch5.html#case-study-5.1.2-the-spock-conspiracy-trial",
+    "title": "One-Way ANOVA",
+    "section": "Case Study 5.1.2: The Spock Conspiracy Trial",
+    "text": "Case Study 5.1.2: The Spock Conspiracy Trial\nIn 1968, Dr. Benjamin Spock was tried in Boston on charges related to encouraging draft resistance during the Vietnam War. The defense argued that the Spock trial judge (referred to here as “Spock’s” judge) systematically underrepresented women on jury venires. They compared this judge’s venires with those of six other Boston-area district judges (labeled A–F).\nThis is an observational study: judge assignment to cases was not randomized.\nThe response is Percent — the percentage of women on each venire. We are interested in:\n\nIs Spock’s judge’s mean percent-women lower than the other judges?\nAre the other judges’ means all the same?\n\n\nggplot(case0502, aes(x = Judge, y = Percent)) +\n  geom_boxplot() +\n  labs(y = \"Percent women on venire\")\n\n\n\n\n\n\n\n\n\nggplot(case0502, aes(x = Judge, y = Percent)) +\n  geom_jitter(width = 0.15, height = 0) +\n  stat_summary(fun = mean, geom = \"crossbar\",\n               color = \"tomato\", linewidth = 0.5, width = 0.55) +\n  labs(y = \"Percent women on venire\",\n       caption = \"Red bars = group sample means\")"
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#pairwise-hypotheses",
+    "href": "07_ch5/07_ch5.html#pairwise-hypotheses",
+    "title": "One-Way ANOVA",
+    "section": "Pairwise Hypotheses",
+    "text": "Pairwise Hypotheses\nTest whether any specific pair of means differs: \\[H_0: \\mu_2 = \\mu_5, \\qquad H_A: \\mu_2 \\neq \\mu_5\\]\nWith \\(I = 7\\) groups there are \\(\\binom{7}{2} = 21\\) possible pairwise tests."
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#omnibus-hypothesis-are-any-means-different",
+    "href": "07_ch5/07_ch5.html#omnibus-hypothesis-are-any-means-different",
+    "title": "One-Way ANOVA",
+    "section": "Omnibus Hypothesis (“Are any means different?”)",
+    "text": "Omnibus Hypothesis (“Are any means different?”)\n\\[H_0: \\mu_1 = \\mu_2 = \\mu_3 = \\mu_4 = \\mu_5 = \\mu_6 = \\mu_7\\] \\[H_A: \\text{at least one } \\mu_i \\neq \\mu_j\\]"
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#one-group-vs.-the-rest",
+    "href": "07_ch5/07_ch5.html#one-group-vs.-the-rest",
+    "title": "One-Way ANOVA",
+    "section": "One Group vs. the Rest",
+    "text": "One Group vs. the Rest\n\\[H_0: \\mu_1 = \\tfrac{1}{6}(\\mu_2 + \\mu_3 + \\mu_4 + \\mu_5 + \\mu_6 + \\mu_7)\\] \\[H_A: \\mu_1 \\neq \\tfrac{1}{6}(\\mu_2 + \\mu_3 + \\mu_4 + \\mu_5 + \\mu_6 + \\mu_7)\\]\nThis asks: Is Spock’s judge’s mean different from the average of the other judges?"
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#group-sample-means",
+    "href": "07_ch5/07_ch5.html#group-sample-means",
+    "title": "One-Way ANOVA",
+    "section": "Group Sample Means",
+    "text": "Group Sample Means\nEstimate \\(\\mu_i\\) with the group sample mean: \\[\\bar{Y}_{i\\bullet} = \\frac{1}{n_i}\\sum_{j=1}^{n_i} Y_{ij}\\]"
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#pooled-variance",
+    "href": "07_ch5/07_ch5.html#pooled-variance",
+    "title": "One-Way ANOVA",
+    "section": "Pooled Variance",
+    "text": "Pooled Variance\nEach group has its own sample standard deviation \\(s_i\\), measuring the spread of observations within that group. Because we assume the same true variance \\(\\sigma^2\\) for every group, we can combine these within-group estimates into one more accurate estimate. We weight each group by the amount of information it contributes — groups with more observations get more weight:\n\\[s_p^2 = \\frac{(n_1-1)s_1^2 + (n_2-1)s_2^2 + \\cdots + (n_I-1)s_I^2}\n               {(n_1-1) + (n_2-1) + \\cdots + (n_I-1)}\\]\nIn words: each term \\((n_i-1)s_i^2\\) in the numerator is the sum of squared deviations from group \\(i\\)’s mean. Adding these across all groups gives the total within-group variation. Dividing by the total degrees of freedom gives the average within-group variance.\nThe denominator is \\(\\nu = n - I\\) (the total degrees of freedom available for estimating variance within groups — we lose one degree of freedom per group because we estimated each group’s mean).\nTwo observations: - This is a weighted average of the within-group variance estimates, weighted by their degrees of freedom. - When \\(I = 2\\) this reduces exactly to the pooled variance from Chapter 2."
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#full-and-reduced-models",
+    "href": "07_ch5/07_ch5.html#full-and-reduced-models",
+    "title": "One-Way ANOVA",
+    "section": "Full and Reduced Models",
+    "text": "Full and Reduced Models\n\n\n\n\n\n\n\n\n\nReduced model (\\(H_0\\))\nFull model (\\(H_A\\))\n\n\n\n\nMeans\n\\(\\mu_1 = \\mu_2 = \\cdots = \\mu_I = \\mu\\) (one shared mean)\n\\(\\mu_1, \\mu_2, \\ldots, \\mu_I\\) (separate means)\n\n\nEstimates\n\\(\\hat{\\mu} = \\bar{Y}_{\\bullet\\bullet}\\)\n\\(\\hat{\\mu}_i = \\bar{Y}_{i\\bullet}\\)\n\n\n# parameters\n1\n\\(I\\)\n\n\n\nFor the Spock data (\\(I = 7\\) judges), here is what each model predicts for each group:\n\n\n\nGroup\nJudge\nFull model prediction\nReduced model prediction\n\n\n\n\n1\nSpock’s\n\\(\\bar{Y}_{1\\bullet}\\)\n\\(\\bar{Y}_{\\bullet\\bullet}\\)\n\n\n2\nJudge A\n\\(\\bar{Y}_{2\\bullet}\\)\n\\(\\bar{Y}_{\\bullet\\bullet}\\)\n\n\n3\nJudge B\n\\(\\bar{Y}_{3\\bullet}\\)\n\\(\\bar{Y}_{\\bullet\\bullet}\\)\n\n\n4\nJudge C\n\\(\\bar{Y}_{4\\bullet}\\)\n\\(\\bar{Y}_{\\bullet\\bullet}\\)\n\n\n5\nJudge D\n\\(\\bar{Y}_{5\\bullet}\\)\n\\(\\bar{Y}_{\\bullet\\bullet}\\)\n\n\n6\nJudge E\n\\(\\bar{Y}_{6\\bullet}\\)\n\\(\\bar{Y}_{\\bullet\\bullet}\\)\n\n\n7\nJudge F\n\\(\\bar{Y}_{7\\bullet}\\)\n\\(\\bar{Y}_{\\bullet\\bullet}\\)\n\n\n\nIn the full model, each group gets its own sample mean as a prediction. Spock’s judge’s venires are predicted by Spock’s judge’s average; Judge A’s venires are predicted by Judge A’s average; and so on. There are 7 free parameters — one per judge.\nIn the reduced model, every observation — regardless of judge — is predicted by the same grand average \\(\\bar{Y}_{\\bullet\\bullet}\\) (the mean over all 46 venires). This is the model that says \\(H_0\\) is true: if all judges have the same expected percent-women, then the best single prediction for any venire is just the overall average.\nWhat is a residual? A residual is simply the distance between an observed value and the model’s prediction for it:\n\nFull model residual: \\(Y_{ij} - \\bar{Y}_{i\\bullet}\\) — how far observation \\((i,j)\\) is from its group’s mean\nReduced model residual: \\(Y_{ij} - \\bar{Y}_{\\bullet\\bullet}\\) — how far observation \\((i,j)\\) is from the grand mean\n\nIntuitively, if the groups really have different means, the full model residuals will be small (each observation is close to its own group mean), while the reduced model residuals will be large (observations from Spock’s group, for example, are far from the overall grand mean)."
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#sums-of-squared-residuals",
+    "href": "07_ch5/07_ch5.html#sums-of-squared-residuals",
+    "title": "One-Way ANOVA",
+    "section": "Sums of Squared Residuals",
+    "text": "Sums of Squared Residuals\nThe residual sum of squares (RSS) for each model is:\n\\[RSS_{full} = \\sum_i \\sum_j (Y_{ij} - \\bar{Y}_{i\\bullet})^2,\n\\quad df_{full} = n - I\\]\n\\[RSS_{reduced} = \\sum_i \\sum_j (Y_{ij} - \\bar{Y}_{\\bullet\\bullet})^2,\n\\quad df_{reduced} = n - 1\\]\nEach RSS adds up all the squared residuals across every observation. Think of it as a scoreboard for how badly the model is fitting: a small RSS means predictions are close to the data; a large RSS means they are far away. Both RSS values involve squaring (so positive and negative residuals don’t cancel) and summing (so we get a single overall measure).\nThe extra sum of squares (ESS) measures how much the fit improves when we go from the reduced model to the full model:\n\\[ESS = RSS_{reduced} - RSS_{full}, \\quad df_{extra} = I - 1\\]\nWhy is \\(RSS_{reduced} \\geq RSS_{full}\\) always? The full model has the reduced model as a special case: if all the \\(\\mu_i\\) happen to be equal, the full model’s separate group means would all estimate the same value as the grand mean, and the two models would give identical fits. In general, the full model has more flexibility, so it can never fit worse than the reduced model — it can always do at least as well. Therefore \\(ESS \\geq 0\\) always.\nWhat does ESS tell us? If \\(H_0\\) is true (all means really are equal), fitting separate group means should not improve the fit by very much — the data don’t contain strong evidence for distinct groups. In that case, ESS will be positive but small. If the means truly differ (the data come from groups with different means), the full model will fit much better, and ESS will be large. The \\(F\\)-test formalizes what “small” and “large” mean.\nThe plots below illustrate this for the Spock data. Red bars/lines show the model’s fitted means; larger gaps between points and those lines = larger residuals.\n\n\n\n\n\n\n\n\n\nThe squared residuals are much smaller under the full model, confirming that group means differ substantially."
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#the-f-statistic",
+    "href": "07_ch5/07_ch5.html#the-f-statistic",
+    "title": "One-Way ANOVA",
+    "section": "The \\(F\\)-Statistic",
+    "text": "The \\(F\\)-Statistic\nIf \\(H_0\\) is true, both \\(ESS/df_{extra}\\) and \\(RSS_{full}/df_{full} = s_p^2\\) estimate the same \\(\\sigma^2\\), so their ratio should be near 1. If \\(H_A\\) is true, the means differ and \\(ESS\\) will be inflated, pushing the ratio above 1.\n\\[F = \\frac{ESS / df_{extra}}{s_p^2}\n    = \\frac{ESS / (I-1)}{RSS_{full} / (n-I)}\\]\nUnder \\(H_0\\), \\(F \\sim F_{I-1,\\; n-I}\\). The \\(p\\)-value uses only the upper tail (large \\(F\\) is evidence against \\(H_0\\))."
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#the-f-distribution",
+    "href": "07_ch5/07_ch5.html#the-f-distribution",
+    "title": "One-Way ANOVA",
+    "section": "The \\(F\\)-Distribution",
+    "text": "The \\(F\\)-Distribution\nThe \\(F\\) distribution is parameterized by two degrees of freedom: numerator (\\(df_1\\)) and denominator (\\(df_2\\)). Below are a few shapes:"
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#p-value-for-the-spock-omnibus-test",
+    "href": "07_ch5/07_ch5.html#p-value-for-the-spock-omnibus-test",
+    "title": "One-Way ANOVA",
+    "section": "\\(p\\)-Value for the Spock Omnibus Test",
+    "text": "\\(p\\)-Value for the Spock Omnibus Test\nThe Spock data has \\(I = 7\\) judges and \\(n = 46\\) venires, so \\(df_{extra} = 6\\) and \\(df_{full} = 39\\).\n\nn     &lt;- nrow(case0502)\nI     &lt;- n_distinct(case0502$Judge)\ndf_extra &lt;- I - 1          # 6\ndf_full  &lt;- n - I          # 39\ness      &lt;- rss_null - rss_full\nsp2      &lt;- rss_full / df_full\nfstat    &lt;- (ess / df_extra) / sp2\nc(ESS = ess, RSS_full = rss_full, sp2 = sp2, F = fstat)\n\n     ESS RSS_full      sp2        F \n1927.081 1864.445   47.806    6.718 \n\n\n\npf(fstat, df1 = df_extra, df2 = df_full, lower.tail = FALSE)\n\n[1] 6.096e-05"
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#checking-the-grouping-variable",
+    "href": "07_ch5/07_ch5.html#checking-the-grouping-variable",
+    "title": "One-Way ANOVA",
+    "section": "Checking the Grouping Variable",
+    "text": "Checking the Grouping Variable\nBefore fitting, confirm the grouping variable is a factor or character:\n\nclass(case0502$Judge)\n\n[1] \"factor\"\n\n\nIf it were numeric, aov() would treat it as a continuous predictor, not a grouping variable. Use as.factor() or mutate(Judge = factor(Judge)) to fix this."
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#omnibus-f-test-with-aov-and-summary",
+    "href": "07_ch5/07_ch5.html#omnibus-f-test-with-aov-and-summary",
+    "title": "One-Way ANOVA",
+    "section": "Omnibus \\(F\\)-Test with aov() and summary()",
+    "text": "Omnibus \\(F\\)-Test with aov() and summary()\n\naout_full &lt;- aov(Percent ~ Judge, data = case0502)\nsummary(aout_full)\n\n            Df Sum Sq Mean Sq F value  Pr(&gt;F)\nJudge        6   1927     321    6.72 6.1e-05\nResiduals   39   1864      48                \n\n\nThe table has two rows:\n\n\n\n\n\n\n\n\n\n\n\nRow\n\\(df\\)\nSum Sq\nMean Sq\n\\(F\\)\n\\(p\\)-value\n\n\n\n\nJudge\n\\(df_{extra} = I - 1\\)\n\\(ESS\\)\n\\(ESS / df_{extra}\\)\n\\(F\\)-stat\n\\(p\\)\n\n\nResiduals\n\\(df_{full} = n - I\\)\n\\(RSS_{full}\\)\n\\(RSS_{full}/df_{full} = s_p^2\\)"
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#pairwise-comparisons",
+    "href": "07_ch5/07_ch5.html#pairwise-comparisons",
+    "title": "One-Way ANOVA",
+    "section": "Pairwise Comparisons",
+    "text": "Pairwise Comparisons\n\nptout &lt;- pairwise.t.test(x = case0502$Percent,\n                         g = case0502$Judge,\n                         p.adjust.method = \"none\")\nptout\n\n\n    Pairwise comparisons using t tests with pooled SD \n\ndata:  case0502$Percent and case0502$Judge \n\n        A     B     C     D     E     F    \nB       0.905 -     -     -     -     -    \nC       0.201 0.223 -     -     -     -    \nD       0.226 0.248 0.700 -     -     -    \nE       0.095 0.104 0.562 0.995 -     -    \nF       0.065 0.069 0.485 0.971 0.964 -    \nSpock's 1e-05 6e-06 7e-05 0.028 0.002 6e-04\n\nP value adjustment method: none \n\n\nEach cell is the raw (unadjusted) \\(p\\)-value for that pair. Note that pairwise.t.test() uses \\(s_p^2\\) from all groups to form the \\(t\\)-statistic, even when comparing just two groups."
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#nested-model-comparisons-with-anova",
+    "href": "07_ch5/07_ch5.html#nested-model-comparisons-with-anova",
+    "title": "One-Way ANOVA",
+    "section": "Nested Model Comparisons with anova()",
+    "text": "Nested Model Comparisons with anova()\nTo test the intermediate hypothesis (Spock’s differs; others pooled):\n\ncase0502 &lt;- case0502 |&gt;\n  mutate(isSpock = Judge == \"Spock's\")\n\naout_intermediate &lt;- aov(Percent ~ isSpock, data = case0502)\naout_null         &lt;- aov(Percent ~ 1,       data = case0502)\n\n\nanova(aout_intermediate, aout_full)\n\nAnalysis of Variance Table\n\nModel 1: Percent ~ isSpock\nModel 2: Percent ~ Judge\n  Res.Df  RSS Df Sum of Sq    F Pr(&gt;F)\n1     44 2191                         \n2     39 1864  5       326 1.37   0.26\n\n\nThe rows are:\n\n\n\n\n\n\n\n\n\n\n\n\nRow\n\\(df_{RSS}\\)\nRSS\n\\(df_{extra}\\)\nESS\n\\(F\\)\n\\(p\\)\n\n\n\n\nModel 1 (reduced)\n\\(df_{reduced}\\)\n\\(RSS_{reduced}\\)\n\n\n\n\n\n\nModel 2 (full)\n\\(df_{full}\\)\n\\(RSS_{full}\\)\n\\(df_{extra}\\)\nESS\n\\(F\\)-stat\n\\(p\\)"
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#full-sequential-anova-table",
+    "href": "07_ch5/07_ch5.html#full-sequential-anova-table",
+    "title": "One-Way ANOVA",
+    "section": "Full Sequential ANOVA Table",
+    "text": "Full Sequential ANOVA Table\nCompare all three models at once:\n\nanova(aout_null, aout_intermediate, aout_full)\n\nAnalysis of Variance Table\n\nModel 1: Percent ~ 1\nModel 2: Percent ~ isSpock\nModel 3: Percent ~ Judge\n  Res.Df  RSS Df Sum of Sq     F Pr(&gt;F)\n1     45 3792                          \n2     44 2191  1      1601 33.48  1e-06\n3     39 1864  5       326  1.37   0.26\n\n\nThis produces the sequential table shown in the hierarchy section above. Row 2 tests Null vs Intermediate; Row 3 tests Intermediate vs Full.\nNote: the \\(F\\)-statistics shown here use \\(s_p^2\\) from the full model (aout_full) as the denominator."
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#residual-plots-in-r",
+    "href": "07_ch5/07_ch5.html#residual-plots-in-r",
+    "title": "One-Way ANOVA",
+    "section": "Residual Plots in R",
+    "text": "Residual Plots in R\nThe quickest way is plot() applied to an aov() object:\n\npar(mfrow = c(2, 2))\nplot(aout_full)\n\n\n\n\n\n\n\npar(mfrow = c(1, 1))\n\nThe two most important panels:\n\nResiduals vs. Fitted: residuals (\\(y\\)-axis) vs. group means (\\(x\\)-axis). Look for unequal spread across the fitted values.\nNormal Q-Q: QQ-plot of residuals. Look for departures from a straight line (skew, heavy tails, outliers)."
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#manual-ggplot2-residual-plots",
+    "href": "07_ch5/07_ch5.html#manual-ggplot2-residual-plots",
+    "title": "One-Way ANOVA",
+    "section": "Manual ggplot2 Residual Plots",
+    "text": "Manual ggplot2 Residual Plots\n\nresid_vec  &lt;- residuals(aout_full)\nfitted_vec &lt;- fitted(aout_full)\nresid_df   &lt;- data.frame(resid = resid_vec, fitted = fitted_vec,\n                         Judge = case0502$Judge)\n\np_rv_fit &lt;- ggplot(resid_df, aes(x = fitted, y = resid)) +\n  geom_point() +\n  geom_hline(yintercept = 0, linetype = \"dashed\") +\n  labs(x = \"Fitted values (group means)\",\n       y = \"Residuals\",\n       title = \"Residuals vs. fitted\")\n\np_rv_grp &lt;- ggplot(resid_df, aes(x = Judge, y = resid)) +\n  geom_boxplot() +\n  geom_hline(yintercept = 0, linetype = \"dashed\") +\n  labs(y = \"Residuals\", title = \"Residuals by group\")\n\np_rv_fit + p_rv_grp\n\n\n\n\n\n\n\n\n\nggplot(resid_df, aes(sample = resid)) +\n  geom_qq() +\n  geom_qq_line() +\n  labs(title = \"Normal Q-Q plot of residuals\")"
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#what-to-look-for",
+    "href": "07_ch5/07_ch5.html#what-to-look-for",
+    "title": "One-Way ANOVA",
+    "section": "What to Look For",
+    "text": "What to Look For\nUnequal variance appears as fan-shaped spread in the Residuals vs. Fitted plot — larger spread for larger fitted values (or vice versa):\n\n\n\n\n\n\n\n\n\nAn outlier appears as an isolated point far from 0:\n\n\n\n\n\n\n\n\n\nSolutions mirror Chapter 3:\n\n\n\n\n\n\n\nViolation\nSolution\n\n\n\n\nIndependence\nANOVA with blocking (Chapters 12–13)\n\n\nUnequal variance\nWelch-style ANOVA; log transformation\n\n\nNon-normality / outliers\nTransformation; run with and without outlier"
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#the-random-effects-model",
+    "href": "07_ch5/07_ch5.html#the-random-effects-model",
+    "title": "One-Way ANOVA",
+    "section": "The Random-Effects Model",
+    "text": "The Random-Effects Model\nThe model is written in two layers:\n\\[Y_{ij} = \\mu_i + \\varepsilon_{ij},\n\\quad \\text{var}(\\varepsilon_{ij}) = \\sigma^2\\] \\[\\mu_i = \\mu + \\xi_i,\n\\quad \\text{var}(\\xi_i) = \\sigma_p^2\\]\nThe first line is identical to the fixed-effects model. The second line says that each group mean \\(\\mu_i\\) is itself random — it is the overall average \\(\\mu\\) plus a random group-specific deviation \\(\\xi_i\\). These deviations have mean 0 and variance \\(\\sigma_p^2\\).\nIn words: every observation has two sources of randomness:\n\nWithin-group noise \\(\\varepsilon_{ij}\\): how much individual \\(j\\) in group \\(i\\) differs from its group’s mean (variance \\(\\sigma^2\\)).\nBetween-group noise \\(\\xi_i\\): how much group \\(i\\)’s mean differs from the overall mean \\(\\mu\\) (variance \\(\\sigma_p^2\\)).\n\nIf \\(\\sigma_p^2 = 0\\), all groups have the same true mean (\\(\\mu_i = \\mu\\) for all \\(i\\)), and there is no between-group variability at all.\nHypotheses: \\[H_0: \\sigma_p^2 = 0 \\quad \\text{(no between-group variability — all group means equal } \\mu\\text{)}\\] \\[H_A: \\sigma_p^2 &gt; 0 \\quad \\text{(some groups have higher/lower means than others)}\\]\nWe run the same \\(F\\)-test as before. Under \\(H_0\\), the \\(F\\)-statistic has the same \\(F_{I-1,\\, n-I}\\) null distribution."
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#why-use-this-model",
+    "href": "07_ch5/07_ch5.html#why-use-this-model",
+    "title": "One-Way ANOVA",
+    "section": "Why Use This Model?",
+    "text": "Why Use This Model?\nIn one-way ANOVA, the \\(p\\)-value from the \\(F\\)-test is identical whether you treat groups as fixed or random. So why bother with random effects?\nIn more complex models — for example, when you have multiple random factors, or when the same individuals appear in multiple groups — treating groups as random leads to different (and generally better) estimates and inference. The one-way case is the simplest introduction to this framework."
+  },
+  {
+    "objectID": "07_ch5/07_ch5.html#intraclass-correlation-icc",
+    "href": "07_ch5/07_ch5.html#intraclass-correlation-icc",
+    "title": "One-Way ANOVA",
+    "section": "Intraclass Correlation (ICC)",
+    "text": "Intraclass Correlation (ICC)\nThe ICC measures the proportion of total variance explained by group membership:\n\\[\\text{ICC} = \\frac{\\hat\\sigma_p^2}{\\hat\\sigma_p^2 + \\hat\\sigma^2}\\]\nTo see why: the total variance of any observation \\(Y_{ij}\\) is \\(\\sigma_p^2 + \\sigma^2\\) (between-group plus within-group). The ICC is the fraction of that total coming from between-group differences.\n\nICC close to 1: most variation is between groups — knowing the group an observation belongs to tells you most of what you need to know about its value.\nICC close to 0: most variation is within groups — group membership explains very little; individual-level noise dominates."
   }
 ]
