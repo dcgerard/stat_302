@@ -1,0 +1,52 @@
+---
+title: "Chapter 5 Case Studies"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+theme_set(theme_bw())
+knitr::opts_chunk$set(echo = TRUE, fig.height = 3, fig.width = 4, fig.align = "center")
+```
+
+# Case Study 5.1.1 Diet Restriction and Longevity --- A Randomized Experiment
+
+A series of studies involving several species of animals found that restricting caloric intake can dramatically increase life expectancy. In one such study, female mice were randomly assigned to one of the following six treatment groups:
+
+1. **NP**: Mice in this group ate as much as they pleased of the nonpurified, standard diet for laboratory mice.
+2. **N/N85**: This group was fed normally both before and after weaning. (The slash distinguishes the two periods.) After weaning, the ration was controlled at 85 kcal/wk. This rather than NP, serves as the control group because caloric intake is held reasonably constant.
+3. **N/R50**: This group was fed a normal diet before weaning and a reduced-calorie diet of 50 kcal/wk after weaning.
+4. **R/R50**: This group was fed a reduced-calorie diet of 50 kcal/wk both before and after weaning.
+5. **N/R50 lopro**: This group was fed a normal diet before weaning, a restricted diet of 50 kcal/wk after weaning, and had dietary protein content decreased with advancing age.
+6. **N/R40**: This group was fed normally before weaning and was given a severely reduced diet of 40 kcal/wk after weaning.
+
+Below are side-by-side boxplots for the lifetimes, measured in months, of the mice in the six groups.
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(Sleuth3)
+data("case0501")
+qplot(Diet, Lifetime, data = case0501, geom = "boxplot")
+case0501 %>%
+  group_by(Diet) %>%
+  summarise(n = n(), Average = mean(Lifetime), SD = sd(Lifetime)) %>%
+  knitr::kable(digits = 1)
+```
+
+# Case Study 5.1.2: The Spock Conspiracy Trial --- An Observational Study
+
+In 1968 Dr. Benjamin Spock was tried in the United States District Court f Massachusetts in Boston on charges of conspiring to violate the Selective Service Act by encouraging young men to resist being drafted into military service for Vietnam. The defense in that case challenged the method by which jurors were selected, claiming that women --- many of whom had raised children according to poplar methods developed by Dr. Spock --- were underrepresented. In fact, the Spock jury had no women.
+
+Boston area juries are selected in three stages. From the City Directory, the Clerk f the Court selects at random 300 names for potential jury duty. Before a trial, a *venire* of 30 or more jurors is selected from the 300 names, again --- according to the law --- at random. An actual jury is selected from the venire in a nonrandom process allowing each side to exclude certain jurors for a variety of reasons.
+
+The Spock defense pointed to the evenire for their trial, which contained only one woman. That woman was released by the prosecution, making an all-male jury. Defense argued that the judge in the trial had a history of venires in which women were systematically underrepresented, contrary to the law. They compared this district judge's recent venires with the venires of six other Boston area district judges. Boxplots of the percents of women in those venires are presented below
+```{r}
+data("case0502")
+qplot(Judge, Percent, data = case0502, geom = "boxplot")
+```
+
+
+
+

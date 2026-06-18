@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-16">
+<meta name="dcterms.date" content="2026-06-17">
 
 <title>Paired and Two-Sample t-Tests – Stat 302: Intermediate Statistics</title>
 <style>
@@ -188,8 +188,9 @@ window.Quarto = {
   <li><a href="#paired-t-test-2.2" id="toc-paired-t-test-2.2" class="nav-link" data-scroll-target="#paired-t-test-2.2">Paired <span class="math inline">\(t\)</span>-Test (§2.2)</a>
   <ul class="collapse">
   <li><a href="#sampling-distributions-and-the-clt" id="toc-sampling-distributions-and-the-clt" class="nav-link" data-scroll-target="#sampling-distributions-and-the-clt">Sampling Distributions and the CLT</a></li>
-  <li><a href="#general-setup-for-the-paired-t-test" id="toc-general-setup-for-the-paired-t-test" class="nav-link" data-scroll-target="#general-setup-for-the-paired-t-test">General Setup for the Paired <span class="math inline">\(t\)</span>-Test</a></li>
-  <li><a href="#applying-the-paired-t-test-twin-study" id="toc-applying-the-paired-t-test-twin-study" class="nav-link" data-scroll-target="#applying-the-paired-t-test-twin-study">Applying the Paired <span class="math inline">\(t\)</span>-Test: Twin Study</a></li>
+  <li><a href="#general-setup-for-the-one-sample-or-paired-t-test" id="toc-general-setup-for-the-one-sample-or-paired-t-test" class="nav-link" data-scroll-target="#general-setup-for-the-one-sample-or-paired-t-test">General Setup for the One-sample (or Paired) <span class="math inline">\(t\)</span>-Test</a></li>
+  <li><a href="#t-distribution" id="toc-t-distribution" class="nav-link" data-scroll-target="#t-distribution"><span class="math inline">\(t\)</span>-distribution</a></li>
+  <li><a href="#applying-the-one-sample-paired-t-test-twin-study" id="toc-applying-the-one-sample-paired-t-test-twin-study" class="nav-link" data-scroll-target="#applying-the-one-sample-paired-t-test-twin-study">Applying the One-sample (Paired) <span class="math inline">\(t\)</span>-Test: Twin Study</a></li>
   </ul></li>
   <li><a href="#confidence-interval-for-the-mean-effect" id="toc-confidence-interval-for-the-mean-effect" class="nav-link" data-scroll-target="#confidence-interval-for-the-mean-effect">Confidence Interval for the Mean Effect</a>
   <ul class="collapse">
@@ -231,7 +232,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 16, 2026</p>
+      <p class="date">June 17, 2026</p>
     </div>
   </div>
   
@@ -285,35 +286,53 @@ window.Quarto = {
 </div>
 <ul>
 <li><p><strong>Central Limit Theorem</strong>: The sampling distribution of the sample mean is approximately normal for sufficiently large <span class="math inline">\(n\)</span>, regardless of the distribution of individual observations.</p></li>
-<li><p><strong>Key result</strong>: If population mean <span class="math inline">\(= \mu\)</span> and population SD <span class="math inline">\(= \sigma\)</span>, then <span class="math display">\[\bar{X} \;\sim\; N\!\left(\mu,\, \frac{\sigma^2}{n}\right)\]</span> This is useful because it tells us how extreme our observed <span class="math inline">\(\bar{X}\)</span> is.</p></li>
+<li><p><strong>Key result</strong>: If population mean <span class="math inline">\(= \mu\)</span> and population SD <span class="math inline">\(= \sigma\)</span>, then <span class="math display">\[\bar{X} \;\sim\; N\!\left(\mu,\, \frac{\sigma^2}{n}\right)\]</span> This is useful because it tells us how extreme our observed <span class="math inline">\(\bar{X}\)</span> is.</p>
+<ul>
+<li><span class="math inline">\(\bar{X}\)</span>: Sample mean</li>
+<li><span class="math inline">\(\mu = E[\bar{X}]\)</span>: Population mean</li>
+<li><span class="math inline">\(\sigma^2\)</span>: Population variance</li>
+<li><span class="math inline">\(n\)</span>: Sample size</li>
+<li><span class="math inline">\(\sigma^2 / n\)</span>: Variance of <span class="math inline">\(\bar{X}\)</span></li>
+</ul></li>
 </ul>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="02_fig/fig_xbar_distribution.svg" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption>The sampling distribution of the mean with each component labeled.</figcaption>
-</figure>
-</div>
 </section>
-<section id="general-setup-for-the-paired-t-test" class="level2">
-<h2 class="anchored" data-anchor-id="general-setup-for-the-paired-t-test">General Setup for the Paired <span class="math inline">\(t\)</span>-Test</h2>
+<section id="general-setup-for-the-one-sample-or-paired-t-test" class="level2">
+<h2 class="anchored" data-anchor-id="general-setup-for-the-one-sample-or-paired-t-test">General Setup for the One-sample (or Paired) <span class="math inline">\(t\)</span>-Test</h2>
 <ol type="1">
 <li><p><strong>Model</strong>: <span class="math inline">\(E[\bar{X}] = \mu\)</span> (the expected mean difference is <span class="math inline">\(\mu\)</span>).</p></li>
 <li><p><strong>Hypotheses</strong>: <span class="math display">\[H_0: \mu = 0 \quad \text{(no difference)} \qquad
   H_A: \mu \neq 0 \quad \text{(some difference)}\]</span></p></li>
-<li><p><strong>Test statistic</strong>: Standardize <span class="math inline">\(\bar{X}\)</span>. If <span class="math inline">\(\sigma\)</span> were known: <span class="math display">\[Z = \frac{\bar{X}}{\sigma/\sqrt{n}} \sim N(0, 1)\]</span> Under <span class="math inline">\(H_0\)</span>, the shaded tails of <span class="math inline">\(N(0,1)\)</span> provide evidence against <span class="math inline">\(H_0\)</span>.</p></li>
-<li><p><strong>Problem</strong>: <span class="math inline">\(\sigma^2\)</span> is unknown.</p>
+<li><p><strong>Test statistic</strong>: Standardize <span class="math inline">\(\bar{X}\)</span>. If <span class="math inline">\(\sigma\)</span> were known: <span class="math display">\[Z = \frac{\bar{X}}{\sigma/\sqrt{n}} \sim N(0, 1)\]</span></p></li>
+<li><p>Compare <span class="math inline">\(Z\)</span> to a <span class="math inline">\(N(0, 1)\)</span></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04_ch2_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Shaded region provides evidence against <span class="math inline">\(H_0\)</span>.</li>
+<li>Area of shaded reason is <span class="math inline">\(p\)</span>-value.</li>
+</ul></li>
+</ol>
+</section>
+<section id="t-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="t-distribution"><span class="math inline">\(t\)</span>-distribution</h2>
+<ul>
+<li><strong>Problem</strong>: <span class="math inline">\(\sigma^2\)</span> is unknown.
 <ul>
 <li><strong>Solution</strong>: Estimate <span class="math inline">\(\sigma^2\)</span> with the sample variance <span class="math inline">\(s^2\)</span>.</li>
 <li>Substituting <span class="math inline">\(s\)</span> for <span class="math inline">\(\sigma\)</span> introduces extra uncertainty, so we use the <span class="math inline">\(t\)</span>-distribution instead of <span class="math inline">\(N(0,1)\)</span>: <span class="math display">\[T = \frac{\bar{X}}{s/\sqrt{n}} \;\sim\; t_\nu \quad
   \text{where } \nu = n - 1 \text{ ("degrees of freedom")}\]</span></li>
 </ul></li>
-</ol>
-<ul>
 <li><strong>Why use <span class="math inline">\(t\)</span> instead of <span class="math inline">\(N(0,1)\)</span>?</strong>
 <ul>
 <li>Estimating <span class="math inline">\(\sigma^2\)</span> adds uncertainty.</li>
 <li>The <span class="math inline">\(t\)</span>-distribution has heavier tails than <span class="math inline">\(N(0,1)\)</span>.</li>
-<li>Using <span class="math inline">\(N(0,1)\)</span> would make you over-confident in the wrongness of <span class="math inline">\(\bar{X}\)</span>.</li>
+<li>Using <span class="math inline">\(N(0,1)\)</span> would make you over-confident in the weirdness of <span class="math inline">\(\bar{X}\)</span>.</li>
 </ul></li>
 </ul>
 <div class="cell" data-layout-align="center">
@@ -326,8 +345,8 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<section id="applying-the-paired-t-test-twin-study" class="level2">
-<h2 class="anchored" data-anchor-id="applying-the-paired-t-test-twin-study">Applying the Paired <span class="math inline">\(t\)</span>-Test: Twin Study</h2>
+<section id="applying-the-one-sample-paired-t-test-twin-study" class="level2">
+<h2 class="anchored" data-anchor-id="applying-the-one-sample-paired-t-test-twin-study">Applying the One-sample (Paired) <span class="math inline">\(t\)</span>-Test: Twin Study</h2>
 <ul>
 <li><span class="math inline">\(\bar{X} = 0.199\)</span>, <span class="math inline">\(s/\sqrt{n} = 0.0615\)</span>, <span class="math inline">\(\nu = n - 1 = 14\)</span>.</li>
 <li><span class="math inline">\(T = 0.199 / 0.0615 = 3.236\)</span>. Compare to <span class="math inline">\(t_{14}\)</span>.</li>
@@ -341,20 +360,27 @@ window.Quarto = {
 </div>
 </div>
 </div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fl">3.236</span>, <span class="at">df =</span> <span class="dv">14</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.005977</code></pre>
+</div>
+</div>
 <ul>
 <li>p-value <span class="math inline">\(= 0.006\)</span>: very strong evidence that <span class="math inline">\(H_0\)</span> is false.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Sleuth3)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"case0202"</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>case0202 <span class="sc">|&gt;</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff =</span> Unaffected <span class="sc">-</span> Affected) <span class="ot">-&gt;</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  twins</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(twins<span class="sc">$</span>diff) <span class="sc">|&gt;</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">|&gt;</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(estimate, statistic, p.value, conf.low, conf.high)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>twins <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0202.csv"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>twins <span class="sc">|&gt;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff =</span> Unaffected <span class="sc">-</span> Affected) <span class="ot">-&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  twins</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(diff <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> twins) <span class="sc">|&gt;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">|&gt;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(estimate, statistic, p.value, conf.low, conf.high)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 5
   estimate statistic p.value conf.low conf.high
@@ -373,8 +399,6 @@ window.Quarto = {
 <li><p>Solving for <span class="math inline">\(\mu\)</span> (and using <span class="math inline">\(-t_{n-1}(0.025) = t_{n-1}(0.975)\)</span>): <span class="math display">\[\bar{X} - t_{n-1}(0.975)\,\frac{s}{\sqrt{n}} \;\leq\; \mu \;\leq\;
   \bar{X} + t_{n-1}(0.975)\,\frac{s}{\sqrt{n}}\]</span></p></li>
 <li><p><strong>95% Confidence Interval</strong>: <span class="math display">\[\bar{X} \;\pm\; t_{n-1}(0.975)\,\frac{s}{\sqrt{n}}\]</span></p></li>
-<li><p><strong>Correct interpretation</strong>: We used a procedure that would capture the true parameter in 95% of repeated samples.</p></li>
-<li><p><strong>Incorrect</strong>: After sampling, there is a 95% probability the parameter is in this interval (it either is or isn’t — we just don’t know).</p></li>
 </ul>
 <section id="interpreting-95-confidence" class="level2">
 <h2 class="anchored" data-anchor-id="interpreting-95-confidence">Interpreting “95% Confidence”</h2>
@@ -405,16 +429,16 @@ window.Quarto = {
 </ul></li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"case0201"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>case0201 <span class="sc">|&gt;</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">factor</span>(Year)) <span class="ot">-&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  finch</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(finch, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Depth)) <span class="sc">+</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">coef =</span> <span class="cn">Inf</span>) <span class="sc">+</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Beak Depth (mm)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>finch <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0201.csv"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>finch <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">factor</span>(Year)) <span class="ot">-&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  finch</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(finch, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Depth)) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">coef =</span> <span class="cn">Inf</span>) <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Beak Depth (mm)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -448,9 +472,9 @@ window.Quarto = {
 <li><p><strong>95% Confidence Interval</strong> for <span class="math inline">\(\mu_1 - \mu_2\)</span>: <span class="math display">\[(\bar{X} - \bar{Y}) \;\pm\; t_\nu(0.975)\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}\]</span></p></li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tout <span class="ot">&lt;-</span> <span class="fu">t.test</span>(Depth <span class="sc">~</span> Year, <span class="at">data =</span> finch)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(tout) <span class="sc">|&gt;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(estimate, statistic, p.value, conf.low, conf.high)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>tout <span class="ot">&lt;-</span> <span class="fu">t.test</span>(Depth <span class="sc">~</span> Year, <span class="at">data =</span> finch)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(tout) <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(estimate, statistic, p.value, conf.low, conf.high)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 5
   estimate statistic    p.value conf.low conf.high

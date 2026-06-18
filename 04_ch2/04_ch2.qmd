@@ -8,11 +8,37 @@ bibliography: "../bib.bib"
 ```{r setup}
 #| include: false
 set.seed(1)
+library(ggplot2)
 knitr::opts_chunk$set(echo       = TRUE,
                       fig.height = 3,
                       fig.width  = 6,
                       fig.align  = "center")
 ggplot2::theme_set(ggplot2::theme_bw())
+plt_t <- function(mu = 0, sig = 1, lb = -Inf, ub = Inf, df = Inf, rng = c(-3, 3), two_sided = FALSE, col = "#E69F00", lwd = 1) {
+  tibble::tibble(x = seq(mu + rng[[1]] * sig, mu + rng[[2]] * sig, length.out = 500)) |>
+    dplyr::mutate(y = dt(x = (x - mu) / sig, df = df)) ->
+    df1
+  df1 |>
+    dplyr::filter(x > lb, x < ub) ->
+    df2
+  ggplot() +
+    geom_line(data = df1, mapping = aes(x = x, y = y), linewidth = lwd) +
+    geom_area(data = df2, mapping = aes(x = x, y = y), fill = col) +
+    geom_line(data = df2, mapping = aes(x = x, y = y), color = col, linewidth = lwd) +
+    theme_classic() +
+    theme(axis.title = element_blank()) ->
+    pl
+  
+  if (two_sided) {
+    df1 |>
+      dplyr::filter(x > -ub, x < -lb) ->
+      df3
+    pl <- pl + 
+      geom_area(data = df3, mapping = aes(x = x, y = y), fill = col) +
+      geom_line(data = df3, mapping = aes(x = x, y = y), color = col, linewidth = lwd)
+  }
+  pl
+}
 ```
 
 # Learning Objectives
@@ -84,8 +110,10 @@ if (!file.exists("02_fig/fig_sampling_dist.gif")) {
 
     obs_df <- data.frame(obs = cur_samp, ypos = jitter_y[, n])
 
-    p_obs <- ggplot(obs_df, aes(x = obs, y = ypos)) +
-      geom_point(color = "#4a90d9", size = 3.2, alpha = 0.85) +
+    p_obs <- ggplot(obs_df) +
+      geom_boxplot(mapping = aes(x = obs), outliers = FALSE) +
+      geom_point(color = "#4a90d9", size = 3.2, alpha = 0.85,
+                 mapping = aes(x = obs, y = ypos)) +
       geom_vline(xintercept = cur_mean,
                  color = "#c0392b", linewidth = 1.3) +
       annotate("text", x = cur_mean, y = 0.55,
@@ -136,10 +164,14 @@ if (!file.exists("02_fig/fig_sampling_dist.gif")) {
 - **Key result**: If population mean $= \mu$ and population SD $= \sigma$, then
   $$\bar{X} \;\sim\; N\!\left(\mu,\, \frac{\sigma^2}{n}\right)$$
   This is useful because it tells us how extreme our observed $\bar{X}$ is.
+  
+  - $\bar{X}$: Sample mean
+  - $\mu = E[\bar{X}]$: Population mean
+  - $\sigma^2$: Population variance
+  - $n$: Sample size
+  - $\sigma^2 / n$: Variance of $\bar{X}$
 
-![The sampling distribution of the mean with each component labeled.](02_fig/fig_xbar_distribution.svg){fig-align="center" width="80%"}
-
-## General Setup for the Paired $t$-Test
+## General Setup for the One-sample (or Paired) $t$-Test
 
 1. **Model**: $E[\bar{X}] = \mu$ (the expected mean difference is $\mu$).
 
@@ -149,9 +181,21 @@ if (!file.exists("02_fig/fig_sampling_dist.gif")) {
 
 3. **Test statistic**: Standardize $\bar{X}$. If $\sigma$ were known:
    $$Z = \frac{\bar{X}}{\sigma/\sqrt{n}} \sim N(0, 1)$$
-   Under $H_0$, the shaded tails of $N(0,1)$ provide evidence against $H_0$.
+   
+4.  Compare $Z$ to a $N(0, 1)$
 
-4. **Problem**: $\sigma^2$ is unknown.
+    ```{r}
+    #| echo: false
+    plt_t(ub = -2, two_sided = TRUE) +
+      geom_vline(xintercept = c(-2, 2), lty = 2, col = "#56B4E9")
+    ```
+    
+    - Shaded region provides evidence against $H_0$.
+    - Area of shaded reason is $p$-value.
+
+## $t$-distribution
+
+-  **Problem**: $\sigma^2$ is unknown.
    - **Solution**: Estimate $\sigma^2$ with the sample variance $s^2$.
    - Substituting $s$ for $\sigma$ introduces extra uncertainty, so we
      use the $t$-distribution instead of $N(0,1)$:
@@ -161,7 +205,7 @@ if (!file.exists("02_fig/fig_sampling_dist.gif")) {
 - **Why use $t$ instead of $N(0,1)$?**
   - Estimating $\sigma^2$ adds uncertainty.
   - The $t$-distribution has heavier tails than $N(0,1)$.
-  - Using $N(0,1)$ would make you over-confident in the wrongness of
+  - Using $N(0,1)$ would make you over-confident in the weirdness of
     $\bar{X}$.
 
 ```{r t-vs-normal-plot}
@@ -172,8 +216,8 @@ library(broom)
 xseq <- seq(-4, 4, length.out = 300)
 data.frame(
   x    = c(xseq, xseq, xseq),
-  y    = c(dt(xseq, df = 4), dt(xseq, df = 14), dnorm(xseq)),
-  dist = rep(c("t (df=4)", "t (df=14)", "Normal"), each = length(xseq))
+  y    = c(dt(xseq, df = 1), dt(xseq, df = 5), dnorm(xseq)),
+  dist = rep(c("t (df=1)", "t (df=5)", "Normal"), each = length(xseq))
 ) |>
   ggplot(aes(x = x, y = y, color = dist, lty = dist)) +
   geom_line(lwd = 1) +
@@ -182,7 +226,7 @@ data.frame(
   theme(legend.position = "inside", legend.position.inside = c(0.8, 0.7))
 ```
 
-## Applying the Paired $t$-Test: Twin Study
+## Applying the One-sample (Paired) $t$-Test: Twin Study
 
 - $\bar{X} = 0.199$, $s/\sqrt{n} = 0.0615$, $\nu = n - 1 = 14$.
 - $T = 0.199 / 0.0615 = 3.236$. Compare to $t_{14}$.
@@ -203,18 +247,23 @@ data.frame(x = xseq, y = dt(xseq, df = nu)) |>
        title = paste0("t distribution (df = ", nu, "), p-value = 0.006"))
 ```
 
+```{r}
+2 * pt(-3.236, df = 14)
+```
+
 - p-value $= 0.006$: very strong evidence that $H_0$ is false.
 
 ```{r case0202-ttest}
 #| message: false
-library(Sleuth3)
+library(tidyverse)
+library(broom)
+twins <- read_csv("https://dcgerard.github.io/stat_302/data/case0202.csv")
 
-data("case0202")
-case0202 |>
+twins |>
   mutate(diff = Unaffected - Affected) ->
   twins
 
-t.test(twins$diff) |>
+t.test(diff ~ 1, data = twins) |>
   tidy() |>
   select(estimate, statistic, p.value, conf.low, conf.high)
 ```
@@ -234,11 +283,6 @@ t.test(twins$diff) |>
 
 - **95% Confidence Interval**:
   $$\bar{X} \;\pm\; t_{n-1}(0.975)\,\frac{s}{\sqrt{n}}$$
-
-- **Correct interpretation**: We used a procedure that would capture the
-  true parameter in 95% of repeated samples.
-- **Incorrect**: After sampling, there is a 95% probability the parameter
-  is in this interval (it either is or isn't — we just don't know).
 
 ## Interpreting "95% Confidence"
 
@@ -360,8 +404,9 @@ if (!file.exists("02_fig/fig_ci_interpretation.gif")) {
     have **two independent samples**.
 
 ```{r finch-plot}
-data("case0201")
-case0201 |>
+#| message: false
+finch <- read_csv("https://dcgerard.github.io/stat_302/data/case0201.csv")
+finch |>
   mutate(Year = factor(Year)) ->
   finch
 

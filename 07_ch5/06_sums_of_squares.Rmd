@@ -1,0 +1,576 @@
+---
+title: "Decoding Sums of Squares"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "metropolis"
+    slide_level: 2
+urlcolor: "blue"
+---
+
+```{r setup, include=FALSE}
+ggplot2::theme_set(
+  ggplot2::theme_bw()
+  )
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.height = 2.5, 
+                      fig.width = 4, 
+                      fig.align = "center")
+```
+
+## Objectives
+
+- Demonstrate how sums of squares $F$-test.
+
+
+```{r, message=FALSE, warning=FALSE}
+library(Sleuth3)
+library(tidyverse)
+data("case0502")
+```
+
+# Full $F$-test
+
+## Model
+
+- Model: $Y_{ij} = \mu_{i} + \epsilon_{ij}$ \bigskip
+- $Y_{ij}$: Percent women in venire $j$ of judge $i$. \bigskip
+- $\mu_i$: Mean percent women for judge $i$. \bigskip
+- $\epsilon_{ij}$: Individual-specific noice for venire $j$ of judge $i$. Assumed to have mean 0 and variance $\sigma^2$. \bigskip
+- $\sigma^2$ is assumed to be the **same** for all venires of all judges.
+
+## Hypotheses
+
+- $H_0$: $\mu_1 = \mu_2 = \mu_3 = \mu_4 = \mu_5 = \mu_6 = \mu_7$ (all judges have the same mean percent women). \bigskip
+- $H_A$: As least some $\mu_i \neq \mu_j$ (there are at least two judges with different mean percent women).
+
+## Estimates
+
+We estimate the means within each groups differently according to the full and reduced models
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+Group   & 1                      & 2                      & 3                      & 4                      & 5                      & 6                      & 7                      \\
+\hline
+Full    & $\bar{Y}_{1\bullet}$     & $\bar{Y}_{2\bullet}$     & $\bar{Y}_{3\bullet}$     & $\bar{Y}_{4\bullet}$     & $\bar{Y}_{5\bullet}$     & $\bar{Y}_{6\bullet}$     & $\bar{Y}_{7\bullet}$     \\
+\hline
+Reduced & $\bar{Y}_{\bullet\bullet}$ & $\bar{Y}_{\bullet\bullet}$ & $\bar{Y}_{\bullet\bullet}$ & $\bar{Y}_{\bullet\bullet}$ & $\bar{Y}_{\bullet\bullet}$ & $\bar{Y}_{\bullet\bullet}$ & $\bar{Y}_{\bullet\bullet}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+- $\bar{Y}_{i\bullet} = \frac{1}{n_i}(Y_{i1} + Y_{i2} + \cdots Y_{in_i})$
+- $\bar{Y}_{\bullet\bullet}$ = Average of all values in dataset.
+
+## Spock Data: Null Model
+
+```{r}
+x <- jitter(rep(1, length = nrow(case0502)))
+z <- jitter(as.numeric(case0502$Judge))
+qplot(x = z, y = Percent, data = case0502, xlab = "Judge") +
+  scale_x_continuous(breaks = 1:7, labels = c("A", "B", "C", "D", "E", "F", "Spock's")) +
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+```
+
+## Spock Data: Alternative Model
+
+```{r}
+qplot(x = z, y = Percent, data = case0502, xlab = "Judge") +
+  scale_x_continuous(breaks = 1:7, labels = c("A", "B", "C", "D", "E", "F", "Spock's"))
+```
+
+## Spock Data: Null Model Estimates
+
+```{r}
+ybar <- mean(case0502$Percent)
+qplot(x = z, y = Percent, data = case0502, xlab = "Judge") +
+  scale_x_continuous(breaks = 1:7, labels = c("A", "B", "C", "D", "E", "F", "Spock's")) +
+  geom_hline(yintercept = ybar, lty = 2, col = 2)
+```
+
+## Spock Data: Alternative Model Estimates
+```{r}
+case0502 %>%
+  group_by(Judge) %>%
+  summarize(mean = mean(Percent)) %>%
+  mutate(z = as.numeric(Judge)) %>%
+  mutate(zlower = z - 1/3, zupper = z + 1/3) ->
+  meandf
+qplot(x = z, y = Percent, data = case0502, xlab = "Judge") +
+  scale_x_continuous(breaks = 1:7, labels = c("A", "B", "C", "D", "E", "F", "Spock's")) +
+  geom_segment(data = meandf, mapping = aes(x = zlower, xend = zupper, y = mean, yend = mean), col = 2, lty = 2)
+```
+
+
+## Spock Data: Null Model Residuals
+
+```{r}
+qplot(x = z, y = Percent, data = case0502, xlab = "Judge") +
+  scale_x_continuous(breaks = 1:7, labels = c("A", "B", "C", "D", "E", "F", "Spock's")) +
+  geom_hline(yintercept = ybar, lty = 2, col = 2) +
+  geom_segment(data = data.frame(x = z, xend = z, y = ybar, yend = case0502$Percent), mapping = aes(x = x, xend = xend, y = y, yend = yend), lty = 2, col = 4)
+```
+
+## Spock's Data: Alternative Model Residuals
+
+```{r}
+meandf %>%
+  select(Judge, mean) %>%
+  right_join(case0502, by = "Judge") %>%
+  mutate(resid = Percent - mean) ->
+  residdf
+residdf$z <- z
+qplot(x = z, y = Percent, data = case0502, xlab = "Judge") +
+  scale_x_continuous(breaks = 1:7, labels = c("A", "B", "C", "D", "E", "F", "Spock's")) +
+  geom_segment(data = meandf, mapping = aes(x = zlower, xend = zupper, y = mean, yend = mean), col = 2, lty = 2) +
+  geom_segment(data = residdf, mapping = aes(x = z, xend = z, y = Percent, yend = mean), lty = 2, col = 4)
+```
+
+## Squared Residuals
+```{r}
+reduced_resids <- case0502$Percent - ybar
+full_resids <- residdf$resid
+data.frame(sqResidual = c(full_resids, reduced_resids)^2,
+           Model = c(rep("Full", length(full_resids)), 
+                     rep("Reduced", length(reduced_resids)))) %>%
+  ggplot(mapping = aes(x = Model, y = sqResidual)) +
+  geom_boxplot() +
+  ylab("Squared Residuals")
+```
+
+## Sum of Squared Residuals
+
+- $RSS_{full} = \sum_{i}\sum_{j}(y_{ij} - \bar{y}_{i\cdot})^2$ = `r sum(full_resids^2)` (Sum of squared residuals in the full model)
+
+- $df_{full}$ = #obs - #{parameters in full model} = $n - 7$ (degrees of freedom in the full model)
+
+\pause
+
+- $RSS_{reduced} = \sum_{i}\sum_{j}(y_{ij} - \bar{y}_{\cdot\cdot})^2$ = `r sum(reduced_resids^2)` (Sum of the squared residuals in the reduced model)
+
+- $df_{reduced}$ = #obs - #{parameters in reduced model} = $n - 1$ (degrees of freedom in the reduced model)
+
+\pause
+
+- Extra sum of squares = $ESS = RSS_{reduced} - RSS_{full}$. (how much larger is the sum of squared residuals in the reduced model compared to that in the full model)
+
+- $df_{extra} = df_{reduced} - df_{full}$
+
+## *Nota Bene*
+
+- $RSS_{reduced}$ will **always** be bigger than $RSS_{full}$
+
+- So $ESS$ will **always** be positive.
+
+\pause
+
+- But if the Null (reduced) model is true, then $RSS_{reduced}$ won't be **a lot** bigger than $RSS_{full}$. 
+
+- So if the Null (reduced) model is true, $ESS$ won't be "very" far from 0.
+
+\pause
+
+- We can quantify what "a lot" and "very" mean using statistical theory.
+
+## Null Distribution
+- If the Null (reduced) model is correct, then the following $F$-statistic follows an $F$ distribution.
+$$
+F-\text{statistic} = \frac{ESS / df_{extra}}{s_p^2} = \frac{ESS / df_{extra}}{RSS_{full} / df_{full}}
+$$
+
+\pause 
+
+- $df_{extra}$ is the number of added parameters and is called the "extra degrees of freedom". It is the number of parameters in the mean for the full model minus the number of parameters in the mean for the reduced model.
+
+\pause
+
+- $s_p^2$ is the pooled estimate of the variance. It is equal to $RSS_{full}/df_{full}$.
+
+## Spock's $F$-statistic
+
+```{r}
+fstat <- ((sum(reduced_resids^2) - sum(full_resids^2)) / 6) / 47.81
+```
+
+- $s_p^2$ = 47.81.
+- $F$-stat = ((`r sum(reduced_resids^2)` - `r sum(full_resids^2)`) / 6) / 47.81 = `r fstat` 
+
+## The $F$-distribution
+
+- Parameterized by two parameters, the *numerator degrees of freedom* (the extra degrees of freedom) and the *denominator degrees of freedom* (degrees of freedom in the full model).
+
+
+- Interact with `df()`, `pf()`, `qf()`, `rf()` in R.
+
+
+- Only need upper tail probabilities for $p$-values (because only large values are extreme).
+
+## $F_{2,2}$ distribution
+
+```{r}
+x <- seq(0, 5, length = 100)
+y <- df(x = x, df1 = 2, df2 = 2)
+qplot(x, y, geom = "line", xlab = "F", ylab = "f(F)")
+```
+
+## $F_{2,30}$ distribution
+
+```{r}
+x <- seq(0, 5, length = 100)
+y <- df(x = x, df1 = 2, df2 = 30)
+qplot(x, y, geom = "line", xlab = "F", ylab = "f(F)")
+```
+
+## $F_{30,2}$ distribution
+
+```{r}
+x <- seq(0, 5, length = 100)
+y <- df(x = x, df1 = 30, df2 = 2)
+qplot(x, y, geom = "line", xlab = "F", ylab = "f(F)")
+```
+
+## $F_{30,30}$ distribution
+
+```{r}
+x <- seq(0, 5, length = 100)
+y <- df(x = x, df1 = 30, df2 = 30)
+qplot(x, y, geom = "line", xlab = "F", ylab = "f(F)")
+```
+
+
+## Density Function
+
+```{r, echo = TRUE}
+df(x = 1, df1 = 30, df2 = 30)
+```
+
+```{r, echo = FALSE}
+library(ggplot2)
+x <- seq(0, 5, length = 100)
+y <- df(x, df1 = 30, df2 = 30)
+qplot(x, y, geom = "line", ylab = "f(x)") +
+  geom_segment(dat = data.frame(x = 1, xend = 1, y = 0, yend = df(x = 1, df1 = 30, df2 = 30)), aes(x = x, y = y, xend = xend, yend = yend), lty = 2, col = 2)
+```
+
+## Random Generation
+
+```{r, echo = TRUE}
+samp <- rf(n = 1000, df1 = 30, df2 = 30)
+head(samp)
+```
+
+```{r, echo = FALSE}
+qplot(samp, geom = "histogram", fill = I("white"), color = I("black"), bins = 20)
+```
+
+
+## Cumulative Distribution Function
+
+```{r, echo = TRUE}
+pf(q = 1, df1 = 30, df2 = 30)
+```
+
+```{r, echo = FALSE}
+x <- seq(0, 5, length = 100)
+y <- df(x, df1 = 30, df2 = 30)
+polydf <- data.frame(x = c(min(x), x[x < 1], 1, 0), 
+                     y = c(0, y[x < 1], 0, 0))
+qplot(x, y, geom = "line", ylab = "f(x)") +
+  geom_polygon(data = polydf, mapping = aes(x = x, y = y), 
+               fill = "blue", alpha = 3/4)
+```
+
+## Quantile Function
+
+```{r, echo = TRUE}
+qf(p = 0.5, df1 = 30, df2 = 30)
+```
+
+```{r, echo = FALSE}
+x <- seq(0, 5, length = 100)
+y <- df(x, df1 = 30, df2 = 30)
+polydf <- data.frame(x = c(min(x), x[x < 1], 1, 0), 
+                     y = c(0, y[x < 1], 0, 0))
+qplot(x, y, geom = "line", ylab = "f(x)") +
+  geom_polygon(data = polydf, mapping = aes(x = x, y = y), 
+               fill = "blue", alpha = 3/4) +
+  annotate(geom = "text", x = 0.7, y = 0.2, label = "0.5", color = "white")
+```
+
+
+## Spock Example
+
+- Spock's $F$ follows an $F_{I-1, n - I} = F_{6, 39}$ distribution *under $H_0$*.
+- How rare is our observed $F$-stat = 6.7, if $H_0$ were true?
+
+```{r}
+x <- seq(0, 7, length = 100)
+y <- df(x = x, df1 = 6, df2 = 39)
+qplot(x, y, geom = "line", xlab = "F", ylab = "f(F)")
+```
+
+## Spock Example
+
+- The p-value is found with
+
+```{r, echo = TRUE}
+pf(q = 6.718, df1 = 6, df2 = 39, lower.tail = FALSE)
+```
+
+# Submodel
+
+## Another Test
+
+- Suppose we are interested in testing $H_0: \mu_2 = \mu_3 = \cdots = \mu_7$ against the alternative that at least one mean is different from some other mean.
+
+- We could do the full $F$-test on the subset of the data that excludes group 1.
+
+- But we would **lose degrees of freedom** because we wouldn't be using group 1 to improve our estimate of the variance.
+
+
+## Model
+
+- Model: $Y_{ij} = \mu_{i} + \epsilon_{ij}$ \bigskip
+- $Y_{ij}$: Percent women in venire $j$ of judge $i$. \bigskip
+- $\mu_i$: Mean percent women for judge $i$. \bigskip
+- $\epsilon_{ij}$: Individual-specific noice for venire $j$ of judge $i$. Assumed to have mean 0 and variance $\sigma^2$. \bigskip
+- $\sigma^2$ is assumed to be the **same** for all venires of all judges.
+
+## Hypotheses
+
+- $H_0$: $\mu_2 = \mu_3 = \mu_4 = \mu_5 = \mu_6 = \mu_7$ (judges 2 through 7 have the same mean percent women, but judge 1 is allowed to have a different mean). \bigskip
+- $H_A$: As least some $\mu_i \neq \mu_j$ for judges 2 through 7 (there are at least two judges with different mean percent women, among judges 2 through 7).
+
+## Estimates
+
+We estimate the means within each groups differently according to the full and reduced models
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+Group   & 1                      & 2                      & 3                      & 4                      & 5                      & 6                      & 7                      \\
+\hline
+Full    & $\bar{Y}_{1\bullet}$     & $\bar{Y}_{2\bullet}$     & $\bar{Y}_{3\bullet}$     & $\bar{Y}_{4\bullet}$     & $\bar{Y}_{5\bullet}$     & $\bar{Y}_{6\bullet}$     & $\bar{Y}_{7\bullet}$     \\
+\hline
+Reduced & $\bar{Y}_{1\bullet}$ & $\bar{Y}_{0}$ & $\bar{Y}_{0}$ & $\bar{Y}_{0}$ & $\bar{Y}_{0}$ & $\bar{Y}_{0}$ & $\bar{Y}_{0}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+- $\bar{Y}_{i\bullet} = \frac{1}{n_i}(Y_{i1} + Y_{i2} + \cdots Y_{in_i})$
+- $\bar{Y}_{0}$ = Average of all values in judges 2 through 7.
+
+
+## Estimate under Null Model
+```{r}
+case0502 %>%
+  mutate(isSpock = Judge == "Spock's") %>%
+  group_by(isSpock) %>%
+  summarize(mean = mean(Percent)) %>%
+  ungroup() %>%
+  mutate(lowerz = isSpock * 6 + 0.7,
+         upperz = isSpock + 6.3) ->
+  otherdf
+
+case0502 %>%
+  mutate(isSpock = Judge == "Spock's") %>%
+  left_join(otherdf, by = "isSpock") ->
+  reduceddf
+
+
+qplot(x = z, y = Percent, data = case0502, xlab = "Judge") +
+  scale_x_continuous(breaks = 1:7, labels = c("A", "B", "C", "D", "E", "F", "Spock's")) +
+  geom_segment(data = reduceddf, mapping = aes(x = lowerz, xend = upperz, y = mean, yend = mean), lty = 2, col = 2)
+```
+
+
+## Estimate Under Full Model
+
+```{r}
+qplot(x = z, y = Percent, data = case0502, xlab = "Judge") +
+  scale_x_continuous(breaks = 1:7, labels = c("A", "B", "C", "D", "E", "F", "Spock's")) +
+  geom_segment(data = meandf, mapping = aes(x = zlower, xend = zupper, y = mean, yend = mean), col = 2, lty = 2)
+```
+
+## Residuals Under Reduced Model
+
+```{r}
+qplot(x = z, y = Percent, data = case0502, xlab = "Judge") +
+  scale_x_continuous(breaks = 1:7, labels = c("A", "B", "C", "D", "E", "F", "Spock's")) +
+  geom_segment(data = reduceddf, mapping = aes(x = lowerz, xend = upperz, y = mean, yend = mean), lty = 2, col = 2) +
+  geom_segment(data = reduceddf, mapping = aes(x = z, xend = z, y = Percent, yend = mean), lty = 2, col = 4)
+```
+
+## Residuals Under Full Model
+
+```{r}
+qplot(x = z, y = Percent, data = case0502, xlab = "Judge") +
+  scale_x_continuous(breaks = 1:7, labels = c("A", "B", "C", "D", "E", "F", "Spock's")) +
+  geom_segment(data = meandf, mapping = aes(x = zlower, xend = zupper, y = mean, yend = mean), col = 2, lty = 2) +
+  geom_segment(data = residdf, mapping = aes(x = z, xend = z, y = Percent, yend = mean), lty = 2, col = 4)
+```
+
+## F-test
+
+```{r}
+rssfull <- sum((residdf$Percent - residdf$mean)^2)
+rssreduced <- sum((reduceddf$Percent - reduceddf$mean)^2)
+ess <- rssreduced - rssfull
+```
+
+
+- $RSS_{full}$ = `r rssfull` (same as before).
+
+- $df_{full} = n - I = 46 - 7 = 39$.
+
+\pause
+
+- $RSS_{reduced}$ = `r rssreduced` (smaller than before).
+
+- $df_{reduced} = n - 2 = 46 - 2 = 44$
+
+\pause
+
+- $df_{extra} = df_{reduced} - df_{full} = 44 - 39 = 5$
+
+- $ESS = RSS_{reduced} - RSS_{full}$ =  `r ess`
+
+- F-stat = $\frac{ESS / df_{extra}}{RSS_{full} / df_{full}}$ = 1.366
+
+## Compare 1.366 to an $F_{5, 39}$ distribution
+
+```{r}
+x <- seq(0, 5, length = 100)
+y <- df(x, 5, 39)
+
+which_x <- x > 1.366
+polydf <- data.frame(polyx = c(min(x[which_x]), x[which_x], max(x[which_x]), min(x[which_x])),
+                     polyy = c(0, y[which_x], 0, 0))
+qplot(x, y, geom = "line") +
+  geom_polygon(data = polydf, mapping = aes(x = polyx, y = polyy), 
+               fill = "blue", alpha = 3/4)
+```
+
+## Compute $p$-value
+
+```{r, echo = TRUE}
+pf(q = 1.366, df1 = 5, df2 = 39, lower.tail = FALSE)
+```
+
+# Comparing Submodels
+
+## Model
+
+- Model: $Y_{ij} = \mu_{i} + \epsilon_{ij}$ \bigskip
+- $Y_{ij}$: Percent women in venire $j$ of judge $i$. \bigskip
+- $\mu_i$: Mean percent women for judge $i$. \bigskip
+- $\epsilon_{ij}$: Individual-specific noice for venire $j$ of judge $i$. Assumed to have mean 0 and variance $\sigma^2$. \bigskip
+- $\sigma^2$ is assumed to be the **same** for all venires of all judges.
+
+## Hypotheses
+
+- $H_0: \mu_1 = \mu_2 = \mu_3 = \cdots = \mu_7$ (all judges have same mean)
+
+- $H_A: \mu_1 \neq \mu_2 = \mu_3 = \cdots = \mu_7$. (judge 1 is different)
+
+## Estimates
+
+We estimate the means within each groups differently according to the full and reduced models
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+Group   & 1                      & 2                      & 3                      & 4                      & 5                      & 6                      & 7                      \\
+\hline
+Full    & $\bar{Y}_{1\bullet}$     & $\bar{Y}_{0}$     & $\bar{Y}_{0}$     & $\bar{Y}_{0}$     & $\bar{Y}_{0}$     & $\bar{Y}_{0}$     & $\bar{Y}_{0}$     \\
+\hline
+Reduced & $\bar{Y}_{\bullet\bullet}$ & $\bar{Y}_{\bullet\bullet}$ & $\bar{Y}_{\bullet\bullet}$ & $\bar{Y}_{\bullet\bullet}$ & $\bar{Y}_{\bullet\bullet}$ & $\bar{Y}_{\bullet\bullet}$ & $\bar{Y}_{\bullet\bullet}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+- $\bar{Y}_{i\bullet} = \frac{1}{n_i}(Y_{i1} + Y_{i2} + \cdots Y_{in_i})$
+- $\bar{Y}_{0}$ = Average of all values in judges 2 through 7.
+- $\bar{Y}_{\bullet\bullet}$ = Average of all values in dataset.
+
+
+## Estimate Under Null Model
+
+```{r}
+qplot(x = z, y = Percent, data = case0502, xlab = "Judge") +
+  scale_x_continuous(breaks = 1:7, labels = c("A", "B", "C", "D", "E", "F", "Spock's")) +
+  geom_hline(yintercept = ybar, lty = 2, col = 2)
+```
+
+
+## Estimate Under Alternative Model
+
+```{r}
+qplot(x = z, y = Percent, data = case0502, xlab = "Judge") +
+  scale_x_continuous(breaks = 1:7, labels = c("A", "B", "C", "D", "E", "F", "Spock's")) +
+  geom_segment(data = reduceddf, mapping = aes(x = lowerz, xend = upperz, y = mean, yend = mean), lty = 2, col = 2)
+```
+
+
+## Residuals Under Null Model
+
+```{r}
+qplot(x = z, y = Percent, data = case0502, xlab = "Judge") +
+  scale_x_continuous(breaks = 1:7, labels = c("A", "B", "C", "D", "E", "F", "Spock's")) +
+  geom_hline(yintercept = ybar, lty = 2, col = 2) +
+  geom_segment(data = data.frame(x = z, xend = z, y = ybar, yend = case0502$Percent), mapping = aes(x = x, xend = xend, y = y, yend = yend), lty = 2, col = 4)
+```
+
+## Residuals Under Full Model
+
+```{r}
+qplot(x = z, y = Percent, data = case0502, xlab = "Judge") +
+  scale_x_continuous(breaks = 1:7, labels = c("A", "B", "C", "D", "E", "F", "Spock's")) +
+  geom_segment(data = reduceddf, mapping = aes(x = lowerz, xend = upperz, y = mean, yend = mean), lty = 2, col = 2) +
+  geom_segment(data = reduceddf, mapping = aes(x = z, xend = z, y = Percent, yend = mean), lty = 2, col = 4)
+```
+
+## $F$-test
+
+- $RSS_{full}$ = `r rssreduced` (same as $RSS_{reduced}$ from the **previous** hypothesis test).
+
+- $df_{full} = n - 2$ = 46 - 2 = 44.
+
+\pause
+
+- $RSS_{reduced}$ = `r sum(reduced_resids^2)` (same as $RSS_{reduced}$ from the **first** hypothesis test).
+
+- $df_{reduced} = n - 1$ = 46 - 1 = 45
+
+\pause
+
+- $ESS = RSS_{reduced} - RSS_{full}$ = 1601
+
+- $df_{extra}$ = 1.
+
+- $F$-statistic = (1601/1) / (2191/44) = 32.15
+
+## Compare to $F_{1, 44}$
+
+```{r, echo = FALSE}
+x <- seq(0, 40, length = 100)
+y <- df(x, 1, 44)
+
+which_x <- x > 32.15
+polydf <- data.frame(polyx = c(min(x[which_x]), x[which_x], max(x[which_x]), min(x[which_x])),
+                     polyy = c(0, y[which_x], 0, 0))
+qplot(x, y, geom = "line") +
+  geom_polygon(data = polydf, mapping = aes(x = polyx, y = polyy), 
+               fill = "red", color = "red")
+```
+
+## Compute $p$-value
+
+```{r, echo = TRUE}
+pf(q = 32.15, df1 = 1, df2 = 44, lower.tail = FALSE)
+```
+

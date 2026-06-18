@@ -1,67 +1,493 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 230" width="600" height="230">
-  <defs>
-    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 600 230"
+   width="600"
+   height="230"
+   version="1.1"
+   id="svg27"
+   sodipodi:docname="fig_sampling_dist_concept.svg"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview27"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="2.5578819"
+     inkscape:cx="66.461238"
+     inkscape:cy="90.309095"
+     inkscape:window-width="1512"
+     inkscape:window-height="921"
+     inkscape:window-x="0"
+     inkscape:window-y="33"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg27" />
+  <defs
+     id="defs1">
+    <marker
+       id="arrow"
+       markerWidth="10"
+       markerHeight="7"
+       refX="9"
+       refY="3.5"
+       orient="auto">
+      <polygon
+         points="0 0, 10 3.5, 0 7"
+         fill="#333"
+         id="polygon1" />
     </marker>
   </defs>
-
   <!-- ── Left column: three samples ── -->
-
   <!-- Sample 1 -->
-  <text x="10" y="42" font-family="Ubuntu Mono, monospace" font-size="12" fill="#555">Sample 1 of 15 twins</text>
-  <circle cx="10"  cy="60" r="3" fill="#4a90d9"/>
-  <circle cx="22"  cy="58" r="3" fill="#4a90d9"/>
-  <circle cx="34"  cy="63" r="3" fill="#4a90d9"/>
-  <circle cx="46"  cy="57" r="3" fill="#4a90d9"/>
-  <circle cx="58"  cy="61" r="3" fill="#4a90d9"/>
-  <circle cx="70"  cy="59" r="3" fill="#4a90d9"/>
-  <text x="10" y="82" font-family="Ubuntu Mono, monospace" font-size="11" fill="#333">x̄₁ = avg difference</text>
-
+  <text
+     x="10"
+     y="42"
+     font-family="Ubuntu Mono, monospace"
+     font-size="12"
+     fill="#555"
+     id="text1">Sample 1 of 15 twins</text>
+  <circle
+     cx="10"
+     cy="60"
+     r="3"
+     fill="#4a90d9"
+     id="circle1" />
+  <circle
+     cx="19.5"
+     cy="58"
+     r="3"
+     fill="#4a90d9"
+     id="circle2" />
+  <circle
+     cx="29"
+     cy="63"
+     r="3"
+     fill="#4a90d9"
+     id="circle3" />
+  <circle
+     cx="38.5"
+     cy="57"
+     r="3"
+     fill="#4a90d9"
+     id="circle4" />
+  <circle
+     cx="48"
+     cy="61"
+     r="3"
+     fill="#4a90d9"
+     id="circle5" />
+  <circle
+     cx="57.5"
+     cy="59"
+     r="3"
+     fill="#4a90d9"
+     id="circle6" />
+  <circle
+     cx="67"
+     cy="62"
+     r="3"
+     fill="#4a90d9"
+     id="circle6-3" />
+  <circle
+     cx="76.5"
+     cy="58"
+     r="3"
+     fill="#4a90d9"
+     id="circle6-2" />
+  <circle
+     cx="86"
+     cy="61"
+     r="3"
+     fill="#4a90d9"
+     id="circle6-39" />
+  <circle
+     cx="95.5"
+     cy="57"
+     r="3"
+     fill="#4a90d9"
+     id="circle6-22" />
+  <circle
+     cx="105"
+     cy="61"
+     r="3"
+     fill="#4a90d9"
+     id="circle6-7" />
+  <circle
+     cx="114.5"
+     cy="57"
+     r="3"
+     fill="#4a90d9"
+     id="circle6-23" />
+  <circle
+     cx="124"
+     cy="63"
+     r="3"
+     fill="#4a90d9"
+     id="circle6-70" />
+  <circle
+     cx="133.5"
+     cy="56"
+     r="3"
+     fill="#4a90d9"
+     id="circle6-8" />
+  <circle
+     cx="143"
+     cy="62"
+     r="3"
+     fill="#4a90d9"
+     id="circle6-76" />
+  <text
+     x="10"
+     y="82"
+     font-family="Ubuntu Mono, monospace"
+     font-size="11"
+     fill="#333"
+     id="text6">x̄₁ = avg difference</text>
   <!-- Sample 2 -->
-  <text x="10" y="112" font-family="Ubuntu Mono, monospace" font-size="12" fill="#555">Sample 2 of 15 twins</text>
-  <circle cx="10"  cy="130" r="3" fill="#4a90d9"/>
-  <circle cx="22"  cy="127" r="3" fill="#4a90d9"/>
-  <circle cx="34"  cy="133" r="3" fill="#4a90d9"/>
-  <circle cx="46"  cy="128" r="3" fill="#4a90d9"/>
-  <circle cx="58"  cy="131" r="3" fill="#4a90d9"/>
-  <circle cx="70"  cy="129" r="3" fill="#4a90d9"/>
-  <text x="10" y="150" font-family="Ubuntu Mono, monospace" font-size="11" fill="#333">x̄₂ = avg difference</text>
-
+  <text
+     x="10"
+     y="112"
+     font-family="Ubuntu Mono, monospace"
+     font-size="12"
+     fill="#555"
+     id="text7">Sample 2 of 15 twins</text>
+  <circle
+     cx="10"
+     cy="130"
+     r="3"
+     fill="#4a90d9"
+     id="circle7" />
+  <circle
+     cx="19"
+     cy="127"
+     r="3"
+     fill="#4a90d9"
+     id="circle8" />
+  <circle
+     cx="28"
+     cy="133"
+     r="3"
+     fill="#4a90d9"
+     id="circle9" />
+  <circle
+     cx="37"
+     cy="128"
+     r="3"
+     fill="#4a90d9"
+     id="circle10" />
+  <circle
+     cx="46"
+     cy="131"
+     r="3"
+     fill="#4a90d9"
+     id="circle11" />
+  <circle
+     cx="55"
+     cy="129"
+     r="3"
+     fill="#4a90d9"
+     id="circle12" />
+  <text
+     x="10"
+     y="150"
+     font-family="Ubuntu Mono, monospace"
+     font-size="11"
+     fill="#333"
+     id="text12">x̄₂ = avg difference</text>
   <!-- Sample 3 -->
-  <text x="10" y="180" font-family="Ubuntu Mono, monospace" font-size="12" fill="#555">Sample 3 of 15 twins</text>
-  <circle cx="10"  cy="198" r="3" fill="#4a90d9"/>
-  <circle cx="22"  cy="201" r="3" fill="#4a90d9"/>
-  <circle cx="34"  cy="196" r="3" fill="#4a90d9"/>
-  <circle cx="46"  cy="200" r="3" fill="#4a90d9"/>
-  <circle cx="58"  cy="197" r="3" fill="#4a90d9"/>
-  <circle cx="70"  cy="199" r="3" fill="#4a90d9"/>
-  <text x="10" y="218" font-family="Ubuntu Mono, monospace" font-size="11" fill="#333">x̄₃ = avg difference</text>
-
+  <text
+     x="10"
+     y="180"
+     font-family="Ubuntu Mono, monospace"
+     font-size="12"
+     fill="#555"
+     id="text13">Sample 3 of 15 twins</text>
+  <circle
+     cx="10"
+     cy="198"
+     r="3"
+     fill="#4a90d9"
+     id="circle13" />
+  <circle
+     cx="18.428572"
+     cy="201"
+     r="3"
+     fill="#4a90d9"
+     id="circle14" />
+  <circle
+     cx="26.857143"
+     cy="196"
+     r="3"
+     fill="#4a90d9"
+     id="circle15" />
+  <circle
+     cx="35.285713"
+     cy="200"
+     r="3"
+     fill="#4a90d9"
+     id="circle16" />
+  <circle
+     cx="43.714287"
+     cy="197"
+     r="3"
+     fill="#4a90d9"
+     id="circle17" />
+  <circle
+     cx="52.142857"
+     cy="199"
+     r="3"
+     fill="#4a90d9"
+     id="circle18" />
+  <text
+     x="10"
+     y="218"
+     font-family="Ubuntu Mono, monospace"
+     font-size="11"
+     fill="#333"
+     id="text18">x̄₃ = avg difference</text>
   <!-- ── Converging arrows ── -->
   <!-- From sample 1 → histogram top -->
-  <line x1="192" y1="75"  x2="326" y2="108" stroke="#333" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <line
+     x1="192"
+     y1="75"
+     x2="326"
+     y2="108"
+     stroke="#333"
+     stroke-width="1.4"
+     marker-end="url(#arrow)"
+     id="line18" />
   <!-- From sample 2 → histogram middle -->
-  <line x1="192" y1="143" x2="328" y2="143" stroke="#333" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <line
+     x1="192"
+     y1="143"
+     x2="328"
+     y2="143"
+     stroke="#333"
+     stroke-width="1.4"
+     marker-end="url(#arrow)"
+     id="line19" />
   <!-- From sample 3 → histogram bottom -->
-  <line x1="192" y1="210" x2="326" y2="178" stroke="#333" stroke-width="1.4" marker-end="url(#arrow)"/>
-
+  <line
+     x1="192"
+     y1="210"
+     x2="326"
+     y2="178"
+     stroke="#333"
+     stroke-width="1.4"
+     marker-end="url(#arrow)"
+     id="line20" />
   <!-- "..." dots to suggest many more samples -->
-  <text x="88" y="163" font-family="Ubuntu Mono, monospace" font-size="18" fill="#aaa">⋮</text>
-
+  <text
+     x="88"
+     y="163"
+     font-family="Ubuntu Mono, monospace"
+     font-size="18"
+     fill="#aaa"
+     id="text20">⋮</text>
   <!-- ── Right: histogram (sampling distribution) ── -->
-  <text x="340" y="22" font-family="Ubuntu Mono, monospace" font-size="13" fill="#333" font-weight="bold">Sampling distribution of x̄</text>
-
+  <text
+     x="340"
+     y="22"
+     font-family="Ubuntu Mono, monospace"
+     font-size="13"
+     fill="#333"
+     font-weight="bold"
+     id="text21">Sampling distribution of x̄</text>
   <!-- Histogram bars (bottom baseline y=210) -->
   <!-- bar heights (from left): 28, 52, 78, 90, 72, 44, 22 -->
-  <rect x="335" y="182" width="26" height="28"  fill="#b3d4e8" stroke="#333" stroke-width="1"/>
-  <rect x="363" y="158" width="26" height="52"  fill="#b3d4e8" stroke="#333" stroke-width="1"/>
-  <rect x="391" y="132" width="26" height="78"  fill="#b3d4e8" stroke="#333" stroke-width="1"/>
-  <rect x="419" y="120" width="26" height="90"  fill="#b3d4e8" stroke="#333" stroke-width="1"/>
-  <rect x="447" y="138" width="26" height="72"  fill="#b3d4e8" stroke="#333" stroke-width="1"/>
-  <rect x="475" y="166" width="26" height="44"  fill="#b3d4e8" stroke="#333" stroke-width="1"/>
-  <rect x="503" y="188" width="26" height="22"  fill="#b3d4e8" stroke="#333" stroke-width="1"/>
-
+  <rect
+     x="335"
+     y="182"
+     width="26"
+     height="28"
+     fill="#b3d4e8"
+     stroke="#333"
+     stroke-width="1"
+     id="rect21" />
+  <rect
+     x="363"
+     y="158"
+     width="26"
+     height="52"
+     fill="#b3d4e8"
+     stroke="#333"
+     stroke-width="1"
+     id="rect22" />
+  <rect
+     x="391"
+     y="132"
+     width="26"
+     height="78"
+     fill="#b3d4e8"
+     stroke="#333"
+     stroke-width="1"
+     id="rect23" />
+  <rect
+     x="419"
+     y="120"
+     width="26"
+     height="90"
+     fill="#b3d4e8"
+     stroke="#333"
+     stroke-width="1"
+     id="rect24" />
+  <rect
+     x="447"
+     y="138"
+     width="26"
+     height="72"
+     fill="#b3d4e8"
+     stroke="#333"
+     stroke-width="1"
+     id="rect25" />
+  <rect
+     x="475"
+     y="166"
+     width="26"
+     height="44"
+     fill="#b3d4e8"
+     stroke="#333"
+     stroke-width="1"
+     id="rect26" />
+  <rect
+     x="503"
+     y="188"
+     width="26"
+     height="22"
+     fill="#b3d4e8"
+     stroke="#333"
+     stroke-width="1"
+     id="rect27" />
   <!-- x-axis baseline -->
-  <line x1="333" y1="210" x2="540" y2="210" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <text x="380" y="224" font-family="Ubuntu Mono, monospace" font-size="11" fill="#555">mean difference (x̄)</text>
+  <line
+     x1="333"
+     y1="210"
+     x2="540"
+     y2="210"
+     stroke="#333"
+     stroke-width="1.5"
+     marker-end="url(#arrow)"
+     id="line27" />
+  <text
+     x="380"
+     y="224"
+     font-family="Ubuntu Mono, monospace"
+     font-size="11"
+     fill="#555"
+     id="text27">mean difference (x̄)</text>
+  <circle
+     cx="64"
+     cy="127"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-8" />
+  <circle
+     cx="73"
+     cy="130"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-1" />
+  <circle
+     cx="82"
+     cy="125"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-5" />
+  <circle
+     cx="91"
+     cy="131"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-6" />
+  <circle
+     cx="100"
+     cy="127"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-54" />
+  <circle
+     cx="109"
+     cy="130"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-7" />
+  <circle
+     cx="118"
+     cy="127"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-4" />
+  <circle
+     cx="127"
+     cy="130"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-83" />
+  <circle
+     cx="136"
+     cy="128"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-83-0" />
+  <circle
+     cx="60.57143"
+     cy="196"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-2" />
+  <circle
+     cx="69"
+     cy="199"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-78" />
+  <circle
+     cx="77.428574"
+     cy="194"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-71" />
+  <circle
+     cx="85.85714"
+     cy="198"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-87" />
+  <circle
+     cx="94.285713"
+     cy="194"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-49" />
+  <circle
+     cx="102.71429"
+     cy="198"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-55" />
+  <circle
+     cx="111.14286"
+     cy="195"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-9" />
+  <circle
+     cx="119.57143"
+     cy="199"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-0" />
+  <circle
+     cx="128"
+     cy="197"
+     r="3"
+     fill="#4a90d9"
+     id="circle12-85" />
 </svg>

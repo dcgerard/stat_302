@@ -1,0 +1,93 @@
+---
+title: "Residual Plots"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "metropolis"
+    slide_level: 2
+urlcolor: "blue"
+---
+
+```{r setup, include=FALSE}
+ggplot2::theme_set(
+  ggplot2::theme_bw()
+  )
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.height = 2.5, 
+                      fig.width = 4, 
+                      fig.align = "center")
+```
+
+## Objectives
+
+- Residual Examples
+
+
+## Load in Data
+
+```{r, message=FALSE, warning=FALSE, echo = TRUE}
+library(Sleuth3)
+data("case0502")
+```
+
+## Fit Model
+```{r, echo = TRUE}
+aout_alldiff <- aov(Percent ~ Judge, data = case0502)
+```
+
+## Residual Plots {.allowframebreaks}
+- Just apply `plot()` to the output of `aov()`.
+```{r, echo = TRUE}
+plot(aout_alldiff)
+```
+
+## Or plot directly (resids vs fitted values)
+```{r, echo = TRUE}
+library(ggplot2)
+resid_vec <- aout_alldiff$residuals
+fitted_vec <- aout_alldiff$fitted.values
+qplot(x = fitted_vec, y = resid_vec)
+```
+
+## Boxplots (resids vs explanatory variable)
+
+```{r, echo = TRUE}
+qplot(x = case0502$Judge, y = resid_vec, 
+      geom = "boxplot")
+```
+
+## qq-plot of residuals
+
+```{r, echo = TRUE}
+qplot(sample = resid_vec, geom = "qq") +
+  geom_qq_line()
+```
+
+
+# What to look for
+
+## Unequal Variance
+
+```{r, echo = FALSE}
+set.seed(1)
+sigma <- sd(aout_alldiff$residuals)
+resid_vec2 <- rnorm(n = nrow(case0502), mean = 0, sd = (fitted_vec)^6 / 4 * 10^8)
+qplot(y = resid_vec2, x = fitted_vec)
+```
+
+
+
+## Outliers
+
+```{r, echo = FALSE}
+resid_vec3 <- resid_vec
+resid_vec3[1] <- 35
+qplot(x = fitted_vec, y = resid_vec3)
+```
+
+
+
+
+
+

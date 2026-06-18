@@ -1,0 +1,162 @@
+---
+title: "Chapter 2 Worksheet"
+author: "David Gerard"
+date: today
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+# Twin Study — Paired $t$-Test (Case Study 2.2.2)
+
+Researchers measured left-hippocampus volumes (in $\text{cm}^3$) for 15 pairs
+of identical twins, one of whom had schizophrenia (`Affected`) and one of
+whom did not (`Unaffected`).
+
+```{r}
+#| eval: true
+#| message: false
+library(tidyverse)
+case0202 <- read_csv("https://dcgerard.github.io/stat_302/data/case0202.csv")
+glimpse(case0202)
+```
+
+**1.** Each row in `case0202` is a pair of twins rather than two independent
+individuals. Why is a *paired* $t$-test more appropriate here than a
+*two-sample* $t$-test?
+
+**2.** Create a new vector `diff` containing the difference in left-hippocampus
+volume for each pair (`Unaffected` minus `Affected`).
+
+```{r}
+
+```
+
+**3.** Use `t.test()` to run a one-sample $t$-test on `diff` against
+$H_0: \mu = 0$. Save the result as `tout` and print it.
+
+```{r}
+
+```
+
+**4.** Now carry out the test manually. Compute the mean, standard deviation,
+and sample size of `diff`.
+
+```{r}
+
+```
+
+**5.** Compute the $t$-statistic:
+$$t^* = \frac{\bar{d}}{s_d / \sqrt{n}}$$
+Save it as `tstat`.
+
+```{r}
+
+```
+
+**6.** What are the degrees of freedom for this test? Save it as `degfr`.
+
+```{r}
+
+```
+
+**7.** Use `pt()` to compute the two-sided $p$-value from `tstat` and
+`degfr`. Check that it matches the output of `t.test()` from Question 3.
+
+```{r}
+
+```
+
+**8.** Manually construct the 95% confidence interval for $\mu$:
+$$\bar{d} \;\pm\; t_{n-1}(0.975) \cdot \frac{s_d}{\sqrt{n}}$$
+Use `qt(0.975, df = degfr)` for the critical value.
+
+```{r}
+
+```
+
+**9.** Interpret the 95% confidence interval from Question 8 in the context
+of this study. What does it say about the magnitude of the hippocampus
+volume difference?
+
+**10.** Based on Questions 3–9, write a complete statistical conclusion.
+Address: (a) whether there is evidence of a difference, (b) the estimated
+magnitude and direction of the difference, and (c) a 95% CI.
+
+**11.** The Central Limit Theorem underpins the $t$-test. State the CLT in
+your own words and explain why it allows us to use a $t$-distribution here
+even if hippocampus volumes are not perfectly normally distributed in the
+population.
+
+---
+
+# Beak Study — Two-Sample $t$-Test (Case Study 2.1.1)
+
+Researchers measured beak depths (mm) of Galápagos finches on Daphne Major
+in 1976 (before a drought) and in 1978 (after a drought that favored
+larger, harder seeds).
+
+```{r}
+#| eval: true
+case0201 <- read.csv("https://dcgerard.github.io/stat_302/data/case0201.csv")
+case0201$Year <- factor(case0201$Year)
+head(case0201)
+```
+
+**1.** Let $\mu_1$ = population mean beak depth in 1976 and
+$\mu_2$ = population mean beak depth in 1978. State the null and alternative
+hypotheses in words and in mathematical notation.
+
+**2.** Make a boxplot of beak `Depth` (y-axis) by `Year` (x-axis). Based on
+the plot, do the two distributions appear to have similar spreads (variances)?
+What does this suggest about which version of the $t$-test to use?
+
+```{r}
+
+```
+
+**3.** Run a two-sample $t$-test assuming equal variances. Save the result
+as `tout` and print it.
+
+```{r}
+t.test(formula = Depth ~ Year, data = case0201, var.equal = TRUE)
+```
+
+**4.** Write a complete statistical conclusion based on the output above.
+Include the estimated difference in means, the 95% CI, and the $p$-value.
+
+**5.** The confidence interval from Question 3 gives a range of plausible
+values for $\mu_1 - \mu_2$ (1976 minus 1978). Is the interval entirely
+above zero, entirely below zero, or does it straddle zero? What does that
+tell you?
+
+**6.** Suppose the researchers had a directional prediction: beaks will be
+*deeper* in 1978 than in 1976 (i.e., the drought selected for larger beaks).
+
+  a. State the one-sided alternative hypothesis in symbols.
+
+  b. Add the appropriate argument to `t.test()` to run this one-sided test
+     and report the resulting $p$-value. Is it larger or smaller than the
+     two-sided $p$-value from Question 3? Explain why.
+
+```{r}
+
+```
+
+**7.** By default, `t.test()` uses `var.equal = FALSE`, which applies the
+**Satterthwaite approximation** to compute the degrees of freedom. In
+Question 3 we overrode this with `var.equal = TRUE`. Under what conditions
+is it safer to use `var.equal = FALSE`? Run the default version below and
+compare the degrees of freedom and $p$-value to Question 3.
+
+```{r}
+
+```
+
+**8.** In this study, finches were not randomly assigned to years — the year
+was determined by when the study took place. Does this affect whether we can
+claim that the drought *caused* a change in beak depth? What additional
+reasoning or evidence would be needed to support a causal claim?

@@ -1,0 +1,159 @@
+---
+title: "Checking For Normality"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "metropolis"
+    slide_level: 2
+urlcolor: "blue"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.height = 2.7, 
+                      fig.width = 4, 
+                      fig.align = "center")
+```
+
+# Checking for normality
+
+## Some distributions look approximately normal
+```{r, fig.height=2, fig.width=3}
+library(Sleuth3)
+library(ggplot2)
+data("case0201")
+beak78 <- case0201$Depth[case0201$Year == 1978]
+qplot(beak78, bins = 15, color = I("black"), fill = I("white"))
+```
+
+
+
+## Clearly not all distributions are normal
+
+```{r, fig.height=2, fig.width=3}
+data("case0301") ## Rainfall data
+rainun <- case0301$Rainfall[case0301$Treatment == "Unseeded"]
+qplot(rainun, bins = 10, color = I("black"), 
+      fill = I("white"), xlab = "rainfall")
+```
+
+## It's sometimes important to check if normality is a valid approximation.
+
+1. Idea: Is the 68-95-99.7 rule approximately correct for a given dataset?
+2. More generally, do the percentiles (quantiles) of the data match with the percentiles (quantiles) of the theoretical normal distribution?
+3. Compare the $p$th percentile (quantile) of the data and the $p$th percentile (quantile) of a $N(\bar{x}, s^2)$ distribution. If they are pretty close, then normality is a good approximation.
+
+
+## Look at percentiles (quantiles)
+
+```{r}
+mu    <- mean(beak78)
+sigma <- sd(beak78)
+qnorm(p = 0.2, mean = mu, sd = sigma)
+quantile(x = beak78, probs = 0.2)
+```
+
+That matches almost exactly, what about other percentiles (quantiles)?
+
+## More quantiles
+
+```{r}
+qnorm(p = 0.7, mean = mu, sd = sigma)
+quantile(x = beak78, probs = 0.7)
+```
+
+## More quantiles
+
+```{r}
+qnorm(p = 0.9, mean = mu, sd = sigma)
+quantile(x = beak78, probs = 0.9)
+```
+These are all pretty close!
+
+
+## Quantile-quantile plot
+
+1. Plots the observed quantiles against the quantiles of a $N(\bar{x}, s^2)$ density.
+2. If the points lie close to a line, then the normal approximation is approximately correct.
+3. Can just plot the observed quantiles against $N(0, 1)$ and look for a straight line (more on why later).
+
+
+## QQplot
+```{r}
+qplot(sample = beak78, geom = "qq") +
+    geom_qq_line()
+```
+
+## But what does a "good" qqplot look like?
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+dftot <- data_frame(x = sort(beak78, decreasing = FALSE))
+dftot$sim <- 0
+for (index in 1:5) {
+  x <- rnorm(length(beak78), mean = mu, sd = sigma)
+  df_temp <- data_frame(x = sort(x, decreasing = FALSE))
+  df_temp$sim <- index
+  dftot <- bind_rows(dftot, df_temp)
+}
+dftot$sim <- as.factor(dftot$sim)
+ggplot(data = dftot, mapping = aes(sample = x)) +
+  geom_qq() +
+  geom_qq_line() +
+  facet_wrap(~sim) +
+  theme_bw() +
+  theme(strip.background = element_rect(fill = "white"))
+```
+Top left is real data, rest are simulated from $N(\bar{x}, s^2)$ --- maybe a little non-normal?
+
+
+## Problem: Skewed right
+```{r, echo=FALSE, fig.width=2, fig.height=1.5}
+x <- rgamma(200, 2, 2)
+qplot(x, geom = "histogram", xlab = "", bins = 20)
+qplot(sample = x, geom = "qq") +
+    geom_qq_line()
+```
+
+## Problem: Skewed left
+```{r, echo=FALSE, fig.width=2, fig.height=1.5}
+op <- par(mfrow = c(1,2))
+qplot(-x, xlab = "", bins = 20)
+qplot(sample = -x, geom = "qq") +
+    geom_qq_line()
+```
+
+
+## Problem: Outliers
+```{r, echo=FALSE, fig.width=2, fig.height=1.5}
+x <- c(rnorm(200), 4.5)
+qplot(x, xlab = "", bins = 20)
+qplot(sample = x, geom = "qq") +
+    geom_qq_line()
+```
+
+## Problem: Heavy tails
+```{r, echo=FALSE, fig.width=2, fig.height=1.5}
+x <- rt(200, 3)
+qplot(x, xlab = "", bins = 20)
+qplot(sample = x, geom = "qq") +
+    geom_qq_line()
+```
+
+
+## Problem: Light tails
+```{r, echo=FALSE, fig.width=2, fig.height=1.5}
+x <- runif(200)
+qplot(x, xlab = "", bins = 20)
+qplot(sample = x, geom = "qq") +
+    geom_qq_line()
+```
+
+
+## The rainfall data
+
+```{r}
+qplot(sample = rainun, geom = "qq") +
+  geom_qq_line()
+```
+

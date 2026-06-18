@@ -1,0 +1,541 @@
+---
+title: "Probability Review"
+author: "David Gerard"
+date: today
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(ggplot2)
+theme_set(theme_bw(base_size = 12))
+knitr::opts_chunk$set(
+  echo       = FALSE,
+  fig.height = 2.5,
+  fig.width  = 3,
+  fig.align  = "center"
+)
+```
+
+# Randomness and Probability
+
+## Example 1
+
+:::{.panel-tabset}
+## a
+Toss a coin and record the result. What is the probability of heads? Tails?
+
+## Solution
+$P(\text{heads}) = 1/2 = 0.5$ and $P(\text{tails}) = 1/2 = 0.5$.
+:::
+
+:::{.panel-tabset}
+## b
+Roll a 6-sided die and record the result. What is the probability of getting a 1? A 2? Etc.
+
+## Solution
+$P(1) = P(2) = P(3) = P(4) = P(5) = P(6) = 1/6 \approx 0.167$.
+:::
+
+:::{.panel-tabset}
+## c
+Toss two coins (or one coin twice). What is the probability of getting two heads?
+
+## Solution
+The sample space is {HH, HT, TH, TT}. Since each outcome is equally likely and only
+one gives HH: $P(\text{HH}) = 1/4 = 0.25$.
+:::
+
+:::{.panel-tabset}
+## d
+What does it mean that there is a 10% chance of rain today?
+
+## Solution
+If we could replay today's weather conditions a very large number of times, it would
+rain in about 10% of those scenarios.
+:::
+
+A phenomenon is **random** if individual outcomes are uncertain, but there is nonetheless a
+regular distribution of outcomes in a large number of repetitions. The **probability** of any
+outcome of a random phenomenon can be defined as the proportion of times the outcome would
+occur in a very long series of repetitions.
+
+The following plot shows the running proportion of heads in two simulated sequences of 100
+coin tosses. Both converge toward 0.5 as the number of tosses increases.
+
+```{r}
+#| label: convergence-plot
+#| fig-width: 4
+#| message: false
+#| warning: false
+library(tidyverse)
+set.seed(3)
+ntoss <- 100
+series1 <- cumsum(sample(c(0, 1), size = ntoss, replace = TRUE)) / seq_len(ntoss)
+series2 <- cumsum(sample(c(0, 1), size = ntoss, replace = TRUE)) / seq_len(ntoss)
+dfdat <- data.frame(
+  y      = c(series1, series2),
+  x      = rep(seq_len(ntoss), 2),
+  Series = rep(c("1", "2"), each = ntoss)
+)
+ggplot(dfdat, aes(x = x, y = y, color = Series)) +
+  geom_line() +
+  ggthemes::scale_color_colorblind() +
+  geom_hline(yintercept = 0.5, lty = 2, color = "gray50") +
+  xlab("Number of Tosses") +
+  ylab("Proportion of Heads")
+```
+
+**Probability distributions** or **models** describe random processes and consist of two parts:
+
+1. A list of all possible outcomes (called the **sample space**)
+2. The probability of each outcome
+
+## Example 2
+
+:::{.panel-tabset}
+## Question
+Give the probability distribution for Example 1b (rolling a 6-sided die).
+
+## Solution
+
+| Outcome     |  1  |  2  |  3  |  4  |  5  |  6  |
+|-------------|:---:|:---:|:---:|:---:|:---:|:---:|
+| Probability | 1/6 | 1/6 | 1/6 | 1/6 | 1/6 | 1/6 |
+
+:::
+
+## Example 3
+
+:::{.panel-tabset}
+## Question
+Suppose you count the number of heads after two flips of a coin. Find the probability
+distribution of the number of heads.
+
+## Solution
+The sample space for two flips is {HH, HT, TH, TT}. Counting heads in each outcome:
+
+| $X$ = # Heads |  0  |  1  |  2  |
+|:--------------|:---:|:---:|:---:|
+| Probability   | 1/4 | 2/4 | 1/4 |
+
+:::
+
+Distributions are frequently described by their histogram or density curve.
+
+## Example 4
+
+:::{.panel-tabset}
+## Question
+Suppose the probability distribution (model) of $X$ = the number of minutes that a
+randomly selected student uses their cell phone (for any purpose) in a given hour has
+the density shown below. Describe the distribution of $X$. (Note: $X$ is called a
+**random variable**.)
+
+```{r}
+#| label: exp-histogram
+set.seed(1)
+x <- rexp(n = 1000, rate = 0.2)
+ggplot(data = data.frame(x), mapping = aes(x = x, y = after_stat(density))) +
+  geom_histogram(color = "black", fill = "white", bins = 30) +
+  geom_density(color = "red", lty = 2) +
+  xlab("Minutes on phone (x)") +
+  ylab("f(x)")
+```
+
+## Solution
+The distribution of $X$ is **right-skewed**: most students use their phone for a short
+duration, but a few use it for much longer. There is a single mode near zero and a long
+right tail.
+:::
+
+# Probability Distributions of a Population
+
+- Distributions describe behavior: the values a random variable can take and how likely it
+  is to take on those values.
+- Probability histograms or density curves (called **pdf**, probability density function)
+  provide graphical descriptions of probability distributions.
+- The area under the density curve between two points gives the probability that the random
+  variable falls between those values. The total area under any density curve equals 1.
+
+**Probability Rules** — Let $A$ be an event.
+
+- $0 \leq P(A) \leq 1$
+- $P(A^c) = 1 - P(A)$, where $A^c$ is the **complement** of $A$.
+- $P(A \text{ or } B) = P(A) + P(B)$, provided $A$ and $B$ are **disjoint**. Two events are
+  disjoint if they have no outcomes in common and cannot occur simultaneously.
+
+## Example 5
+
+:::{.panel-tabset}
+## Question
+The event $A$ = "flip exactly two heads" and event $B$ = "flip exactly two tails."
+Are $A$ and $B$ disjoint? If so, what is $P(A \text{ or } B)$?
+
+## Solution
+$A$ and $B$ are disjoint because they cannot both occur on the same pair of flips.
+By the addition rule for disjoint events:
+$$P(A \text{ or } B) = P(A) + P(B) = \frac{1}{4} + \frac{1}{4} = \frac{1}{2}$$
+:::
+
+- $P(A \text{ and } B) = P(A) \cdot P(B)$, provided $A$ and $B$ are **independent**. Two
+  events are independent if knowing that one occurs does not change the probability that
+  the other occurs.
+
+## Example 6
+
+:::{.panel-tabset}
+## Question
+Let $T$ = "get tails on the first toss" and $H$ = "get heads on the second toss."
+Are $T$ and $H$ independent? If so, what is $P(T \text{ and } H)$?
+
+## Solution
+$T$ and $H$ are independent because the outcome of the first toss has no effect on the
+second toss. Therefore:
+$$P(T \text{ and } H) = P(T) \cdot P(H) = \frac{1}{2} \cdot \frac{1}{2} = \frac{1}{4}$$
+:::
+
+# Some Famous Distributions
+
+## Normal
+
+- R functions: `dnorm()`, `pnorm()`, `qnorm()`, `rnorm()`
+- $\mu$ = mean (center of the distribution)
+- $\sigma^2$ = variance; larger variance means more spread out.
+
+```{r}
+#| label: normal-plot
+#| fig-width: 3
+#| fig-height: 2
+library(latex2exp)
+set.seed(4)
+x  <- seq(-3, 3, length = 100)
+fx <- dnorm(x)
+rs <- rnorm(5000)
+ggplot(data.frame(rs = rs), aes(x = rs, y = after_stat(density))) +
+  geom_histogram(bins = 30, fill = "red2", color = "black", alpha = 1/2) +
+  geom_line(data = data.frame(x = x, fx = fx), mapping = aes(x = x, y = fx),
+            linewidth = 1.2) +
+  ggtitle(TeX("Normal, $X \\sim N(\\mu, \\sigma^2)$")) +
+  xlab("x") +
+  ylab("f(x)")
+```
+
+## t-Distribution
+
+- R functions: `dt()`, `pt()`, `qt()`, `rt()`
+- $\nu$ (or $df$) = degrees of freedom; smaller $df$ gives heavier tails.
+- Mean is always 0; shape resembles the normal but with more probability in the tails.
+
+```{r}
+#| label: t-plot
+#| fig-width: 3
+#| fig-height: 2
+x  <- seq(-3, 3, length = 100)
+fx <- dt(x, df = 4)
+rs <- rt(5000, df = 4)
+ggplot(data.frame(rs = rs), aes(x = rs, y = after_stat(density))) +
+  geom_histogram(bins = 30, fill = "blue1", color = "black", alpha = 1/2) +
+  geom_line(data = data.frame(x = x, fx = fx), mapping = aes(x = x, y = fx),
+            linewidth = 1.2) +
+  ggtitle(TeX("t, $X \\sim t_{df}$")) +
+  xlab("x") +
+  ylab("f(x)")
+```
+
+## Chi-Squared
+
+- R functions: `dchisq()`, `pchisq()`, `qchisq()`, `rchisq()`
+- $\nu$ (or $df$) = degrees of freedom; smaller $df$ implies more spread out.
+- Always non-negative and right-skewed, especially for small $df$.
+
+```{r}
+#| label: chisq-plot
+#| fig-width: 3
+#| fig-height: 2
+x  <- seq(0, 15, length = 100)
+fx <- dchisq(x, df = 3)
+rs <- rchisq(5000, df = 3)
+ggplot(data.frame(rs = rs), aes(x = rs, y = after_stat(density))) +
+  geom_histogram(bins = 30, fill = "green3", color = "black", alpha = 1/2) +
+  geom_line(data = data.frame(x = x, fx = fx), mapping = aes(x = x, y = fx),
+            linewidth = 1.2) +
+  ggtitle(TeX("Chi-squared, $X \\sim \\chi^2(\\nu)$")) +
+  xlab("x") +
+  ylab("f(x)")
+```
+
+## Exponential
+
+- R functions: `dexp()`, `pexp()`, `qexp()`, `rexp()`
+- $\lambda$ = rate parameter; larger $\lambda$ implies shorter typical durations.
+- Often used for waiting-time questions: "How long until a light bulb fails?"
+
+```{r}
+#| label: exp-plot
+#| fig-width: 3
+#| fig-height: 2
+x  <- seq(0.001, 3, length = 100)
+fx <- dexp(x, rate = 2)
+rs <- rexp(5000, rate = 2)
+ggplot(data.frame(rs = rs), aes(x = rs, y = after_stat(density))) +
+  geom_histogram(bins = 30, fill = "purple2", color = "black", alpha = 1/2) +
+  geom_line(data = data.frame(x = x, fx = fx), mapping = aes(x = x, y = fx),
+            linewidth = 1.2) +
+  ggtitle(TeX("Exponential, $X \\sim Exp(\\lambda)$")) +
+  xlab("x") +
+  ylab("f(x)")
+```
+
+## Binomial
+
+- R functions: `dbinom()`, `pbinom()`, `qbinom()`, `rbinom()`
+- $n$ = number of trials, $p$ = probability of success on each trial.
+- Use when: (i) there are $n$ independent trials, (ii) each results in success or failure,
+  and (iii) the probability of success is $p$ for every trial.
+
+```{r}
+#| label: binom-plot
+#| fig-width: 3
+#| fig-height: 2
+x  <- 0:10
+fx <- dbinom(x, size = 10, prob = 0.7)
+ggplot(data.frame(x = x, fx = fx), aes(x = x, xend = x, y = 0, yend = fx)) +
+  geom_segment(linewidth = 1.2, color = "black") +
+  ggtitle(TeX("Binomial, $X \\sim Bin(n, p)$")) +
+  xlab("x") +
+  ylab("Pr(x)")
+```
+
+## Uniform
+
+- R functions: `dunif()`, `punif()`, `qunif()`, `runif()`
+- $a$ = lower bound, $b$ = upper bound.
+- Every value in $[a, b]$ has equal probability density.
+
+```{r}
+#| label: unif-plot
+#| fig-width: 3
+#| fig-height: 2
+rs <- runif(5000)
+ggplot(data.frame(rs = rs), aes(x = rs, y = after_stat(density))) +
+  geom_histogram(bins = 30, fill = "yellow1", color = "black", alpha = 1/2) +
+  geom_hline(yintercept = 1) +
+  ggtitle(TeX("Uniform, $X \\sim Unif(a, b)$")) +
+  xlab("x") +
+  ylab("f(x)")
+```
+
+## Poisson
+
+- R functions: `dpois()`, `ppois()`, `qpois()`, `rpois()`
+- $\lambda$ = rate; both the mean and variance equal $\lambda$.
+- Used for count data: "How many phone calls will we receive in the next hour?"
+
+```{r}
+#| label: pois-plot
+#| fig-width: 3
+#| fig-height: 2
+x  <- 0:15
+fx <- dpois(x, lambda = 3)
+ggplot(data.frame(x = x, fx = fx), aes(x = x, xend = x, y = 0, yend = fx)) +
+  geom_segment(linewidth = 1.2, color = "orange") +
+  ggtitle(TeX("Poisson, $X \\sim Poi(\\lambda)$")) +
+  xlab("x") +
+  ylab("Pr(x)")
+```
+
+# The Normal Distribution in Depth
+
+## Density Function
+
+The normal distribution $N(\mu, \sigma^2)$ has density:
+$$f(x \mid \mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left(-\frac{(x - \mu)^2}{2\sigma^2}\right)$$
+
+- **Mean** $\mu$: shifts the curve left or right along the $x$-axis without changing shape.
+- **Standard deviation** $\sigma$: stretches or squeezes the curve.
+
+Normal density curves with different means (same $\sigma = 2$):
+
+```{r}
+#| label: normal-means
+#| message: false
+#| warning: false
+#| fig-width: 4
+x <- seq(-10, 10, length = 100)
+dfdat <- data.frame(
+  x = rep(x, 3),
+  y = c(dnorm(x, mean =  0, sd = 2),
+        dnorm(x, mean = -4, sd = 2),
+        dnorm(x, mean =  4, sd = 2)),
+  z = factor(rep(c(1, 2, 3), each = length(x)))
+)
+ggplot(dfdat, aes(x = x, y = y, color = z, lty = z)) +
+  geom_line() +
+  ggthemes::scale_color_colorblind() +
+  theme(legend.position = "none") +
+  ylab("f(x)") +
+  xlab("x") +
+  ggtitle("Different means, same standard deviation")
+```
+
+Normal density curves with different standard deviations (same $\mu = 0$):
+
+```{r}
+#| label: normal-sds
+#| message: false
+#| warning: false
+#| fig-width: 4
+x <- seq(-10, 10, length = 100)
+dfdat <- data.frame(
+  x = rep(x, 3),
+  y = c(dnorm(x, mean = 0, sd = 1),
+        dnorm(x, mean = 0, sd = 2),
+        dnorm(x, mean = 0, sd = 4)),
+  z = factor(rep(c(1, 2, 3), each = length(x)))
+)
+ggplot(dfdat, aes(x = x, y = y, color = z, lty = z)) +
+  geom_line() +
+  ggthemes::scale_color_colorblind() +
+  theme(legend.position = "none") +
+  ylab("f(x)") +
+  xlab("x") +
+  ggtitle("Same mean, different standard deviations")
+```
+
+## The 68–95–99.7 Rule
+
+For any $N(\mu, \sigma^2)$ distribution:
+
+- Approximately **68%** of observations fall within $1\sigma$ of $\mu$
+- Approximately **95%** of observations fall within $2\sigma$ of $\mu$ (exactly 1.96$\sigma$)
+- Approximately **99.7%** of observations fall within $3\sigma$ of $\mu$
+
+```{r}
+#| label: rule-plot
+x <- seq(-3.5, 3.5, length = 500)
+y <- dnorm(x)
+dat <- data.frame(x = x, y = y)
+poly1 <- data.frame(x = c(-1, x[x <= 1 & x >= -1], 1, -1),
+                    y = c(0, y[x <= 1 & x >= -1], 0, 0))
+poly2 <- data.frame(x = c(-2, x[x <= 2 & x >= -2], 2, -2),
+                    y = c(0, y[x <= 2 & x >= -2], 0, 0))
+poly3 <- data.frame(x = c(-3, x[x <= 3 & x >= -3], 3, -3),
+                    y = c(0, y[x <= 3 & x >= -3], 0, 0))
+ggplot(dat, aes(x = x, y = y)) +
+  geom_line() +
+  geom_polygon(data = poly1, aes(x, y), alpha = 0.4, fill = "red") +
+  geom_polygon(data = poly2, aes(x, y), alpha = 0.3, fill = "blue") +
+  geom_polygon(data = poly3, aes(x, y), alpha = 0.2, fill = "green") +
+  ylab("Density") +
+  annotate("text", x = 0,   y = 0.20, label = "68%",   size = 3.5) +
+  annotate("text", x = 1.6, y = 0.08, label = "95%",   size = 3.5) +
+  annotate("text", x = 2.8, y = 0.02, label = "99.7%", size = 3.0) +
+  scale_x_continuous(breaks = -3:3,
+                     labels = c("-3σ", "-2σ", "-σ",
+                                "μ", "+σ", "+2σ", "+3σ")) +
+  xlab("")
+```
+
+## Standardization
+
+A variable $X \sim N(\mu, \sigma^2)$ can be **standardized** to $Z \sim N(0, 1)$ by:
+$$z = \frac{x - \mu}{\sigma}$$
+
+Standardizing lets us compare observations from different normal distributions and use
+a single table (the standard normal table) or R to find any probability.
+
+## Example: Calf Circumference
+
+Suppose the calf circumference of adults is approximately:
+$$X \sim N(\mu = 37,\ \sigma^2 = 25) \quad \text{(cm, so } \sigma = 5\text{)}$$
+
+:::{.panel-tabset}
+## a
+What is the probability that a randomly selected person has a calf circumference less
+than 37 cm?
+
+## Solution
+Since 37 cm is the mean, and the normal distribution is symmetric about its mean:
+$$P(X < 37) = 0.5$$
+:::
+
+:::{.panel-tabset}
+## b
+What proportion has calf circumference greater than 37 cm?
+
+## Solution
+By the complement rule:
+$$P(X > 37) = 1 - P(X < 37) = 0.5$$
+:::
+
+:::{.panel-tabset}
+## c
+What is the probability of a calf circumference between 27 cm and 47 cm?
+
+## Solution
+Note $27 = 37 - 2(5) = \mu - 2\sigma$ and $47 = 37 + 2(5) = \mu + 2\sigma$. By the
+68–95–99.7 rule:
+$$P(27 < X < 47) \approx 0.95$$
+:::
+
+:::{.panel-tabset}
+## d
+What is the probability that two independently selected adults each have a calf
+circumference greater than 47 cm?
+
+## Solution
+First, $P(X > 47) = P(X > \mu + 2\sigma) = (1 - 0.95)/2 = 0.025$.
+
+Since the individuals are independent:
+$$P(\text{both} > 47) = 0.025 \times 0.025 = 0.000625$$
+:::
+
+
+# Computing Probabilities in R
+
+For $X \sim N(\mu, \sigma^2)$, `pnorm(q, mean, sd)` returns $P(X < q)$.
+
+**Note:** R takes the standard deviation $\sigma$, not the variance $\sigma^2$.
+
+:::{.panel-tabset}
+## a
+Let $X \sim N(37, 25)$. Find $P(X < 30)$.
+
+## Solution
+```{r}
+#| echo: true
+pnorm(30, mean = 37, sd = 5)
+```
+:::
+
+:::{.panel-tabset}
+## b
+Let $X \sim N(37, 25)$. Find $P(30 < X < 35)$.
+
+## Solution
+$$P(30 < X < 35) = P(X < 35) - P(X < 30)$$
+
+```{r}
+#| echo: true
+pnorm(35, mean = 37, sd = 5) - pnorm(30, mean = 37, sd = 5)
+```
+:::
+
+Use `qnorm(p, mean, sd)` to find the $p$th quantile.
+
+:::{.panel-tabset}
+## c
+At what value do 20% of individuals have a smaller calf circumference?
+
+## Solution
+We need the 20th percentile of $N(37, 25)$, which we find with `qnorm()`:
+
+```{r}
+#| echo: true
+qnorm(0.20, mean = 37, sd = 5)
+```
+
+About 32.8 cm.
+:::
+

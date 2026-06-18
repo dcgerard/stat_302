@@ -1,0 +1,181 @@
+---
+title: "Random Samples"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "metropolis"
+    slide_level: 2
+urlcolor: "blue"
+---
+
+```{r setup, include=FALSE}
+ggplot2::theme_set(ggplot2::theme_bw())
+knitr::opts_chunk$set(echo = TRUE, fig.height = 2.3, fig.width = 3, fig.align = "center")
+```
+
+## Learning Objectives
+
+- Gain intuitive understanding of CLT
+
+## Birthweight Data
+
+```{r}
+library(ggplot2)
+weight <- read.csv("../data/BIRTHWEIGHT.csv")$weight
+qplot(x = weight, geom = "histogram", fill = I("white"), 
+      color = I("black"), bins = 30)
+```
+
+
+## Get Sampling Distributions of Size 5
+
+```{r}
+xbarvec5 <- replicate(n = 10000,
+                      expr = {
+                        mean(sample(weight, size = 5, 
+                                    replace = TRUE))
+                      })
+```
+
+
+## Get Sampling Distributions of Size 10
+
+```{r}
+xbarvec10 <- replicate(n = 10000,
+                       expr = {
+                         mean(sample(weight, size = 10, 
+                                     replace = TRUE))
+                       })
+```
+
+
+## Get Sampling Distributions of Size 50
+
+```{r}
+xbarvec50 <- replicate(n = 10000,
+                       expr = {
+                         mean(sample(weight, size = 20, 
+                                     replace = TRUE))
+                       })
+```
+
+## Get Sampling Distributions of Size 100
+
+```{r}
+xbarvec100 <- replicate(n = 10000,
+                        expr = {
+                          mean(sample(weight, size = 100, 
+                                      replace = TRUE))
+                        })
+```
+
+## Get Sampling Distributions of Size 1000
+
+```{r}
+xbarvec1000 <- replicate(n = 10000,
+                        expr = {
+                          mean(sample(weight, size = 1000,
+                                      replace = TRUE))
+                        })
+```
+
+## Variances Decrease over Time
+
+```{r, echo = FALSE}
+xbardf <- data.frame(xbar = c(xbarvec5, xbarvec10, xbarvec50, xbarvec100, xbarvec1000),
+                     n    = c(rep(5, length(xbarvec5)), rep(10, length(xbarvec10)), 
+                              rep(50, length(xbarvec50)), rep(100, length(xbarvec100)),
+                              rep(1000, length(xbarvec1000))))
+ggplot(data = xbardf, mapping = aes(x = as.factor(n), y = xbar)) +
+  geom_boxplot() +
+  xlab("n")
+```
+
+
+## Not Very Normal (n = 5)
+
+```{r, echo = FALSE}
+qplot(x = xbarvec5, y = ..density.., geom = "histogram", 
+      fill = I("white"), color = I("black"), bins = 30) +
+  geom_density()
+```
+
+
+## More Normal (n = 10)
+
+```{r, echo = FALSE}
+qplot(x = xbarvec10, y = ..density.., geom = "histogram", 
+      fill = I("white"), color = I("black"), bins = 30) +
+  geom_density()
+```
+
+## More Normal (n = 50)
+
+```{r, echo = FALSE}
+qplot(x = xbarvec50, y = ..density.., geom = "histogram", 
+      fill = I("white"), color = I("black"), bins = 30) +
+  geom_density()
+```
+
+## Very Normal (n = 100)
+
+```{r, echo = FALSE}
+qplot(x = xbarvec100, y = ..density.., geom = "histogram", 
+      fill = I("white"), color = I("black"), bins = 30) +
+  geom_density()
+```
+
+
+##  Oh-my-god-can-it-be-any-more Normal (n = 1000)
+
+```{r, echo = FALSE}
+qplot(x = xbarvec1000, y = ..density.., geom = "histogram", 
+      fill = I("white"), color = I("black"), bins = 30) +
+  geom_density()
+```
+
+
+
+## Not Very Normal (n = 5)
+
+```{r, echo = FALSE}
+qplot(sample = xbarvec5, geom = "qq") +
+  geom_qq_line()
+```
+
+
+## More Normal (n = 10)
+
+```{r, echo = FALSE}
+qplot(sample = xbarvec10, geom = "qq") +
+  geom_qq_line()
+```
+
+
+
+## More Normal (n = 50)
+
+```{r, echo = FALSE}
+qplot(sample = xbarvec50, geom = "qq") +
+  geom_qq_line()
+```
+
+## More Normal (n = 100)
+
+```{r, echo = FALSE}
+qplot(sample = xbarvec100, geom = "qq") +
+  geom_qq_line()
+```
+
+
+##  Oh-my-god-can-it-be-any-more Normal (n = 1000)
+
+
+```{r, echo = FALSE}
+qplot(sample = xbarvec1000, geom = "qq") +
+  geom_qq_line()
+```
+
+
+

@@ -1,0 +1,158 @@
+---
+title: "Chapter 1 Worksheet"
+author: "David Gerard"
+date: today
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+## Sex Discrimination at a Bank (Case Study 1.1.2)
+
+The data below come from a bank that was accused of paying female clerical
+employees less than their male counterparts. Load the data and take a look.
+
+```{r}
+#| eval: true
+#| message: false
+library(tidyverse)
+case0102 <- read_csv("https://dcgerard.github.io/stat_302/data/case0102.csv")
+glimpse(case0102)
+```
+
+---
+
+### Conceptual Questions
+
+**1.** Is Case Study 1.1.2 a *randomized experiment* or an *observational study*?
+Explain briefly.
+
+**2.** Can we conclude from this data that sex *caused* the difference in
+salaries? Why or why not? Identify at least one possible **confounder** that
+could explain an observed salary gap.
+
+**3.** The bank's records cover all clerical employees at this particular
+institution. Does this limit how broadly we can generalize any findings?
+What would need to be true for the results to apply to the broader
+population of U.S. bank employees?
+
+**4.** Let $\delta$ be the difference in population mean salaries (male minus
+female) for clerical employees at this bank. State the null and alternative
+hypotheses in words and in mathematical notation.
+
+---
+
+### Exploratory Data Analysis
+
+**5.** Create a boxplot of `Salary` (y-axis) vs `Sex` (x-axis). Describe
+what you see.
+
+       - Functions to use: `ggplot()`, `geom_boxplot()`
+
+```{r}
+
+```
+
+**6.** Calculate the mean salary for female employees. Save it as `femave`.
+
+       - Functions to use: `mean()`, the dollar sign symbol `$`
+
+```{r}
+
+```
+
+**7.** Calculate the mean salary for male employees. Save it as `malave`.
+       
+       - Functions to use: `mean()`, the dollar sign symbol `$`
+
+```{r}
+
+```
+
+**8.** Calculate the observed difference in mean salaries (male minus female).
+
+```{r}
+
+```
+
+---
+
+### Permutation Test
+
+The idea behind the randomization test: if sex had **no effect** on salary,
+then the `Sex` labels could be shuffled randomly without changing anything
+meaningful — any observed difference would just be due to chance.
+
+**9.** The function `sample()` randomly shuffles the elements of a vector.
+Try it on `case0102$Sex` and run it two or three times. What do you notice
+about the output each time?
+
+```{r}
+sample(case0102$Sex)
+```
+
+**10.** Take one random permutation of `Sex` and recalculate the average
+salary difference (male minus female) using the shuffled labels. How does
+it compare to the observed difference from Question 8?
+
+```{r}
+
+```
+
+**11.** The `replicate()` function runs a block of code `n` times and
+collects the results. Run the demo below to see how it works.
+
+```{r}
+#| eval: true
+demo_vec <- replicate(n = 10,
+                      expr = {
+                        a <- rnorm(1)
+                        b <- rnorm(1)
+                        b - a
+                      })
+demo_vec
+```
+
+Now modify the code above to build a **permutation distribution**: shuffle
+`Sex` 1000 times, compute the mean salary difference (male minus female)
+each time, and store all 1000 values in `sample_vec`.
+
+```{r}
+
+```
+
+**12.** Plot `sample_vec` as a histogram. Add a vertical dashed line at the
+observed difference from Question 8. What does the location of that line
+tell you?
+
+```{r}
+
+```
+
+**13.** Compute the **two-sided p-value**: the proportion of permutations
+that produced an absolute difference at least as large as the one observed.
+
+```{r}
+
+```
+
+---
+
+### Interpretation
+
+**14.** Interpret the p-value in context. Is there strong evidence that
+salaries differ by sex at this bank? What would a very small p-value imply?
+
+**15.** Suppose the p-value is very small and we conclude the salary gap
+is real. Does this mean sex *caused* the difference? What is the role of
+the possible confounder you identified in Question 2?
+
+**16.** Refer back to the four-step framework from the notes:
+
+  - **Step 1**: What is the model for this study?
+  - **Step 2**: What are the hypotheses (from Question 4)?
+  - **Step 3**: What test statistic did we use?
+  - **Step 4**: How did we evaluate how extreme the test statistic is?

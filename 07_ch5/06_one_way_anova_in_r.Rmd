@@ -1,0 +1,165 @@
+---
+title: "Spock Example"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "metropolis"
+    slide_level: 2
+urlcolor: "blue"
+---
+
+```{r setup, include=FALSE}
+ggplot2::theme_set(
+  ggplot2::theme_bw()
+  )
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.height = 2.5, 
+                      fig.width = 4, 
+                      fig.align = "center")
+```
+
+## Objectives
+
+- Demonstrate how to interact with ANOVA in R.
+
+- Analyze the Spock trial data in R.
+
+## Load in Data
+```{r}
+library(Sleuth3)
+library(ggplot2)
+data("case0502")
+```
+
+
+## Spock EDA
+
+```{r}
+qplot(Judge, Percent, data = case0502)
+```
+
+## Spock EDA
+
+```{r}
+qplot(Judge, Percent, data = case0502, geom = "boxplot")
+```
+
+## Before Fitting
+- Always make sure the grouping variable (the explanatory variable) is either a "`factor`", a "`character`", or a "`logical`" with the `class()` function.
+```{r}
+class(case0502$Judge)
+```
+- Things will go wrong if this is any other type.
+- You can force a variable to be a `factor` with the `as.factor()` function:
+```{r}
+case0502$Judge <- as.factor(case0502$Judge)
+```
+
+
+## Fit the full model
+- Use `aov()` function (for **A**nalysis **O**f **V**ariance) to fit the model that assumes $\mu_1$, $\mu_2$, \ldots, $\mu_I$ are all *different*.
+
+- Always save this output.
+
+- The **response** variable goes on the left of the tilde (`~`) and the **explanatory** variable goes to the right of the tilde.
+
+## Fit the full model
+```{r}
+aout_alldiff <- aov(Percent ~ Judge, data = case0502)
+aout_alldiff
+```
+
+
+## Get $p$-values
+- Apply `summary()` to this output to run the omnibus $F$-test
+```{r}
+summary(aout_alldiff)
+```
+
+## What is that Table?
+
+- $H_0$: $\mu_1 = \mu_2 = \mu_3 = \mu_4 = \mu_5 = \mu_6 = \mu_7$
+- $H_A$: At least two means are different.
+
+```{r, echo = FALSE}
+stemp <- summary(aout_alldiff)
+stemp
+```
+
+\begin{center}
+\small
+\begin{tabular}{llllll}
+ & Df & Sum Sq & Mean Sq & F value & Pr(>F) \\
+Judge & $df_{extra}$ & $ESS$ & $ESS / df_{extra}$ & $F$-statistic & $p$-value \\
+Residuals & $df_{full}$ & $RSS_{full}$ & $RSS_{full} / df_{full} = s_p^2$ & \\
+\end{tabular}
+\end{center}
+
+
+
+## Pairwise Comparisons
+- Use `pairwise.t.test()` to perform all pairwise comparisons, and then just extract the ones that you want.
+
+## Pairwise Comparisons
+\footnotesize
+```{r}
+ptout <- pairwise.t.test(x = case0502$Percent, 
+                         g = case0502$Judge, 
+                         p.adjust.method = "none")
+ptout
+```
+\normalsize
+
+
+## General Nested Comparisons
+- To run tests that do not include the "all equal model", you must first *fit* both models using `aov()`, then run the `anova()` command.
+- To compare the full model where all means are different to the reduced model where the non-Spock-judges have the same mean, fit a new model of Spock's judge vs the rest of the judges.
+
+```{r}
+case0502$isSpock <- case0502$Judge == "Spock's"
+case0502$isSpock
+```
+
+## General Nested Comparisons
+- Now fit the reduced model where $\mu_2 = \mu_3 = \cdots = \mu_7$
+```{r}
+aout_otherssame <- aov(Percent ~ isSpock, data = case0502)
+```
+
+## General Nested Comparisons
+- Use `anova()` with both the full and reduced models to get the appropriate ANOVA table.
+```{r}
+anova(aout_otherssame, aout_alldiff)
+```
+
+## What is that Table?
+
+- $H_0$: $\mu_1 \neq \mu_2 = \mu_3 = \mu_4 = \mu_5 = \mu_6 = \mu_7$
+- $H_A$: At least two means are different among judges 2 through 7.
+
+\small
+```{r, echo = FALSE}
+stemp <- anova(aout_otherssame, aout_alldiff)
+stemp
+```
+\normalsize
+
+\begin{center}
+\small
+\begin{tabular}{lllllll}
+ & Res.Df & RSS & Df & Sum of Sq & F & Pr(>F) \\
+1 & $df_{reduced}$ & $RSS_{reduced}$ & & & &\\
+2 & $dr_{full}$ & $RSS_{full}$ & $df_{extra}$ & $ESS$ & $F$-statistic & $p$-value \\ 
+\end{tabular}
+\end{center}
+
+
+## More nested comparisons
+- use `anova()` with more than 2 models to get the nested sum of squares.
+```{r}
+aout_allequal <- aov(Percent ~ 1, data = case0502)
+anova(aout_allequal, aout_otherssame, aout_alldiff)
+```
+
+

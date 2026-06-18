@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-16">
+<meta name="dcterms.date" content="2026-06-17">
 
 <title>Assumptions of t-Tools – Stat 302: Intermediate Statistics</title>
 <style>
@@ -186,33 +186,26 @@ window.Quarto = {
   <ul>
   <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
   <li><a href="#assumptions-of-2-sample-t-tools" id="toc-assumptions-of-2-sample-t-tools" class="nav-link" data-scroll-target="#assumptions-of-2-sample-t-tools">Assumptions of 2-Sample <span class="math inline">\(t\)</span>-Tools</a></li>
-  <li><a href="#independence" id="toc-independence" class="nav-link" data-scroll-target="#independence">1. Independence</a>
-  <ul class="collapse">
-  <li><a href="#to-detect" id="toc-to-detect" class="nav-link" data-scroll-target="#to-detect">To Detect</a></li>
-  <li><a href="#issues-when-independence-is-violated" id="toc-issues-when-independence-is-violated" class="nav-link" data-scroll-target="#issues-when-independence-is-violated">Issues When Independence Is Violated</a></li>
-  <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
-  </ul></li>
-  <li><a href="#unequal-variances" id="toc-unequal-variances" class="nav-link" data-scroll-target="#unequal-variances">2. Unequal Variances</a>
-  <ul class="collapse">
-  <li><a href="#to-detect-1" id="toc-to-detect-1" class="nav-link" data-scroll-target="#to-detect-1">To Detect</a></li>
-  <li><a href="#issues" id="toc-issues" class="nav-link" data-scroll-target="#issues">Issues</a></li>
-  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a></li>
-  </ul></li>
+  <li><a href="#independence" id="toc-independence" class="nav-link" data-scroll-target="#independence">1. Independence</a></li>
+  <li><a href="#unequal-variances" id="toc-unequal-variances" class="nav-link" data-scroll-target="#unequal-variances">2. Unequal Variances</a></li>
   <li><a href="#normality-skew" id="toc-normality-skew" class="nav-link" data-scroll-target="#normality-skew">3. Normality (Skew)</a>
   <ul class="collapse">
-  <li><a href="#issues-1" id="toc-issues-1" class="nav-link" data-scroll-target="#issues-1">Issues</a></li>
-  <li><a href="#to-detect-2" id="toc-to-detect-2" class="nav-link" data-scroll-target="#to-detect-2">To Detect</a></li>
-  <li><a href="#solutions-1" id="toc-solutions-1" class="nav-link" data-scroll-target="#solutions-1">Solutions</a></li>
+  <li><a href="#checking-for-normality-with-qq-plots" id="toc-checking-for-normality-with-qq-plots" class="nav-link" data-scroll-target="#checking-for-normality-with-qq-plots">Checking for Normality with QQ Plots</a></li>
   </ul></li>
-  <li><a href="#normality-outliers" id="toc-normality-outliers" class="nav-link" data-scroll-target="#normality-outliers">4. Normality (Outliers)</a>
-  <ul class="collapse">
-  <li><a href="#to-detect-3" id="toc-to-detect-3" class="nav-link" data-scroll-target="#to-detect-3">To Detect</a></li>
-  <li><a href="#issues-2" id="toc-issues-2" class="nav-link" data-scroll-target="#issues-2">Issues</a></li>
-  <li><a href="#solution-1" id="toc-solution-1" class="nav-link" data-scroll-target="#solution-1">Solution</a></li>
-  </ul></li>
-  <li><a href="#transformations" id="toc-transformations" class="nav-link" data-scroll-target="#transformations">5. Transformations</a>
+  <li><a href="#normality-outliers" id="toc-normality-outliers" class="nav-link" data-scroll-target="#normality-outliers">4. Normality (Outliers)</a></li>
+  <li><a href="#central-limit-theorem" id="toc-central-limit-theorem" class="nav-link" data-scroll-target="#central-limit-theorem">Central Limit Theorem</a></li>
+  <li><a href="#transformations" id="toc-transformations" class="nav-link" data-scroll-target="#transformations">Transformations</a>
   <ul class="collapse">
   <li><a href="#interpreting-log-transformations" id="toc-interpreting-log-transformations" class="nav-link" data-scroll-target="#interpreting-log-transformations">Interpreting Log Transformations</a></li>
+  <li><a href="#worked-example-rainfall-data" id="toc-worked-example-rainfall-data" class="nav-link" data-scroll-target="#worked-example-rainfall-data">Worked Example: Rainfall Data</a>
+  <ul class="collapse">
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">Exploratory Data Analysis</a></li>
+  <li><a href="#apply-log-transformation" id="toc-apply-log-transformation" class="nav-link" data-scroll-target="#apply-log-transformation">Apply Log Transformation</a></li>
+  <li><a href="#model" id="toc-model" class="nav-link" data-scroll-target="#model">Model</a></li>
+  <li><a href="#hypotheses" id="toc-hypotheses" class="nav-link" data-scroll-target="#hypotheses">Hypotheses</a></li>
+  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -239,7 +232,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 16, 2026</p>
+      <p class="date">June 17, 2026</p>
     </div>
   </div>
   
@@ -296,8 +289,8 @@ window.Quarto = {
 <figcaption>Serial effects: measurements within each individual (dashed lines) are correlated across time, violating independence.</figcaption>
 </figure>
 </div>
-<section id="to-detect" class="level2">
-<h2 class="anchored" data-anchor-id="to-detect">To Detect</h2>
+<ul>
+<li><p><strong>To Detect</strong></p>
 <ol type="1">
 <li>Think carefully about how the data were collected.
 <ul>
@@ -306,10 +299,8 @@ window.Quarto = {
 <li>Were groups treated differently in ways unrelated to treatment?</li>
 </ul></li>
 <li>Residual plots (covered in Chapter 8).</li>
-</ol>
-</section>
-<section id="issues-when-independence-is-violated" class="level2">
-<h2 class="anchored" data-anchor-id="issues-when-independence-is-violated">Issues When Independence Is Violated</h2>
+</ol></li>
+<li><p><strong>Issues When Independence Is Violated</strong></p>
 <ul>
 <li><p>Recall <span class="math inline">\(\bar{X} - \bar{Y} \sim N(\mu_1 - \mu_2,\; \sigma_1^2/n_1 + \sigma_2^2/n_2)\)</span>.</p></li>
 <li><p>If samples are not independent, the variance formula above is <em>too small</em>.</p></li>
@@ -324,40 +315,23 @@ window.Quarto = {
 <li>Correct variance estimate: <span class="math inline">\(\sigma^2 \approx 0.25 / 2 = 0.125\)</span>.</li>
 <li>Incorrectly assumed variance: <span class="math inline">\(\sigma^2 \approx 0.25 / 100 = 0.0025\)</span>.</li>
 </ul></li>
-</ul>
-</section>
-<section id="solutions" class="level2">
-<h2 class="anchored" data-anchor-id="solutions">Solutions</h2>
+</ul></li>
+<li><p><strong>Solutions</strong></p>
 <ul>
 <li>ANOVA with blocking (Chapters 12–13) for cluster effects.</li>
 <li>Longitudinal analysis (Chapter 18) for serial effects.</li>
+</ul></li>
 </ul>
-</section>
 </section>
 <section id="unequal-variances" class="level1">
 <h1>2. Unequal Variances</h1>
 <ul>
 <li><p>Sometimes people assume <span class="math inline">\(\sigma_1^2 = \sigma_2^2\)</span> (the <em>pooled</em> variance <span class="math inline">\(t\)</span>-test), because it generalizes more easily to more complex methods.</p></li>
-<li><p>Under the equal-variance assumption: <span class="math display">\[\bar{X} - \bar{Y} \;\sim\; N\!\left(\mu_1 - \mu_2,\; \sigma^2\!\left(\frac{1}{n_1} + \frac{1}{n_2}\right)\right)\]</span> Estimate <span class="math inline">\(\sigma^2\)</span> with the pooled variance: <span class="math display">\[s_p^2 = \frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}\]</span></p></li>
-</ul>
-<section id="to-detect-1" class="level2">
-<h2 class="anchored" data-anchor-id="to-detect-1">To Detect</h2>
+<li><p>Under the equal-variance assumption: <span class="math display">\[\bar{X} - \bar{Y} \;\sim\; N\!\left(\mu_1 - \mu_2,\; \sigma^2\!\left(\frac{1}{n_1} + \frac{1}{n_2}\right)\right)\]</span> Estimate <span class="math inline">\(\sigma^2\)</span> with the pooled sample variance: <span class="math display">\[s_p^2 = \frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}\]</span></p></li>
+<li><p><strong>To Detect</strong></p>
 <ul>
-<li>Make side-by-side boxplots; only worry if the spread looks very different.</li>
-</ul>
+<li><p>Make side-by-side boxplots; only worry if the spread looks very different.</p>
 <div class="cell" data-layout-align="center">
-<div class="cell-output cell-output-stderr">
-<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.2.1     ✔ readr     2.2.0
-✔ forcats   1.0.1     ✔ stringr   1.6.0
-✔ ggplot2   4.0.3     ✔ tibble    3.3.1
-✔ lubridate 1.9.5     ✔ tidyr     1.3.2
-✔ purrr     1.2.2     
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -365,66 +339,220 @@ window.Quarto = {
 </figure>
 </div>
 </div>
+</div></li>
+<li><p>A little (or even moderate) difference is fine</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/unequal-var-example-ok-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
 </div>
-</section>
-<section id="issues" class="level2">
-<h2 class="anchored" data-anchor-id="issues">Issues</h2>
+</div>
+</div></li>
+</ul></li>
+<li><p><strong>Issues</strong></p>
 <ul>
 <li>If <span class="math inline">\(\sigma_1^2 \neq \sigma_2^2\)</span> but we assume they are equal, the variance estimate of <span class="math inline">\(\bar{X} - \bar{Y}\)</span> is wrong.</li>
 <li>This is mainly a problem when <span class="math inline">\(n_1\)</span> is very different from <span class="math inline">\(n_2\)</span>.</li>
-</ul>
-</section>
-<section id="solution" class="level2">
-<h2 class="anchored" data-anchor-id="solution">Solution</h2>
+</ul></li>
+<li><p><strong>Solution</strong></p>
 <ul>
 <li>Assume unequal variances — this is the default in <code>t.test()</code> in R, which uses the Satterthwaite approximation for degrees of freedom.</li>
-<li>Alternatively, transform the data.</li>
+<li>Alternatively, transform the data (folks don’t typically do this).</li>
+</ul></li>
 </ul>
-</section>
 </section>
 <section id="normality-skew" class="level1">
 <h1>3. Normality (Skew)</h1>
 <ul>
-<li>The <span class="math inline">\(t\)</span>-test assumes that <span class="math inline">\(X_1, \ldots, X_{n_1}\)</span> and <span class="math inline">\(Y_1, \ldots, Y_{n_2}\)</span> are approximately normal, or that the sample size is “large enough” (Central Limit Theorem).</li>
-<li>More skew <span class="math inline">\(\Rightarrow\)</span> larger sample size needed.</li>
-</ul>
-<section id="issues-1" class="level2">
-<h2 class="anchored" data-anchor-id="issues-1">Issues</h2>
+<li><p>The <span class="math inline">\(t\)</span>-test assumes that <span class="math inline">\(X_1, \ldots, X_{n_1}\)</span> and <span class="math inline">\(Y_1, \ldots, Y_{n_2}\)</span> are approximately normal, or that the sample size is “large enough” (Central Limit Theorem).</p></li>
+<li><p>More skew <span class="math inline">\(\Rightarrow\)</span> larger sample size needed.</p></li>
+<li><p><strong>Issues</strong></p>
 <ul>
 <li>Confidence intervals do not achieve 95% coverage.</li>
 <li>p-values do not have the correct null interpretation.</li>
-</ul>
-</section>
-<section id="to-detect-2" class="level2">
-<h2 class="anchored" data-anchor-id="to-detect-2">To Detect</h2>
+<li>Hard to predict if methods are conservative or liberal
+<ul>
+<li>Exercise: What does “conservative” and “liberal” mean when it comes to confidence intervals? To p-values?</li>
+</ul></li>
+</ul></li>
+<li><p><strong>To Detect</strong></p>
 <ul>
 <li>Make quantile-quantile (QQ) plots.</li>
-</ul>
-</section>
-<section id="solutions-1" class="level2">
-<h2 class="anchored" data-anchor-id="solutions-1">Solutions</h2>
+</ul></li>
+<li><p><strong>Solutions</strong></p>
 <ul>
 <li>Apply a transformation (see Section 5 below).</li>
 <li>Perform a permutation test.</li>
+</ul></li>
 </ul>
+<section id="checking-for-normality-with-qq-plots" class="level2">
+<h2 class="anchored" data-anchor-id="checking-for-normality-with-qq-plots">Checking for Normality with QQ Plots</h2>
+<p>Some distributions look approximately normal:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> beak78), <span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">15</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Beak depth (mm)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/beak-hist-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="288"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Clearly not all distributions are normal:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> rainun), <span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">10</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Rainfall"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/rain-hist-qqsec-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="288"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>It is sometimes important to check if normality is a valid approximation.</p>
+<ol type="1">
+<li>Is the 68–95–99.7 rule approximately correct for this dataset?</li>
+<li>Do the percentiles (quantiles) of the data match those of the theoretical normal distribution?</li>
+<li>Compare the <span class="math inline">\(p\)</span>th percentile of the data to the <span class="math inline">\(p\)</span>th percentile of a <span class="math inline">\(N(\bar{x}, s^2)\)</span> distribution. If they are close, normality is a good approximation.</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mu    <span class="ot">&lt;-</span> <span class="fu">mean</span>(beak78)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fu">sd</span>(beak78)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="at">p =</span> <span class="fl">0.2</span>, <span class="at">mean =</span> mu, <span class="at">sd =</span> sigma)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9.375</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(<span class="at">x =</span> beak78, <span class="at">probs =</span> <span class="fl">0.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> 20% 
+9.46 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="at">p =</span> <span class="fl">0.7</span>, <span class="at">mean =</span> mu, <span class="at">sd =</span> sigma)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10.61</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(<span class="at">x =</span> beak78, <span class="at">probs =</span> <span class="fl">0.7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> 70% 
+10.6 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="at">p =</span> <span class="fl">0.9</span>, <span class="at">mean =</span> mu, <span class="at">sd =</span> sigma)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 11.3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(<span class="at">x =</span> beak78, <span class="at">probs =</span> <span class="fl">0.9</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  90% 
+11.14 </code></pre>
+</div>
+</div>
+<p>A <strong>quantile-quantile (QQ) plot</strong> plots the observed quantiles against the quantiles of a <span class="math inline">\(N(\bar{x}, s^2)\)</span> distribution. If the points lie close to a straight line, the normal approximation is approximately correct.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> beak78), <span class="fu">aes</span>(<span class="at">sample =</span> x)) <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/qqplot-beak-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>What does a “good” QQ-plot look like? The panel labelled <code>0</code> below shows the real beak data; the others show data simulated from <span class="math inline">\(N(\bar{x}, s^2)\)</span> — perhaps a little non-normal?</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/qqplot-comparison-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Common departures from normality and their QQ-plot signatures (histogram on left, QQ-plot on right):</p>
+<p><strong>Skewed right</strong> — curve arcs upward:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/qqplot-skew-right-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Skewed left</strong> — curve arcs downward:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/qqplot-skew-left-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Outliers</strong> — isolated points far from the line:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/qqplot-outliers-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Heavy tails</strong> — S-shaped curve:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/qqplot-heavy-tails-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Light tails</strong> — reverse S-shaped curve:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/qqplot-light-tails-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The rainfall data clearly violates normality:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> rainun), <span class="fu">aes</span>(<span class="at">sample =</span> x)) <span class="sc">+</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/qqplot-rainfall-skew-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="normality-outliers" class="level1">
 <h1>4. Normality (Outliers)</h1>
-<section id="to-detect-3" class="level2">
-<h2 class="anchored" data-anchor-id="to-detect-3">To Detect</h2>
+<ul>
+<li><p><strong>To Detect</strong></p>
 <ul>
 <li>Histograms, boxplots, QQ-plots.</li>
-</ul>
-</section>
-<section id="issues-2" class="level2">
-<h2 class="anchored" data-anchor-id="issues-2">Issues</h2>
+</ul></li>
+<li><p><strong>Issues</strong></p>
 <ul>
 <li>Results are unstable — removing a single point can change conclusions.</li>
-</ul>
-</section>
-<section id="solution-1" class="level2">
-<h2 class="anchored" data-anchor-id="solution-1">Solution</h2>
+</ul></li>
+<li><p><strong>Solution</strong></p>
 <ul>
 <li>Run the analysis with and without the outlier.</li>
 <li>If answers are the same, do not remove it.</li>
@@ -433,14 +561,146 @@ window.Quarto = {
 <li>Use a robust analysis (Chapter 4).</li>
 <li>Report both analyses.</li>
 </ol></li>
+</ul></li>
 </ul>
 </section>
+<section id="central-limit-theorem" class="level1">
+<h1>Central Limit Theorem</h1>
+<p>The Central Limit Theorem (CLT) justifies using the <span class="math inline">\(t\)</span>-distribution even when the population is not perfectly normal, provided the sample size is large enough. Below we demonstrate the CLT using birth-weight data.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>rain_all <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0301.csv"</span>)<span class="sc">$</span>Rainfall</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> rain_all), <span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">bins =</span> <span class="dv">30</span>) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Rainfall (acre-feet)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/clt-data-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We draw repeated bootstrap samples of size <span class="math inline">\(n\)</span> and compute the sample mean each time, then examine the distribution of <span class="math inline">\(\bar{X}\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>xbarvec5 <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="at">n =</span> <span class="dv">10000</span>,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">expr =</span> <span class="fu">mean</span>(<span class="fu">sample</span>(rain_all, <span class="at">size =</span> <span class="dv">5</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>xbarvec10 <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="at">n =</span> <span class="dv">10000</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">expr =</span> <span class="fu">mean</span>(<span class="fu">sample</span>(rain_all, <span class="at">size =</span> <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>xbarvec50 <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="at">n =</span> <span class="dv">10000</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">expr =</span> <span class="fu">mean</span>(<span class="fu">sample</span>(rain_all, <span class="at">size =</span> <span class="dv">20</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>xbarvec100 <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="at">n =</span> <span class="dv">10000</span>,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">expr =</span> <span class="fu">mean</span>(<span class="fu">sample</span>(rain_all, <span class="at">size =</span> <span class="dv">100</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>xbarvec1000 <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="at">n =</span> <span class="dv">10000</span>,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">expr =</span> <span class="fu">mean</span>(<span class="fu">sample</span>(rain_all, <span class="at">size =</span> <span class="dv">1000</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>As <span class="math inline">\(n\)</span> increases, the variance of <span class="math inline">\(\bar{X}\)</span> decreases:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/clt-boxplot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And the distribution of <span class="math inline">\(\bar{X}\)</span> becomes increasingly normal (histograms):</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/clt-hist-n5-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/clt-hist-n10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/clt-hist-n50-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/clt-hist-n100-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/clt-hist-n1000-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The same pattern is visible in QQ-plots:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/clt-qq-n5-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/clt-qq-n10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/clt-qq-n50-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/clt-qq-n100-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/clt-qq-n1000-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="transformations" class="level1">
-<h1>5. Transformations</h1>
+<h1>Transformations</h1>
 <ul>
 <li><p>Many transformations are possible: <span class="math inline">\(\sqrt{y}\)</span>, <span class="math inline">\(\arcsin(\sqrt{y})\)</span>, <span class="math inline">\(\log(y)\)</span>.</p></li>
-<li><p><strong>Log is usually the only one used in practice.</strong></p></li>
+<li><p><strong>Log is usually the only one used in practice for t-methods.</strong></p></li>
 <li><p><strong>When to use log</strong>:</p>
 <ol type="1">
 <li>Values are positive.</li>
@@ -451,29 +711,6 @@ window.Quarto = {
 <li>Log makes such data symmetric and stabilizes variance.</li>
 </ul></li>
 </ul>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Sleuth3)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"case0301"</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>p_raw <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(case0301, <span class="fu">aes</span>(<span class="at">x =</span> Treatment, <span class="at">y =</span> Rainfall)) <span class="sc">+</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Raw scale"</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>p_log <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(case0301, <span class="fu">aes</span>(<span class="at">x =</span> Treatment, <span class="at">y =</span> Rainfall)) <span class="sc">+</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Log scale"</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>p_raw <span class="sc">+</span> p_log</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="05_ch3_files/figure-html/rainfall-plots-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
-</figure>
-</div>
-</div>
-</div>
 <section id="interpreting-log-transformations" class="level2">
 <h2 class="anchored" data-anchor-id="interpreting-log-transformations">Interpreting Log Transformations</h2>
 <ul>
@@ -499,39 +736,151 @@ window.Quarto = {
 <li>Exponentiate: <span class="math inline">\(e^{\hat{\delta}}\)</span> estimates the ratio of medians; <span class="math inline">\((e^{\hat{\delta}_L}, e^{\hat{\delta}_U})\)</span> is the CI for the ratio.</li>
 </ol></li>
 </ul>
+</section>
+<section id="worked-example-rainfall-data" class="level2">
+<h2 class="anchored" data-anchor-id="worked-example-rainfall-data">Worked Example: Rainfall Data</h2>
+<p>Researchers studied whether cloud seeding increases rainfall. The treatment (seeded vs.&nbsp;unseeded) was randomly assigned to days, making this a randomized experiment.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>case0301 <span class="sc">|&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">logRainfall =</span> <span class="fu">log</span>(Rainfall)) <span class="sc">|&gt;</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t.test</span>(logRainfall <span class="sc">~</span> Treatment, <span class="at">data =</span> _) <span class="sc">|&gt;</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="ot">-&gt;</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  tout</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>tout <span class="sc">|&gt;</span> <span class="fu">select</span>(estimate, p.value, conf.low, conf.high)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>case0301 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0301.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="exploratory-data-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h3>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0301, <span class="fu">aes</span>(<span class="at">x =</span> Treatment, <span class="at">y =</span> Rainfall)) <span class="sc">+</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/rainfall-boxplot-raw-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0301, <span class="fu">aes</span>(<span class="at">x =</span> Rainfall)) <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Treatment)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/rainfall-hist-raw-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0301, <span class="fu">aes</span>(<span class="at">sample =</span> Rainfall)) <span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Treatment)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/rainfall-qq-raw-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The data are severely right-skewed with larger variance in the seeded group. A log transformation is appropriate: values are positive, larger mean implies larger variance, and the data are skewed.</p>
+</section>
+<section id="apply-log-transformation" class="level3">
+<h3 class="anchored" data-anchor-id="apply-log-transformation">Apply Log Transformation</h3>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>case0301 <span class="ot">&lt;-</span> case0301 <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">logRainfall =</span> <span class="fu">log</span>(Rainfall))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0301, <span class="fu">aes</span>(<span class="at">x =</span> Treatment, <span class="at">y =</span> logRainfall)) <span class="sc">+</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/rainfall-boxplot-log-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0301, <span class="fu">aes</span>(<span class="at">x =</span> logRainfall)) <span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Treatment)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/rainfall-hist-log-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0301, <span class="fu">aes</span>(<span class="at">sample =</span> logRainfall)) <span class="sc">+</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Treatment)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_ch3_files/figure-html/rainfall-qq-log-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The log-transformed data look much more approximately normal.</p>
+</section>
+<section id="model" class="level3">
+<h3 class="anchored" data-anchor-id="model">Model</h3>
+<ul>
+<li><span class="math inline">\(Z_i\)</span> = rainfall on unseeded days; <span class="math inline">\(Y_i = \log(Z_i)\)</span>.</li>
+<li><span class="math inline">\(Z_i^*\)</span> = rainfall on seeded days; <span class="math inline">\(Y_i^* = \log(Z_i^*)\)</span>.</li>
+<li>Location-shift model on the log scale: <span class="math inline">\(Y_i^* = Y_i + \delta\)</span>, which implies <span class="math inline">\(Z_i^* = e^\delta Z_i\)</span>.</li>
+<li><span class="math inline">\(e^\delta\)</span> is the <strong>multiplicative effect</strong> of seeding on rainfall.
+<ul>
+<li><span class="math inline">\(e^\delta = 2\)</span>: seeding doubles rainfall.</li>
+<li><span class="math inline">\(e^\delta = 3\)</span>: seeding triples rainfall.</li>
+</ul></li>
+</ul>
+</section>
+<section id="hypotheses" class="level3">
+<h3 class="anchored" data-anchor-id="hypotheses">Hypotheses</h3>
+<p><span class="math display">\[H_0: \delta = 0 \qquad H_a: \delta \neq 0\]</span></p>
+</section>
+<section id="analysis" class="level3">
+<h3 class="anchored" data-anchor-id="analysis">Analysis</h3>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>case0301 <span class="sc">|&gt;</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t.test</span>(logRainfall <span class="sc">~</span> Treatment, <span class="at">data =</span> _) <span class="sc">|&gt;</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="ot">-&gt;</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  tout</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>tout <span class="sc">|&gt;</span> <span class="fu">select</span>(estimate, p.value, conf.low, conf.high)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 4
   estimate p.value conf.low conf.high
      &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
 1     1.14  0.0141    0.241      2.05</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Estimated ratio of median rainfall (Seeded / Unseeded):</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(tout<span class="sc">$</span>estimate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Estimated ratio of median rainfall (Seeded / Unseeded):</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(tout<span class="sc">$</span>estimate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 3.139</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 95% CI for the ratio of medians:</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">c</span>(<span class="at">lower =</span> tout<span class="sc">$</span>conf.low, <span class="at">upper =</span> tout<span class="sc">$</span>conf.high))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 95% CI for the ratio of medians:</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">c</span>(<span class="at">lower =</span> tout<span class="sc">$</span>conf.low, <span class="at">upper =</span> tout<span class="sc">$</span>conf.high))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>lower upper 
 1.272 7.742 </code></pre>
 </div>
 </div>
-<ul>
-<li>Estimated median rainfall in the seeded group is about 3.1 times that of the unseeded group, with a 95% confidence interval of (1.3, 7.7).</li>
-</ul>
+</section>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>We estimate that seeding results in a 3.1-fold increase in median rainfall (<span class="math inline">\(p\)</span>-value 0.014, 95% CI: 1.3 to 7.7 times). Note the causal language — cloud seeding was randomly assigned, so a causal conclusion is warranted.</p>
 
 
+</section>
 </section>
 </section>
 

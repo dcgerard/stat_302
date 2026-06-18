@@ -1,0 +1,116 @@
+---
+title: "Rainfall Example"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "metropolis"
+    slide_level: 2
+urlcolor: "blue"
+---
+
+```{r setup, include=FALSE}
+ggplot2::theme_set(
+  ggplot2::theme_bw()
+  )
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.height = 2.5, 
+                      fig.width = 4, 
+                      fig.align = "center")
+```
+
+## Objectives
+
+Here, we work through the rainfall analysis
+
+## Load in Data
+```{r}
+library(Sleuth3)
+library(ggplot2)
+data("case0301")
+```
+
+
+## Rainfall EDA
+```{r}
+qplot(x = Treatment, y = Rainfall, 
+      data = case0301, geom = "boxplot")
+```
+
+## Rainfall EDA
+```{r}
+qplot(x = Rainfall, facets = . ~ Treatment,
+      data = case0301, geom = "histogram", bins = 10)
+```
+
+## Rainfall EDA
+```{r}
+qplot(sample = Rainfall, facets = . ~ Treatment,
+      data = case0301, geom = "qq") +
+  geom_qq_line()
+```
+
+## Apply Transformation
+
+```{r}
+case0301$logRainfall <- log(case0301$Rainfall)
+```
+
+## Rain EDA
+
+```{r}
+qplot(x = Treatment, y = logRainfall, 
+      data = case0301, geom = "boxplot")
+```
+
+## Rainfall EDA
+```{r}
+qplot(x = logRainfall, facets = . ~ Treatment,
+      data = case0301, geom = "histogram", bins = 10)
+```
+
+## Rainfall EDA
+```{r}
+qplot(sample = logRainfall, facets = . ~ Treatment,
+      data = case0301, geom = "qq") +
+  geom_qq_line()
+```
+
+# Interpretation
+
+## Posit a Model
+
+- $Z_i$ = rainfall on unseeded days.
+- $Y_i$ = **log** rainfall on unseeded days.
+- $Z_i^*$ = rainfall on seeded days.
+- $Y_i^*$ = **log** rainfall on seeded days.
+- $Y_i^* = Y_i + \delta$.
+- $Z_i^* = e^{\delta}Z_i$.
+- $e^{\delta}$ is the multiplicative effect of seeding on rainfall.
+- $e^{\delta} = 2$ means rainfall is twice as large on seeded days.
+- $e^{\delta} = 3$ means rainfall is three times as large on seeded days.
+
+## Posit Hypotheses
+
+- $H_0: \delta = 0$
+- $H_a: \delta \neq 0$
+
+## Run t-test
+
+```{r}
+tout <- t.test(logRainfall ~ Treatment, data = case0301)
+tout
+```
+
+## Estimate and Confidence Intervals on Original Scale
+
+```{r}
+exp(tout$estimate[1] - tout$estimate[2])
+exp(tout$conf.int)
+```
+
+
+## Conclusion
+
+- We estimate that that seeding results in a 3.1 factor increase in rainfall ($p$-value 0.01, 95\% confidence interval of 1.3 to 7.7).
+- Note the causal language because this is a randomized experiment. I will deduct many points if you use causal language in an observational study.

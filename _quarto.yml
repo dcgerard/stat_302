@@ -1,6 +1,9 @@
 project:
   type: website
   output-dir: docs
+  render:
+    - "*.qmd"
+    - "**/*.qmd"
 
 website:
   title: "Stat 302: Intermediate Statistics"
@@ -9,6 +12,9 @@ website:
       - href: index.qmd
         text: Home
       - data.qmd
+
+execute:
+  dir: file
 
 format:
   html:
