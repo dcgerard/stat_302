@@ -1,0 +1,191 @@
+---
+title: "Chapter 3 Worksheet"
+author: "David Gerard"
+date: today
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+# Case Study 3.1.2: Effects of Agent Orange on Troops in Vietnam
+
+Many Vietnam veterans are concerned that their health may have been affected by
+exposure to Agent Orange, a herbicide sprayed in South Vietnam between 1962 and
+1970. The particularly worrisome component of Agent Orange is a dioxin called
+TCDD, which in high doses is known to be associated with certain cancers.
+Studies have shown that high levels of this dioxin can be detected 20 or more
+years after heavy exposure. Consequently, researchers from the Centers for
+Disease Control compared dioxin levels in Vietnam veterans to those in veterans
+who did not serve in Vietnam.
+
+The 646 Vietnam veterans in the study were a sample of U.S. Army combat
+personnel who served in Vietnam during 1967 and 1968, in areas most heavily
+treated with Agent Orange. The 97 non-Vietnam veterans entered the Army between
+1965 and 1971 and served only in the United States or Germany. Neither sample
+was randomly selected.
+
+Blood samples from each veteran were analyzed for the presence of dioxin.
+
+```{r}
+#| eval: true
+#| message: false
+library(tidyverse)
+case0302 <- read_csv("https://dcgerard.github.io/stat_302/data/case0302.csv")
+glimpse(case0302)
+```
+
+**1.** From the description, do you think there are any problems with
+independence between observations? Explain your reasoning.
+
+**2.** Make side-by-side boxplots of `Dioxin` by `Veteran` group. Do the
+variances look approximately equal?
+
+```{r}
+
+```
+
+**3.** Based on the same plot, how does the symmetry assumption look?
+
+**4.** Are there any major outliers? Reference the plot from Question 2.
+
+**5.** Address any issues identified above and run a two-sample $t$-test.
+Follow these steps:
+
+  a. Posit a model. Let $Y_i$ denote the dioxin level for non-Vietnam veteran
+     $i$ and $X_j$ denote the dioxin level for Vietnam veteran $j$. Write the
+     location-shift model and define all symbols.
+
+  b. State the null and alternative hypotheses in symbols.
+
+  c. Run the $t$-test on the full dataset and report the $p$-value.
+
+```{r}
+
+```
+
+  d. Identify any extreme outliers and remove them, then re-run the $t$-test.
+
+```{r}
+
+```
+
+  e. Report your conclusions in plain language. Are the two analyses
+     consistent? What do you conclude about dioxin levels in Vietnam vs.
+     non-Vietnam veterans?
+
+---
+
+# QQ Plots
+
+```{r}
+#| eval: true
+#| message: false
+library(tidyverse)
+case0301 <- read_csv("https://dcgerard.github.io/stat_302/data/case0301.csv")
+case0201 <- read_csv("https://dcgerard.github.io/stat_302/data/case0201.csv")
+```
+
+**6.** Make a QQ plot of `Rainfall` for the `Unseeded` group in `case0301`.
+
+```{r}
+
+```
+
+**7.** Based on the QQ plot from Question 6, what type of departure from
+normality do you observe (right skew, left skew, heavy tails, light tails, or
+outliers)? Describe how the shape of the plotted points supports your
+conclusion.
+
+**8.** Make a QQ plot of beak `Depth` for finches measured in 1978 from
+`case0201`.
+
+```{r}
+
+```
+
+**9.** Does the 1978 beak depth data appear approximately normal? What
+features of the QQ plot support your conclusion?
+
+---
+
+# Log Transformations — Rainfall Data
+
+Researchers randomly assigned days to receive cloud seeding (`Seeded`) or no
+seeding (`Unseeded`) and recorded the resulting rainfall (in acre-feet).
+
+**10.** The notes list three conditions that suggest a log transformation is
+appropriate. State all three and check whether each holds for the rainfall
+data. (Use plots to support your answer.)
+
+```{r}
+
+```
+
+**11.** Create a new variable `logRainfall = log(Rainfall)`. Make side-by-side
+boxplots and QQ plots of `logRainfall` by `Treatment`.
+
+```{r}
+
+```
+
+**12.** Does the log transformation improve normality and stabilize the
+variance? What do you observe compared to Question 10?
+
+**13.** Posit a model for the log-scale analysis. Let $Y_i = \log(\text{Rainfall}_i)$
+for unseeded days and $Y_j^* = \log(\text{Rainfall}_j^*)$ for seeded days.
+Write the location-shift model and state the null and alternative hypotheses.
+
+**14.** Run the $t$-test on the log-transformed data. Report the estimated
+$\hat{\delta}$, its 95% CI, and the $p$-value.
+
+```{r}
+
+```
+
+**15.** Exponentiate $\hat{\delta}$ and the endpoints of the 95% CI to
+interpret the results on the original scale. Write a complete conclusion,
+including units and a statement about causality (is a causal claim warranted
+here?).
+
+---
+
+# Conceptual Questions
+
+**16.** The chapter lists three assumptions of the two-sample $t$-test in
+decreasing order of importance. List them. Then explain *why* independence is
+the most critical — what specifically goes wrong with the $p$-value and
+confidence interval when independence is violated?
+
+**17.** Explain the difference between a "conservative" and "liberal"
+statistical method in terms of (a) confidence intervals and (b) $p$-values.
+If a $t$-test is applied to severely right-skewed data with a small sample
+size, which direction of error would you expect? Why is this hard to predict
+in general?
+
+**18.** In the Agent Orange study, neither sample was randomly selected.
+
+  a. Does the lack of random sampling affect whether we can *generalize* the
+     results to all Vietnam veterans? Explain.
+
+  b. Does it affect whether we can draw *causal* conclusions? Explain.
+
+**19.** The Central Limit Theorem (CLT) guarantees that $\bar{X}$ is
+approximately normal for large $n$, regardless of the population distribution.
+Describe a scenario where you would *not* want to rely on the CLT to justify a
+$t$-test, even with $n = 50$. What would you do instead?
+
+**20.** An outlier is detected in a two-sample dataset. A student removes it,
+runs the $t$-test only on the cleaned data, and reports those results.
+
+  a. What is the problem with this approach?
+
+  b. What is the recommended procedure?
+
+**21.** Suppose you log-transform data and run a $t$-test. The 95% CI for
+$\delta$ (the difference in log-medians, Group A minus Group B) is
+$(0.2,\; 1.1)$. Exponentiate the endpoints. What does this interval say about
+the ratio of medians (Group A to Group B) on the original scale? Is there
+strong evidence that Group A has higher values than Group B?

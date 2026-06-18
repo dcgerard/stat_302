@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo       = TRUE,
                       fig.width  = 6,
                       fig.align  = "center")
 ggplot2::theme_set(ggplot2::theme_bw())
+library(patchwork)
 ```
 
 # Learning Objectives
@@ -160,13 +161,9 @@ ggplot2::theme_set(ggplot2::theme_bw())
 
 ```{r}
 #| label: qqplot-data
-#| include: false
 #| message: false
-library(patchwork)
-case0201_qqplot <- read_csv("https://dcgerard.github.io/stat_302/data/case0201.csv")
-beak78 <- case0201_qqplot$Depth[case0201_qqplot$Year == 1978]
-case0301_qqplot <- read_csv("https://dcgerard.github.io/stat_302/data/case0301.csv")
-rainun <- case0301_qqplot$Rainfall[case0301_qqplot$Treatment == "Unseeded"]
+case0201 <- read_csv("https://dcgerard.github.io/stat_302/data/case0201.csv")
+case0301 <- read_csv("https://dcgerard.github.io/stat_302/data/case0301.csv")
 ```
 
 Some distributions look approximately normal:
@@ -175,7 +172,9 @@ Some distributions look approximately normal:
 #| label: beak-hist
 #| fig-height: 2
 #| fig-width: 3
-ggplot(data.frame(x = beak78), aes(x = x)) +
+case0201 |>
+  filter(Year == 1978) |>
+  ggplot(mapping = aes(x = Depth)) +
   geom_histogram(bins = 15, color = "black", fill = "white") +
   xlab("Beak depth (mm)")
 ```
@@ -186,7 +185,9 @@ Clearly not all distributions are normal:
 #| label: rain-hist-qqsec
 #| fig-height: 2
 #| fig-width: 3
-ggplot(data.frame(x = rainun), aes(x = x)) +
+case0301 |>
+  filter(Treatment == "Unseeded") |>
+  ggplot(mapping = aes(x = Rainfall)) +
   geom_histogram(bins = 10, color = "black", fill = "white") +
   xlab("Rainfall")
 ```
@@ -199,6 +200,7 @@ It is sometimes important to check if normality is a valid approximation.
 
 ```{r}
 #| label: qqplot-quantile-examples
+beak78 <- case0201$Depth[case0201$Year == 1978]
 mu    <- mean(beak78)
 sigma <- sd(beak78)
 qnorm(p = 0.2, mean = mu, sd = sigma)
@@ -213,7 +215,9 @@ A **quantile-quantile (QQ) plot** plots the observed quantiles against the quant
 
 ```{r}
 #| label: qqplot-beak
-ggplot(data.frame(x = beak78), aes(sample = x)) +
+case0201 |>
+  filter(Year == 1978) |>
+  ggplot(mapping = aes(sample = Depth)) +
   geom_qq() +
   geom_qq_line()
 ```
@@ -324,7 +328,9 @@ The rainfall data clearly violates normality:
 
 ```{r}
 #| label: qqplot-rainfall-skew
-ggplot(data.frame(x = rainun), aes(sample = x)) +
+case0301 |>
+  filter(Treatment == "Unseeded") |>
+  ggplot(mapping = aes(sample = Rainfall)) +
   geom_qq() +
   geom_qq_line()
 ```

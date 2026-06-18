@@ -20,6 +20,7 @@ author: David Gerard
   - [Chapter 2 Worksheet](./04_ch2/04_worksheet.qmd)
 - Chapter 3:
   - [Assumptions of t-Tools](./05_ch3/05_ch3.qmd)
+  - [Chapter 3 Worksheet](./05_ch3/05_worksheet.qmd)
 - Chapter 4: 
   - Nonparameterics
 - Chapter 5:

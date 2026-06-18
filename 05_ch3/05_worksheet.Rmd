@@ -1,0 +1,106 @@
+---
+title: "Chapter 3 Worksheet"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output: pdf_document
+urlcolor: "blue"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, eval = FALSE)
+```
+
+# Case Study 3.1.2 Effects of Agent Orange on Troops in Vietnam
+
+Many Vietnam veterans are concerned that their health may have been affected by exposure to Agent Orange, a herbicide sprayed in South Vietnam between 1962 and 1970. The particularly worrisome component of Agent Orange is a dioxin called TCDD, which in high doses is known to be associated with certain cancers. Studies have shown that high levels of this dioxin can be detected 20 or more years after heavy exposure to Agent Orange. Consequently, as part of a series of studies, researchers from the Centers for Disease Control compared the current (1987) dioxin levels in Vietnam veterans to the dioxin levels in veterans who did not serve in Vietnam.
+
+The 646 Vietnam veterans in the study were a sample of U.S. Army combat personnel who served in Vietnam during 1967 and 1968, in the areas that were most heavily treated with Agent Orange. The 97 non-Vietnam veterans entered the Army between 1965 and 1971 and served only in the United States or Germany. Neither sample was randomly selected.
+
+Blood samples from each veteran were analyzed for the presence of ioxin.
+
+Load the data into R
+```{r, echo = TRUE}
+library(Sleuth3)
+data("case0302")
+```
+
+1. From the description, do you think there are any problems with independence between observations?
+
+```{block}
+Hard to say based on the description.
+```
+
+
+2. Do you think the variances look equal? Check with an appropriate plot.
+
+```{r}
+## Look about equal, minus the outliers
+library(ggplot2)
+qplot(x = Veteran, y = Dioxin, data = case0302, geom = "boxplot")
+```
+
+
+3. How does the symmetry assumption look? Check with an appropriate plot.
+
+```{block}
+Same plot as above. Looks ok, minus the outliers.
+```
+
+
+4. Are there any major outliers? Check with an appropriate plot.
+
+```{block}
+Yes, same plot as above. Major outliers.
+```
+
+
+5. Solve any of the above problems and run a two-sample $t$-test. Remember, first posit a model, write out the hypotheses, run the $t$-test, then state your conclusions in an interpretable way.
+
+```{block}
+Model
+
+$$
+Y_i = \mu + \epsilon_i
+$$
+$$
+X_j = \mu + \delta + \xi_j
+$$
+Here, $\delta$ is the difference in means.
+
+Hypothesis
+$$
+H_0: \delta = 0
+$$
+$$
+H_A: \delta \neq 0
+$$
+
+First do analysis with outliers
+```
+```{r}
+t.test(Dioxin ~ Veteran, data = case0302)
+```
+
+```{block}
+Find Outliers
+```
+```{r}
+which_out <- case0302$Dioxin > 20
+subdat <- case0302[!which_out, ]
+```
+
+```{block}
+Now rerun without outliers
+```
+```{r}
+t.test(Dioxin ~ Veteran, data = subdat)
+```
+
+```{block}
+$p$-value is very large both times.
+Report both results, indicating no
+evidence of difference in Dioxin levels
+between Vietnam veterans and non-Vietnam veterans
+```
+
+
