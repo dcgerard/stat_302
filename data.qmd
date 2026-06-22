@@ -219,6 +219,10 @@ These data were almost all taken from the [companion website](https://www.cengag
 
 # Chapter 6
 
+- [sardine.csv](./data/sardine.csv): Vertebrae counts from 12,858 Pacific sardines (*Sardinops sagax*) sampled from six locations along the Pacific coast. [@clarke1936variations]
+  - `location`: integer code for sampling location — `1` Alaska, `2` British Columbia, `3` San Francisco, `4` Monterey, `5` San Pedro, `6` San Diego
+  - `number`: number of vertebrae
+
 - [case0601.csv](./data/case0601.csv): Study explores how physical handicaps affect people's perception of employment qualifications. Researchers prepared 5 videotaped job interviews using actors with a script designed to reflect an interview with an applicant of average qualifications. The 5 tapes differed only in that the applicant appeared with a different handicap in each one. Seventy undergraduate students were randomly assigned to view the tapes and rate the qualification of the applicant on a 0-10 point scale. [@cesare1990interviewers]
   - `Score`: is the score each student gave to the applicant
   - `Handicap`: is a factor variable with 5 levels—`"None"`, `"Amputee"`, `"Crutches"`, `"Hearing"`, and `"Wheelchair"`

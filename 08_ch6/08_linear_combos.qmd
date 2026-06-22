@@ -1,0 +1,292 @@
+---
+title: "Linear Combinations of Group Means"
+author: "David Gerard"
+date: today
+bibliography: "../bib.bib"
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(car)
+knitr::opts_chunk$set(echo       = TRUE,
+                      fig.height = 3,
+                      fig.width  = 5,
+                      fig.align  = "center")
+ggplot2::theme_set(ggplot2::theme_bw())
+```
+
+# Learning Objectives
+
+- Define a linear combination and a contrast of group means.
+- Estimate a linear combination and compute its standard error.
+- Conduct a hypothesis test and form a confidence interval for a linear
+  combination.
+- Use `linearHypothesis()` from the `car` package to test linear combinations
+  in R.
+
+---
+
+# The Spock Conspiracy Trial (Recap)
+
+```{r}
+#| label: load-data
+#| message: false
+case0502 <- read_csv("https://dcgerard.github.io/stat_302/data/case0502.csv") |>
+  mutate(Judge = factor(Judge))
+```
+
+The model is $Y_{ij} = \mu_i + \varepsilon_{ij}$, where $Y_{ij}$ is the
+percent women on venire $j$ of judge $i$, $\mu_i$ is judge $i$'s true mean,
+and $\varepsilon_{ij}$ is individual noise with variance $\sigma^2$. There
+are $I = 7$ judges and $n = 46$ venires.
+
+The omnibus $F$-test from Chapter 5 gave very strong evidence that the seven
+judges do not all have the same mean ($p < 0.001$). Now we want to ask more
+specific questions.
+
+---
+
+# Linear Combinations
+
+## Motivation
+
+We want to compare Spock's judge ($\mu_1$) to the average of the other six
+judges ($\mu_2, \ldots, \mu_7$), **without** having to assume those six means
+are equal. That is:
+
+$$H_0: \mu_1 = \tfrac{1}{6}(\mu_2 + \mu_3 + \cdots + \mu_7),
+\qquad
+H_A: \mu_1 \neq \tfrac{1}{6}(\mu_2 + \mu_3 + \cdots + \mu_7)$$
+
+Rewriting the null:
+
+$$\mu_1 - \tfrac{1}{6}\mu_2 - \tfrac{1}{6}\mu_3 - \cdots - \tfrac{1}{6}\mu_7 = 0$$
+
+The left-hand side is a **linear combination** of the group means.
+
+## Definition
+
+A **linear combination** of $\mu_1, \mu_2, \ldots, \mu_I$ with coefficients
+$c_1, c_2, \ldots, c_I$ is:
+
+$$\gamma = c_1\mu_1 + c_2\mu_2 + \cdots + c_I\mu_I$$
+
+If the coefficients sum to zero ($c_1 + c_2 + \cdots + c_I = 0$), the linear
+combination is called a **contrast**.
+
+For the Spock comparison: $c_1 = 1$ and $c_2 = c_3 = \cdots = c_7 = -\tfrac{1}{6}$.
+Check: $1 + 6 \times (-\tfrac{1}{6}) = 0$. So this is a contrast.
+
+## Hypotheses
+
+For any linear combination $\gamma$, the hypotheses are:
+
+$$H_0: \gamma = 0, \qquad H_A: \gamma \neq 0$$
+
+## Estimation
+
+Estimate each $\mu_i$ with the group sample mean $\bar{Y}_{i\bullet}$:
+
+$$\hat{\gamma} = c_1 \bar{Y}_{1\bullet} + c_2 \bar{Y}_{2\bullet} + \cdots + c_I \bar{Y}_{I\bullet}$$
+
+## Standard Error
+
+Because the group means are independent and
+$\mathrm{Var}(\bar{Y}_{i\bullet}) = \sigma^2 / n_i$:
+
+$$\mathrm{Var}(\hat{\gamma}) = \sigma^2 \left(\frac{c_1^2}{n_1} + \frac{c_2^2}{n_2} + \cdots + \frac{c_I^2}{n_I}\right)$$
+
+We estimate $\sigma$ with the pooled standard deviation $s_p$ from the full
+model, giving:
+
+$$SE(\hat{\gamma}) = s_p \sqrt{\frac{c_1^2}{n_1} + \frac{c_2^2}{n_2} + \cdots + \frac{c_I^2}{n_I}}$$
+
+## Hypothesis Test
+
+Under $H_0$, the standardized estimate follows a $t$ distribution:
+
+$$t^* = \frac{\hat{\gamma}}{SE(\hat{\gamma})} \;\sim\; t_\nu, \quad \nu = n - I$$
+
+The two-sided $p$-value is $2 \cdot P(t_\nu \leq -|t^*|)$.
+
+## Confidence Interval
+
+A 95% confidence interval for $\gamma$:
+
+$$\hat{\gamma} \;\pm\; t_\nu(0.975) \cdot SE(\hat{\gamma})$$
+
+---
+
+# Implementation in R
+
+## The Default Parameterization
+
+Fitting a one-way ANOVA with `aov()` uses R's default treatment-contrast
+parameterization: the model is $Y_{ij} = \mu + \delta_i + \varepsilon_{ij}$
+with $\delta_1 = 0$ (the first factor level is the reference group). The
+coefficients returned are $\hat{\mu}$ and $\hat{\delta}_2, \ldots, \hat{\delta}_I$
+— **not** the group means $\mu_1, \ldots, \mu_I$.
+
+```{r}
+#| label: default-param
+aout_full <- aov(Percent ~ Judge, data = case0502)
+coef(aout_full)
+```
+
+The interpretation: `(Intercept)` = $\hat{\mu}_A$ (judge A's mean);
+`JudgeB` = $\hat{\mu}_B - \hat{\mu}_A$; and so on. The group means are
+$\hat{\mu}_i = \hat{\mu} + \hat{\delta}_i$, but this parameterization
+makes setting up coefficient vectors awkward.
+
+## Forcing the Group-Means Parameterization
+
+Subtracting 1 from the formula removes the intercept and forces R to fit
+$Y_{ij} = \mu_i + \varepsilon_{ij}$ directly, returning each group mean:
+
+```{r}
+#| label: no-intercept
+aout_lc <- aov(Percent ~ Judge - 1, data = case0502)
+coef(aout_lc)
+```
+
+::: {.callout-warning}
+## Use `- 1` only for `linearHypothesis()`
+
+The no-intercept fit gives correct group means, but it **corrupts the ANOVA
+table**: `summary()` and `anova()` will give wrong $F$-statistics and
+$p$-values. Only switch to `~ Judge - 1` immediately before calling
+`linearHypothesis()`. Use the ordinary `~ Judge` fit for everything else.
+:::
+
+## Checking the Factor Level Order
+
+The coefficient vector must be in the **same order as the factor levels**:
+
+```{r}
+#| label: factor-levels
+levels(case0502$Judge)
+```
+
+The order is `A, B, C, D, E, F, Spock's` — so position 7 is Spock's judge.
+
+## Setting Up Coefficient Vectors
+
+**Test 1:** Is Spock's mean different from the average of the other six?
+
+$$H_0: \mu_{\text{Spock's}} - \tfrac{1}{6}\mu_A - \tfrac{1}{6}\mu_B - \cdots - \tfrac{1}{6}\mu_F = 0$$
+
+```{r}
+#| label: coef-vec1
+combo_vec1 <- c(-1/6, -1/6, -1/6, -1/6, -1/6, -1/6, 1)
+```
+
+**Test 2:** Is the average of judges A–C equal to the average of judges D–F?
+
+$$H_0: \tfrac{1}{3}\mu_A + \tfrac{1}{3}\mu_B + \tfrac{1}{3}\mu_C - \tfrac{1}{3}\mu_D - \tfrac{1}{3}\mu_E - \tfrac{1}{3}\mu_F = 0$$
+
+```{r}
+#| label: coef-vec2
+combo_vec2 <- c(1/3, 1/3, 1/3, -1/3, -1/3, -1/3, 0)
+```
+
+## Running the Tests
+
+```{r}
+#| label: lh-test1
+lhout1 <- linearHypothesis(model = aout_lc, hypothesis.matrix = combo_vec1)
+lhout1
+```
+
+```{r}
+#| label: lh-test2
+lhout2 <- linearHypothesis(model = aout_lc, hypothesis.matrix = combo_vec2)
+lhout2
+```
+
+Strong evidence that Spock's judge's mean differs from the pooled mean of the
+other six ($p < 0.001$). No evidence that the first three non-Spock judges
+(A–C) differ from the last three (D–F) ($p = 0.26$).
+
+## Correspondence to the $t$-Test
+
+`linearHypothesis()` returns an $F$-statistic. For a **single** linear
+combination, $F = t^2$, so $|t| = \sqrt{F}$:
+
+```{r}
+#| label: t-from-f
+sqrt(lhout1$F[2])
+```
+
+We can verify this manually. First, compute $\hat\gamma$ and $SE(\hat\gamma)$:
+
+```{r}
+#| label: manual-t
+#| message: false
+sumdat <- case0502 |>
+  group_by(Judge) |>
+  summarise(ybar = mean(Percent), n = n())
+
+gamma_hat <- sum(combo_vec1 * sumdat$ybar)
+
+sp  <- sqrt(sum(aout_lc$residuals^2) / (nrow(case0502) - 7))
+se_gamma <- sp * sqrt(sum(combo_vec1^2 / sumdat$n))
+
+tstat <- gamma_hat / se_gamma
+
+cat("gamma_hat =", round(gamma_hat, 3), "\n",
+    "SE       =", round(se_gamma, 3), "\n",
+    "t*       =", round(tstat, 3), "\n")
+```
+
+```{r}
+#| label: pvalue-match
+2 * pt(-abs(tstat), df = nrow(case0502) - 7)
+lhout1$`Pr(>F)`[2]
+```
+
+The $p$-values are identical, confirming the equivalence.
+
+---
+
+# Exercises
+
+**1.** In the Spock data, suppose researchers wanted — **before looking at the
+data** — to test whether the three judges with the highest average percent-women
+in the dataset (A, B, E) have a different mean from the three with the lowest
+(C, D, F), ignoring Spock's judge entirely.
+
+  a. Write out the coefficient vector for this contrast (using the factor level
+     order A, B, C, D, E, F, Spock's). Does it qualify as a contrast?
+
+  b. Use `linearHypothesis()` to test this hypothesis. Report the $F$-statistic,
+     $p$-value, and your conclusion.
+
+```{r}
+
+```
+
+**2.** The hypothesis $H_0: \mu_A = \mu_B$ is a pairwise comparison — a
+special case of a linear combination.
+
+  a. What is the coefficient vector (in the order A, B, C, D, E, F, Spock's)?
+
+  b. Verify using `linearHypothesis()` that the $p$-value matches what
+     `pairwise.t.test()` gives (with `p.adjust.method = "none"`).
+
+```{r}
+
+```
+
+**3.** What is the estimated value of $\gamma$ for Test 1 (Spock's vs.\ the
+average of others)? Interpret this number in the context of the study.
+
+**4.** Compute a 95% confidence interval for $\gamma$ (Spock's mean minus the
+average of the other six means) using the formula
+$\hat{\gamma} \pm t_{n-I}(0.975) \cdot SE(\hat\gamma)$.
+What does this interval tell you about how different Spock's judge is?
+
+```{r}
+
+```

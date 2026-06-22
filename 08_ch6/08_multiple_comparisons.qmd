@@ -1,0 +1,367 @@
+---
+title: "Multiple Comparisons"
+author: "David Gerard"
+date: today
+bibliography: "../bib.bib"
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(car)
+knitr::opts_chunk$set(echo       = TRUE,
+                      fig.height = 3,
+                      fig.width  = 5,
+                      fig.align  = "center")
+ggplot2::theme_set(ggplot2::theme_bw())
+```
+
+```{r}
+#| label: load-data
+#| message: false
+#| include: false
+case0502 <- read_csv("https://dcgerard.github.io/stat_302/data/case0502.csv") |>
+  mutate(Judge = factor(Judge))
+case0601 <- read_csv("https://dcgerard.github.io/stat_302/data/case0601.csv")
+```
+
+# Learning Objectives
+
+- Explain why running many hypothesis tests inflates the Type I error rate.
+- Distinguish between planned comparisons and data snooping.
+- Define the family-wise error rate (FWER) and adjusted $p$-values.
+- Apply the Bonferroni, Holm, and Tukey-Kramer corrections in R.
+- Construct adjusted confidence intervals using the appropriate multiplier.
+
+---
+
+# The Multiple Testing Problem
+
+## $p$-Values and False Positives
+
+A $p$-value is the probability of seeing data as extreme as what was observed
+**if $H_0$ were true**. When $\alpha = 0.05$ and $H_0$ is true, there is a 5%
+chance of a false positive (rejecting $H_0$) in any single test.
+
+If we run $m$ independent tests, all with true null hypotheses, and reject
+each at $\alpha = 0.05$, we would expect to falsely reject $0.05m$ of them.
+With $m = 21$ pairwise tests (as in the Spock data), that's about one
+spurious rejection on average — even when all means are identical.
+
+## Simulation Illustration
+
+```{r}
+#| label: sim-illustration
+set.seed(7)
+tvec   <- rt(1000, df = 20)
+pvalue <- 2 * pt(-abs(tvec), df = 20)
+mean(pvalue < 0.05)
+```
+
+Even though every test was simulated under $H_0$, roughly 5% of the 1,000
+$p$-values are below 0.05.
+
+<img src="https://imgs.xkcd.com/comics/significant.png" alt="XKCD graphic depicting p-value hacking">
+
+## Data Snooping
+
+Consider the following five-group dataset where all means are truly equal:
+
+```{r}
+#| label: snoop-data
+#| echo: false
+#| fig-width: 5
+set.seed(7)
+df_snoop <- data.frame(x = factor(rep(1:5, each = 5)),
+                       y = rnorm(25))
+ggplot(df_snoop, aes(x = x, y = y)) +
+  geom_boxplot() +
+  labs(x = "Group", y = "Response",
+       title = "Five groups — all means truly equal")
+```
+
+Looking at the plot, groups 1 and 3 appear to have the largest difference.
+If we tested only that pair after peeking at the data, the naive $p$-value
+would be misleadingly small — we selected the pair *because* it looked
+extreme:
+
+```{r}
+#| label: snoop-pvals
+pairwise.t.test(df_snoop$y, df_snoop$x, p.adjust.method = "none")
+```
+
+**Data snooping** occurs when you select which hypotheses to test *after*
+looking at the data. It inflates the Type I error rate beyond $\alpha$.
+
+A **planned comparison** is a hypothesis test chosen *before* looking at the
+data — based on scientific reasoning, not on what the data suggest.
+
+---
+
+# Case Study: Physical Handicaps and Perceived Qualifications
+
+How do physical handicaps affect people's perception of employment
+qualifications? Researchers prepared five videotaped job interviews in which
+the same actor appeared with a different apparent handicap in each tape. Seventy
+undergraduates were randomly assigned to view one tape and rate the applicant's
+qualifications on a 0–10 scale.
+
+```{r}
+#| label: handicap-load
+#| message: false
+case0601 <- read_csv("https://dcgerard.github.io/stat_302/data/case0601.csv")
+```
+
+```{r}
+#| label: handicap-eda
+#| fig-width: 7
+ggplot(case0601, aes(x = Handicap, y = Score)) +
+  geom_boxplot() +
+  labs(y = "Qualification score (0–10)")
+```
+
+Running all $\binom{5}{2} = 10$ pairwise tests without adjustment:
+
+```{r}
+#| label: handicap-unadj
+pairwise.t.test(x = case0601$Score,
+                g = case0601$Handicap,
+                p.adjust.method = "none")
+```
+
+A handful of $p$-values are below 0.05. But we ran 10 tests simultaneously —
+even if all null hypotheses were true we would expect $10 \times 0.05 = 0.5$
+false rejections on average. Are these moderate $p$-values genuine signals or
+lucky noise?
+
+---
+
+# Family-Wise Error Rate
+
+The **family-wise error rate (FWER)** is the probability of making *at least
+one* Type I error across a family of hypothesis tests.
+
+The **adjusted $p$-value** for a test in a family is defined so that:
+
+> Rejecting when the adjusted $p$-value $< \alpha$ guarantees that the FWER
+> is at most $\alpha$.
+
+---
+
+# Correction Procedures
+
+## Bonferroni
+
+**Procedure:** Multiply each raw $p$-value by $m$ (the total number of tests).
+
+**Conditions:** Applies to any family of pre-planned tests; tests need not be
+pairwise comparisons.
+
+**Proof that the FWER $\leq \alpha$:** Let $m_0$ be the number of tests where
+$H_0$ is true and $p_i$ the raw $p$-value for test $i$.
+
+$$\text{FWER} = Pr(mp_1 \leq \alpha \text{ or } \cdots \text{ or } mp_{m_0} \leq \alpha)$$
+
+The key inequality is the **Bonferroni (union) bound**: for any events
+$A_1, \ldots, A_k$,
+
+$$Pr(A_1 \cup A_2 \cup \cdots \cup A_k) \leq Pr(A_1) + Pr(A_2) + \cdots + Pr(A_k)$$
+
+illustrated below for three events:
+
+::: {layout-ncol=2}
+![Individual probabilities](bonferroni_1.svg)
+
+![Union is at most the sum](bonferroni_2.svg)
+:::
+
+Applying this bound:
+
+$$\text{FWER} \leq Pr(mp_1 \leq \alpha) + \cdots + Pr(mp_{m_0} \leq \alpha)
+= \frac{\alpha}{m} + \cdots + \frac{\alpha}{m}
+= \frac{m_0 \alpha}{m}
+\leq \frac{m\alpha}{m} = \alpha$$
+
+## Holm
+
+**Procedure:** Order the raw $p$-values from smallest to largest:
+$p_{(1)} \leq p_{(2)} \leq \cdots \leq p_{(m)}$. The Holm-adjusted $p$-value
+for the $k$th smallest is $\min\bigl((m - k + 1) \cdot p_{(k)},\; 1\bigr)$,
+applied sequentially so that adjusted values are non-decreasing.
+
+**Conditions:** Same as Bonferroni — any pre-planned tests.
+
+**Advantage:** Holm is uniformly more powerful than Bonferroni (it rejects at
+least as often) while still controlling the FWER at $\alpha$.
+
+## Tukey-Kramer
+
+**Procedure:** Uses the *studentized range distribution* to derive exact
+$p$-values and confidence intervals for all $\binom{I}{2}$ pairwise
+comparisons simultaneously.
+
+**Conditions:** Only valid for **all pairwise comparisons** in a balanced or
+unbalanced one-way ANOVA (pre-planned).
+
+**Advantage:** Smaller adjusted $p$-values than Bonferroni or Holm when the
+goal is all pairwise tests.
+
+---
+
+# Implementation in R
+
+Continuing with the handicap study (`case0601`):
+
+```{r}
+#| label: handicap-aov
+aout_handicap <- aov(Score ~ Handicap, data = case0601)
+```
+
+## Bonferroni Adjustment
+
+```{r}
+#| label: bonferroni
+pairwise.t.test(x = case0601$Score,
+                g = case0601$Handicap,
+                p.adjust.method = "bonferroni")
+```
+
+## Holm Adjustment
+
+```{r}
+#| label: holm
+pairwise.t.test(x = case0601$Score,
+                g = case0601$Handicap,
+                p.adjust.method = "holm")
+```
+
+## Tukey-Kramer Adjustment
+
+`TukeyHSD()` takes an `aov()` object and returns all pairwise comparisons
+with Tukey-adjusted $p$-values and confidence intervals:
+
+```{r}
+#| label: tukey
+tout <- TukeyHSD(aout_handicap)
+tout
+```
+
+```{r}
+#| label: tukey-plot
+#| fig-width: 7
+#| fig-height: 5
+plot(tout)
+```
+
+## Adjusted Confidence Intervals
+
+Every confidence interval has the form
+$\text{estimate} \pm \text{multiplier} \times SE$.
+Adjusting for multiple comparisons means using a **larger multiplier**:
+
+| Method | Multiplier |
+|:-------|:-----------|
+| Unadjusted (single test) | $t_{n-I}(1 - \alpha/2)$ |
+| Bonferroni ($m$ tests) | $t_{n-I}(1 - \alpha/(2m))$ |
+| Tukey-Kramer | Studentized-range quantile (automatic via `TukeyHSD()`) |
+
+A larger multiplier means wider intervals — correctly reflecting the
+additional uncertainty from testing many hypotheses.
+
+::: {.callout-note}
+## Which method to use?
+
+- **Bonferroni / Holm**: use for any pre-planned family of tests (not necessarily
+  all pairwise). Holm is always at least as powerful as Bonferroni; prefer Holm.
+- **Tukey-Kramer**: use when you want *all* pairwise comparisons. Gives
+  narrower intervals and smaller adjusted $p$-values than Bonferroni in that
+  specific setting.
+- **No adjustment**: valid for a *single* pre-planned comparison (planned before
+  seeing the data).
+:::
+
+---
+
+# Exercises
+
+These exercises use vertebrae counts from Pacific sardines sampled at six
+locations along the Pacific coast. [@clarke1936variations] Load the data with:
+
+```{r}
+#| label: sardine-load
+#| message: false
+#| eval: false
+sardine <- read_csv("https://dcgerard.github.io/stat_302/data/sardine.csv") |>
+  mutate(location = factor(location,
+                           labels = c("Alaska", "Brit. Columbia",
+                                      "San Francisco", "Monterey",
+                                      "San Pedro", "San Diego")))
+```
+
+**1.** Make side-by-side boxplots of `number` (vertebrae count) by `location`.
+Do you think the equal-variance and normality assumptions are satisfied well
+enough to proceed with ANOVA? Explain.
+
+```{r}
+
+```
+
+**2.** Run the omnibus $F$-test with `aov()`. How many pairwise comparisons
+would be needed to test all pairs of locations? How many spurious rejections
+would you expect at $\alpha = 0.05$ if all location means were truly equal?
+
+```{r}
+
+```
+
+**3.** Run all pairwise $t$-tests with **no** $p$-value adjustment. Which
+pairs have a raw $p$-value below 0.05?
+
+```{r}
+
+```
+
+**4.** Apply the **Tukey-Kramer** adjustment with `TukeyHSD()`. Which pairs
+now show evidence of a difference? Produce the confidence-interval plot.
+How do the results compare to the unadjusted tests?
+
+```{r}
+
+```
+
+**5.** Apply the **Holm** adjustment using `pairwise.t.test()`. Compare these
+adjusted $p$-values to the Tukey-Kramer values — are the conclusions the same?
+
+```{r}
+
+```
+
+**6.** Suppose researchers had suspected *before collecting data* that sardines
+from colder waters (Alaska and British Columbia) have more vertebrae than those
+from warmer waters (San Francisco, Monterey, San Pedro, San Diego). This is a
+single pre-planned contrast.
+
+  a. Write the null hypothesis in terms of the six location means
+     $\mu_1, \ldots, \mu_6$.
+
+  b. Check the factor level order of `location`, then set up the coefficient
+     vector.
+
+```{r}
+
+```
+
+**7.** Test the planned contrast from Exercise 6 using `linearHypothesis()`
+(refit with `~ location - 1` first). Report the $F$-statistic, $p$-value,
+and a plain-language conclusion. Because this is a single pre-planned
+comparison, no multiplicity adjustment is needed.
+
+```{r}
+
+```
+
+**8.** Explain in your own words why the Tukey-Kramer procedure gives smaller
+adjusted $p$-values than Bonferroni for all-pairwise comparisons, while
+Bonferroni is more general. In which situation would you prefer Bonferroni
+over Tukey-Kramer?

@@ -28,7 +28,8 @@ author: David Gerard
   - [One-Way ANOVA](./07_ch5/07_ch5.qmd)
   - [Chapter 5 Worksheet](./07_ch5/07_worksheet.qmd)
 - Chapter 6:
-  - Multiple Comparisons
+  - [Linear Combinations of Group Means](./08_ch6/08_linear_combos.qmd)
+  - [Multiple Comparisons](./08_ch6/08_multiple_comparisons.qmd)
 - Chapters 7--8
   - Simple Linear Regression
 - Chapters 9--11:

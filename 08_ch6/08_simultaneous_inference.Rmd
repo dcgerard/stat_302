@@ -1,0 +1,281 @@
+---
+title: "Simultaneous Inference"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "metropolis"
+    slide_level: 2
+urlcolor: "blue"
+---
+
+```{r setup, include=FALSE}
+ggplot2::theme_set(
+  ggplot2::theme_bw()
+  )
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.height = 2.5, 
+                      fig.width = 4, 
+                      fig.align = "center")
+```
+
+## Objectives
+
+- Learn about issues when running many tests.
+
+- Learn about solutions when running many tests.
+
+- Implement these solutions in R.
+
+## P-values
+
+- Probability of seeing data as extreme or more extreme than what we saw **if $H_0$ were true**.
+
+- Suppose we are running *many* tests.
+
+- Suppose we reject when the $p$-value is less than 0.05.
+
+- Then even if $H_0$ is **true** in all tests, we would **reject** 5% of them.
+
+## Illustration
+
+```{r}
+tvec <- rt(1000, df = 20) ## distrubiton under H0
+pvalue <- 2 * pt(-abs(tvec), df = 20) ## p-values
+mean(pvalue < 0.05) ## proportion of p-vals less than 0.05
+```
+
+## Illustration
+
+https://xkcd.com/882/
+
+## Data Snooping
+
+- Suppose you run 20 tests, get one significant result, and only report that significant result. This is a form of **data snooping**.
+
+- More generally, **data snooping** is where you look at the data before choosing the hypotheses to test.
+
+- A **planned comparison** is a hypothesis test chosen before looking at the data.
+
+
+## Data Snooping
+
+- Exercise: Rank the below pairwise comparisons in decreasing order of what you think would be the largest effect.
+
+```{r, echo = FALSE}
+library(ggplot2)
+set.seed(7)
+df_temp <- data.frame(x = factor(rep(1:5, each = 5)), y = rnorm(25))
+qplot(x, y, data = df_temp, geom = "boxplot", outlier.alpha = 0) +
+  theme(axis.title = element_blank()) +
+  stat_boxplot(coef = 5)
+```
+
+## Data Snooping
+
+```{r, echo = FALSE}
+pout <- pairwise.t.test(df_temp$y, df_temp$x, p.adjust.method = "none")
+pout
+```
+
+## Data Snooping
+
+- Actual ordering
+
+```{r, echo = FALSE}
+pdf <- reshape2::melt(t(pout$p.value))
+names(pdf) <- c("Var1", "Var2", "pvalue")
+pdf <- pdf[!is.na(pdf$pvalue), ]
+pdf <- pdf[order(pdf$pvalue, decreasing = FALSE), ]
+rownames(pdf) <- NULL
+print(pdf, row.names = FALSE)
+```
+
+
+## Handicap Study
+
+- How do physical handicaps affect people's perception of employment qualifications?
+
+- Randomly assigned 70 undergrads to view videos of interviews containing actors performing with different handicaps.
+
+- Undergrads rated the qualifications of the applicant on a 10-point scale.
+
+## EDA
+\small
+```{r}
+library(Sleuth3)
+library(ggplot2)
+data("case0601")
+qplot(Handicap, Score, data = case0601, geom = "boxplot")
+```
+\normalsize
+
+## All Pairwise Tests
+- Run all tests for $H_0: \mu_i = \mu_j$ vs $H_A: \mu_i \neq \mu_j$.
+
+\small
+```{r}
+pairwise.t.test(x = case0601$Score,
+                g = case0601$Handicap, 
+                p.adjust.method = "none")
+```
+\normalsize
+
+## Question
+
+- Are those moderate $p$-values (0.018 and 0.04) meaningful?
+
+- Or are they there because all hypotheses are null and these just happened to be less than 0.05?
+
+- Running 10 tests, so on average 0.5 should be rejected.
+
+## Definition
+
+- The **family-wise error rate** is the probability of a false postitive (Type I error) among a family of hypothesis tests.
+
+- I.e. the probability of making at least one Type I Error
+
+- Recall: Type I error = rejecting $H_0$ when it is true.
+
+## Adjusted $p$-value
+
+- Given a family of hypothesis tests, the **adjusted $p$-value** of a test is less than $\alpha$ if and only if the probability of at least one Type I error (among all tests) is at most $\alpha$.
+
+- That is, if you reject when the adjusted $p$-value is less than $\alpha$, then the probability (prior to sampling) of any test producing a Type I error is less than $\alpha$.
+
+## Bonferroni Procedure
+
+- Multiply the $p$-value by the number of tests.
+
+- Works for **any** family of **preplanned** hypothesis tests.
+
+- $p$-values tend to be much larger than other corrections.
+
+## Proof of Bonferroni Correction
+
+- $m$ = Total number of tests.
+- $m_0$ = Number tests where the null hypothesis is correct.
+- $p_i$ = $p$-value for test $i$.
+- Suppose (unknown to us) that the first $m_0$ tests are the ones where the null is true.
+
+
+Family-wise error rate\pause
+
+= $Pr($Type I error among the $m_0$ tests$)$\pause
+
+= $Pr(mp_1 \leq \alpha \text{ or } mp_2\leq\alpha \text{ or } \cdots \text{ or } mp_{m_0}\leq \alpha)$\pause
+
+= $Pr(p_1 \leq \alpha/m \text{ or } p_2\leq\alpha/m \text{ or } \cdots \text{ or } p_{m_0}\leq \alpha/m)$\pause
+
+$\leq Pr(p_1 \leq \alpha/m) + Pr(p_2 \leq \alpha/m) + \cdots + Pr(p_{m_0} \leq \alpha/m)$
+
+## Bonferroni Inequality
+\begin{center}
+\includegraphics{./bonferroni_1}
+\end{center}
+
+## Bonferroni Inequality
+\begin{center}
+\includegraphics{./bonferroni_2}
+\end{center}
+
+## Proof of Bonferroni Correction
+
+Family-wise error rate
+
+= $Pr($Type I error among the $m_0$ tests$)$
+
+= $Pr(mp_1 \leq \alpha \text{ or } mp_2\leq\alpha \text{ or } \cdots \text{ or } mp_{m_0}\leq \alpha)$
+
+= $Pr(p_1 \leq \alpha/m \text{ or } p_2\leq\alpha/m \text{ or } \cdots \text{ or } p_{m_0}\leq \alpha/m)$
+
+$\leq Pr(p_1 \leq \alpha/m) + Pr(p_2 \leq \alpha/m) + \cdots + Pr(p_{m_0} \leq \alpha/m)$\pause
+
+= $\alpha/m + \alpha / m + \cdots + \alpha / m$ ($m_0$ summations)\pause
+
+= $m_0\alpha/m$\pause
+
+$\leq m\alpha/m$\pause
+
+= $\alpha$
+
+## Bonferroni Continued
+\small
+```{r}
+pairwise.t.test(x = case0601$Score,
+                g = case0601$Handicap, 
+                p.adjust.method = "bonferroni")
+```
+\normalsize
+
+## Holm Procedure
+
+- Slightly better than Bonferroni, and is the default in R.
+
+- Same conditions as Bonferroni (pre-planned tests, any type of tests)
+
+## Holm Continued
+
+\small
+```{r}
+pairwise.t.test(x = case0601$Score,
+                g = case0601$Handicap, 
+                p.adjust.method = "holm")
+```
+\normalsize
+
+## Tukey-Kramer Procedure
+
+- Use when you want **all** pairwise comparisons.
+
+- Smaller $p$-values than Bonferroni.
+
+- Tests need to be **preplanned**.
+
+- Needs `aov()` object as input.
+
+## Tukey Continued 
+
+\small
+```{r}
+aout <- aov(Score ~ Handicap, data = case0601)
+tout <- TukeyHSD(aout)
+tout
+```
+\normalsize
+
+## Cool plotting
+```{r}
+plot(tout)
+```
+
+
+## Many others
+
+- There are *many* other adjustment methods.
+
+- Each of these specialize in certain testing scenarios.
+
+- Read the help-page of `p.adjust()` for more information.
+
+## Adjusted Confidence Intervals
+
+All Confidence Inverals for Means
+
+\begin{center}
+estimate + multiplier * standard error
+\end{center}
+
+## Different Multipliers
+
+- Original multiplier = $t_{n-1}(1 - \alpha / 2)$
+- Bonferroni multiplier = $t_{n-1}(1 - \alpha / (2m))$, where $m$ is the number of tests.
+- Tukey has its own multiplier (get those CI's automatically from `TukeyHSD()`).
+
+
+
+
+
+
+
+
