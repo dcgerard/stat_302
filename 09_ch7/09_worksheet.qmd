@@ -1,0 +1,101 @@
+---
+title: "Simple Linear Regression Worksheet"
+author: "David Gerard"
+date: today
+bibliography: "../bib.bib"
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(broom)
+knitr::opts_chunk$set(echo       = TRUE,
+                      eval       = FALSE,
+                      fig.height = 3,
+                      fig.width  = 4,
+                      fig.align  = "center")
+```
+
+# LSD
+
+In @wagner1968correlation, the authors intravenously injected d-lysergic acid
+diethylamide (better known as LSD) into seven volunteer male subjects. They then
+instructed the subjects to solve a set of simple arithmetic problems as quickly
+as possible during a three-minute period. Load the data with:
+
+```{r}
+#| label: load-data
+#| eval: true
+#| message: false
+lsd <- read_csv("https://dcgerard.github.io/stat_302/data/lsd.csv")
+lsd
+```
+
+The variables are: `conc`, the tissue concentration of LSD (nanograms per mL);
+and `score`, their performance score on the arithmetic questions as a percent
+of a control score.
+
+**1.** What is the explanatory variable? What is the response variable? What
+are the observational units?
+
+**2.** Make a scatterplot of `score` vs. `conc`. Does a linear model appear
+appropriate?
+
+```{r}
+
+```
+
+**3.** Write out the simple linear regression model for these data. Define each
+term in the context of the study. What causal language (if any) is appropriate
+for the slope interpretation, and why?
+
+**4.** What assumptions does simple linear regression make about the
+distribution of the **explanatory** variable?
+
+**5.** Fit a linear model of `score` on `conc` using `lm()`.
+
+```{r}
+
+```
+
+**6.** Make a residual plot (fitted values on the $x$-axis, residuals on the
+$y$-axis). Does the constant-variance assumption look reasonable?
+
+```{r}
+
+```
+
+**7.** State the null and alternative hypotheses to test whether concentration
+is associated with score.
+
+**8.** Use `tidy()` from the `broom` package to test the hypotheses from
+Question 7. Report the test statistic, $p$-value, and a 95% confidence interval
+for the slope. State a conclusion in plain language, including an interpretation
+of the slope estimate.
+
+```{r}
+
+```
+
+**9.** Suppose a new individual has a tissue concentration of 4 ng/mL. Compute
+their predicted test score.
+
+```{r}
+
+```
+
+**10.** Compute a 95% prediction interval for that individual's score. What
+range of scores is plausible for a single person at that concentration?
+
+```{r}
+
+```
+
+**11.** As the sample size approaches infinity, what does the standard error of
+a prediction approach? Explain why.
+
+**12.** A fellow researcher asks you to predict the score for an individual with
+a concentration of 9 ng/mL. What concern would you raise?
+
+# References
