@@ -9,7 +9,7 @@
 <meta name="author" content="David Gerard">
 <meta name="dcterms.date" content="2026-06-22">
 
-<title>Chapter 1 Worksheet – Stat 302: Intermediate Statistics</title>
+<title>Chapter 6 Worksheet – Stat 302: Intermediate Statistics</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -60,7 +60,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -184,13 +203,8 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#sex-discrimination-at-a-bank-case-study-1.1.2" id="toc-sex-discrimination-at-a-bank-case-study-1.1.2" class="nav-link active" data-scroll-target="#sex-discrimination-at-a-bank-case-study-1.1.2">Sex Discrimination at a Bank (Case Study 1.1.2)</a>
-  <ul class="collapse">
-  <li><a href="#conceptual-questions" id="toc-conceptual-questions" class="nav-link" data-scroll-target="#conceptual-questions">Conceptual Questions</a></li>
-  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">Exploratory Data Analysis</a></li>
-  <li><a href="#permutation-test" id="toc-permutation-test" class="nav-link" data-scroll-target="#permutation-test">Permutation Test</a></li>
-  <li><a href="#interpretation" id="toc-interpretation" class="nav-link" data-scroll-target="#interpretation">Interpretation</a></li>
-  </ul></li>
+  <li><a href="#linear-combinations-spock-data" id="toc-linear-combinations-spock-data" class="nav-link active" data-scroll-target="#linear-combinations-spock-data">Linear Combinations (Spock Data)</a></li>
+  <li><a href="#multiple-comparisons-sardine-data" id="toc-multiple-comparisons-sardine-data" class="nav-link" data-scroll-target="#multiple-comparisons-sardine-data">Multiple Comparisons (Sardine Data)</a></li>
   </ul>
 </nav>
     </div>
@@ -199,7 +213,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Chapter 1 Worksheet</h1>
+<h1 class="title">Chapter 6 Worksheet</h1>
 </div>
 
 
@@ -228,84 +242,56 @@ window.Quarto = {
 </header>
 
 
-<section id="sex-discrimination-at-a-bank-case-study-1.1.2" class="level2">
-<h2 class="anchored" data-anchor-id="sex-discrimination-at-a-bank-case-study-1.1.2">Sex Discrimination at a Bank (Case Study 1.1.2)</h2>
-<p>The data below come from a bank that was accused of paying female clerical employees less than their male counterparts. Load the data and take a look.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>case0102 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0102.csv"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(case0102)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 93
-Columns: 2
-$ Salary &lt;dbl&gt; 3900, 4020, 4290, 4380, 4380, 4380, 4380, 4380, 4440, 4500, 450…
-$ Sex    &lt;chr&gt; "Female", "Female", "Female", "Female", "Female", "Female", "Fe…</code></pre>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>case0502 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0502.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Judge =</span> <span class="fu">factor</span>(Judge))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>sardine <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/sardine.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">location =</span> <span class="fu">factor</span>(location,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Alaska"</span>, <span class="st">"Brit. Columbia"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"San Francisco"</span>, <span class="st">"Monterey"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"San Pedro"</span>, <span class="st">"San Diego"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</div>
-<hr>
-<section id="conceptual-questions" class="level3">
-<h3 class="anchored" data-anchor-id="conceptual-questions">Conceptual Questions</h3>
-<p><strong>1.</strong> Is Case Study 1.1.2 a <em>randomized experiment</em> or an <em>observational study</em>? Explain briefly.</p>
-<p><strong>2.</strong> Can we conclude from this data that sex <em>caused</em> the difference in salaries? Why or why not? Identify at least one possible <strong>confounder</strong> that could explain an observed salary gap.</p>
-<p><strong>3.</strong> The bank’s records cover all clerical employees at this particular institution. Does this limit how broadly we can generalize any findings? What would need to be true for the results to apply to the broader population of U.S. bank employees?</p>
-<p><strong>4.</strong> Let <span class="math inline">\(\delta\)</span> be the difference in population mean salaries (male minus female) for clerical employees at this bank. State the null and alternative hypotheses in words and in mathematical notation.</p>
-<hr>
-</section>
-<section id="exploratory-data-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h3>
-<p><strong>5.</strong> Create a boxplot of <code>Salary</code> (y-axis) vs <code>Sex</code> (x-axis). Describe what you see.</p>
-<pre><code>   - Functions to use: `ggplot()`, `geom_boxplot()`</code></pre>
-<p><strong>6.</strong> Calculate the mean salary for female employees. Save it as <code>femave</code>.</p>
-<pre><code>   - Functions to use: `mean()`, the dollar sign symbol `$`</code></pre>
-<p><strong>7.</strong> Calculate the mean salary for male employees. Save it as <code>malave</code>.</p>
-<pre><code>   - Functions to use: `mean()`, the dollar sign symbol `$`</code></pre>
-<p><strong>8.</strong> Calculate the observed difference in mean salaries (male minus female).</p>
+<section id="linear-combinations-spock-data" class="level1">
+<h1>Linear Combinations (Spock Data)</h1>
+<p><strong>1.</strong> In the Spock data, suppose researchers wanted — <strong>before looking at the data</strong> — to test whether the three judges with the highest average percent-women in the dataset (A, B, E) have a different mean from the three with the lowest (C, D, F), ignoring Spock’s judge entirely.</p>
+<ol type="a">
+<li><p>Write out the coefficient vector for this contrast (using the factor level order A, B, C, D, E, F, Spock’s). Does it qualify as a contrast?</p></li>
+<li><p>Use <code>linearHypothesis()</code> to test this hypothesis. Report the <span class="math inline">\(F\)</span>-statistic, <span class="math inline">\(p\)</span>-value, and your conclusion.</p></li>
+</ol>
+<p><strong>2.</strong> The hypothesis <span class="math inline">\(H_0: \mu_A = \mu_B\)</span> is a pairwise comparison — a special case of a linear combination.</p>
+<ol type="a">
+<li><p>What is the coefficient vector (in the order A, B, C, D, E, F, Spock’s)?</p></li>
+<li><p>Verify using <code>linearHypothesis()</code> that the <span class="math inline">\(p\)</span>-value matches what <code>pairwise.t.test()</code> gives (with <code>p.adjust.method = "none"</code>).</p></li>
+</ol>
+<p><strong>3.</strong> What is the estimated value of <span class="math inline">\(\gamma\)</span> for the contrast that compares Spock’s mean to the average of the other six judges? Interpret this number in the context of the study.</p>
+<p><strong>4.</strong> Compute a 95% confidence interval for <span class="math inline">\(\gamma\)</span> (Spock’s mean minus the average of the other six means) using the formula <span class="math inline">\(\hat{\gamma} \pm t_{n-I}(0.975) \cdot SE(\hat\gamma)\)</span>. What does this interval tell you about how different Spock’s judge is?</p>
 <hr>
 </section>
-<section id="permutation-test" class="level3">
-<h3 class="anchored" data-anchor-id="permutation-test">Permutation Test</h3>
-<p>The idea behind the randomization test: if sex had <strong>no effect</strong> on salary, then the <code>Sex</code> labels could be shuffled randomly without changing anything meaningful — any observed difference would just be due to chance.</p>
-<p><strong>9.</strong> The function <code>sample()</code> randomly shuffles the elements of a vector. Try it on <code>case0102$Sex</code> and run it two or three times. What do you notice about the output each time?</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(case0102<span class="sc">$</span>Sex)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p><strong>10.</strong> Take one random permutation of <code>Sex</code> and recalculate the average salary difference (male minus female) using the shuffled labels. How does it compare to the observed difference from Question 8?</p>
-<p><strong>11.</strong> The <code>replicate()</code> function runs a block of code <code>n</code> times and collects the results. Run the demo below to see how it works.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>demo_vec <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="at">n =</span> <span class="dv">10</span>,</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">expr =</span> {</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                        a <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                        b <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                        b <span class="sc">-</span> a</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                      })</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>demo_vec</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] -2.3776  0.3354  2.4772 -0.1853 -1.7265 -1.3138  1.5016 -0.4806  1.3016
-[10]  3.2939</code></pre>
-</div>
-</div>
-<p>Now modify the code above to build a <strong>permutation distribution</strong>: shuffle <code>Sex</code> 1000 times, compute the mean salary difference (male minus female) each time, and store all 1000 values in <code>sample_vec</code>.</p>
-<p><strong>12.</strong> Plot <code>sample_vec</code> as a histogram. Add a vertical dashed line at the observed difference from Question 8. What does the location of that line tell you?</p>
-<p><strong>13.</strong> Compute the <strong>two-sided p-value</strong>: the proportion of permutations that produced an absolute difference at least as large as the one observed.</p>
-<hr>
-</section>
-<section id="interpretation" class="level3">
-<h3 class="anchored" data-anchor-id="interpretation">Interpretation</h3>
-<p><strong>14.</strong> Interpret the p-value in context. Is there strong evidence that salaries differ by sex at this bank? What would a very small p-value imply?</p>
-<p><strong>15.</strong> Suppose the p-value is very small and we conclude the salary gap is real. Does this mean sex <em>caused</em> the difference? What is the role of the possible confounder you identified in Question 2?</p>
-<p><strong>16.</strong> Refer back to the four-step framework from the notes:</p>
-<ul>
-<li><strong>Step 1</strong>: What is the model for this study?</li>
-<li><strong>Step 2</strong>: What are the hypotheses (from Question 4)?</li>
-<li><strong>Step 3</strong>: What test statistic did we use?</li>
-<li><strong>Step 4</strong>: How did we evaluate how extreme the test statistic is?</li>
-</ul>
+<section id="multiple-comparisons-sardine-data" class="level1">
+<h1>Multiple Comparisons (Sardine Data)</h1>
+<p>These exercises use vertebrae counts from Pacific sardines sampled at six locations along the Pacific coast. <span class="citation" data-cites="clarke1936variations">(<a href="#ref-clarke1936variations" role="doc-biblioref">Clarke 1936</a>)</span></p>
+<p><strong>5.</strong> Make side-by-side boxplots of <code>number</code> (vertebrae count) by <code>location</code>. Do you think the equal-variance and normality assumptions are satisfied well enough to proceed with ANOVA? Explain.</p>
+<p><strong>6.</strong> Run the omnibus <span class="math inline">\(F\)</span>-test with <code>aov()</code>. How many pairwise comparisons would be needed to test all pairs of locations? How many spurious rejections would you expect at <span class="math inline">\(\alpha = 0.05\)</span> if all location means were truly equal?</p>
+<p><strong>7.</strong> Run all pairwise <span class="math inline">\(t\)</span>-tests with <strong>no</strong> <span class="math inline">\(p\)</span>-value adjustment. Which pairs have a raw <span class="math inline">\(p\)</span>-value below 0.05?</p>
+<p><strong>8.</strong> Apply the <strong>Tukey-Kramer</strong> adjustment with <code>TukeyHSD()</code>. Which pairs now show evidence of a difference? Produce the confidence-interval plot. How do the results compare to the unadjusted tests?</p>
+<p><strong>9.</strong> Apply the <strong>Holm</strong> adjustment using <code>pairwise.t.test()</code>. Compare these adjusted <span class="math inline">\(p\)</span>-values to the Tukey-Kramer values — are the conclusions the same?</p>
+<p><strong>10.</strong> Suppose researchers had suspected <em>before collecting data</em> that sardines from colder waters (Alaska and British Columbia) have more vertebrae than those from warmer waters (San Francisco, Monterey, San Pedro, San Diego). This is a single pre-planned contrast.</p>
+<ol type="a">
+<li><p>Write the null hypothesis in terms of the six location means <span class="math inline">\(\mu_1, \ldots, \mu_6\)</span>.</p></li>
+<li><p>Check the factor level order of <code>location</code>, then set up the coefficient vector.</p></li>
+</ol>
+<p><strong>11.</strong> Test the planned contrast from Exercise 10 using <code>linearHypothesis()</code> (refit with <code>~ location - 1</code> first). Report the <span class="math inline">\(F\)</span>-statistic, <span class="math inline">\(p\)</span>-value, and a plain-language conclusion. Because this is a single pre-planned comparison, no multiplicity adjustment is needed.</p>
+<p><strong>12.</strong> Explain in your own words why the Tukey-Kramer procedure gives smaller adjusted <span class="math inline">\(p\)</span>-values than Bonferroni for all-pairwise comparisons, while Bonferroni is more general. In which situation would you prefer Bonferroni over Tukey-Kramer?</p>
+
 
 
 </section>
-</section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-clarke1936variations" class="csl-entry" role="listitem">
+Clarke, F. N. 1936. <span>“Variations in the Number of Vertebrae in Sardine, <em>Sardinops Caerulea (Girard)</em>.”</span> <em>Copeia</em> 1936: 147–50. <a href="https://doi.org/10.2307/1435822">https://doi.org/10.2307/1435822</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

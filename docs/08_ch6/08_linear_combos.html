@@ -205,7 +205,6 @@ window.Quarto = {
   <li><a href="#running-the-tests" id="toc-running-the-tests" class="nav-link" data-scroll-target="#running-the-tests">Running the Tests</a></li>
   <li><a href="#correspondence-to-the-t-test" id="toc-correspondence-to-the-t-test" class="nav-link" data-scroll-target="#correspondence-to-the-t-test">Correspondence to the <span class="math inline">\(t\)</span>-Test</a></li>
   </ul></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
   </ul>
 </nav>
     </div>
@@ -458,25 +457,9 @@ Model 2: Percent ~ Judge - 1
 </div>
 </div>
 <p>The <span class="math inline">\(p\)</span>-values are identical, confirming the equivalence.</p>
-<hr>
-</section>
-</section>
-<section id="exercises" class="level1">
-<h1>Exercises</h1>
-<p><strong>1.</strong> In the Spock data, suppose researchers wanted — <strong>before looking at the data</strong> — to test whether the three judges with the highest average percent-women in the dataset (A, B, E) have a different mean from the three with the lowest (C, D, F), ignoring Spock’s judge entirely.</p>
-<ol type="a">
-<li><p>Write out the coefficient vector for this contrast (using the factor level order A, B, C, D, E, F, Spock’s). Does it qualify as a contrast?</p></li>
-<li><p>Use <code>linearHypothesis()</code> to test this hypothesis. Report the <span class="math inline">\(F\)</span>-statistic, <span class="math inline">\(p\)</span>-value, and your conclusion.</p></li>
-</ol>
-<p><strong>2.</strong> The hypothesis <span class="math inline">\(H_0: \mu_A = \mu_B\)</span> is a pairwise comparison — a special case of a linear combination.</p>
-<ol type="a">
-<li><p>What is the coefficient vector (in the order A, B, C, D, E, F, Spock’s)?</p></li>
-<li><p>Verify using <code>linearHypothesis()</code> that the <span class="math inline">\(p\)</span>-value matches what <code>pairwise.t.test()</code> gives (with <code>p.adjust.method = "none"</code>).</p></li>
-</ol>
-<p><strong>3.</strong> What is the estimated value of <span class="math inline">\(\gamma\)</span> for Test 1 (Spock’s vs.&nbsp;the average of others)? Interpret this number in the context of the study.</p>
-<p><strong>4.</strong> Compute a 95% confidence interval for <span class="math inline">\(\gamma\)</span> (Spock’s mean minus the average of the other six means) using the formula <span class="math inline">\(\hat{\gamma} \pm t_{n-I}(0.975) \cdot SE(\hat\gamma)\)</span>. What does this interval tell you about how different Spock’s judge is?</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

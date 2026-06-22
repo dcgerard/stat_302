@@ -60,26 +60,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -225,7 +206,6 @@ window.Quarto = {
   <li><a href="#tukey-kramer-adjustment" id="toc-tukey-kramer-adjustment" class="nav-link" data-scroll-target="#tukey-kramer-adjustment">Tukey-Kramer Adjustment</a></li>
   <li><a href="#adjusted-confidence-intervals" id="toc-adjusted-confidence-intervals" class="nav-link" data-scroll-target="#adjusted-confidence-intervals">Adjusted Confidence Intervals</a></li>
   </ul></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
   </ul>
 </nav>
     </div>
@@ -565,41 +545,12 @@ Wheelchair-None      0.4429 -1.2889  2.1746 0.9517</code></pre>
 </ul>
 </div>
 </div>
-<hr>
-</section>
-</section>
-<section id="exercises" class="level1">
-<h1>Exercises</h1>
-<p>These exercises use vertebrae counts from Pacific sardines sampled at six locations along the Pacific coast. <span class="citation" data-cites="clarke1936variations">(<a href="#ref-clarke1936variations" role="doc-biblioref">Clarke 1936</a>)</span> Load the data with:</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>sardine <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/sardine.csv"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">location =</span> <span class="fu">factor</span>(location,</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Alaska"</span>, <span class="st">"Brit. Columbia"</span>,</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"San Francisco"</span>, <span class="st">"Monterey"</span>,</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"San Pedro"</span>, <span class="st">"San Diego"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p><strong>1.</strong> Make side-by-side boxplots of <code>number</code> (vertebrae count) by <code>location</code>. Do you think the equal-variance and normality assumptions are satisfied well enough to proceed with ANOVA? Explain.</p>
-<p><strong>2.</strong> Run the omnibus <span class="math inline">\(F\)</span>-test with <code>aov()</code>. How many pairwise comparisons would be needed to test all pairs of locations? How many spurious rejections would you expect at <span class="math inline">\(\alpha = 0.05\)</span> if all location means were truly equal?</p>
-<p><strong>3.</strong> Run all pairwise <span class="math inline">\(t\)</span>-tests with <strong>no</strong> <span class="math inline">\(p\)</span>-value adjustment. Which pairs have a raw <span class="math inline">\(p\)</span>-value below 0.05?</p>
-<p><strong>4.</strong> Apply the <strong>Tukey-Kramer</strong> adjustment with <code>TukeyHSD()</code>. Which pairs now show evidence of a difference? Produce the confidence-interval plot. How do the results compare to the unadjusted tests?</p>
-<p><strong>5.</strong> Apply the <strong>Holm</strong> adjustment using <code>pairwise.t.test()</code>. Compare these adjusted <span class="math inline">\(p\)</span>-values to the Tukey-Kramer values — are the conclusions the same?</p>
-<p><strong>6.</strong> Suppose researchers had suspected <em>before collecting data</em> that sardines from colder waters (Alaska and British Columbia) have more vertebrae than those from warmer waters (San Francisco, Monterey, San Pedro, San Diego). This is a single pre-planned contrast.</p>
-<ol type="a">
-<li><p>Write the null hypothesis in terms of the six location means <span class="math inline">\(\mu_1, \ldots, \mu_6\)</span>.</p></li>
-<li><p>Check the factor level order of <code>location</code>, then set up the coefficient vector.</p></li>
-</ol>
-<p><strong>7.</strong> Test the planned contrast from Exercise 6 using <code>linearHypothesis()</code> (refit with <code>~ location - 1</code> first). Report the <span class="math inline">\(F\)</span>-statistic, <span class="math inline">\(p\)</span>-value, and a plain-language conclusion. Because this is a single pre-planned comparison, no multiplicity adjustment is needed.</p>
-<p><strong>8.</strong> Explain in your own words why the Tukey-Kramer procedure gives smaller adjusted <span class="math inline">\(p\)</span>-values than Bonferroni for all-pairwise comparisons, while Bonferroni is more general. In which situation would you prefer Bonferroni over Tukey-Kramer?</p>
-
 
 
 </section>
+</section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-clarke1936variations" class="csl-entry" role="listitem">
-Clarke, F. N. 1936. <span>“Variations in the Number of Vertebrae in Sardine, <em>Sardinops Caerulea (Girard)</em>.”</span> <em>Copeia</em> 1936: 147–50. <a href="https://doi.org/10.2307/1435822">https://doi.org/10.2307/1435822</a>.
-</div>
-</div></section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

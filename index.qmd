@@ -30,6 +30,7 @@ author: David Gerard
 - Chapter 6:
   - [Linear Combinations of Group Means](./08_ch6/08_linear_combos.qmd)
   - [Multiple Comparisons](./08_ch6/08_multiple_comparisons.qmd)
+  - [Chapter 6 Worksheet](./08_ch6/08_worksheet.qmd)
 - Chapter 7:
   - [Simple Linear Regression](./09_ch7/09_ch7.qmd)
   - [Chapter 7 Worksheet](./09_ch7/09_worksheet.qmd)

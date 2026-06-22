@@ -1,0 +1,148 @@
+---
+title: "Chapter 6 Worksheet"
+author: "David Gerard"
+date: today
+bibliography: "../bib.bib"
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(car)
+knitr::opts_chunk$set(echo       = TRUE,
+                      eval       = FALSE,
+                      fig.height = 3,
+                      fig.width  = 5,
+                      fig.align  = "center")
+ggplot2::theme_set(ggplot2::theme_bw())
+```
+
+```{r}
+#| label: load-data
+#| eval: true
+#| message: false
+case0502 <- read_csv("https://dcgerard.github.io/stat_302/data/case0502.csv") |>
+  mutate(Judge = factor(Judge))
+sardine <- read_csv("https://dcgerard.github.io/stat_302/data/sardine.csv") |>
+  mutate(location = factor(location,
+                           labels = c("Alaska", "Brit. Columbia",
+                                      "San Francisco", "Monterey",
+                                      "San Pedro", "San Diego")))
+```
+
+# Linear Combinations (Spock Data)
+
+**1.** In the Spock data, suppose researchers wanted — **before looking at the
+data** — to test whether the three judges with the highest average percent-women
+in the dataset (A, B, E) have a different mean from the three with the lowest
+(C, D, F), ignoring Spock's judge entirely.
+
+  a. Write out the coefficient vector for this contrast (using the factor level
+     order A, B, C, D, E, F, Spock's). Does it qualify as a contrast?
+
+  b. Use `linearHypothesis()` to test this hypothesis. Report the $F$-statistic,
+     $p$-value, and your conclusion.
+
+```{r}
+
+```
+
+**2.** The hypothesis $H_0: \mu_A = \mu_B$ is a pairwise comparison — a
+special case of a linear combination.
+
+  a. What is the coefficient vector (in the order A, B, C, D, E, F, Spock's)?
+
+  b. Verify using `linearHypothesis()` that the $p$-value matches what
+     `pairwise.t.test()` gives (with `p.adjust.method = "none"`).
+
+```{r}
+
+```
+
+**3.** What is the estimated value of $\gamma$ for the contrast that compares
+Spock's mean to the average of the other six judges? Interpret this number in
+the context of the study.
+
+**4.** Compute a 95% confidence interval for $\gamma$ (Spock's mean minus the
+average of the other six means) using the formula
+$\hat{\gamma} \pm t_{n-I}(0.975) \cdot SE(\hat\gamma)$.
+What does this interval tell you about how different Spock's judge is?
+
+```{r}
+
+```
+
+---
+
+# Multiple Comparisons (Sardine Data)
+
+These exercises use vertebrae counts from Pacific sardines sampled at six
+locations along the Pacific coast. [@clarke1936variations]
+
+**5.** Make side-by-side boxplots of `number` (vertebrae count) by `location`.
+Do you think the equal-variance and normality assumptions are satisfied well
+enough to proceed with ANOVA? Explain.
+
+```{r}
+
+```
+
+**6.** Run the omnibus $F$-test with `aov()`. How many pairwise comparisons
+would be needed to test all pairs of locations? How many spurious rejections
+would you expect at $\alpha = 0.05$ if all location means were truly equal?
+
+```{r}
+
+```
+
+**7.** Run all pairwise $t$-tests with **no** $p$-value adjustment. Which
+pairs have a raw $p$-value below 0.05?
+
+```{r}
+
+```
+
+**8.** Apply the **Tukey-Kramer** adjustment with `TukeyHSD()`. Which pairs
+now show evidence of a difference? Produce the confidence-interval plot.
+How do the results compare to the unadjusted tests?
+
+```{r}
+
+```
+
+**9.** Apply the **Holm** adjustment using `pairwise.t.test()`. Compare these
+adjusted $p$-values to the Tukey-Kramer values — are the conclusions the same?
+
+```{r}
+
+```
+
+**10.** Suppose researchers had suspected *before collecting data* that sardines
+from colder waters (Alaska and British Columbia) have more vertebrae than those
+from warmer waters (San Francisco, Monterey, San Pedro, San Diego). This is a
+single pre-planned contrast.
+
+  a. Write the null hypothesis in terms of the six location means
+     $\mu_1, \ldots, \mu_6$.
+
+  b. Check the factor level order of `location`, then set up the coefficient
+     vector.
+
+```{r}
+
+```
+
+**11.** Test the planned contrast from Exercise 10 using `linearHypothesis()`
+(refit with `~ location - 1` first). Report the $F$-statistic, $p$-value,
+and a plain-language conclusion. Because this is a single pre-planned
+comparison, no multiplicity adjustment is needed.
+
+```{r}
+
+```
+
+**12.** Explain in your own words why the Tukey-Kramer procedure gives smaller
+adjusted $p$-values than Bonferroni for all-pairwise comparisons, while
+Bonferroni is more general. In which situation would you prefer Bonferroni
+over Tukey-Kramer?
