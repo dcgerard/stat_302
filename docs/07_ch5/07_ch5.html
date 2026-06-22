@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-18">
+<meta name="dcterms.date" content="2026-06-22">
 
 <title>One-Way ANOVA – Stat 302: Intermediate Statistics</title>
 <style>
@@ -258,7 +258,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 18, 2026</p>
+      <p class="date">June 22, 2026</p>
     </div>
   </div>
   
@@ -274,7 +274,7 @@ window.Quarto = {
 <h1>Learning Objectives</h1>
 <ul>
 <li>Explain the one-way ANOVA model for observational studies and randomized experiments.</li>
-<li>State and interpret the three types of hypotheses: pairwise, omnibus, and one-group-vs-rest.</li>
+<li>State and interpret the nested hypotheses.</li>
 <li>Compute and interpret the pooled variance estimate <span class="math inline">\(s_p^2\)</span>.</li>
 <li>Conduct pairwise <span class="math inline">\(t\)</span>-tests using the pooled variance.</li>
 <li>Set up and interpret the ANOVA <span class="math inline">\(F\)</span>-test using the extra-sum-of-squares framework.</li>
@@ -337,6 +337,15 @@ window.Quarto = {
 <li>Are <em>any</em> of the diets different from each other in terms of longevity?</li>
 <li>Which specific diets differ, and by how much?</li>
 </ol>
+<ul>
+<li><p>Pairwise comparisons of interest:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ch5_fig/diet_groups.svg" class="img-fluid figure-img" style="width:85.0%"></p>
+<figcaption>Relationship among the six diet groups. Arrows connect groups that share a base diet or caloric level; the vertical chain (N/N85 → N/R50 → N/R40) shows increasing post-weaning restriction.</figcaption>
+</figure>
+</div></li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0501, <span class="fu">aes</span>(<span class="at">x =</span> Diet, <span class="at">y =</span> Lifetime)) <span class="sc">+</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
@@ -495,16 +504,11 @@ window.Quarto = {
 <li><span class="math inline">\(Y_{ij}\)</span> = observed percent women on venire <span class="math inline">\(j\)</span> of judge <span class="math inline">\(i\)</span></li>
 <li><span class="math inline">\(\varepsilon_{ij}\)</span> = random variation in how that particular venire was drawn</li>
 </ul>
-<p><strong>Observational vs.&nbsp;randomized:</strong> The model equation <span class="math inline">\(Y_{ij} = \mu_i + \varepsilon_{ij}\)</span> looks the same in both settings, but the randomized experiment has a useful additional interpretation. In the diet study, the same individual mouse could in principle have been assigned to any diet. If we call the response under diet 1 (N/N85, the control) <span class="math inline">\(Y^* = \mu_1 + \varepsilon_j\)</span>, then the same mouse under diet <span class="math inline">\(i\)</span> would have response:</p>
-<p><span class="math display">\[Y_j^{(i)} = \mu_i + \varepsilon_j
-             = (\mu_i - \mu_1) + \mu_1 + \varepsilon_j
-             = \delta_i + Y^*\]</span></p>
-<p>where <span class="math inline">\(\delta_i = \mu_i - \mu_1\)</span> is the <strong>treatment effect</strong> of diet <span class="math inline">\(i\)</span> relative to the control. Because diets were randomly assigned, <span class="math inline">\(\delta_i\)</span> has a genuine causal interpretation: it is how much longer (or shorter) a mouse would live if assigned to diet <span class="math inline">\(i\)</span> instead of the control.</p>
-<p>In an observational study we cannot make this argument — the “same individual under a different group” is a counterfactual we cannot observe, and confounding may explain any observed difference.</p>
-<p>The difference is in the conclusions:</p>
+<p><strong>Observational vs.&nbsp;randomized:</strong> - The model equation <span class="math inline">\(Y_{ij} = \mu_i + \varepsilon_{ij}\)</span> looks the same in both the Spock trial and the longevity study.</p>
 <ul>
-<li><strong>Observational study</strong> (Spock trial): use associational language (“is associated with”, “differs between”).</li>
-<li><strong>Randomized experiment</strong> (diet study): use causal language (“causes”, “results in”, “affects”).</li>
+<li><p>But only in the longevity study can we interpret any causal association (diet and lifetime).</p></li>
+<li><p>E.g., if <span class="math inline">\(\mu_{NP}\)</span> is the mean lifetime of mice on the NP diet, and <span class="math inline">\(\mu_{N/N85}\)</span> is the mean lifetime of the mice on the N/N85 diet, then <span class="math inline">\(\delta = \mu_{N/N85} - \mu_{NP}\)</span> is the treatment effect.</p></li>
+<li><p>That is, <span class="math inline">\(\delta\)</span> is how much longer, on average, a mouse would live if given the N/N85 diet over the NP diet.</p></li>
 </ul>
 <hr>
 </section>
@@ -540,7 +544,11 @@ window.Quarto = {
                {(n_1-1) + (n_2-1) + \cdots + (n_I-1)}\]</span></p>
 <p>In words: each term <span class="math inline">\((n_i-1)s_i^2\)</span> in the numerator is the sum of squared deviations from group <span class="math inline">\(i\)</span>’s mean. Adding these across all groups gives the total within-group variation. Dividing by the total degrees of freedom gives the average within-group variance.</p>
 <p>The denominator is <span class="math inline">\(\nu = n - I\)</span> (the total degrees of freedom available for estimating variance within groups — we lose one degree of freedom per group because we estimated each group’s mean).</p>
-<p>Two observations: - This is a weighted average of the within-group variance estimates, weighted by their degrees of freedom. - When <span class="math inline">\(I = 2\)</span> this reduces exactly to the pooled variance from Chapter 2.</p>
+<p>Two observations:</p>
+<ul>
+<li>This is a weighted average of the within-group variance estimates, weighted by their degrees of freedom.</li>
+<li>When <span class="math inline">\(I = 2\)</span> this reduces exactly to the pooled variance from Chapter 2.</li>
+</ul>
 <hr>
 </section>
 </section>
@@ -556,7 +564,6 @@ window.Quarto = {
        \;\sim\; t_\nu
        \quad \text{under } H_0\]</span></p>
 <p>where <span class="math inline">\(\nu = n - I\)</span>.</p>
-<p><strong>Why <span class="math inline">\(\nu = n - I\)</span>?</strong> Because <span class="math inline">\(s_p^2\)</span> uses <em>all <span class="math inline">\(n\)</span> observations across all <span class="math inline">\(I\)</span> groups</em> to estimate <span class="math inline">\(\sigma^2\)</span> — not just the <span class="math inline">\(n_i + n_j\)</span> observations in the two groups being compared. Using more data gives a better estimate, which in turn gives larger degrees of freedom (<span class="math inline">\(n - I\)</span> instead of <span class="math inline">\(n_i + n_j - 2\)</span>), making the <span class="math inline">\(t\)</span> distribution closer to a standard normal and the test more powerful.</p>
 <p>The advantage over running separate two-sample <span class="math inline">\(t\)</span>-tests is that <strong>we use all the data to estimate <span class="math inline">\(\sigma^2\)</span></strong>, giving more degrees of freedom and a more accurate variance estimate.</p>
 <p>A 95% confidence interval for <span class="math inline">\(\mu_i - \mu_j\)</span> is:</p>
 <p><span class="math display">\[\bar{Y}_{i\bullet} - \bar{Y}_{j\bullet}
@@ -612,6 +619,13 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
+<p>Where <span class="math display">\[
+Y_{i\bullet} = \frac{1}{n_i}\sum_{j=1}^{n_i}Y_{ij}
+\]</span> <span class="math display">\[
+\bar{Y}_{\bullet\bullet} = \frac{1}{n}\sum_{i=1}^I\sum_{j=1}^{n_i}Y_{ij},
+\]</span> <span class="math display">\[
+n = \sum_{i=1}^{I}n_i
+\]</span></p>
 <p>For the Spock data (<span class="math inline">\(I = 7\)</span> judges), here is what each model predicts for each group:</p>
 <table class="caption-top table">
 <thead>
@@ -671,8 +685,14 @@ window.Quarto = {
 <p>In the <strong>reduced model</strong>, every observation — regardless of judge — is predicted by the same grand average <span class="math inline">\(\bar{Y}_{\bullet\bullet}\)</span> (the mean over all 46 venires). This is the model that says <span class="math inline">\(H_0\)</span> is true: if all judges have the same expected percent-women, then the best single prediction for any venire is just the overall average.</p>
 <p><strong>What is a residual?</strong> A residual is simply the distance between an observed value and the model’s prediction for it:</p>
 <ul>
-<li>Full model residual: <span class="math inline">\(Y_{ij} - \bar{Y}_{i\bullet}\)</span> — how far observation <span class="math inline">\((i,j)\)</span> is from <em>its group’s mean</em></li>
-<li>Reduced model residual: <span class="math inline">\(Y_{ij} - \bar{Y}_{\bullet\bullet}\)</span> — how far observation <span class="math inline">\((i,j)\)</span> is from <em>the grand mean</em></li>
+<li><p>Full model residual: <span class="math inline">\(Y_{ij} - \bar{Y}_{i\bullet}\)</span></p>
+<ul>
+<li>how far observation <span class="math inline">\((i,j)\)</span> is from <em>its group’s mean</em></li>
+</ul></li>
+<li><p>Reduced model residual: <span class="math inline">\(Y_{ij} - \bar{Y}_{\bullet\bullet}\)</span></p>
+<ul>
+<li>how far observation <span class="math inline">\((i,j)\)</span> is from <em>the grand mean</em></li>
+</ul></li>
 </ul>
 <p>Intuitively, if the groups really have different means, the full model residuals will be small (each observation is close to its own group mean), while the reduced model residuals will be large (observations from Spock’s group, for example, are far from the overall grand mean).</p>
 </section>
@@ -683,11 +703,24 @@ window.Quarto = {
 \quad df_{full} = n - I\]</span></p>
 <p><span class="math display">\[RSS_{reduced} = \sum_i \sum_j (Y_{ij} - \bar{Y}_{\bullet\bullet})^2,
 \quad df_{reduced} = n - 1\]</span></p>
-<p>Each RSS adds up all the squared residuals across every observation. Think of it as a scoreboard for how badly the model is fitting: a small RSS means predictions are close to the data; a large RSS means they are far away. Both RSS values involve squaring (so positive and negative residuals don’t cancel) and summing (so we get a single overall measure).</p>
-<p>The <strong>extra sum of squares</strong> (ESS) measures how much the fit improves when we go from the reduced model to the full model:</p>
-<p><span class="math display">\[ESS = RSS_{reduced} - RSS_{full}, \quad df_{extra} = I - 1\]</span></p>
-<p><strong>Why is <span class="math inline">\(RSS_{reduced} \geq RSS_{full}\)</span> always?</strong> The full model has the reduced model as a special case: if all the <span class="math inline">\(\mu_i\)</span> happen to be equal, the full model’s separate group means would all estimate the same value as the grand mean, and the two models would give identical fits. In general, the full model has more flexibility, so it can <em>never</em> fit worse than the reduced model — it can always do at least as well. Therefore <span class="math inline">\(ESS \geq 0\)</span> always.</p>
-<p><strong>What does ESS tell us?</strong> If <span class="math inline">\(H_0\)</span> is true (all means really are equal), fitting separate group means should not improve the fit by very much — the data don’t contain strong evidence for distinct groups. In that case, ESS will be positive but small. If the means truly differ (the data come from groups with different means), the full model will fit much better, and ESS will be large. The <span class="math inline">\(F\)</span>-test formalizes what “small” and “large” mean.</p>
+<ul>
+<li><p>Each RSS adds up all the squared residuals across every observation.</p>
+<ul>
+<li>a small RSS means predictions are close to the data</li>
+<li>a large RSS means they are far away.</li>
+<li>Both RSS values involve squaring (so positive and negative residuals don’t cancel) and summing (so we get a single overall measure).</li>
+</ul></li>
+<li><p>The <strong>extra sum of squares</strong> (ESS) measures how much the fit improves when we go from the reduced model to the full model:</p>
+<p><span class="math display">\[ESS = RSS_{reduced} - RSS_{full}, \quad df_{extra} = I - 1\]</span></p></li>
+<li><p><strong>NOTE: <span class="math inline">\(RSS_{reduced} \geq RSS_{full}\)</span></strong></p>
+<ul>
+<li>The full model has the reduced model as a special case: if all the <span class="math inline">\(\mu_i\)</span> happen to be equal, the full model’s separate group means would all estimate the same value as the grand mean, and the two models would give identical fits. In general, the full model has more flexibility, so it can <em>never</em> fit worse than the reduced model. It can always do at least as well. Therefore <span class="math inline">\(ESS \geq 0\)</span> always.</li>
+</ul></li>
+<li><p><strong>What does ESS tell us?</strong></p>
+<ul>
+<li>If <span class="math inline">\(H_0\)</span> is true (all means really are equal), fitting separate group means should not improve the fit by very much — the data don’t contain strong evidence for distinct groups. In that case, ESS will be positive but small. If the means truly differ (the data come from groups with different means), the full model will fit much better, and ESS will be large. The <span class="math inline">\(F\)</span>-test formalizes what “small” and “large” mean.</li>
+</ul></li>
+</ul>
 <p>The plots below illustrate this for the Spock data. Red bars/lines show the model’s fitted means; larger gaps between points and those lines = larger residuals.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -766,7 +799,8 @@ window.Quarto = {
 </section>
 <section id="a-hierarchy-of-models" class="level1">
 <h1>A Hierarchy of Models</h1>
-<p>In more complex questions we compare <strong>three</strong> or more nested models. Each model is a special case of the next:</p>
+<p>An F-test can be used to compare any two <strong>nested</strong> models.</p>
+<p>In the Spock example, we had three nested models:</p>
 <ul>
 <li><strong>Null</strong>: all means equal <span class="math inline">\((\mu)\)</span></li>
 <li><strong>Intermediate</strong>: Spock’s judge differs from a common mean for the rest <span class="math inline">\((\mu_\text{Spock}, \mu_\text{others})\)</span></li>
@@ -774,6 +808,10 @@ window.Quarto = {
 </ul>
 <p>Here is what each model predicts for each judge in the Spock data.</p>
 <p><strong>Null vs.&nbsp;Intermediate</strong> — Is Spock’s judge different from the rest?</p>
+<ul>
+<li><span class="math inline">\(H_0: \mu_1 = \cdots = \mu_7\)</span> (all same)</li>
+<li><span class="math inline">\(H_A: \mu_1 \neq \mu_2 = \cdots = \mu_7\)</span> (Spock is different)</li>
+</ul>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -829,7 +867,21 @@ window.Quarto = {
 </tbody>
 </table>
 <p>Here <span class="math inline">\(\bar{Y}_{\bullet\bullet}\)</span> is the grand mean of all 46 venires, and <span class="math inline">\(\bar{Y}_{0}\)</span> is the average percent-women across all venires belonging to judges A–F (groups 2 through 7). The intermediate model has 2 parameters: one for Spock’s judge (<span class="math inline">\(\bar{Y}_{1\bullet}\)</span>) and one pooled mean for the remaining six judges (<span class="math inline">\(\bar{Y}_{0}\)</span>).</p>
+<p>The plots below show how these two models fit the data. The drop in RSS when moving from the null to the intermediate model is the ESS for this test.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="07_ch5_files/figure-html/null-vs-inter-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
 <p><strong>Intermediate vs.&nbsp;Full</strong> — Do judges A–F differ among themselves?</p>
+<ul>
+<li><span class="math inline">\(H_0: \mu_1 \neq \mu_2 = \cdots = \mu_7\)</span> (Spock is different)</li>
+<li><span class="math inline">\(H_A:\)</span> At least one <span class="math inline">\(\mu_i \neq \mu_j\)</span> for <span class="math inline">\(i,j\in \{2,\ldots,7\}\)</span></li>
+</ul>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -885,8 +937,17 @@ window.Quarto = {
 </tbody>
 </table>
 <p>This test asks: after accounting for Spock’s judge, do the remaining six judges’ venires show any systematic differences from each other?</p>
+<p>The plots below compare the fit of the intermediate model (reduced) against the full model. The ESS here captures only the variation <em>among</em> judges A–F.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="07_ch5_files/figure-html/inter-vs-full-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>Notice that we always fit <em>both</em> models using <em>all</em> the data — we never discard Spock’s judge’s observations even when comparing only judges A–F. This matters for the variance estimate: instead of testing on a subset of 39 venires (judges A–F only, <span class="math inline">\(df = 32\)</span>), we keep all 46 venires and use <span class="math inline">\(s_p^2\)</span> from the full model (<span class="math inline">\(df = 39\)</span>). More degrees of freedom means a better variance estimate and a more powerful test.</p>
-<p>Each <span class="math inline">\(F\)</span>-test compares adjacent models. Crucially, <strong>all F-tests use the variance estimate <span class="math inline">\(s_p^2 = RSS_{full}/df_{full}\)</span> from the most general (full) model</strong>, regardless of which pair is being compared.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="ch5_fig/model_hierarchy.svg" class="img-fluid figure-img" style="width:90.0%"></p>
@@ -941,21 +1002,6 @@ window.Quarto = {
 <li>Strong evidence that Spock’s judge has a different (lower) mean than the other judges (<span class="math inline">\(F_{1,39} = 33.48\)</span>, <span class="math inline">\(p &lt; 0.001\)</span>).</li>
 <li>No evidence that the six non-Spock judges differ among themselves (<span class="math inline">\(F_{5,39} = 1.37\)</span>, <span class="math inline">\(p = 0.26\)</span>).</li>
 </ul>
-<p>Note: the <span class="math inline">\(F\)</span>-statistic in the table uses <span class="math inline">\(s_p^2 = 1864/39 \approx 47.8\)</span> (from the <strong>full</strong> model) as the denominator throughout.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span><span class="math inline">\(s_p^2\)</span> is not the same as the overall sample variance
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The pooled variance <span class="math inline">\(s_p^2 = RSS_{full}/39 = 1864/39 \approx 48\)</span> measures how much observations vary <em>within</em> groups — after accounting for differences in group means. It is what ANOVA uses to estimate <span class="math inline">\(\sigma^2\)</span>.</p>
-<p>If you ignored the groups entirely and computed a single sample variance for all 46 venires, you would get <span class="math inline">\(s^2 = RSS_{reduced}/45 = 3792/45 \approx 84\)</span>. This is larger because it lumps together within-group and between-group variation — the judges have different means, and that extra spread inflates <span class="math inline">\(s^2\)</span>. Using <span class="math inline">\(s_p^2\)</span> removes the between-group contribution and focuses on the within-group noise, giving a better estimate of <span class="math inline">\(\sigma^2\)</span>.</p>
-</div>
-</div>
 <hr>
 </section>
 <section id="one-way-anova-in-r" class="level1">

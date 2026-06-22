@@ -1,0 +1,153 @@
+---
+title: "Chapter 5 Worksheet"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output: pdf_document
+urlcolor: "blue"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, eval = FALSE)
+```
+
+```{r, echo = FALSE, eval = FALSE}
+library(tidyverse)
+trek <- read.csv("https://raw.githubusercontent.com/dcgerard/stat234/master/data/trek.csv")
+
+trek %>%
+  select(episode:wesley, season) %>%
+  gather(key = "character", value = "wordcount", picard:wesley) %>%
+  group_by(season, character) %>%
+  summarize(count = sum(wordcount)) %>%
+  ungroup() %>%
+  group_by(season) %>%
+  mutate(prop = count / sum(count)) %>%
+  ungroup() %>%
+  mutate(logprop = log(prop)) ->
+  trek
+
+trek <- trek[trek$count != 0, ]
+trek <- trek[trek$character != "tasha", ]
+trek <- trek[trek$character != "pulaski", ]
+trek <- trek[trek$character != "wesley", ]
+trek <- trek[trek$logprop > -6, ]
+write.csv(x = trek, file = "trek.csv", row.names = FALSE)
+```
+
+
+The data in trek.csv consist of word counts and proportion of words spoken by the main characters from the excellent television series [Star Trek: The Next Generation](https://en.wikipedia.org/wiki/Star_Trek:_The_Next_Generation). I obtained the original dataset [here](https://github.com/RMHogervorst/TNG). The variables in this dataset are
+
+- `season` The season of the show.
+- `character` The character of the show.
+- `count` The raw word-counts for a given character in a given season.
+- `prop` The proportion of words spoken by a given character in a given season.
+- `logprop` The log of `prop`.
+
+Captian Picard is generally considered the main character of the television series. So we are interested in answering the following questions:
+
+1. Do characters have about the same amount of dialogue?
+2. Does Picard speak more than the other characters?
+3. Do the other characters speak about the same amount?
+
+ANOVA is not quite the best method here (the independence assumption is violated: as one character speaks more, the others must speak less since there is a limited amount of television time). However, we will ignore this for now and just state that any results we find are "preliminary."
+
+Throughout this worksheet, we will use the `logprop` variable to measure a character's contribution to the show.
+
+## Questions
+
+The data are available on Blackbard (as "trek.csv"). You can load the data into R using (you might need to change the path):
+```{r, echo = TRUE}
+trek <- read.csv("trek.csv")
+head(trek)
+```
+
+1. Make a plot to informally explore questions-of-interest 1 through 3.
+
+```{block}
+Picard definitely seems to have a higher contribution. It is less clear if the other characters have different amounts of contribution.
+```
+
+```{r}
+library(ggplot2)
+qplot(x = character, y = logprop, data = trek, geom = "boxplot") +
+  theme_bw()
+```
+
+
+
+2. State the model and hypotheses under consideration for exploring question-of-interest 1.
+
+```{block}
+$$
+Y_{ij} = \mu_i + \epsilon_j
+$$
+
+- $H_0$: $\mu_1 = \mu_2 = \cdots = \mu_7$
+- $H_A$: At least two means are different.
+```
+
+3. Test the above hypothesis in R using `aov()` and `summary()`.
+
+```{r}
+aout_alldiff <- aov(logprop ~ character, data = trek)
+summary(aout_alldiff)
+```
+
+```{block}
+There is strong evidence that there is a difference in means ($p < 0.001$).
+```
+
+4. Create a new variable that distinguishes between Picard and not-Picard.
+
+```{r}
+trek$isPicard <- trek$character == "picard"
+```
+
+5. Use `aov()` to fit the model where only picard has a different mean.
+
+```{r}
+aout_othersame <- aov(logprop ~ isPicard, data = trek)
+```
+
+6. Use `aov()` to fit the model where all means are the same.
+
+```{r}
+aout_allsame <- aov(logprop ~ 1, data = trek)
+```
+
+7. Use `anova()` to create an ANOVA table for the three different models under study.
+
+```{r}
+anova(aout_allsame, aout_othersame, aout_alldiff)
+```
+
+8. Use `pairwise.t.test()` to obtain $p$-values for testing for pairwise-comparisons. What is the $p$-value comparing `beverly` to `troi`?
+
+```{r}
+pairwise.t.test(x = trek$logprop, g = trek$character, p.adjust.method = "none")
+## 0.094
+```
+
+
+9. Now suppose we want to test the following hypotheses: 
+
+  - $H_0$ Picard has his own mean; Riker and Data have the same mean; and Beverly, Geordi, Troi, and Worf have the same mean.
+  - $H_A$: Picard has his own mean; Everyone else has the same mean.
+
+  Use `aov()` and `anova()` to test the above hypotheses.
+  
+```{r}
+trek$trip <- "other"
+trek$trip[trek$character == "data" | trek$character == "riker"] <- "data_riker"
+trek$trip[trek$character == "picard"] <- "picard"
+head(trek$trip)
+aout_trip <- aov(logprop ~ trip, data = trek)
+anova(aout_othersame, aout_trip)
+
+## p-value of 1.2e-09
+```
+  
+
+
+
+

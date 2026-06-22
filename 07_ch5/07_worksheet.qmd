@@ -1,0 +1,156 @@
+---
+title: "Chapter 5 Worksheet"
+author: "David Gerard"
+date: today
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+# Star Trek: The Next Generation Dialogue
+
+The data in `trek.csv` contain word counts and proportions of words spoken by
+the main characters from [Star Trek: The Next Generation](https://en.wikipedia.org/wiki/Star_Trek:_The_Next_Generation).
+The original dataset was obtained from [github.com/RMHogervorst/TNG](https://github.com/RMHogervorst/TNG).
+Each row summarizes the dialogue for one character in one season. The variables
+are:
+
+- `season`: the season of the show (1–7).
+- `character`: the character's name (lower case).
+- `count`: total word count for that character in that season.
+- `prop`: proportion of all words in that season spoken by that character.
+- `logprop`: natural log of `prop`.
+
+Captain Picard is generally considered the main character. We want to answer
+three questions:
+
+1. Do characters have about the same amount of dialogue?
+2. Does Picard speak more than the other characters?
+3. Do the other characters speak about the same amount as each other?
+
+**Note:** ANOVA is not quite the ideal method here because the independence
+assumption is somewhat violated — as one character speaks more, the others
+must speak less within each season. We will proceed anyway and treat any
+conclusions as preliminary.
+
+We will use `logprop` as our response throughout.
+
+```{r}
+#| label: load-data
+#| eval: true
+#| message: false
+library(tidyverse)
+trek <- read_csv("https://dcgerard.github.io/stat_302/data/trek.csv")
+glimpse(trek)
+```
+
+---
+
+**1.** Make a plot to informally explore questions of interest 1 through 3.
+Which characters appear to speak the most? Does it look like Picard stands
+out from the rest?
+
+```{r}
+
+```
+
+**2.** State the one-way ANOVA model and the omnibus null and alternative
+hypotheses for exploring question 1. Define all symbols.
+
+**3.** Test the omnibus hypothesis from Question 2 using `aov()` and
+`summary()`. Report the $F$-statistic, degrees of freedom, and $p$-value.
+
+```{r}
+
+```
+
+**4.** Interpret the result from Question 3 in plain language. What does the
+$p$-value tell you? Does a significant omnibus result tell you *which*
+characters differ? Explain.
+
+**5.** Create a new variable `isPicard` that is `TRUE` when `character ==
+"picard"` and `FALSE` otherwise.
+
+```{r}
+
+```
+
+**6.** Use `aov()` to fit the *intermediate* model in which only Picard has
+his own mean and all other characters share a common mean.
+
+```{r}
+
+```
+
+**7.** Use `aov()` to fit the *null* model in which all characters share the
+same mean.
+
+```{r}
+
+```
+
+**8.** Use `anova()` to produce the sequential ANOVA table comparing the null
+model, the intermediate model, and the full model (from Question 3).
+
+```{r}
+
+```
+
+  a. What are $H_0$ and $H_A$ for the first $F$-test in the table? Report the
+     $F$-statistic, degrees of freedom, and $p$-value, and state your
+     conclusion.
+
+  b. What are $H_0$ and $H_A$ for the second $F$-test? Report the
+     $F$-statistic, degrees of freedom, and $p$-value, and state your
+     conclusion.
+
+**9.** Use `plot()` on your full ANOVA model object from Question 3 to produce
+residual diagnostic plots. Check the equal-variance and normality assumptions.
+Do either appear violated?
+
+```{r}
+
+```
+
+**10.** Use `pairwise.t.test()` (with no $p$-value adjustment) to obtain
+unadjusted $p$-values for all pairwise comparisons of `logprop` across
+characters.
+
+```{r}
+
+```
+
+  a. How many pairwise comparisons are there for this dataset?
+  b. Which pair has the largest $p$-value? What does that suggest about those
+     two characters' dialogue share?
+  c. Why is it problematic to use $\alpha = 0.05$ for each individual test
+     when conducting this many comparisons?
+
+**11.** Suppose we now want to test whether Riker and Data together have a
+different mean from the remaining non-Picard characters (Beverly, Geordi,
+Troi, Worf). Use `aov()` and `anova()` to carry out this test by comparing
+the following two models:
+
+  - **Reduced**: Picard has his own mean; all other characters share one mean.
+  - **Full**: Picard has his own mean; Riker and Data share a mean; Beverly,
+    Geordi, Troi, and Worf share a separate mean.
+
+  Create the necessary grouping variable, fit both models, and produce the
+  ANOVA table. Report the $F$-statistic and $p$-value, and state your
+  conclusion.
+
+```{r}
+
+```
+
+**12.** The introduction notes that the independence assumption is violated in
+this dataset: within each season, if one character speaks more, the others
+must speak less.
+
+  a. Explain in your own words why this violates the ANOVA independence
+     assumption.
+  b. In which direction would you expect this violation to bias the $p$-values
+     (too small or too large)? Explain your reasoning.

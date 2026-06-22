@@ -451,6 +451,14 @@ window.Quarto = {
 <li><code>Percent</code>: is the percent of women on the venire’s of the Spock trial judge and 6 other Boston area judges</li>
 <li><code>Judge</code>: is a factor with levels <code>"Spock's"</code>, <code>"A"</code>, <code>"B"</code>, <code>"C"</code>, <code>"D"</code>, <code>"E"</code>, and <code>"F"</code>.</li>
 </ul></li>
+<li><p><a href="./data/trek.csv">trek.csv</a>: Word counts and proportions of dialogue spoken by the main characters of <a href="https://en.wikipedia.org/wiki/Star_Trek:_The_Next_Generation">Star Trek: The Next Generation</a> across all seven seasons. The original raw data were obtained from <a href="https://github.com/RMHogervorst/TNG">github.com/RMHogervorst/TNG</a> under a <a href="https://wiki.creativecommons.org/wiki/CC0">CC0</a> license. Rows with zero word count and recurring guest characters (Tasha Yar, Dr.&nbsp;Pulaski, Wesley Crusher) were excluded; rows with log-proportion below −6 were also excluded.</p>
+<ul>
+<li><code>season</code>: season number (integer, 1–7)</li>
+<li><code>character</code>: character name in lower case; one of <code>"beverly"</code>, <code>"data"</code>, <code>"geordi"</code>, <code>"picard"</code>, <code>"riker"</code>, <code>"troi"</code>, <code>"worf"</code></li>
+<li><code>count</code>: total word count for that character in that season</li>
+<li><code>prop</code>: proportion of all words spoken in that season attributable to that character</li>
+<li><code>logprop</code>: natural log of <code>prop</code></li>
+</ul></li>
 <li><p><a href="./data/ex0518.csv">ex0518.csv</a>: A randomized experiment was performed to estimate the effect of a certain fatty acid CPFA on the level of a certain protein in rat livers.</p>
 <ul>
 <li><code>Protein</code>: levels of protein (x 10) found in rat livers</li>

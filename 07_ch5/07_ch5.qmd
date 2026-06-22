@@ -23,8 +23,7 @@ ggplot2::theme_set(ggplot2::theme_bw())
 
 - Explain the one-way ANOVA model for observational studies and randomized
   experiments.
-- State and interpret the three types of hypotheses: pairwise, omnibus, and
-  one-group-vs-rest.
+- State and interpret the nested hypotheses.
 - Compute and interpret the pooled variance estimate $s_p^2$.
 - Conduct pairwise $t$-tests using the pooled variance.
 - Set up and interpret the ANOVA $F$-test using the extra-sum-of-squares
@@ -64,6 +63,11 @@ The response is **lifetime in months**. We are interested in:
 
 1. Are *any* of the diets different from each other in terms of longevity?
 2. Which specific diets differ, and by how much?
+
+
+- Pairwise comparisons of interest:
+  
+  ![Relationship among the six diet groups. Arrows connect groups that share a base diet or caloric level; the vertical chain (N/N85 → N/R50 → N/R40) shows increasing post-weaning restriction.](ch5_fig/diet_groups.svg){fig-align="center" width="85%"}
 
 ```{r}
 #| label: diet-eda
@@ -160,32 +164,13 @@ two-sample $t$-test from Chapter 2.
 - $\varepsilon_{ij}$ = random variation in how that particular venire was drawn
 
 **Observational vs. randomized:**
-The model equation $Y_{ij} = \mu_i + \varepsilon_{ij}$ looks the same in both
-settings, but the randomized experiment has a useful additional interpretation.
-In the diet study, the same individual mouse could in principle have been
-assigned to any diet. If we call the response under diet 1 (N/N85, the
-control) $Y^* = \mu_1 + \varepsilon_j$, then the same mouse under diet $i$
-would have response:
+- The model equation $Y_{ij} = \mu_i + \varepsilon_{ij}$ looks the same in both the Spock trial and the longevity study.
 
-$$Y_j^{(i)} = \mu_i + \varepsilon_j
-             = (\mu_i - \mu_1) + \mu_1 + \varepsilon_j
-             = \delta_i + Y^*$$
+- But only in the longevity study can we interpret any causal association (diet and lifetime).
 
-where $\delta_i = \mu_i - \mu_1$ is the **treatment effect** of diet $i$
-relative to the control. Because diets were randomly assigned, $\delta_i$ has
-a genuine causal interpretation: it is how much longer (or shorter) a mouse
-would live if assigned to diet $i$ instead of the control.
+- E.g., if $\mu_{NP}$ is the mean lifetime of mice on the NP diet, and $\mu_{N/N85}$ is the mean lifetime of the mice on the N/N85 diet, then $\delta = \mu_{N/N85} - \mu_{NP}$ is the treatment effect.
 
-In an observational study we cannot make this argument — the "same individual
-under a different group" is a counterfactual we cannot observe, and
-confounding may explain any observed difference.
-
-The difference is in the conclusions:
-
-- **Observational study** (Spock trial): use associational language
-  ("is associated with", "differs between").
-- **Randomized experiment** (diet study): use causal language
-  ("causes", "results in", "affects").
+- That is, $\delta$ is how much longer, on average, a mouse would live if given the N/N85 diet over the NP diet.
 
 ---
 
@@ -243,6 +228,7 @@ estimating variance within groups — we lose one degree of freedom per group
 because we estimated each group's mean).
 
 Two observations:
+
 - This is a weighted average of the within-group variance estimates, weighted
   by their degrees of freedom.
 - When $I = 2$ this reduces exactly to the pooled variance from Chapter 2.
@@ -275,13 +261,6 @@ $$t^* = \frac{\bar{Y}_{i\bullet} - \bar{Y}_{j\bullet}}{s_p\sqrt{1/n_i + 1/n_j}}
        \quad \text{under } H_0$$
 
 where $\nu = n - I$.
-
-**Why $\nu = n - I$?** Because $s_p^2$ uses *all $n$ observations across all
-$I$ groups* to estimate $\sigma^2$ — not just the $n_i + n_j$ observations in
-the two groups being compared. Using more data gives a better estimate, which
-in turn gives larger degrees of freedom ($n - I$ instead of $n_i + n_j - 2$),
-making the $t$ distribution closer to a standard normal and the test more
-powerful.
 
 The advantage over running separate two-sample $t$-tests is that **we use all
 the data to estimate $\sigma^2$**, giving more degrees of freedom and a more
@@ -318,6 +297,17 @@ means?*
 | **Estimates** | $\hat{\mu} = \bar{Y}_{\bullet\bullet}$ | $\hat{\mu}_i = \bar{Y}_{i\bullet}$ |
 | **# parameters** | 1 | $I$ |
 
+Where
+$$
+Y_{i\bullet} = \frac{1}{n_i}\sum_{j=1}^{n_i}Y_{ij}
+$$
+$$
+\bar{Y}_{\bullet\bullet} = \frac{1}{n}\sum_{i=1}^I\sum_{j=1}^{n_i}Y_{ij},
+$$
+$$
+n = \sum_{i=1}^{I}n_i
+$$
+
 For the Spock data ($I = 7$ judges), here is what each model predicts for
 each group:
 
@@ -345,10 +335,13 @@ venire is just the overall average.
 **What is a residual?** A residual is simply the distance between an observed
 value and the model's prediction for it:
 
-- Full model residual: $Y_{ij} - \bar{Y}_{i\bullet}$ — how far observation
-  $(i,j)$ is from *its group's mean*
-- Reduced model residual: $Y_{ij} - \bar{Y}_{\bullet\bullet}$ — how far
-  observation $(i,j)$ is from *the grand mean*
+- Full model residual: $Y_{ij} - \bar{Y}_{i\bullet}$ 
+
+  - how far observation $(i,j)$ is from *its group's mean*
+  
+- Reduced model residual: $Y_{ij} - \bar{Y}_{\bullet\bullet}$ 
+
+  - how far observation $(i,j)$ is from *the grand mean*
 
 Intuitively, if the groups really have different means, the full model
 residuals will be small (each observation is close to its own group mean),
@@ -365,30 +358,20 @@ $$RSS_{full} = \sum_i \sum_j (Y_{ij} - \bar{Y}_{i\bullet})^2,
 $$RSS_{reduced} = \sum_i \sum_j (Y_{ij} - \bar{Y}_{\bullet\bullet})^2,
 \quad df_{reduced} = n - 1$$
 
-Each RSS adds up all the squared residuals across every observation. Think of
-it as a scoreboard for how badly the model is fitting: a small RSS means
-predictions are close to the data; a large RSS means they are far away. Both
-RSS values involve squaring (so positive and negative residuals don't cancel)
-and summing (so we get a single overall measure).
+- Each RSS adds up all the squared residuals across every observation.
+  - a small RSS means predictions are close to the data
+  - a large RSS means they are far away. 
+  - Both RSS values involve squaring (so positive and negative residuals don't cancel) and summing (so we get a single overall measure).
 
-The **extra sum of squares** (ESS) measures how much the fit improves when
-we go from the reduced model to the full model:
+- The **extra sum of squares** (ESS) measures how much the fit improves when we go from the reduced model to the full model:
 
-$$ESS = RSS_{reduced} - RSS_{full}, \quad df_{extra} = I - 1$$
+  $$ESS = RSS_{reduced} - RSS_{full}, \quad df_{extra} = I - 1$$
 
-**Why is $RSS_{reduced} \geq RSS_{full}$ always?** The full model has the
-reduced model as a special case: if all the $\mu_i$ happen to be equal, the
-full model's separate group means would all estimate the same value as the
-grand mean, and the two models would give identical fits. In general, the
-full model has more flexibility, so it can *never* fit worse than the reduced
-model — it can always do at least as well. Therefore $ESS \geq 0$ always.
+- **NOTE: $RSS_{reduced} \geq RSS_{full}$** 
+  - The full model has the reduced model as a special case: if all the $\mu_i$ happen to be equal, the full model's separate group means would all estimate the same value as the grand mean, and the two models would give identical fits. In general, the full model has more flexibility, so it can *never* fit worse than the reduced model. It can always do at least as well. Therefore $ESS \geq 0$ always.
 
-**What does ESS tell us?** If $H_0$ is true (all means really are equal),
-fitting separate group means should not improve the fit by very much — the
-data don't contain strong evidence for distinct groups. In that case, ESS
-will be positive but small. If the means truly differ (the data come from
-groups with different means), the full model will fit much better, and ESS
-will be large. The $F$-test formalizes what "small" and "large" mean.
+- **What does ESS tell us?** 
+  - If $H_0$ is true (all means really are equal), fitting separate group means should not improve the fit by very much — the data don't contain strong evidence for distinct groups. In that case, ESS will be positive but small. If the means truly differ (the data come from groups with different means), the full model will fit much better, and ESS will be large. The $F$-test formalizes what "small" and "large" mean.
 
 The plots below illustrate this for the Spock data. Red bars/lines show the
 model's fitted means; larger gaps between points and those lines = larger
@@ -535,8 +518,9 @@ ggplot(data.frame(x = x, y = y), aes(x, y)) +
 
 # A Hierarchy of Models
 
-In more complex questions we compare **three** or more nested models. Each
-model is a special case of the next:
+An F-test can be used to compare any two **nested** models. 
+
+In the Spock example, we had three nested models:
 
 - **Null**: all means equal $(\mu)$
 - **Intermediate**: Spock's judge differs from a common mean for the rest
@@ -546,6 +530,9 @@ model is a special case of the next:
 Here is what each model predicts for each judge in the Spock data.
 
 **Null vs. Intermediate** — Is Spock's judge different from the rest?
+
+- $H_0: \mu_1 = \cdots = \mu_7$ (all same)
+- $H_A: \mu_1 \neq \mu_2 = \cdots = \mu_7$ (Spock is different)
 
 | Group | Judge | Null (reduced) | Intermediate (full) |
 |:-----:|:------|:--------------:|:-------------------:|
@@ -563,7 +550,61 @@ judges A–F (groups 2 through 7). The intermediate model has 2 parameters:
 one for Spock's judge ($\bar{Y}_{1\bullet}$) and one pooled mean for the
 remaining six judges ($\bar{Y}_{0}$).
 
+The plots below show how these two models fit the data. The drop in RSS
+when moving from the null to the intermediate model is the ESS for this
+test.
+
+```{r}
+#| label: null-vs-inter
+#| echo: false
+#| fig-width: 9
+#| fig-height: 3.2
+spock_mean <- case0502 |>
+  filter(Judge == "Spock's") |>
+  pull(Percent) |>
+  mean()
+other_mean <- case0502 |>
+  filter(Judge != "Spock's") |>
+  pull(Percent) |>
+  mean()
+
+rss_inter <- case0502 |>
+  mutate(fitted = if_else(Judge == "Spock's", spock_mean, other_mean)) |>
+  summarise(rss = sum((Percent - fitted)^2)) |>
+  pull(rss)
+
+seg_inter <- data.frame(
+  x    = c(0.65, 6.65),
+  xend = c(6.35, 7.35),
+  y    = c(other_mean, spock_mean),
+  yend = c(other_mean, spock_mean)
+)
+
+p_null2 <- ggplot(case0502, aes(x = Judge, y = Percent)) +
+  geom_jitter(width = 0.12, height = 0, alpha = 0.7) +
+  geom_hline(yintercept = ybar, color = "tomato",
+             linetype = "dashed", linewidth = 1) +
+  labs(title = "Null model: one overall mean",
+       subtitle = paste0("RSS = ", round(rss_null, 0))) +
+  theme(plot.subtitle = element_text(size = 9))
+
+p_inter <- ggplot(case0502, aes(x = Judge, y = Percent)) +
+  geom_jitter(width = 0.12, height = 0, alpha = 0.7) +
+  geom_segment(data = seg_inter,
+               aes(x = x, xend = xend, y = y, yend = yend),
+               color = "tomato", linetype = "dashed", linewidth = 1,
+               inherit.aes = FALSE) +
+  labs(title = "Intermediate model: Spock's judge differs",
+       subtitle = paste0("RSS = ", round(rss_inter, 0))) +
+  theme(plot.subtitle = element_text(size = 9))
+
+p_null2 + p_inter
+```
+
 **Intermediate vs. Full** — Do judges A–F differ among themselves?
+
+- $H_0: \mu_1 \neq \mu_2 = \cdots = \mu_7$ (Spock is different)
+- $H_A:$ At least one $\mu_i \neq \mu_j$ for $i,j\in \{2,\ldots,7\}$
 
 | Group | Judge | Intermediate (reduced) | Full |
 |:-----:|:------|:----------------------:|:----:|
@@ -578,16 +619,41 @@ remaining six judges ($\bar{Y}_{0}$).
 This test asks: after accounting for Spock's judge, do the remaining six
 judges' venires show any systematic differences from each other?
 
+The plots below compare the fit of the intermediate model (reduced) against
+the full model. The ESS here captures only the variation *among* judges A–F.
+
+```{r}
+#| label: inter-vs-full
+#| echo: false
+#| fig-width: 9
+#| fig-height: 3.2
+p_inter2 <- ggplot(case0502, aes(x = Judge, y = Percent)) +
+  geom_jitter(width = 0.12, height = 0, alpha = 0.7) +
+  geom_segment(data = seg_inter,
+               aes(x = x, xend = xend, y = y, yend = yend),
+               color = "tomato", linetype = "dashed", linewidth = 1,
+               inherit.aes = FALSE) +
+  labs(title = "Intermediate model: Spock's judge differs",
+       subtitle = paste0("RSS = ", round(rss_inter, 0))) +
+  theme(plot.subtitle = element_text(size = 9))
+
+p_full2 <- ggplot(case0502, aes(x = Judge, y = Percent)) +
+  geom_jitter(width = 0.12, height = 0, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "crossbar",
+               color = "tomato", linewidth = 0.5, width = 0.55) +
+  labs(title = "Full model: all judges separate",
+       subtitle = paste0("RSS = ", round(rss_full, 0))) +
+  theme(plot.subtitle = element_text(size = 9))
+
+p_inter2 + p_full2
+```
+
 Notice that we always fit *both* models using *all* the data — we never
 discard Spock's judge's observations even when comparing only judges A–F. This
 matters for the variance estimate: instead of testing on a subset of 39 venires
 (judges A–F only, $df = 32$), we keep all 46 venires and use $s_p^2$ from the
 full model ($df = 39$). More degrees of freedom means a better variance
 estimate and a more powerful test.
-
-Each $F$-test compares adjacent models. Crucially, **all F-tests use the
-variance estimate $s_p^2 = RSS_{full}/df_{full}$ from the most general
-(full) model**, regardless of which pair is being compared.
 
 ![Hierarchy of models for the Spock trial. Arrows show $F$-tests between adjacent models. RSS = residual sum of squares; df = degrees of freedom.](ch5_fig/model_hierarchy.svg){fig-align="center" width="90%"}
 
@@ -605,24 +671,6 @@ The full sequential ANOVA table for the Spock data is:
   other judges ($F_{1,39} = 33.48$, $p < 0.001$).
 - No evidence that the six non-Spock judges differ among themselves
   ($F_{5,39} = 1.37$, $p = 0.26$).
-
-Note: the $F$-statistic in the table uses $s_p^2 = 1864/39 \approx 47.8$
-(from the **full** model) as the denominator throughout.
-
-::: {.callout-note}
-## $s_p^2$ is not the same as the overall sample variance
-
-The pooled variance $s_p^2 = RSS_{full}/39 = 1864/39 \approx 48$ measures
-how much observations vary *within* groups — after accounting for differences
-in group means. It is what ANOVA uses to estimate $\sigma^2$.
-
-If you ignored the groups entirely and computed a single sample variance for
-all 46 venires, you would get $s^2 = RSS_{reduced}/45 = 3792/45 \approx 84$.
-This is larger because it lumps together within-group and between-group
-variation — the judges have different means, and that extra spread inflates
-$s^2$. Using $s_p^2$ removes the between-group contribution and focuses on
-the within-group noise, giving a better estimate of $\sigma^2$.
-:::
 
 ---
 
@@ -827,6 +875,8 @@ ggplot(data.frame(resid = resid_out, fitted = fitted_vec),
 ---
 
 # Random Effects
+
+
 
 In the fixed-effects model above, the groups (judges, diets) are the
 specific groups of interest — we want to compare these particular groups.

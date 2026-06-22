@@ -24,6 +24,7 @@ author: David Gerard
   - [Chapter 3 Worksheet](./05_ch3/05_worksheet.qmd)
 - Chapter 5:
   - [One-Way ANOVA](./07_ch5/07_ch5.qmd)
+  - [Chapter 5 Worksheet](./07_ch5/07_worksheet.qmd)
 - Chapter 4:
   - Nonparameterics
 - Chapter 5:
