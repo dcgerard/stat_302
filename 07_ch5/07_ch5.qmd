@@ -876,8 +876,6 @@ ggplot(data.frame(resid = resid_out, fitted = fitted_vec),
 
 # Random Effects
 
-
-
 In the fixed-effects model above, the groups (judges, diets) are the
 specific groups of interest — we want to compare these particular groups.
 
