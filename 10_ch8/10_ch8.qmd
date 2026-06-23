@@ -66,23 +66,25 @@ set.seed(1)
 
 ## Dataset 1: Gold Standard
 
+Generate some fake data:
 ```{r}
 #| label: d1-gen
 x <- rnorm(100, sd = 1)
 y <- x + rnorm(100)
+df <- tibble(x = x, y = y)
 ```
 
 ```{r}
 #| label: d1-scatter
 #| message: false
-ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+ggplot(df, aes(x = x, y = y)) +
   geom_point() +
   geom_smooth(se = FALSE)
 ```
 
 ```{r}
 #| label: d1-resid
-lmout <- lm(y ~ x)
+lmout <- lm(y ~ x, data = df)
 augment(lmout) |>
   ggplot(aes(x = .fitted, y = .resid)) +
   geom_point() +
@@ -103,20 +105,21 @@ The distribution of x doesn't matter. The below plot is **also** perfect
 #| label: d1a-gen
 x <- sample(1:3, size = 100, replace = TRUE)
 y <- x + rnorm(100)
+df <- tibble(x = x, y = y)
 ```
 
 ```{r}
 #| label: d1a-scatter
 #| message: false
 #| warning: false
-ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+ggplot(df, aes(x = x, y = y)) +
   geom_point() +
   geom_smooth(se = FALSE, method = lm)
 ```
 
 ```{r}
 #| label: d1a-resid
-lmout <- lm(y ~ x)
+lmout <- lm(y ~ x, data = df)
 augment(lmout) |>
   ggplot(aes(x = .fitted, y = .resid)) +
   geom_point() +
@@ -128,24 +131,26 @@ augment(lmout) |>
 
 ## Dataset 2: Curved Monotone Relationship, Equal Variances
 
+Fake data
 ```{r}
 #| label: d2-gen
 x <- rexp(100)
 x <- x - min(x) + 0.5
 y <- log(x) * 20 + rnorm(100, sd = 4)
+df <- tibble(x = x, y = y)
 ```
 
 ```{r}
 #| label: d2-scatter
 #| message: false
-ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+ggplot(df, aes(x = x, y = y)) +
   geom_point() +
   geom_smooth(se = FALSE)
 ```
 
 ```{r}
 #| label: d2-resid
-lmout <- lm(y ~ x)
+lmout <- lm(y ~ x, data = df)
 augment(lmout) |>
   ggplot(aes(x = .fitted, y = .resid)) +
   geom_point() +
@@ -161,8 +166,10 @@ augment(lmout) |>
 ```{r}
 #| label: d2-log-scatter
 #| message: false
-x_log <- log(x)
-ggplot(data.frame(x_log = x_log, y = y), aes(x = x_log, y = y)) +
+df |>
+  mutate(x_log = log(x)) ->
+  df
+ggplot(df, aes(x = x_log, y = y)) +
   geom_point() +
   geom_smooth(se = FALSE) +
   labs(x = "log(x)")
@@ -170,7 +177,7 @@ ggplot(data.frame(x_log = x_log, y = y), aes(x = x_log, y = y)) +
 
 ```{r}
 #| label: d2-log-resid
-lmout <- lm(y ~ x_log)
+lmout <- lm(y ~ x_log, data = df)
 augment(lmout) |>
   ggplot(aes(x = .fitted, y = .resid)) +
   geom_point() +
@@ -185,23 +192,26 @@ even — the linearity and equal-variance assumptions are now satisfied.
 
 ## Dataset 3: Curved Non-Monotone Relationship, Equal Variances
 
+Fake data
+
 ```{r}
 #| label: d3-gen
 x <- rnorm(100)
 y <- -x^2 + rnorm(100)
+df <- tibble(x = x, y = y)
 ```
 
 ```{r}
 #| label: d3-scatter
 #| message: false
-ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+ggplot(df, aes(x = x, y = y)) +
   geom_point() +
   geom_smooth(se = FALSE)
 ```
 
 ```{r}
 #| label: d3-resid
-lmout <- lm(y ~ x)
+lmout <- lm(y ~ x, data = df)
 augment(lmout) |>
   ggplot(aes(x = .fitted, y = .resid)) +
   geom_point() +
@@ -218,14 +228,13 @@ $$Y_i = \beta_0 + \beta_1 X_i + \beta_2 X_i^2$$
 
 ```{r}
 #| label: d3-quad-fit
-x2 <- x^2
-quad_lm <- lm(y ~ x + x2)
-
-fit_df <- data.frame(x = x, fitted = fitted(quad_lm)) |> arrange(x)
-ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+quad_lm <- lm(y ~ x + I(x^2), data = df)
+df |>
+  mutate(fitted = fitted(quad_lm)) ->
+  df
+ggplot(df, aes(x = x, y = y)) +
   geom_point() +
-  geom_line(data = fit_df, aes(x = x, y = fitted),
-            color = "blue", linewidth = 1)
+  geom_line(aes(x = x, y = fitted), color = "blue", linewidth = 1)
 ```
 
 ```{r}
@@ -245,18 +254,18 @@ $$Y_i = \begin{cases} \beta_0 + \beta_1 X_i & \text{if } X_i < C \\ \beta_0^* + 
 #| label: d3-lmbr
 #| message: false
 library(lm.br)
-lmbr_out <- lm.br(y ~ x)
-
-fit_df2 <- data.frame(x = x, fitted = fitted(lmbr_out)) |> arrange(x)
-ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+lmbr_out <- lm.br(y ~ x, data = df)
+df |>
+  mutate(fitted = fitted(lmbr_out)) ->
+  df
+ggplot(df, aes(x = x, y = y)) +
   geom_point() +
-  geom_line(data = fit_df2, aes(x = x, y = fitted),
-            color = "blue", linewidth = 1)
+  geom_line(aes(x = x, y = fitted), color = "blue", linewidth = 1)
 ```
 
 ```{r}
 #| label: d3-lmbr-resid
-augment(quad_lm) |>
+tibble(.fitted = fitted(lmbr_out), .resid = resid(lmbr_out)) |>
   ggplot(aes(x = .fitted, y = .resid)) +
   geom_point() +
   geom_hline(yintercept = 0) +
@@ -267,23 +276,26 @@ augment(quad_lm) |>
 
 ## Dataset 4: Curved Relationship, Variance Increases with $Y$
 
+Fake data
+
 ```{r}
 #| label: d4-gen
 x <- rnorm(100)
 y <- exp(x + rnorm(100, sd = 1/2))
+df <- tibble(x = x, y = y)
 ```
 
 ```{r}
 #| label: d4-scatter
 #| message: false
-ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+ggplot(df, aes(x = x, y = y)) +
   geom_point() +
   geom_smooth(se = FALSE)
 ```
 
 ```{r}
 #| label: d4-resid
-lmout <- lm(y ~ x)
+lmout <- lm(y ~ x, data = df)
 augment(lmout) |>
   ggplot(aes(x = .fitted, y = .resid)) +
   geom_point() +
@@ -300,8 +312,10 @@ augment(lmout) |>
 ```{r}
 #| label: d4-log-scatter
 #| message: false
-y_log <- log(y)
-ggplot(data.frame(x = x, y_log = y_log), aes(x = x, y = y_log)) +
+df |>
+  mutate(y_log = log(y)) ->
+  df
+ggplot(df, aes(x = x, y = y_log)) +
   geom_point() +
   geom_smooth(se = FALSE) +
   labs(y = "log(y)")
@@ -309,7 +323,7 @@ ggplot(data.frame(x = x, y_log = y_log), aes(x = x, y = y_log)) +
 
 ```{r}
 #| label: d4-log-resid
-lmout <- lm(y_log ~ x)
+lmout <- lm(y_log ~ x, data = df)
 augment(lmout) |>
   ggplot(aes(x = .fitted, y = .resid)) +
   geom_point() +
@@ -328,20 +342,21 @@ Still look for increasing variances for increasing x, even if the distribution o
 #| label: d4a-gen
 x <- sample(1:3, size = 100, replace = TRUE)
 y <- exp(x + rnorm(100, sd = 1/2))
+df <- tibble(x = x, y = y)
 ```
 
 ```{r}
 #| label: d4a-scatter
 #| message: false
 #| warning: false
-ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+ggplot(df, aes(x = x, y = y)) +
   geom_point() +
   geom_smooth(se = FALSE)
 ```
 
 ```{r}
 #| label: d4a-resid
-lmout <- lm(y ~ x)
+lmout <- lm(y ~ x, data = df)
 augment(lmout) |>
   ggplot(aes(x = .fitted, y = .resid)) +
   geom_point() +
@@ -359,8 +374,10 @@ augment(lmout) |>
 #| label: d4a-log-scatter
 #| message: false
 #| warning: false
-y_log <- log(y)
-ggplot(data.frame(x = x, y_log = y_log), aes(x = x, y = y_log)) +
+df |>
+  mutate(y_log = log(y)) ->
+  df
+ggplot(df, aes(x = x, y = y_log)) +
   geom_point() +
   geom_smooth(se = FALSE, method = lm) +
   labs(y = "log(y)")
@@ -368,7 +385,7 @@ ggplot(data.frame(x = x, y_log = y_log), aes(x = x, y = y_log)) +
 
 ```{r}
 #| label: d4a-log-resid
-lmout <- lm(y_log ~ x)
+lmout <- lm(y_log ~ x, data = df)
 augment(lmout) |>
   ggplot(aes(x = .fitted, y = .resid)) +
   geom_point() +
@@ -383,23 +400,26 @@ resolved.
 
 ## Dataset 5: Linear Relationship, Equal Variances, Skewed Errors
 
+Fake data
+
 ```{r}
 #| label: d5-gen
 x <- runif(200)
 y <- 15 * x + rexp(200, 0.2)
+df <- tibble(x = x, y = y)
 ```
 
 ```{r}
 #| label: d5-scatter
 #| message: false
-ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+ggplot(df, aes(x = x, y = y)) +
   geom_point() +
   geom_smooth(se = FALSE)
 ```
 
 ```{r}
 #| label: d5-resid
-lmout <- lm(y ~ x)
+lmout <- lm(y ~ x, data = df)
 augment(lmout) |>
   ggplot(aes(x = .fitted, y = .resid)) +
   geom_point() +
@@ -421,14 +441,16 @@ augment(lmout) |>
 #| label: d5-quantreg
 #| message: false
 library(quantreg)
-qr_out <- rq(y ~ x, tau = 0.5)
+qr_out <- rq(y ~ x, tau = 0.5, data = df)
 
 fit_df <- data.frame(x = x, qr_fitted = fitted(qr_out)) |> arrange(x)
-ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+df |>
+  mutate(qr_fitted = fitted(qr_out)) ->
+  df
+ggplot(df, aes(x = x, y = y)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  geom_line(data = fit_df, aes(x = x, y = qr_fitted),
-            color = "red", linewidth = 1)
+  geom_line(aes(x = x, y = qr_fitted), color = "red", linewidth = 1)
 ```
 
 The quantile regression line (red) is not very different from the OLS line
@@ -443,19 +465,20 @@ coefficient estimates.
 #| label: d6-gen
 x <- runif(100) * 10
 y <- 0.85 * x + rnorm(100, sd = (x - 5)^2)
+df <- tibble(x = x, y = y)
 ```
 
 ```{r}
 #| label: d6-scatter
 #| message: false
-ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+ggplot(df, aes(x = x, y = y)) +
   geom_point() +
   geom_smooth(se = FALSE)
 ```
 
 ```{r}
 #| label: d6-resid
-lmout <- lm(y ~ x)
+lmout <- lm(y ~ x, data = df)
 augment(lmout) |>
   ggplot(aes(x = .fitted, y = .resid)) +
   geom_point() +
@@ -470,6 +493,7 @@ augment(lmout) |>
 
 ```{r}
 #| label: d6-sandwich
+#| message: false
 library(sandwich)
 library(lmtest)
 coeftest(lmout, vcov = sandwich) |> tidy()
@@ -489,10 +513,24 @@ Confidence intervals with sandwich standard errors:
 coefci(lmout, vcov = sandwich)
 ```
 
+## Intuition of Sandwich Estimator of Variance
+
+Simplified model: $Y_i = \beta_1 X_i$ (zero intercept).
+
+Using calculus:
+$$\hat{\beta}_1 = \frac{\sum_{i=1}^n X_i Y_i}{\sum_{i=1}^n X_i^2}$$
+
+So:
+$$\text{Var}(\hat{\beta}_1) = \text{Var}\!\left(\frac{\sum_{i=1}^n X_i Y_i}{\sum_{i=1}^n X_i^2}\right) = \frac{\sum_{i=1}^n X_i^2\,\text{Var}(Y_i \mid X_i)}{\left(\sum_{i=1}^n X_i^2\right)^2}$$
+
+- **Usual method:** Estimate $\text{Var}(Y_i \mid X_i)$ with $s_p^2$ — assumes the same variance for all $i$.
+- **Sandwich method:** Estimate $\text{Var}(Y_i \mid X_i)$ with $(Y_i - \hat{\beta}_1 X_i)^2$ — allows a different variance at each $i$.
+
 The sandwich estimator yields accurate standard errors for the coefficient
-estimates as long as (1) the linearity assumption holds, and (2) the sample
-size is large enough. Note that sandwich standard errors **cannot** be used
-for prediction intervals.
+estimates as long as:
+
+1. The linearity assumption holds, and 
+2. The sample size is large enough. Note that sandwich standard errors **cannot** be used for prediction intervals.
 
 ---
 

@@ -34,8 +34,9 @@ author: David Gerard
 - Chapter 7:
   - [Simple Linear Regression](./09_ch7/09_ch7.qmd)
   - [Chapter 7 Worksheet](./09_ch7/09_worksheet.qmd)
-- Chapters 9--11:
-  - Multiple Regression
+- Chapter 8:
+  - [Assumptions of Simple Linear Regression](./10_ch8/10_ch8.qmd)
+- Chapters 9
+- Chapter 10
+- Chapter 11
 - Chapter 20:
-  - Logistic Regression
-  
