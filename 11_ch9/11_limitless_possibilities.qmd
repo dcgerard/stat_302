@@ -1,0 +1,250 @@
+---
+title: "Creating New Explanatory Variables"
+author: "David Gerard"
+date: today
+bibliography: "../bib.bib"
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(Sleuth3)
+knitr::opts_chunk$set(echo       = TRUE,
+                      fig.height = 3,
+                      fig.width  = 5,
+                      fig.align  = "center")
+ggplot2::theme_set(ggplot2::theme_bw())
+set.seed(1)
+```
+
+# Learning Objectives
+
+- Create new explanatory variables to handle curvature (polynomial regression),
+  categorical predictors (indicator / one-hot variables), and non-constant
+  slopes (interaction terms).
+- Chapter 9.
+
+---
+
+# Adding Curvature
+
+```{r}
+#| label: corn-scatter
+data("ex0915")
+ggplot(ex0915, aes(x = Rainfall, y = Yield)) +
+  geom_point()
+```
+
+## Quadratic Regression **is** Multiple Linear Regression
+
+- From last chapter, we said that we should fit
+$$Y_i = \beta_0 + \beta_1 X_i + \beta_2 X_i^2 + \epsilon_i$$
+- Relabel $X_{1i} = X_i$ and $X_{2i} = X_i^2$.
+- Then this is equivalent to fitting
+$$Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \epsilon_i$$
+
+## Why Is It Called *Linear* Regression?
+
+$$Y_i = \beta_0 + \beta_1 X_i + \beta_2 X_i^2 + \epsilon_i$$
+
+- Multiple linear regression represents the mean of the $Y$'s as a linear combination of the $\beta$'s.
+- Even though the mean is a quadratic function of the $X_i$'s, it is still a linear function of the $\beta_j$'s.
+
+To fit a polynomial, create new variables that are powers of existing variables, then include those in the multiple regression model.
+
+```{r}
+#| label: quad-fit
+ex0915$Rainfall2 <- ex0915$Rainfall ^ 2
+lmout_quad <- lm(Yield ~ Rainfall + Rainfall2, data = ex0915)
+lmout_quad
+```
+
+| `(Intercept)` | `Rainfall` | `Rainfall2` |
+|:-:|:-:|:-:|
+| $\hat\beta_0$ | $\hat\beta_1$ | $\hat\beta_2$ |
+
+Estimated model:
+$$\hat\mu(Y \mid \text{Rainfall}) = -5.0 + 6.0\,\text{Rainfall} - 0.2\,\text{Rainfall}^2$$
+
+-   I think it works better to wrap a transformation within `I()` (for "As**i**s"). 
+    - This allows `predict()` to work with just `Rainfall`
+  
+    ```{r}
+    lmout_quad_2 <- lm(Yield ~ Rainfall + I(Rainfall^2), data = ex0915)
+    lmout_quad_2
+    ```
+
+-   Look at how we encode `predict()`:
+    ```{r}
+    predict(object = lmout_quad, newdata = data.frame(Rainfall = 10, Rainfall2 = 100))
+    predict(object = lmout_quad_2, newdata = data.frame(Rainfall = 10))
+    ```
+
+---
+
+# Indicator Variables
+
+- An **indicator variable** only takes on the values 0 or 1.
+- If you have a binary explanatory variable, you can represent it as an indicator variable and include it directly in the regression model.
+- The result is effectively **two lines that have the same slope but different intercepts** (parallel lines).
+
+Researchers studied the effect of timing and light intensity on flower yield:
+
+- Response: Flower yield (average number of flowers per plant).
+- Explanatory variables: Timing of light (early/late, binary), intensity of light (quantitative).
+
+```{r}
+#| label: flowers-head
+data(case0901)
+head(case0901)
+```
+
+Model: $\mu(\text{Flowers} \mid \text{Time},\,\text{Intensity}) = \beta_0 + \beta_1\,\text{Time} + \beta_2\,\text{Intensity}$
+
+- `Time` can be made into an indicator variable (because it only has two levels).
+- The model at $\text{Time} = 0$: $\beta_0 + \beta_2\,\text{Intensity}$
+- The model at $\text{Time} = 1$: $(\beta_0 + \beta_1) + \beta_2\,\text{Intensity}$
+- Slope is $\beta_2$ both times, but the lines have different intercepts (parallel lines).
+
+```{r}
+#| label: flowers-scatter
+case0901$Time <- as.factor(case0901$Time)
+ggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+---
+
+# One-Hot Transformation
+
+- You can represent any categorical variable with $k$ levels using $k - 1$ indicator variables.
+- This representation is called a **one-hot transformation** in the machine learning community.
+- Let $X_{\ell i} = 1$ if unit $i$ belongs to level $\ell$, and $X_{\ell i} = 0$ otherwise.
+
+Let $Z$ be a categorical variable with levels "Bob", "Cindy", "Doug":
+
+- $X_{1i} = 1$ if Cindy and 0 otherwise.
+- $X_{2i} = 1$ if Doug and 0 otherwise.
+- Whenever "Bob": $X_{1i} = 0$ and $X_{2i} = 0$.
+- Whenever "Cindy": $X_{1i} = 1$ and $X_{2i} = 0$.
+- Whenever "Doug": $X_{1i} = 0$ and $X_{2i} = 1$.
+
+If we have a quantitative response and a categorical explanatory variable, **we can apply a one-hot transformation and use multiple linear regression.**
+
+$Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \epsilon_i$
+
+- Mean if "Bob":   $\beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 = \beta_0$
+- Mean if "Cindy": $\beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 = \beta_0 + \beta_1$
+- Mean if "Doug":  $\beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 = \beta_0 + \beta_2$
+
+This is equivalent to one-way ANOVA:
+
+- Multiple regression: $Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \epsilon_i$
+- One-way ANOVA: $Y_{ij} = \mu + \alpha_i + \epsilon_{ij}$
+- $\mu = \beta_0$, $\alpha_2 = \beta_1$, $\alpha_3 = \beta_2$
+- In linear regression, $X_{1i}$ and $X_{2i}$ index the group status of unit $i$.
+- In ANOVA, $i$ indexes the group, $j$ indexes the unit within the group.
+
+If a variable has only 2 levels, it can be represented by 1 indicator variable. For example, `Time` has levels `Late` and `Early`:
+
+- Let $X_{1i} = 0$ if Late and $X_{1i} = 1$ if Early.
+
+## Including Categorical Variables in R
+
+- If the variable is a `factor`, R will automatically apply a one-hot transformation.
+- Check with `class()`:
+
+```{r}
+#| label: class-check
+class(case0901$Time)
+```
+
+- If it is not a `factor`, convert it with `as.factor()`:
+
+```{r}
+#| label: as-factor
+case0901$Time <- as.factor(case0901$Time)
+```
+
+```{r}
+#| label: lm-flowers
+lmout <- lm(Flowers ~ Time + Intensity, data = case0901)
+coef(lmout)
+```
+
+Model: $\mu(Y_i \mid \text{Time},\,\text{Intensity}) = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i}$, where $X_{1i} = 1$ if `Time` is `Late` and 0 otherwise, and $X_{2i}$ is light intensity:
+
+| `(Intercept)` | `Time2` | `Intensity` |
+|:-:|:-:|:-:|
+| $\hat\beta_0$ | $\hat\beta_1$ | $\hat\beta_2$ |
+
+---
+
+# Interactions
+
+- An **interaction** between two variables means the slope with respect to one variable **changes** with the value of the other.
+- $\mu(Y_i \mid \text{Time},\,\text{Intensity}) = \beta_0 + \beta_1\,\text{Time} + \beta_2\,\text{Intensity} + \beta_3\,\text{Time} \times \text{Intensity}$
+
+When $\text{Time} = 0$:
+
+$$\mu(Y_i \mid \text{Time} = 0,\,\text{Intensity}) = \beta_0 + \beta_2\,\text{Intensity}$$
+
+When $\text{Time} = 1$:
+
+$$\mu(Y_i \mid \text{Time} = 1,\,\text{Intensity}) = (\beta_0 + \beta_1) + (\beta_2 + \beta_3)\,\text{Intensity}$$
+
+- Slope when $\text{Time} = 0$: $\beta_2$
+- Slope when $\text{Time} = 1$: $\beta_2 + \beta_3$
+- Intercept when $\text{Time} = 0$: $\beta_0$
+- Intercept when $\text{Time} = 1$: $\beta_0 + \beta_1$
+- Each level of `Time` has its own line.
+
+**No interaction** — parallel lines, same slope:
+
+```{r}
+#| label: no-interaction
+lmadd <- lm(Flowers ~ Time + Intensity, data = case0901)
+case0901$fit <- fitted(lmadd)
+ggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +
+  geom_line(aes(y = fit), linewidth = 1)
+```
+
+**Interaction** — non-parallel lines, slopes differ by group:
+
+```{r}
+#| label: interaction-plot
+case0901$fit1 <- case0901$fit +
+  case0901$Intensity * (case0901$Time == 2) * 0.02
+ggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +
+  geom_line(aes(y = fit1), linewidth = 1)
+```
+
+## Fitting Interactions in R
+
+$\mu(Y_i \mid \text{Time},\,\text{Intensity}) = \beta_0 + \beta_1\,\text{Time} + \beta_2\,\text{Intensity} + \beta_3\,\text{Time} \times \text{Intensity}$
+
+```{r}
+#| label: lm-interaction
+lmint <- lm(Flowers ~ Time * Intensity, data = case0901)
+coef(lmint)
+```
+
+| `(Intercept)` | `Time2` | `Intensity` | `Time2:Intensity` |
+|:-:|:-:|:-:|:-:|
+| $\hat\beta_0$ | $\hat\beta_1$ | $\hat\beta_2$ | $\hat\beta_3$ |
+
+- Using `*` fits interactions along with all lower-order terms.
+- Using `:` just fits interactions.
+
+Reconsider the brain weight data:
+
+$\mu(\text{Brain} \mid \text{Body},\,\text{Litter}) = \beta_0 + \beta_1\,\text{Body} + \beta_2\,\text{Litter} + \beta_3\,\text{Body} \times \text{Litter}$
+
+- What is the slope for `Body` at a given `Litter` size?
+- What is the intercept for `Body` at a given `Litter` size?
+
+Interpreting models with interactions is difficult. Include them only when
+there is a substantive reason to believe the slope changes across levels of the
+moderating variable.

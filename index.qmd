@@ -38,6 +38,9 @@ author: David Gerard
   - [Assumptions of Simple Linear Regression](./10_ch8/10_ch8.qmd)
   - [Chapter 8 Worksheet](./10_ch8/10_worksheet.qmd)
 - Chapters 9
+  - [Multiple Linear Regression](./11_ch9/11_multiple_regression.qmd)
+  - [Transformations](./11_ch9/11_limitless_possibilities.qmd)
+  - [MLR EDA](./11_ch9/11_multiple_regression_eda.qmd)
 - Chapter 10
 - Chapter 11
 - Chapter 20:

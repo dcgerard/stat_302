@@ -1,0 +1,308 @@
+---
+title: "Multiple Regression"
+author: "David Gerard"
+date: today
+bibliography: "../bib.bib"
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(Sleuth3)
+library(patchwork)
+knitr::opts_chunk$set(echo       = TRUE,
+                      fig.height = 3,
+                      fig.width  = 5,
+                      fig.align  = "center")
+ggplot2::theme_set(ggplot2::theme_bw())
+set.seed(1)
+```
+
+# Learning Objectives
+
+- Introduce Multiple Linear Regression.
+- Interpret the coefficients of a multiple regression model in randomized
+  experiments and observational studies.
+- Fit multiple linear regression models in R using `lm()`.
+- Conduct inference ($t$-tests and confidence intervals) for individual
+  coefficients.
+- Understand how $p$-value interpretation depends on what other variables are
+  in the model.
+- Chapters 9 and 10 in the book.
+
+---
+
+# Case Study: Brain Size
+
+- What variables are associated with brain weight?
+- Collected information on 96 different species.
+- We know that body weight is already associated with brain weight,
+    - So what variables are associated with brain weight **after controlling for body weight**?
+- Possible variables: Body weight (kg), gestation period (days), litter size.
+
+```{r}
+#| label: brain-data
+data("case0902")
+head(case0902)
+```
+
+---
+
+# The Model
+
+Simple linear regression:
+
+- One quantitative response variable ($Y$).
+- One quantitative explanatory variable ($X$).
+- Model the conditional distribution of $Y$ given $X$.
+- $Y_i = \beta_0 + \beta_1 X_i + \epsilon_i$
+
+```{r}
+#| label: slr-scatter
+ggplot(case0902, aes(x = log(Body), y = log(Brain))) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+Multiple linear regression:
+
+- One quantitative response ($Y$).
+- **Multiple** quantitative explanatory variables ($X_1, X_2, \ldots, X_p$).
+- $Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \cdots + \beta_p X_{pi} + \epsilon_i$
+- E.g., $X_{2i}$ is the value of the second explanatory variable for unit $i$.
+- With two explanatory variables:
+$$Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \epsilon_i$$
+- $\epsilon_i$ is still ideally normally distributed with mean 0 and constant variance $\sigma^2$.
+
+---
+
+# Interpreting Coefficients
+
+Consider the model $Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \epsilon_i$.
+
+To interpret $\beta_1$ in a **randomized experiment**:
+
+- Conceptually fix $X_{2i}$ at a value.
+- Add one to $X_{1i}$.
+- $Y_i$ changes by $\beta_1$.
+- $\beta_1$ is how much $Y_i$ increases when we add one to $X_{1i}$ but keep $X_{2i}$ fixed.
+- "A one-unit increase in light intensity causes the mean number of flowers to increase by $\beta_1$."
+
+To interpret $\beta_1$ in an **observational study**:
+
+- The $X_i$'s cannot be fixed independently of one another.
+- Consider a subpopulation that has the same values of the $X_j$'s, where $j \neq 1$. Then the expected difference in means between species that differ in $X_1$ only by one unit is $\beta_1$.
+- $\beta_1$ is the expected difference in $Y$'s when we compare units with $X_1$ and $X_1 + 1$.
+- "For any subpopulation of mammal species with the same body weight, species with a one-day longer gestation length tend to have a mean brain weight $\beta_1$ grams larger."
+
+## A Useful Notation
+
+- $\mu(\text{brain} \mid \text{gestation}) = \beta_0 + \beta_1\,\text{gestation}$
+    - The mean of brain weight equals $\beta_0$ plus $\beta_1$ times the gestation time.
+- $\mu(\text{brain} \mid \text{gestation},\,\text{body}) = \beta_0 + \beta_1\,\text{gestation} + \beta_2\,\text{body}$
+    - The mean of brain weight equals $\beta_0$ plus $\beta_1$ times the gestation time plus $\beta_2$ times the body weight.
+
+## Interpretation Changes with the Model
+
+The interpretation of $\beta_1$ **changes when the model changes**, because the comparison group changes:
+
+- $\mu(\text{brain} \mid \text{gestation}) = \beta_0 + \beta_1\,\text{gestation}$
+    - $\beta_1$ is the mean difference in brain weight comparing gestation periods 1 day apart **in the population of all mammal species**.
+- $\mu(\text{brain} \mid \text{gestation},\,\text{body}) = \beta_0 + \beta_1\,\text{gestation} + \beta_2\,\text{body}$
+    - $\beta_1$ is the mean difference comparing gestation periods 1 day apart **in subpopulations with the same body weight**.
+
+## Visualizing the Coefficient Interpretation
+
+Consider artificial data with $\beta_0 = 2$, $\beta_1 = 1$ (positive $X_1$ effect), $\beta_2 = -3$ (large negative $X_2$ effect), where $X_1$ and $X_2$ are positively correlated.
+
+```{r}
+#| label: fake-data
+beta0 <- 2; beta1 <- 1; beta2 <- -3
+x2 <- rep(1:10, 5)
+x1 <- rep(0:9, 5) + rep(1:5, each = 10)
+y  <- beta0 + beta1 * x1 + beta2 * x2
+df_fake <- data.frame(x1 = x1, y = y, x2 = as.factor(x2))
+```
+
+**Without $X_2$ in the model** — the marginal slope looks **negative** even though $\beta_1 = 1$:
+
+```{r}
+#| label: fake-no-x2
+ggplot(df_fake, aes(x = x1, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme(axis.text = element_blank(), axis.ticks = element_blank())
+```
+
+**With $X_2$ color-coded** — the slope within each level of $X_2$ is positive ($= \beta_1 = 1$), and the parallel lines sit at different heights:
+
+```{r}
+#| label: fake-with-x2
+ggplot(df_fake, aes(x = x1, y = y, color = x2)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme(axis.text = element_blank(), axis.ticks = element_blank()) +
+  guides(color = guide_legend(keywidth = 0.1, keyheight = 0.1,
+                               default.unit = "inch"))
+```
+
+The figure below shows the same idea using the real brain-size data (`case0902`):
+
+- **Left:** a single marginal fit line for all 96 species ($\hat\beta_1 \approx 2.23$).
+- **Middle:** points colored by log(Body) tertile — large-bodied species (green) drive much of the steep marginal slope because they have both long gestations and large brains.
+- **Right:** parallel fit lines from the additive model — every body-weight group has the same gestation slope ($\hat\beta_1 \approx 0.67$) but sits at a different height, reflecting the body-size effect $\beta_2$.
+
+```{r}
+#| label: parallel-slopes
+#| echo: false
+#| fig-width: 11
+#| fig-height: 3.5
+#| message: false
+df <- case0902 |>
+  mutate(
+    logBrain     = log(Brain),
+    logGestation = log(Gestation),
+    logBody      = log(Body),
+    BodyGroup    = cut(log(Body),
+                       breaks         = quantile(log(Body), c(0, 1/3, 2/3, 1)),
+                       labels         = c("Small", "Medium", "Large"),
+                       include.lowest = TRUE)
+  )
+
+lm_marg <- lm(logBrain ~ logGestation, data = df)
+lm_add  <- lm(logBrain ~ logGestation + BodyGroup, data = df)
+
+b1_marg <- round(coef(lm_marg)["logGestation"], 2)
+b1_part <- round(coef(lm_add)["logGestation"],  2)
+
+x_seq <- seq(min(df$logGestation), max(df$logGestation), length.out = 200)
+
+marg_line <- tibble(
+  logGestation = x_seq,
+  logBrain_hat = predict(lm_marg, data.frame(logGestation = x_seq))
+)
+
+group_lines <- expand_grid(logGestation = x_seq, BodyGroup = levels(df$BodyGroup)) |>
+  mutate(logBrain_hat = predict(lm_add, data.frame(logGestation = logGestation,
+                                                    BodyGroup = BodyGroup)))
+
+cb_pal <- c("Small" = "#E69F00", "Medium" = "#56B4E9", "Large" = "#009E73")
+
+p1 <- ggplot(df, aes(logGestation, logBrain)) +
+  geom_point(color = "gray50", size = 1.5) +
+  geom_line(data = marg_line, aes(y = logBrain_hat),
+            color = "#0066cc", linewidth = 1.3) +
+  labs(x = "log(Gestation, days)", y = "log(Brain, g)",
+       subtitle = bquote(hat(beta)[1] == .(b1_marg) ~ "(marginal, all species)"))
+
+p2 <- ggplot(df, aes(logGestation, logBrain, color = BodyGroup)) +
+  geom_point(size = 1.5) +
+  geom_line(data = marg_line, aes(logGestation, logBrain_hat),
+            inherit.aes = FALSE, color = "black",
+            linewidth = 1, linetype = "dashed") +
+  scale_color_manual(values = cb_pal, name = "Body weight") +
+  labs(x = "log(Gestation, days)", y = NULL,
+       subtitle = "Body weight confounds the relationship")
+
+p3 <- ggplot(df, aes(logGestation, logBrain, color = BodyGroup)) +
+  geom_point(size = 1.5) +
+  geom_line(data = group_lines, aes(logGestation, logBrain_hat, color = BodyGroup),
+            linewidth = 1.3) +
+  scale_color_manual(values = cb_pal, name = "Body weight") +
+  labs(x = "log(Gestation, days)", y = NULL,
+       subtitle = bquote(hat(beta)[1] == .(b1_part) ~
+                           "(within groups — same slope, different heights)"))
+
+(p1 | p2 | p3) + plot_layout(guides = "collect") &
+  theme(legend.position = "bottom")
+```
+
+---
+
+# Fitting Multiple Linear Regression in R
+
+Want to fit: $\mu(\text{brain} \mid \text{gestation},\,\text{body}) = \beta_0 + \beta_1\,\text{gestation} + \beta_2\,\text{body}$
+
+- $\beta_0$, $\beta_1$, $\beta_2$ are parameters (we don't know them).
+- We can **estimate** them by minimizing the sum of squared residuals.
+- Residuals: $Y_i - (\beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i})$
+- The resulting estimates are the OLS (ordinary least squares) estimates: $\hat\beta_0$, $\hat\beta_1$, $\hat\beta_2$.
+
+Use `lm()` and **always save the output**:
+
+```{r}
+#| label: lm-two-vars
+lmout <- lm(Brain ~ Gestation + Body, data = case0902)
+lmout
+```
+
+| `(Intercept)` | `Gestation` | `Body` |
+|:-:|:-:|:-:|
+| $\hat\beta_0$ | $\hat\beta_1$ | $\hat\beta_2$ |
+
+```{r}
+#| label: lm-three-vars
+lmout <- lm(Brain ~ Gestation + Body + Litter, data = case0902)
+lmout
+```
+
+| `(Intercept)` | `Gestation` | `Body` | `Litter` |
+|:-:|:-:|:-:|:-:|
+| $\hat\beta_0$ | $\hat\beta_1$ | $\hat\beta_2$ | $\hat\beta_3$ |
+
+We would interpret this output as:
+
+- "We estimate that species with a 1-day longer gestation time tend to have a brain weight 1.8 grams heavier, after adjusting for body weight and litter size."
+- "We estimate that species with an average body weight 1 kg heavier tend to have a brain weight 0.99 grams heavier, after adjusting for gestation time and litter size."
+- "We estimate that species with a litter size one offspring larger tend to have a brain weight 27.6 grams heavier, after adjusting for body weight and gestation time."
+
+---
+
+# Inference
+
+- We are usually interested in testing if $\beta_i = 0$.
+- We are usually interested in getting confidence intervals on the $\beta_i$'s.
+- We can use the usual $t$-tools to get these.
+
+```{r}
+#| label: inference-summary
+lmout <- lm(Brain ~ Gestation + Body, data = case0902)
+summary(lmout)
+```
+
+```{r}
+#| label: coef-table
+coef(summary(lmout))
+```
+
+| | Estimate | Std. Error | t value | Pr(\>|t|) |
+|:--|:-:|:-:|:-:|:-:|
+| `(Intercept)` | $\hat\beta_0$ | $SE(\hat\beta_0)$ | $\hat\beta_0/SE(\hat\beta_0)$ | p-value for $H_0:\beta_0=0$ |
+| `Gestation`   | $\hat\beta_1$ | $SE(\hat\beta_1)$ | $\hat\beta_1/SE(\hat\beta_1)$ | p-value for $H_0:\beta_1=0$ |
+| `Body`        | $\hat\beta_2$ | $SE(\hat\beta_2)$ | $\hat\beta_2/SE(\hat\beta_2)$ | p-value for $H_0:\beta_2=0$ |
+
+```{r}
+#| label: confint-output
+confint(lmout)
+```
+
+## Interpreting $p$-values
+
+The interpretation of significance **depends on what other variables are in the model**.
+
+$\mu(\text{brain} \mid \text{gestation}) = \beta_0 + \beta_1\,\text{gestation}$
+
+- $H_0: \beta_1 = 0$ vs $H_A: \beta_1 \neq 0$
+- Model under $H_0$: $\mu(\text{brain}) = \beta_0$
+- Model under $H_A$: $\mu(\text{brain} \mid \text{gestation}) = \beta_0 + \beta_1\,\text{gestation}$
+- If we reject $H_0$: "We have strong evidence that gestation is related to brain weight."
+- If we fail to reject $H_0$: "We do not have strong evidence that gestation is related to brain weight."
+
+$\mu(\text{brain} \mid \text{gestation},\,\text{body}) = \beta_0 + \beta_1\,\text{gestation} + \beta_2\,\text{body}$
+
+- $H_0: \beta_1 = 0$ vs $H_A: \beta_1 \neq 0$
+- Model under $H_0$: $\mu(\text{brain} \mid \text{body}) = \beta_0 + \beta_2\,\text{body}$
+- Model under $H_A$: $\mu(\text{brain} \mid \text{gestation},\,\text{body}) = \beta_0 + \beta_1\,\text{gestation} + \beta_2\,\text{body}$
+- If we reject $H_0$: "We have strong evidence that gestation is related to brain weight after adjusting for body size."
+- If we fail to reject $H_0$: "We do not have strong evidence that gestation is related to brain weight after adjusting for body size."

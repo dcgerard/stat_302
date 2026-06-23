@@ -977,7 +977,7 @@
     "href": "index.html",
     "title": "STAT-302 Homepage",
     "section": "",
-    "text": "Syllabus\n\nChapter 0: R\n\nR and Data Frames\nR Graphics\nR Cheat Sheet\n\nReview:\n\nBasic Statistics Review\nProbability Review\n\nChapter 1:\n\nCausality and Generalizability\nChapter 1 Worksheet\n\nChapter 2:\n\nPaired and Two-Sample t-Tests\nChapter 2 Worksheet\n\nChapter 3:\n\nAssumptions of t-Tools\nReview: Logarithms and Exponentials\nChapter 3 Worksheet\n\nChapter 4:\n\nNonparameterics\n\nChapter 5:\n\nOne-Way ANOVA\nChapter 5 Worksheet\n\nChapter 6:\n\nLinear Combinations of Group Means\nMultiple Comparisons\nChapter 6 Worksheet\n\nChapter 7:\n\nSimple Linear Regression\nChapter 7 Worksheet\n\nChapter 8:\n\nAssumptions of Simple Linear Regression\nChapter 8 Worksheet\n\nChapters 9\nChapter 10\nChapter 11\nChapter 20:"
+    "text": "Syllabus\n\nChapter 0: R\n\nR and Data Frames\nR Graphics\nR Cheat Sheet\n\nReview:\n\nBasic Statistics Review\nProbability Review\n\nChapter 1:\n\nCausality and Generalizability\nChapter 1 Worksheet\n\nChapter 2:\n\nPaired and Two-Sample t-Tests\nChapter 2 Worksheet\n\nChapter 3:\n\nAssumptions of t-Tools\nReview: Logarithms and Exponentials\nChapter 3 Worksheet\n\nChapter 4:\n\nNonparameterics\n\nChapter 5:\n\nOne-Way ANOVA\nChapter 5 Worksheet\n\nChapter 6:\n\nLinear Combinations of Group Means\nMultiple Comparisons\nChapter 6 Worksheet\n\nChapter 7:\n\nSimple Linear Regression\nChapter 7 Worksheet\n\nChapter 8:\n\nAssumptions of Simple Linear Regression\nChapter 8 Worksheet\n\nChapters 9\n\nMultiple Linear Regression\nTransformations\nMLR EDA\n\nChapter 10\nChapter 11\nChapter 20:"
   },
   {
     "objectID": "10_ch8/10_ch8.html",
@@ -1230,5 +1230,341 @@
     "title": "Linear Model Assumptions Worksheet",
     "section": "",
     "text": "Wine Consumption and Heart Disease\nData frame ex0823 from the Sleuth3 package contains the average wine consumption rates (in liters per person) and number of ischemic heart disease deaths (per 1,000 men aged 55 to 64 years old) for 18 industrial countries. Do these data suggest that the heart disease death rate is associated with average wine consumption? If so, how can that relationship be described? Do any countries have substantially higher or lower death rates than others with similar wine consumption rates? We will answer these questions.\nLoad the data with:\n\nlibrary(tidyverse)\nex0823 &lt;- read_csv(\"https://dcgerard.github.io/stat_302/data/ex0823.csv\")\nglimpse(ex0823)\n\nRows: 18\nColumns: 3\n$ Country   &lt;chr&gt; \"Norway\", \"Scotland\", \"England\", \"Ireland\", \"Finland\", \"Cana…\n$ Wine      &lt;dbl&gt; 2.8, 3.2, 3.2, 3.4, 4.3, 4.9, 5.1, 5.2, 5.9, 5.9, 6.6, 8.3, …\n$ Mortality &lt;dbl&gt; 6.2, 9.0, 7.1, 6.8, 10.2, 7.8, 9.3, 5.9, 8.9, 5.5, 7.1, 9.1,…\n\n\n1. What is the explanatory variable? What is the response variable? What are the observational units? Is this an observational study or a randomized experiment?\n2. Make a scatterplot of Wine (x-axis) vs Mortality (y-axis). Describe the relationship — does it look linear? Comment on the direction and strength of any trend you see.\n3. Based on the scatterplot, which of the four linear model assumptions (linearity, independence, equal variance, normality) appear potentially violated? Explain briefly.\n4. Fit an initial simple linear regression of Mortality on Wine using lm(). Then create a residual plot (fitted values on the \\(x\\)-axis, residuals on the \\(y\\)-axis) using augment() from the broom package.\n5. Examine the residual plot. What patterns, if any, do you see? Which assumption(s) does this suggest are violated? What transformation(s) might address these issues?\n6. Try the following transformations one at a time and evaluate each with a scatterplot and residual plot:\n\nLog-transform Mortality only: fit log(Mortality) ~ Wine.\nLog-transform Wine only: fit Mortality ~ log(Wine).\nLog-transform both variables: fit log(Mortality) ~ log(Wine).\n\nFor each, note whether the residual plot looks better or worse than the original. Which combination, if any, satisfies the linearity and equal-variance assumptions?\n7. Using your final model from Question 6, report the estimated slope coefficient. Then compute the appropriate back-transformed estimate and 95% confidence interval. Write a one-sentence plain-language interpretation of the slope on the original scale, in the context of this study.\n8. Is it appropriate to use causal language such as “drinking more wine causes lower heart disease mortality”? Explain your reasoning based on the study design."
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression_eda.html",
+    "href": "11_ch9/11_multiple_regression_eda.html",
+    "title": "Multiple Regression EDA",
+    "section": "",
+    "text": "Apply a systematic strategy for exploratory data analysis in multiple linear regression.\nChapter 9."
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression_eda.html#response-against-each-explanatory-variable",
+    "href": "11_ch9/11_multiple_regression_eda.html#response-against-each-explanatory-variable",
+    "title": "Multiple Regression EDA",
+    "section": "Response Against Each Explanatory Variable",
+    "text": "Response Against Each Explanatory Variable\n\nggplot(case0902, aes(x = Body, y = Brain)) +\n  geom_point()\n\n\n\n\n\n\n\n\n\nggplot(case0902, aes(x = Gestation, y = Brain)) +\n  geom_point()\n\n\n\n\n\n\n\n\n\nggplot(case0902, aes(x = Litter, y = Brain)) +\n  geom_point()\n\n\n\n\n\n\n\n\nCurvature and different spreads at each explanatory variable value suggest a log transformation of Brain.\n\ncase0902$logBrain &lt;- log(case0902$Brain)\n\n\nggplot(case0902, aes(x = Body, y = logBrain)) +\n  geom_point()\n\n\n\n\n\n\n\n\n\nggplot(case0902, aes(x = Gestation, y = logBrain)) +\n  geom_point()\n\n\n\n\n\n\n\n\n\nggplot(case0902, aes(x = Litter, y = logBrain)) +\n  geom_point()\n\n\n\n\n\n\n\n\nStill a lot of curvature in the explanatory variables, so it looks like logging each variable might help.\n\ncase0902$logBody      &lt;- log(case0902$Body)\ncase0902$logGestation &lt;- log(case0902$Gestation)\ncase0902$logLitter    &lt;- log(case0902$Litter)\n\n\nggplot(case0902, aes(x = logBody, y = logBrain)) +\n  geom_point()\n\n\n\n\n\n\n\n\n\nggplot(case0902, aes(x = logGestation, y = logBrain)) +\n  geom_point()\n\n\n\n\n\n\n\n\n\nggplot(case0902, aes(x = logLitter, y = logBrain)) +\n  geom_point()\n\n\n\n\n\n\n\n\nThere looks like there is a lot of linearity now."
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression_eda.html#quantitative-third-variable",
+    "href": "11_ch9/11_multiple_regression_eda.html#quantitative-third-variable",
+    "title": "Multiple Regression EDA",
+    "section": "Quantitative Third Variable",
+    "text": "Quantitative Third Variable\n\nIf you want to explore the association between three quantitative variables, you can code one of them by transparency (more preferable) or size (less preferable).\n\n\nggplot(case0902, aes(x = logBody, y = logBrain, alpha = logGestation)) +\n  geom_point()\n\n\n\n\n\n\n\n\n\nggplot(case0902, aes(x = logBody, y = logBrain, size = logGestation)) +\n  geom_point()"
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression_eda.html#categorical-third-variable",
+    "href": "11_ch9/11_multiple_regression_eda.html#categorical-third-variable",
+    "title": "Multiple Regression EDA",
+    "section": "Categorical Third Variable",
+    "text": "Categorical Third Variable\n\nIf you have categorical explanatory variables, you can code their levels by colors (more preferable) and shapes (less preferable) and include this on a scatterplot of two quantitative variables.\n\n\ndata(\"case0901\")\ncase0901$Time &lt;- as.factor(case0901$Time)\nggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +\n  geom_point()\n\n\n\n\n\n\n\n\n\nggplot(case0901, aes(x = Intensity, y = Flowers, shape = Time)) +\n  geom_point()\n\n\n\n\n\n\n\n\nIt’s polite to use colorblind-safe color palettes. The Okabe-Ito is one colorblind-safe palette.\n\nggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +\n  geom_point() +\n  scale_color_discrete(palette = \"Okabe-Ito\")"
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html",
+    "href": "11_ch9/11_limitless_possibilities.html",
+    "title": "Creating New Explanatory Variables",
+    "section": "",
+    "text": "Create new explanatory variables to handle curvature (polynomial regression), categorical predictors (indicator / one-hot variables), and non-constant slopes (interaction terms).\nChapter 9."
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#corn-and-rain",
+    "href": "11_ch9/11_limitless_possibilities.html#corn-and-rain",
+    "title": "Creating New Explanatory Variables",
+    "section": "Corn and Rain",
+    "text": "Corn and Rain\n\ndata(\"ex0915\")\nggplot(ex0915, aes(x = Rainfall, y = Yield)) +\n  geom_point()"
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#quadratic-regression-is-multiple-linear-regression",
+    "href": "11_ch9/11_limitless_possibilities.html#quadratic-regression-is-multiple-linear-regression",
+    "title": "Creating New Explanatory Variables",
+    "section": "Quadratic Regression is Multiple Linear Regression",
+    "text": "Quadratic Regression is Multiple Linear Regression\n\nFrom last chapter, we said that we should fit \\[Y_i = \\beta_0 + \\beta_1 X_i + \\beta_2 X_i^2 + \\epsilon_i\\]\nRelabel \\(X_{1i} = X_i\\) and \\(X_{2i} = X_i^2\\).\nThen this is equivalent to fitting \\[Y_i = \\beta_0 + \\beta_1 X_{1i} + \\beta_2 X_{2i} + \\epsilon_i\\]"
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#why-is-it-called-linear-regression",
+    "href": "11_ch9/11_limitless_possibilities.html#why-is-it-called-linear-regression",
+    "title": "Creating New Explanatory Variables",
+    "section": "Why Is It Called Linear Regression?",
+    "text": "Why Is It Called Linear Regression?\n\\[Y_i = \\beta_0 + \\beta_1 X_i + \\beta_2 X_i^2 + \\epsilon_i\\]\n\nMultiple linear regression represents the mean of the \\(Y\\)’s as a linear combination of the \\(\\beta\\)’s.\nEven though the mean is a quadratic function of the \\(X_i\\)’s, it is still a linear function of the \\(\\beta_j\\)’s.\n\nTo fit a polynomial, create new variables that are powers of existing variables, then include those in the multiple regression model.\n\nex0915$Rainfall2 &lt;- ex0915$Rainfall ^ 2\nlmout_quad &lt;- lm(Yield ~ Rainfall + Rainfall2, data = ex0915)\nlmout_quad\n\n\nCall:\nlm(formula = Yield ~ Rainfall + Rainfall2, data = ex0915)\n\nCoefficients:\n(Intercept)     Rainfall    Rainfall2  \n     -5.015        6.004       -0.229  \n\n\n\n\n\n(Intercept)\nRainfall\nRainfall2\n\n\n\n\n\\(\\hat\\beta_0\\)\n\\(\\hat\\beta_1\\)\n\\(\\hat\\beta_2\\)\n\n\n\nEstimated model: \\[\\hat\\mu(Y \\mid \\text{Rainfall}) = -5.0 + 6.0\\,\\text{Rainfall} - 0.2\\,\\text{Rainfall}^2\\]\n\nI think it works better to wrap a transformation within I() (for “Asis”).\n\nThis allows predict() to work with just Rainfall\n\n\nlmout_quad_2 &lt;- lm(Yield ~ Rainfall + I(Rainfall^2), data = ex0915)\nlmout_quad_2\n\n\nCall:\nlm(formula = Yield ~ Rainfall + I(Rainfall^2), data = ex0915)\n\nCoefficients:\n  (Intercept)       Rainfall  I(Rainfall^2)  \n       -5.015          6.004         -0.229  \n\n\nLook at how we encode predict():\n\npredict(object = lmout_quad, newdata = data.frame(Rainfall = 10, Rainfall2 = 100))\n\n    1 \n32.09 \n\npredict(object = lmout_quad_2, newdata = data.frame(Rainfall = 10))\n\n    1 \n32.09"
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#fitting-a-quadratic-in-r",
+    "href": "11_ch9/11_limitless_possibilities.html#fitting-a-quadratic-in-r",
+    "title": "Creating New Explanatory Variables",
+    "section": "Fitting a Quadratic in R",
+    "text": "Fitting a Quadratic in R\nTo fit a polynomial, create new variables that are powers of existing variables, then include those in the multiple regression model.\n\ndata(\"ex0915\")\nex0915$Rainfall2 &lt;- ex0915$Rainfall ^ 2\nlmout_quad &lt;- lm(Yield ~ Rainfall + Rainfall2, data = ex0915)\nlmout_quad\n\n\nCall:\nlm(formula = Yield ~ Rainfall + Rainfall2, data = ex0915)\n\nCoefficients:\n(Intercept)     Rainfall    Rainfall2  \n     -5.015        6.004       -0.229  \n\n\nReading the output:\n\n\n\n(Intercept)\nRainfall\nRainfall2\n\n\n\n\n\\(\\hat\\beta_0\\)\n\\(\\hat\\beta_1\\)\n\\(\\hat\\beta_2\\)\n\n\n\nEstimated model:\n\\[\\hat\\mu(Y \\mid \\text{Rainfall}) = -5.0 + 6.0\\,\\text{Rainfall} - 0.2\\,\\text{Rainfall}^2\\]"
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#what-is-an-indicator-variable",
+    "href": "11_ch9/11_limitless_possibilities.html#what-is-an-indicator-variable",
+    "title": "Creating New Explanatory Variables",
+    "section": "What Is an Indicator Variable?",
+    "text": "What Is an Indicator Variable?\n\nAn indicator variable only takes on the values 0 or 1.\nIf you have a binary explanatory variable, you can include it in your model by representing it as an indicator variable.\nIncluding it in the regression model effectively fits two lines that have the same slope but different intercepts (parallel lines)."
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#example-flowers-and-light",
+    "href": "11_ch9/11_limitless_possibilities.html#example-flowers-and-light",
+    "title": "Creating New Explanatory Variables",
+    "section": "Example: Flowers and Light",
+    "text": "Example: Flowers and Light\nResearchers studied the effect of timing and light intensity on flower yield.\n\nResponse: Flower yield (average number of flowers per plant).\nExplanatory variables: Timing of light (early / late; binary), intensity of light (quantitative).\n\n\ndata(case0901)\nhead(case0901)\n\n  Flowers Time Intensity\n1    62.3    1       150\n2    77.4    1       150\n3    55.3    1       300\n4    54.2    1       300\n5    49.6    1       450\n6    61.9    1       450"
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#the-indicator-variable-model",
+    "href": "11_ch9/11_limitless_possibilities.html#the-indicator-variable-model",
+    "title": "Creating New Explanatory Variables",
+    "section": "The Indicator Variable Model",
+    "text": "The Indicator Variable Model\n\\[\\mu(\\text{Flowers} \\mid \\text{Time}, \\text{Intensity}) = \\beta_0 + \\beta_1 \\text{Time} + \\beta_2 \\text{Intensity}\\]\nTime can be made into an indicator variable because it only has two levels.\n\nModel when \\(\\text{Time} = 0\\):\n\n\\[\\beta_0 + \\beta_2\\,\\text{Intensity}\\]\n\nModel when \\(\\text{Time} = 1\\):\n\n\\[(\\beta_0 + \\beta_1) + \\beta_2\\,\\text{Intensity}\\]\nThe slope is \\(\\beta_2\\) both times, but the lines have different intercepts (parallel lines)."
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#exploring-the-data",
+    "href": "11_ch9/11_limitless_possibilities.html#exploring-the-data",
+    "title": "Creating New Explanatory Variables",
+    "section": "Exploring the Data",
+    "text": "Exploring the Data\n\ncase0901$Time &lt;- as.factor(case0901$Time)\nggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +\n  geom_point()"
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#fitting-the-model",
+    "href": "11_ch9/11_limitless_possibilities.html#fitting-the-model",
+    "title": "Creating New Explanatory Variables",
+    "section": "Fitting the Model",
+    "text": "Fitting the Model\n\nggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +\n  geom_point() +\n  geom_smooth(method = \"lm\", se = FALSE)\n\n`geom_smooth()` using formula = 'y ~ x'"
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#overview",
+    "href": "11_ch9/11_limitless_possibilities.html#overview",
+    "title": "Creating New Explanatory Variables",
+    "section": "Overview",
+    "text": "Overview\n\nYou can represent any categorical variable with \\(k\\) levels using \\(k - 1\\) indicator variables.\nThis representation is called a one-hot transformation in the machine learning community.\nLet \\(X_{\\ell i} = 1\\) if observational unit \\(i\\) belongs to level \\(\\ell\\), and \\(X_{\\ell i} = 0\\) otherwise."
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#example",
+    "href": "11_ch9/11_limitless_possibilities.html#example",
+    "title": "Creating New Explanatory Variables",
+    "section": "Example",
+    "text": "Example\nLet \\(Z\\) be a categorical variable with levels “Bob”, “Cindy”, “Doug”.\n\n\\(X_{1i} = 1\\) if Cindy and 0 otherwise.\n\\(X_{2i} = 1\\) if Doug and 0 otherwise.\n\nThen:\n\n“Bob”: \\(X_{1i} = 0\\), \\(X_{2i} = 0\\)\n“Cindy”: \\(X_{1i} = 1\\), \\(X_{2i} = 0\\)\n“Doug”: \\(X_{1i} = 0\\), \\(X_{2i} = 1\\)"
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#using-one-hot-in-regression",
+    "href": "11_ch9/11_limitless_possibilities.html#using-one-hot-in-regression",
+    "title": "Creating New Explanatory Variables",
+    "section": "Using One-Hot in Regression",
+    "text": "Using One-Hot in Regression\nIf we have a quantitative response and a categorical explanatory variable, we can apply a one-hot transformation and use multiple linear regression.\n\\[Y_i = \\beta_0 + \\beta_1 X_{1i} + \\beta_2 X_{2i} + \\epsilon_i\\]\n\nMean if “Bob”: \\(\\beta_0 + \\beta_1 \\cdot 0 + \\beta_2 \\cdot 0 = \\beta_0\\)\nMean if “Cindy”: \\(\\beta_0 + \\beta_1 \\cdot 1 + \\beta_2 \\cdot 0 = \\beta_0 + \\beta_1\\)\nMean if “Doug”: \\(\\beta_0 + \\beta_1 \\cdot 0 + \\beta_2 \\cdot 1 = \\beta_0 + \\beta_2\\)"
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#equivalence-with-one-way-anova",
+    "href": "11_ch9/11_limitless_possibilities.html#equivalence-with-one-way-anova",
+    "title": "Creating New Explanatory Variables",
+    "section": "Equivalence with One-Way ANOVA",
+    "text": "Equivalence with One-Way ANOVA\nThis is equivalent to One-way ANOVA:\n\nMultiple Regression: \\(Y_i = \\beta_0 + \\beta_1 X_{1i} + \\beta_2 X_{2i} + \\epsilon_i\\)\nOne-way ANOVA: \\(Y_{ij} = \\mu + \\alpha_i + \\epsilon_{ij}\\)\n\\(\\mu = \\beta_0\\), \\(\\alpha_2 = \\beta_1\\), \\(\\alpha_3 = \\beta_2\\)\n\nIn linear regression, \\(X_{1i}\\) and \\(X_{2i}\\) index the group status of observational unit \\(i\\). In ANOVA, \\(i\\) indexes the group and \\(j\\) indexes the observational unit within that group."
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#two-level-case",
+    "href": "11_ch9/11_limitless_possibilities.html#two-level-case",
+    "title": "Creating New Explanatory Variables",
+    "section": "Two-Level Case",
+    "text": "Two-Level Case\nIf a variable takes on only 2 levels, it can be represented by 1 indicator variable. For example, Time takes on the levels Late and Early:\n\nLet \\(X_{1i} = 0\\) if Late and \\(X_{1i} = 1\\) if Early."
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#how-to-include-categorical-variables-in-r",
+    "href": "11_ch9/11_limitless_possibilities.html#how-to-include-categorical-variables-in-r",
+    "title": "Creating New Explanatory Variables",
+    "section": "How to Include Categorical Variables in R",
+    "text": "How to Include Categorical Variables in R\nIf the variable is a factor, R will automatically apply a one-hot transformation. Check with class():\n\nclass(case0901$Time)\n\n[1] \"factor\"\n\n\nIf it is not a factor, convert it with as.factor():\n\ncase0901$Time &lt;- as.factor(case0901$Time)"
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#fitting-in-r",
+    "href": "11_ch9/11_limitless_possibilities.html#fitting-in-r",
+    "title": "Creating New Explanatory Variables",
+    "section": "Fitting in R",
+    "text": "Fitting in R\n\nlmout &lt;- lm(Flowers ~ Time + Intensity, data = case0901)\ncoef(lmout)\n\n(Intercept)       Time2   Intensity \n   71.30583    12.15833    -0.04047"
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#interpreting-the-output",
+    "href": "11_ch9/11_limitless_possibilities.html#interpreting-the-output",
+    "title": "Creating New Explanatory Variables",
+    "section": "Interpreting the Output",
+    "text": "Interpreting the Output\nModel: \\(\\mu(Y_i \\mid \\text{Time}, \\text{Intensity}) = \\beta_0 + \\beta_1 X_{1i} + \\beta_2 X_{2i}\\)\nwhere \\(X_{1i} = 1\\) if Time is Late and 0 otherwise, and \\(X_{2i}\\) is the light intensity.\n\ncoef(lmout)\n\n(Intercept)       Time2   Intensity \n   71.30583    12.15833    -0.04047 \n\n\n\n\n\n(Intercept)\nTime2\nIntensity\n\n\n\n\n\\(\\hat\\beta_0\\)\n\\(\\hat\\beta_1\\)\n\\(\\hat\\beta_2\\)"
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#what-is-an-interaction",
+    "href": "11_ch9/11_limitless_possibilities.html#what-is-an-interaction",
+    "title": "Creating New Explanatory Variables",
+    "section": "What Is an Interaction?",
+    "text": "What Is an Interaction?\nAn interaction between two variables means that the slope with respect to one variable changes with the value of the second variable.\n\\[\\mu(Y_i \\mid \\text{Time}, \\text{Intensity}) = \\beta_0 + \\beta_1 \\text{Time} + \\beta_2 \\text{Intensity} + \\beta_3 \\text{Time} \\times \\text{Intensity}\\]\nWhen \\(\\text{Time} = 0\\):\n\\[\\mu(Y_i \\mid \\text{Time} = 0, \\text{Intensity}) = \\beta_0 + \\beta_2\\,\\text{Intensity}\\]\nWhen \\(\\text{Time} = 1\\):\n\\[\\mu(Y_i \\mid \\text{Time} = 1, \\text{Intensity}) = (\\beta_0 + \\beta_1) + (\\beta_2 + \\beta_3)\\,\\text{Intensity}\\]"
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#summary-of-slopes-and-intercepts",
+    "href": "11_ch9/11_limitless_possibilities.html#summary-of-slopes-and-intercepts",
+    "title": "Creating New Explanatory Variables",
+    "section": "Summary of Slopes and Intercepts",
+    "text": "Summary of Slopes and Intercepts\n\nSlope when \\(\\text{Time} = 0\\): \\(\\beta_2\\)\nSlope when \\(\\text{Time} = 1\\): \\(\\beta_2 + \\beta_3\\)\nIntercept when \\(\\text{Time} = 0\\): \\(\\beta_0\\)\nIntercept when \\(\\text{Time} = 1\\): \\(\\beta_0 + \\beta_1\\)\n\nEach level of the categorical variable (Time) has its own line."
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#visualizing-no-interaction-vs.-interaction",
+    "href": "11_ch9/11_limitless_possibilities.html#visualizing-no-interaction-vs.-interaction",
+    "title": "Creating New Explanatory Variables",
+    "section": "Visualizing No Interaction vs. Interaction",
+    "text": "Visualizing No Interaction vs. Interaction\nNo interaction — parallel lines, same slope:\n\nlmadd &lt;- lm(Flowers ~ Time + Intensity, data = case0901)\ncase0901$fit &lt;- fitted(lmadd)\nggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +\n  geom_line(aes(y = fit), linewidth = 1)\n\n\n\n\n\n\n\n\nInteraction — non-parallel lines, slopes differ by group:\n\ncase0901$fit1 &lt;- case0901$fit +\n  case0901$Intensity * (case0901$Time == 2) * 0.02\nggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +\n  geom_line(aes(y = fit1), linewidth = 1)"
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#fitting-interactions-in-r",
+    "href": "11_ch9/11_limitless_possibilities.html#fitting-interactions-in-r",
+    "title": "Creating New Explanatory Variables",
+    "section": "Fitting Interactions in R",
+    "text": "Fitting Interactions in R\n\\(\\mu(Y_i \\mid \\text{Time},\\,\\text{Intensity}) = \\beta_0 + \\beta_1\\,\\text{Time} + \\beta_2\\,\\text{Intensity} + \\beta_3\\,\\text{Time} \\times \\text{Intensity}\\)\n\nlmint &lt;- lm(Flowers ~ Time * Intensity, data = case0901)\ncoef(lmint)\n\n    (Intercept)           Time2       Intensity Time2:Intensity \n       71.62333        11.52333        -0.04108         0.00121 \n\n\n\n\n\n(Intercept)\nTime2\nIntensity\nTime2:Intensity\n\n\n\n\n\\(\\hat\\beta_0\\)\n\\(\\hat\\beta_1\\)\n\\(\\hat\\beta_2\\)\n\\(\\hat\\beta_3\\)\n\n\n\n\nUsing * fits interactions along with all lower-order terms.\nUsing : just fits interactions.\n\nReconsider the brain weight data:\n\\(\\mu(\\text{Brain} \\mid \\text{Body},\\,\\text{Litter}) = \\beta_0 + \\beta_1\\,\\text{Body} + \\beta_2\\,\\text{Litter} + \\beta_3\\,\\text{Body} \\times \\text{Litter}\\)\n\nWhat is the slope for Body at a given Litter size?\nWhat is the intercept for Body at a given Litter size?\n\nInterpreting models with interactions is difficult. Include them only when there is a substantive reason to believe the slope changes across levels of the moderating variable."
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#r-syntax-for-interactions",
+    "href": "11_ch9/11_limitless_possibilities.html#r-syntax-for-interactions",
+    "title": "Creating New Explanatory Variables",
+    "section": "R Syntax for Interactions",
+    "text": "R Syntax for Interactions\n\nUsing * fits interactions along with all lower-order terms.\nUsing : fits interactions only (without the main effects)."
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#interpreting-interactions",
+    "href": "11_ch9/11_limitless_possibilities.html#interpreting-interactions",
+    "title": "Creating New Explanatory Variables",
+    "section": "Interpreting Interactions",
+    "text": "Interpreting Interactions\nReconsider the brain weight data. Suppose we fit\n\\[\\mu(\\text{Brain} \\mid \\text{Body}, \\text{Litter}) = \\beta_0 + \\beta_1 \\text{Body} + \\beta_2 \\text{Litter} + \\beta_3 \\text{Body} \\times \\text{Litter}\\]\n\nWhat is the slope for Body at a given Litter size?\nWhat is the intercept for Body at a given Litter size?"
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#a-note-on-complexity",
+    "href": "11_ch9/11_limitless_possibilities.html#a-note-on-complexity",
+    "title": "Creating New Explanatory Variables",
+    "section": "A Note on Complexity",
+    "text": "A Note on Complexity\nInterpreting models with interactions is difficult. Include them only when there is a substantive reason to believe the slope changes across levels of the moderating variable."
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html",
+    "href": "11_ch9/11_multiple_regression.html",
+    "title": "Multiple Regression",
+    "section": "",
+    "text": "Introduce Multiple Linear Regression.\nInterpret the coefficients of a multiple regression model in randomized experiments and observational studies.\nFit multiple linear regression models in R using lm().\nConduct inference (\\(t\\)-tests and confidence intervals) for individual coefficients.\nUnderstand how \\(p\\)-value interpretation depends on what other variables are in the model.\nChapters 9 and 10 in the book."
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html#simple-linear-regression-review",
+    "href": "11_ch9/11_multiple_regression.html#simple-linear-regression-review",
+    "title": "Multiple Regression",
+    "section": "Simple Linear Regression (Review)",
+    "text": "Simple Linear Regression (Review)\n\nOne quantitative response variable (\\(Y\\)).\nOne quantitative explanatory variable (\\(X\\)).\nThe mean of \\(Y\\) is a linear function of \\(X\\).\nModels the conditional distribution of \\(Y\\) given \\(X\\).\n\n\\[Y_i = \\beta_0 + \\beta_1 X_i + \\epsilon_i\\]\n\nggplot(case0902, aes(x = log(Body), y = log(Brain))) +\n  geom_point()\n\n\n\n\n\n\n\n\n\nggplot(case0902, aes(x = log(Body), y = log(Brain))) +\n  geom_point() +\n  geom_smooth(method = \"lm\", se = FALSE)\n\n`geom_smooth()` using formula = 'y ~ x'"
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html#multiple-linear-regression-model",
+    "href": "11_ch9/11_multiple_regression.html#multiple-linear-regression-model",
+    "title": "Multiple Regression",
+    "section": "Multiple Linear Regression Model",
+    "text": "Multiple Linear Regression Model\n\nOne quantitative response (\\(Y\\)).\nMultiple quantitative explanatory variables (\\(X_1, X_2, \\ldots, X_p\\)).\n\n\\[Y_i = \\beta_0 + \\beta_1 X_{1i} + \\beta_2 X_{2i} + \\cdots + \\beta_p X_{pi} + \\epsilon_i\\]\n\n\\(X_{2i}\\) is the value of the second explanatory variable for observational unit \\(i\\).\nWith two explanatory variables this simplifies to\n\n\\[Y_i = \\beta_0 + \\beta_1 X_{1i} + \\beta_2 X_{2i} + \\epsilon_i\\]\n\n\\(\\epsilon_i\\) is still ideally normally distributed with mean 0 and constant variance \\(\\sigma^2\\)."
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html#randomized-experiment",
+    "href": "11_ch9/11_multiple_regression.html#randomized-experiment",
+    "title": "Multiple Regression",
+    "section": "Randomized Experiment",
+    "text": "Randomized Experiment\nConsider the model \\(Y_i = \\beta_0 + \\beta_1 X_{1i} + \\beta_2 X_{2i} + \\epsilon_i\\).\nTo interpret \\(\\beta_1\\) in a randomized experiment:\n\nConceptually fix \\(X_{2i}\\) at a value.\nAdd one to \\(X_{1i}\\).\n\\(Y_i\\) changes by \\(\\beta_1\\).\n\n\\(\\beta_1\\) is how much \\(Y_i\\) increases when we add one to \\(X_{1i}\\) but keep \\(X_{2i}\\) fixed.\n\n“A one-unit increase in light intensity causes the mean number of flowers to increase by \\(\\beta_1\\).”"
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html#observational-study",
+    "href": "11_ch9/11_multiple_regression.html#observational-study",
+    "title": "Multiple Regression",
+    "section": "Observational Study",
+    "text": "Observational Study\nConsider the model \\(Y_i = \\beta_0 + \\beta_1 X_{1i} + \\beta_2 X_{2i} + \\epsilon_i\\).\nTo interpret \\(\\beta_1\\) in an observational study:\n\nThe \\(X_i\\)’s cannot be fixed independently of one another.\nConsider a subpopulation that has the same values of the \\(X_j\\)’s, where \\(j \\neq 1\\). Then the expected difference in means between species that differ in \\(X_1\\) only by one unit is \\(\\beta_1\\).\n\n\\(\\beta_1\\) is the expected difference in \\(Y\\)’s when we compare species with \\(X_1\\) and \\(X_1 + 1\\).\n\n“For any subpopulation of mammal species with the same body weight, species with a one-day longer gestation length tend to have a mean brain weight \\(\\beta_1\\) grams larger.”"
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html#a-useful-notation",
+    "href": "11_ch9/11_multiple_regression.html#a-useful-notation",
+    "title": "Multiple Regression",
+    "section": "A Useful Notation",
+    "text": "A Useful Notation\n\n\\(\\mu(\\text{brain} \\mid \\text{gestation}) = \\beta_0 + \\beta_1\\,\\text{gestation}\\)\n\nThe mean of brain weight equals \\(\\beta_0\\) plus \\(\\beta_1\\) times the gestation time.\n\n\\(\\mu(\\text{brain} \\mid \\text{gestation},\\,\\text{body}) = \\beta_0 + \\beta_1\\,\\text{gestation} + \\beta_2\\,\\text{body}\\)\n\nThe mean of brain weight equals \\(\\beta_0\\) plus \\(\\beta_1\\) times the gestation time plus \\(\\beta_2\\) times the body weight."
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html#how-interpretation-changes-with-model",
+    "href": "11_ch9/11_multiple_regression.html#how-interpretation-changes-with-model",
+    "title": "Multiple Regression",
+    "section": "How Interpretation Changes with Model",
+    "text": "How Interpretation Changes with Model\nThe interpretation of a coefficient changes when the model changes because the comparison group changes.\n\n\\(\\mu(\\text{brain} \\mid \\text{gestation}) = \\beta_0 + \\beta_1 \\text{ gestation}\\)\n\n\\(\\beta_1\\) is the mean difference in brain weight comparing gestation periods 1 day apart in the population of all mammal species.\n\n\\(\\mu(\\text{brain} \\mid \\text{gestation}, \\text{body}) = \\beta_0 + \\beta_1 \\text{ gestation} + \\beta_2 \\text{ body}\\)\n\n\\(\\beta_1\\) is the mean difference in brain weight comparing gestation periods 1 day apart in subpopulations that have the same body weight."
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html#visualizing-the-coefficient-interpretation",
+    "href": "11_ch9/11_multiple_regression.html#visualizing-the-coefficient-interpretation",
+    "title": "Multiple Regression",
+    "section": "Visualizing the Coefficient Interpretation",
+    "text": "Visualizing the Coefficient Interpretation\nConsider artificial data with \\(\\beta_0 = 2\\), \\(\\beta_1 = 1\\) (positive \\(X_1\\) effect), \\(\\beta_2 = -3\\) (large negative \\(X_2\\) effect), where \\(X_1\\) and \\(X_2\\) are positively correlated.\n\nbeta0 &lt;- 2; beta1 &lt;- 1; beta2 &lt;- -3\nx2 &lt;- rep(1:10, 5)\nx1 &lt;- rep(0:9, 5) + rep(1:5, each = 10)\ny  &lt;- beta0 + beta1 * x1 + beta2 * x2\ndf_fake &lt;- data.frame(x1 = x1, y = y, x2 = as.factor(x2))\n\nWithout \\(X_2\\) in the model — the marginal slope looks negative even though \\(\\beta_1 = 1\\):\n\nggplot(df_fake, aes(x = x1, y = y)) +\n  geom_point() +\n  geom_smooth(method = \"lm\", se = FALSE) +\n  theme(axis.text = element_blank(), axis.ticks = element_blank())\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\nWith \\(X_2\\) color-coded — the slope within each level of \\(X_2\\) is positive (\\(= \\beta_1 = 1\\)), and the parallel lines sit at different heights:\n\nggplot(df_fake, aes(x = x1, y = y, color = x2)) +\n  geom_point() +\n  geom_smooth(method = \"lm\", se = FALSE) +\n  theme(axis.text = element_blank(), axis.ticks = element_blank()) +\n  guides(color = guide_legend(keywidth = 0.1, keyheight = 0.1,\n                               default.unit = \"inch\"))\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\nThe figure below shows the same idea using the real brain-size data (case0902):\n\nLeft: a single marginal fit line for all 96 species (\\(\\hat\\beta_1 \\approx 2.23\\)).\nMiddle: points colored by log(Body) tertile — large-bodied species (green) drive much of the steep marginal slope because they have both long gestations and large brains.\nRight: parallel fit lines from the additive model — every body-weight group has the same gestation slope (\\(\\hat\\beta_1 \\approx 0.67\\)) but sits at a different height, reflecting the body-size effect \\(\\beta_2\\)."
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html#parallel-slopes-with-real-data-brain-weight",
+    "href": "11_ch9/11_multiple_regression.html#parallel-slopes-with-real-data-brain-weight",
+    "title": "Multiple Regression",
+    "section": "Parallel Slopes with Real Data: Brain Weight",
+    "text": "Parallel Slopes with Real Data: Brain Weight\nThe animation below uses the case0902 brain-size data to show the same idea with three real variables: log(Brain weight), log(Gestation period), and log(Body weight).\n\nFrame 1 — Marginal relationship of log(Brain) on log(Gestation): slope \\(\\hat\\beta_1 \\approx 2.23\\).\nFrame 2 — Color points by log(Body weight) tertile: large-bodied species (green) cluster in the upper right, showing that body size drives much of the gestation–brain correlation.\nFrame 3 — Parallel fit lines from the additive model \\(\\mu(\\text{logBrain} \\mid \\text{logGestation}, \\text{BodyGroup})\\): every group has the same slope \\(\\hat\\beta_1 \\approx 0.67\\) but a different intercept — the “different heights” come from the body-size effect \\(\\beta_2\\).\n\n\n\n\nParallel slopes demonstration using mammal brain-size data.\n\n\nThe drop from 2.23 to 0.67 is not a reversal, but it is substantial: the apparent gestation–brain link is partly explained by body size (larger animals have both longer gestations and bigger brains). The partial slope 0.67 measures the gestation effect after holding body size constant."
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html#how-do-we-estimate-the-regression-coefficients",
+    "href": "11_ch9/11_multiple_regression.html#how-do-we-estimate-the-regression-coefficients",
+    "title": "Multiple Regression",
+    "section": "How Do We Estimate the Regression Coefficients?",
+    "text": "How Do We Estimate the Regression Coefficients?\nModel: \\(\\mu(\\text{brain} \\mid \\text{gestation}, \\text{body}) = \\beta_0 + \\beta_1 \\text{ gestation} + \\beta_2 \\text{ body}\\)\n\n\\(\\beta_0\\), \\(\\beta_1\\), \\(\\beta_2\\) are unknown parameters.\nWe estimate them by minimizing the sum of squared residuals.\nResiduals: \\(Y_i - (\\beta_0 + \\beta_1 X_{1i} + \\beta_2 X_{2i})\\)\nThe resulting estimates are the OLS (ordinary least squares) estimates: \\(\\hat\\beta_0\\), \\(\\hat\\beta_1\\), \\(\\hat\\beta_2\\)."
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html#the-lm-function",
+    "href": "11_ch9/11_multiple_regression.html#the-lm-function",
+    "title": "Multiple Regression",
+    "section": "The lm() Function",
+    "text": "The lm() Function\nUse lm() and always save the output.\n\nlmout &lt;- lm(Brain ~ Gestation + Body, data = case0902)\nlmout\n\n\nCall:\nlm(formula = Brain ~ Gestation + Body, data = case0902)\n\nCoefficients:\n(Intercept)    Gestation         Body  \n    -112.19         1.45         1.03  \n\n\nReading the output:\n\n\n\n(Intercept)\nGestation\nBody\n\n\n\n\n\\(\\hat\\beta_0\\)\n\\(\\hat\\beta_1\\)\n\\(\\hat\\beta_2\\)"
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html#three-explanatory-variables",
+    "href": "11_ch9/11_multiple_regression.html#three-explanatory-variables",
+    "title": "Multiple Regression",
+    "section": "Three Explanatory Variables",
+    "text": "Three Explanatory Variables\n\nlmout &lt;- lm(Brain ~ Gestation + Body + Litter, data = case0902)\nlmout\n\n\nCall:\nlm(formula = Brain ~ Gestation + Body + Litter, data = case0902)\n\nCoefficients:\n(Intercept)    Gestation         Body       Litter  \n   -225.292        1.809        0.986       27.649  \n\n\nReading the output:\n\n\n\n(Intercept)\nGestation\nBody\nLitter\n\n\n\n\n\\(\\hat\\beta_0\\)\n\\(\\hat\\beta_1\\)\n\\(\\hat\\beta_2\\)\n\\(\\hat\\beta_3\\)"
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html#specific-language-we-use",
+    "href": "11_ch9/11_multiple_regression.html#specific-language-we-use",
+    "title": "Multiple Regression",
+    "section": "Specific Language We Use",
+    "text": "Specific Language We Use\nUsing the three-variable fit above:\n\n“We estimate that species with a 1-day longer gestation time tend to have a brain weight 1.8 grams heavier, after adjusting for body weight and litter size.”\n“We estimate that species with an average body weight 1 kg heavier tend to have a brain weight 0.99 grams heavier, after adjusting for gestation time and litter size.”\n“We estimate that species with a litter size one offspring larger tend to have a brain weight 27.6 grams heavier, after adjusting for body weight and gestation time.”"
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html#overview",
+    "href": "11_ch9/11_multiple_regression.html#overview",
+    "title": "Multiple Regression",
+    "section": "Overview",
+    "text": "Overview\n\nWe are usually interested in testing \\(H_0: \\beta_i = 0\\).\nWe are usually interested in obtaining confidence intervals for the \\(\\beta_i\\)’s.\nWe can use the usual \\(t\\)-tools to get these."
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html#inference-in-r",
+    "href": "11_ch9/11_multiple_regression.html#inference-in-r",
+    "title": "Multiple Regression",
+    "section": "Inference in R",
+    "text": "Inference in R\nModel: \\(\\mu(\\text{brain} \\mid \\text{gestation}, \\text{body}) = \\beta_0 + \\beta_1 \\text{ gestation} + \\beta_2 \\text{ body}\\)\n\nlmout &lt;- lm(Brain ~ Gestation + Body, data = case0902)\nsummary(lmout)\n\n\nCall:\nlm(formula = Brain ~ Gestation + Body, data = case0902)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-1091.5   -63.2     8.2    67.1  1025.0 \n\nCoefficients:\n             Estimate Std. Error t value Pr(&gt;|t|)\n(Intercept) -112.1920    43.0595   -2.61    0.011\nGestation      1.4499     0.2752    5.27  8.9e-07\nBody           1.0326     0.0903   11.44  &lt; 2e-16\n\nResidual standard error: 226 on 93 degrees of freedom\nMultiple R-squared:  0.805, Adjusted R-squared:  0.801 \nF-statistic:  192 on 2 and 93 DF,  p-value: &lt;2e-16\n\n\nReading the coefficient table:\n\nsumout &lt;- summary(lmout)\ncoef(sumout)\n\n            Estimate Std. Error t value  Pr(&gt;|t|)\n(Intercept) -112.192    43.0595  -2.606 1.068e-02\nGestation      1.450     0.2752   5.268 8.889e-07\nBody           1.033     0.0903  11.436 1.984e-19\n\n\n\n\n\n\n\n\n\n\n\n\n\nEstimate\nStd. Error\nt value\nPr(&gt;|t|)\n\n\n\n\n(Intercept)\n\\(\\hat\\beta_0\\)\n\\(SE(\\hat\\beta_0)\\)\n\\(\\hat\\beta_0/SE(\\hat\\beta_0)\\)\np-value for \\(H_0:\\beta_0=0\\)\n\n\nGestation\n\\(\\hat\\beta_1\\)\n\\(SE(\\hat\\beta_1)\\)\n\\(\\hat\\beta_1/SE(\\hat\\beta_1)\\)\np-value for \\(H_0:\\beta_1=0\\)\n\n\nBody\n\\(\\hat\\beta_2\\)\n\\(SE(\\hat\\beta_2)\\)\n\\(\\hat\\beta_2/SE(\\hat\\beta_2)\\)\np-value for \\(H_0:\\beta_2=0\\)"
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html#confidence-intervals-in-r",
+    "href": "11_ch9/11_multiple_regression.html#confidence-intervals-in-r",
+    "title": "Multiple Regression",
+    "section": "Confidence Intervals in R",
+    "text": "Confidence Intervals in R\n\nconfint(lmout)\n\n                2.5 %  97.5 %\n(Intercept) -197.6997 -26.684\nGestation      0.9033   1.996\nBody           0.8533   1.212"
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html#interpreting-p-values",
+    "href": "11_ch9/11_multiple_regression.html#interpreting-p-values",
+    "title": "Multiple Regression",
+    "section": "Interpreting \\(p\\)-values",
+    "text": "Interpreting \\(p\\)-values\nThe interpretation of significance depends on what other variables are in the model.\n\\(\\mu(\\text{brain} \\mid \\text{gestation}) = \\beta_0 + \\beta_1\\,\\text{gestation}\\)\n\n\\(H_0: \\beta_1 = 0\\) vs \\(H_A: \\beta_1 \\neq 0\\)\nModel under \\(H_0\\): \\(\\mu(\\text{brain}) = \\beta_0\\)\nModel under \\(H_A\\): \\(\\mu(\\text{brain} \\mid \\text{gestation}) = \\beta_0 + \\beta_1\\,\\text{gestation}\\)\nIf we reject \\(H_0\\): “We have strong evidence that gestation is related to brain weight.”\nIf we fail to reject \\(H_0\\): “We do not have strong evidence that gestation is related to brain weight.”\n\n\\(\\mu(\\text{brain} \\mid \\text{gestation},\\,\\text{body}) = \\beta_0 + \\beta_1\\,\\text{gestation} + \\beta_2\\,\\text{body}\\)\n\n\\(H_0: \\beta_1 = 0\\) vs \\(H_A: \\beta_1 \\neq 0\\)\nModel under \\(H_0\\): \\(\\mu(\\text{brain} \\mid \\text{body}) = \\beta_0 + \\beta_2\\,\\text{body}\\)\nModel under \\(H_A\\): \\(\\mu(\\text{brain} \\mid \\text{gestation},\\,\\text{body}) = \\beta_0 + \\beta_1\\,\\text{gestation} + \\beta_2\\,\\text{body}\\)\nIf we reject \\(H_0\\): “We have strong evidence that gestation is related to brain weight after adjusting for body size.”\nIf we fail to reject \\(H_0\\): “We do not have strong evidence that gestation is related to brain weight after adjusting for body size.”"
+  },
+  {
+    "objectID": "11_ch9/11_limitless_possibilities.html#including-categorical-variables-in-r",
+    "href": "11_ch9/11_limitless_possibilities.html#including-categorical-variables-in-r",
+    "title": "Creating New Explanatory Variables",
+    "section": "Including Categorical Variables in R",
+    "text": "Including Categorical Variables in R\n\nIf the variable is a factor, R will automatically apply a one-hot transformation.\nCheck with class():\n\n\nclass(case0901$Time)\n\n[1] \"factor\"\n\n\n\nIf it is not a factor, convert it with as.factor():\n\n\ncase0901$Time &lt;- as.factor(case0901$Time)\n\n\nlmout &lt;- lm(Flowers ~ Time + Intensity, data = case0901)\ncoef(lmout)\n\n(Intercept)       Time2   Intensity \n   71.30583    12.15833    -0.04047 \n\n\nModel: \\(\\mu(Y_i \\mid \\text{Time},\\,\\text{Intensity}) = \\beta_0 + \\beta_1 X_{1i} + \\beta_2 X_{2i}\\), where \\(X_{1i} = 1\\) if Time is Late and 0 otherwise, and \\(X_{2i}\\) is light intensity:\n\n\n\n(Intercept)\nTime2\nIntensity\n\n\n\n\n\\(\\hat\\beta_0\\)\n\\(\\hat\\beta_1\\)\n\\(\\hat\\beta_2\\)"
+  },
+  {
+    "objectID": "11_ch9/11_multiple_regression.html#interpretation-changes-with-the-model",
+    "href": "11_ch9/11_multiple_regression.html#interpretation-changes-with-the-model",
+    "title": "Multiple Regression",
+    "section": "Interpretation Changes with the Model",
+    "text": "Interpretation Changes with the Model\nThe interpretation of \\(\\beta_1\\) changes when the model changes, because the comparison group changes:\n\n\\(\\mu(\\text{brain} \\mid \\text{gestation}) = \\beta_0 + \\beta_1\\,\\text{gestation}\\)\n\n\\(\\beta_1\\) is the mean difference in brain weight comparing gestation periods 1 day apart in the population of all mammal species.\n\n\\(\\mu(\\text{brain} \\mid \\text{gestation},\\,\\text{body}) = \\beta_0 + \\beta_1\\,\\text{gestation} + \\beta_2\\,\\text{body}\\)\n\n\\(\\beta_1\\) is the mean difference comparing gestation periods 1 day apart in subpopulations with the same body weight."
   }
 ]

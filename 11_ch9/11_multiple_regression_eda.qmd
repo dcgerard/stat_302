@@ -1,0 +1,241 @@
+---
+title: "Multiple Regression EDA"
+author: "David Gerard"
+date: today
+bibliography: "../bib.bib"
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(Sleuth3)
+knitr::opts_chunk$set(echo       = TRUE,
+                      fig.height = 3,
+                      fig.width  = 5,
+                      fig.align  = "center")
+ggplot2::theme_set(ggplot2::theme_bw())
+set.seed(1)
+```
+
+# Learning Objectives
+
+- Apply a systematic strategy for exploratory data analysis in multiple linear
+  regression.
+- Chapter 9.
+
+---
+
+# Case Study: Brain Size
+
+- What variables are associated with brain weight?
+- Collected information on 96 different species.
+- We know that body weight is already associated with brain weight,
+    - So what variables are associated with brain weight **after controlling for body weight**?
+- Possible variables: Body weight (kg), gestation period (days), litter size.
+
+```{r}
+#| label: brain-data
+data("case0902")
+head(case0902)
+```
+
+---
+
+# Plotting the Response Against Each Explanatory Variable
+
+- The first step is almost always **making a ton of scatterplots**.
+- Plots of the response against each explanatory variable show what variables seem to be **marginally** related to the response.
+- "Marginally related" = related **unconditionally** on other variables.
+
+```{r}
+#| label: scatter-body
+ggplot(case0902, aes(x = Body, y = Brain)) +
+  geom_point()
+```
+
+```{r}
+#| label: scatter-gestation
+ggplot(case0902, aes(x = Gestation, y = Brain)) +
+  geom_point()
+```
+
+```{r}
+#| label: scatter-litter
+ggplot(case0902, aes(x = Litter, y = Brain)) +
+  geom_point()
+```
+
+Curvature and different spreads at each explanatory variable suggest a log transformation of `Brain`.
+
+```{r}
+#| label: log-brain
+case0902$logBrain <- log(case0902$Brain)
+```
+
+```{r}
+#| label: scatter-logbrain-body
+ggplot(case0902, aes(x = Body, y = logBrain)) +
+  geom_point()
+```
+
+```{r}
+#| label: scatter-logbrain-gestation
+ggplot(case0902, aes(x = Gestation, y = logBrain)) +
+  geom_point()
+```
+
+```{r}
+#| label: scatter-logbrain-litter
+ggplot(case0902, aes(x = Litter, y = logBrain)) +
+  geom_point()
+```
+
+Still a lot of curvature, so it looks like logging each variable might help.
+
+```{r}
+#| label: log-all-vars
+case0902$logBody      <- log(case0902$Body)
+case0902$logGestation <- log(case0902$Gestation)
+case0902$logLitter    <- log(case0902$Litter)
+```
+
+```{r}
+#| label: scatter-log-body
+ggplot(case0902, aes(x = logBody, y = logBrain)) +
+  geom_point()
+```
+
+```{r}
+#| label: scatter-log-gestation
+ggplot(case0902, aes(x = logGestation, y = logBrain)) +
+  geom_point()
+```
+
+```{r}
+#| label: scatter-log-litter
+ggplot(case0902, aes(x = logLitter, y = logBrain)) +
+  geom_point()
+```
+
+There looks like there is a lot of linearity now.
+
+---
+
+# Plotting Explanatory Variables Against Each Other
+
+- It is often useful to look at scatterplots between each pair of explanatory variables.
+- This tells us if some variables seem to be picking up a lot of the same information.
+- E.g., gestation period might be larger just because body size is larger.
+    - If brain is associated with gestation, it might only be through body weight.
+
+```{r}
+#| label: scatter-body-gestation
+ggplot(case0902, aes(x = logBody, y = logGestation)) +
+  geom_point()
+```
+
+```{r}
+#| label: scatter-body-litter
+ggplot(case0902, aes(x = logBody, y = logLitter)) +
+  geom_point()
+```
+
+```{r}
+#| label: scatter-gestation-litter
+ggplot(case0902, aes(x = logGestation, y = logLitter)) +
+  geom_point()
+```
+
+---
+
+# Matrix Plot
+
+- You can show scatterplots between all variables at the same time.
+- This is called a **matrix plot** (or a **pairs plot**).
+
+```{r}
+#| label: pairs-plot
+#| message: false
+#| fig-width: 7
+#| fig-height: 7
+library(GGally)
+ggpairs(case0902, columns = 6:9)
+```
+
+---
+
+# Initial Model Fit
+
+- We can first fit a very complicated model and check residuals.
+- We would be looking for more curvature and outliers.
+
+```{r}
+#| label: complex-model
+lm_comp <- lm(logBrain ~ logBody * logLitter * logGestation,
+              data = case0902)
+res_vec <- resid(lm_comp)
+fit_vec <- fitted(lm_comp)
+```
+
+```{r}
+#| label: resid-plot
+ggplot(data.frame(fit_vec, res_vec), aes(x = fit_vec, y = res_vec)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+```{r}
+#| label: qq-plot
+ggplot(data.frame(res_vec), aes(sample = res_vec)) +
+  geom_qq() +
+  geom_qq_line()
+```
+
+---
+
+# Coded Scatterplots
+
+## Quantitative Third Variable
+
+- If you want to explore the association between three quantitative variables, you can code one of them by **transparency** (more preferable) or **size** (less preferable).
+
+```{r}
+#| label: coded-alpha
+ggplot(case0902, aes(x = logBody, y = logBrain, alpha = logGestation)) +
+  geom_point()
+```
+
+```{r}
+#| label: coded-size
+ggplot(case0902, aes(x = logBody, y = logBrain, size = logGestation)) +
+  geom_point()
+```
+
+## Categorical Third Variable
+
+- If you have categorical explanatory variables, you can code their levels by **colors** (more preferable) and **shapes** (less preferable) and include this on a scatterplot of two quantitative variables.
+
+```{r}
+#| label: coded-color
+data("case0901")
+case0901$Time <- as.factor(case0901$Time)
+ggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +
+  geom_point()
+```
+
+```{r}
+#| label: coded-shape
+ggplot(case0901, aes(x = Intensity, y = Flowers, shape = Time)) +
+  geom_point()
+```
+
+It's polite to use colorblind-safe color palettes. The Okabe-Ito is one colorblind-safe palette.
+
+```{r}
+#| label: coded-colorblind
+ggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +
+  geom_point() +
+  scale_color_discrete(palette = "Okabe-Ito")
+```

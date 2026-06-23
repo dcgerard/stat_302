@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="David Gerard">
+<meta name="dcterms.date" content="2026-06-23">
+
+<title>Multiple Regression – Stat 302: Intermediate Statistics</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-33269adcf1721b81efc5ea7fcfe7f0ee.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">dHJ1ZQ==</script>
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-0e01d36e12aedd38e6bb7bd9a7358603.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Stat 302: Intermediate Statistics</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../data.html"> 
+<span class="menu-text">Data</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#case-study-brain-size" id="toc-case-study-brain-size" class="nav-link" data-scroll-target="#case-study-brain-size">Case Study: Brain Size</a></li>
+  <li><a href="#the-model" id="toc-the-model" class="nav-link" data-scroll-target="#the-model">The Model</a></li>
+  <li><a href="#interpreting-coefficients" id="toc-interpreting-coefficients" class="nav-link" data-scroll-target="#interpreting-coefficients">Interpreting Coefficients</a>
+  <ul class="collapse">
+  <li><a href="#a-useful-notation" id="toc-a-useful-notation" class="nav-link" data-scroll-target="#a-useful-notation">A Useful Notation</a></li>
+  <li><a href="#interpretation-changes-with-the-model" id="toc-interpretation-changes-with-the-model" class="nav-link" data-scroll-target="#interpretation-changes-with-the-model">Interpretation Changes with the Model</a></li>
+  <li><a href="#visualizing-the-coefficient-interpretation" id="toc-visualizing-the-coefficient-interpretation" class="nav-link" data-scroll-target="#visualizing-the-coefficient-interpretation">Visualizing the Coefficient Interpretation</a></li>
+  </ul></li>
+  <li><a href="#fitting-multiple-linear-regression-in-r" id="toc-fitting-multiple-linear-regression-in-r" class="nav-link" data-scroll-target="#fitting-multiple-linear-regression-in-r">Fitting Multiple Linear Regression in R</a></li>
+  <li><a href="#inference" id="toc-inference" class="nav-link" data-scroll-target="#inference">Inference</a>
+  <ul class="collapse">
+  <li><a href="#interpreting-p-values" id="toc-interpreting-p-values" class="nav-link" data-scroll-target="#interpreting-p-values">Interpreting <span class="math inline">\(p\)</span>-values</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Multiple Regression</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>David Gerard </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 23, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="learning-objectives" class="level1">
+<h1>Learning Objectives</h1>
+<ul>
+<li>Introduce Multiple Linear Regression.</li>
+<li>Interpret the coefficients of a multiple regression model in randomized experiments and observational studies.</li>
+<li>Fit multiple linear regression models in R using <code>lm()</code>.</li>
+<li>Conduct inference (<span class="math inline">\(t\)</span>-tests and confidence intervals) for individual coefficients.</li>
+<li>Understand how <span class="math inline">\(p\)</span>-value interpretation depends on what other variables are in the model.</li>
+<li>Chapters 9 and 10 in the book.</li>
+</ul>
+<hr>
+</section>
+<section id="case-study-brain-size" class="level1">
+<h1>Case Study: Brain Size</h1>
+<ul>
+<li>What variables are associated with brain weight?</li>
+<li>Collected information on 96 different species.</li>
+<li>We know that body weight is already associated with brain weight,
+<ul>
+<li>So what variables are associated with brain weight <strong>after controlling for body weight</strong>?</li>
+</ul></li>
+<li>Possible variables: Body weight (kg), gestation period (days), litter size.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"case0902"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(case0902)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           Species  Brain    Body Gestation Litter
+1         Aardvark    9.6    2.20        31    5.0
+2         Acouchis    9.9    0.78        98    1.2
+3 African elephant 4480.0 2800.00       655    1.0
+4          Agoutis   20.3    2.80       104    1.3
+5        Axis deer  219.0   89.00       218    1.0
+6           Badger   53.0    6.00        60    2.2</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="the-model" class="level1">
+<h1>The Model</h1>
+<p>Simple linear regression:</p>
+<ul>
+<li>One quantitative response variable (<span class="math inline">\(Y\)</span>).</li>
+<li>One quantitative explanatory variable (<span class="math inline">\(X\)</span>).</li>
+<li>Model the conditional distribution of <span class="math inline">\(Y\)</span> given <span class="math inline">\(X\)</span>.</li>
+<li><span class="math inline">\(Y_i = \beta_0 + \beta_1 X_i + \epsilon_i\)</span></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0902, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log</span>(Body), <span class="at">y =</span> <span class="fu">log</span>(Brain))) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="11_multiple_regression_files/figure-html/slr-scatter-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Multiple linear regression:</p>
+<ul>
+<li>One quantitative response (<span class="math inline">\(Y\)</span>).</li>
+<li><strong>Multiple</strong> quantitative explanatory variables (<span class="math inline">\(X_1, X_2, \ldots, X_p\)</span>).</li>
+<li><span class="math inline">\(Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \cdots + \beta_p X_{pi} + \epsilon_i\)</span></li>
+<li>E.g., <span class="math inline">\(X_{2i}\)</span> is the value of the second explanatory variable for unit <span class="math inline">\(i\)</span>.</li>
+<li>With two explanatory variables: <span class="math display">\[Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \epsilon_i\]</span></li>
+<li><span class="math inline">\(\epsilon_i\)</span> is still ideally normally distributed with mean 0 and constant variance <span class="math inline">\(\sigma^2\)</span>.</li>
+</ul>
+<hr>
+</section>
+<section id="interpreting-coefficients" class="level1">
+<h1>Interpreting Coefficients</h1>
+<p>Consider the model <span class="math inline">\(Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \epsilon_i\)</span>.</p>
+<p>To interpret <span class="math inline">\(\beta_1\)</span> in a <strong>randomized experiment</strong>:</p>
+<ul>
+<li>Conceptually fix <span class="math inline">\(X_{2i}\)</span> at a value.</li>
+<li>Add one to <span class="math inline">\(X_{1i}\)</span>.</li>
+<li><span class="math inline">\(Y_i\)</span> changes by <span class="math inline">\(\beta_1\)</span>.</li>
+<li><span class="math inline">\(\beta_1\)</span> is how much <span class="math inline">\(Y_i\)</span> increases when we add one to <span class="math inline">\(X_{1i}\)</span> but keep <span class="math inline">\(X_{2i}\)</span> fixed.</li>
+<li>“A one-unit increase in light intensity causes the mean number of flowers to increase by <span class="math inline">\(\beta_1\)</span>.”</li>
+</ul>
+<p>To interpret <span class="math inline">\(\beta_1\)</span> in an <strong>observational study</strong>:</p>
+<ul>
+<li>The <span class="math inline">\(X_i\)</span>’s cannot be fixed independently of one another.</li>
+<li>Consider a subpopulation that has the same values of the <span class="math inline">\(X_j\)</span>’s, where <span class="math inline">\(j \neq 1\)</span>. Then the expected difference in means between species that differ in <span class="math inline">\(X_1\)</span> only by one unit is <span class="math inline">\(\beta_1\)</span>.</li>
+<li><span class="math inline">\(\beta_1\)</span> is the expected difference in <span class="math inline">\(Y\)</span>’s when we compare units with <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_1 + 1\)</span>.</li>
+<li>“For any subpopulation of mammal species with the same body weight, species with a one-day longer gestation length tend to have a mean brain weight <span class="math inline">\(\beta_1\)</span> grams larger.”</li>
+</ul>
+<section id="a-useful-notation" class="level2">
+<h2 class="anchored" data-anchor-id="a-useful-notation">A Useful Notation</h2>
+<ul>
+<li><span class="math inline">\(\mu(\text{brain} \mid \text{gestation}) = \beta_0 + \beta_1\,\text{gestation}\)</span>
+<ul>
+<li>The mean of brain weight equals <span class="math inline">\(\beta_0\)</span> plus <span class="math inline">\(\beta_1\)</span> times the gestation time.</li>
+</ul></li>
+<li><span class="math inline">\(\mu(\text{brain} \mid \text{gestation},\,\text{body}) = \beta_0 + \beta_1\,\text{gestation} + \beta_2\,\text{body}\)</span>
+<ul>
+<li>The mean of brain weight equals <span class="math inline">\(\beta_0\)</span> plus <span class="math inline">\(\beta_1\)</span> times the gestation time plus <span class="math inline">\(\beta_2\)</span> times the body weight.</li>
+</ul></li>
+</ul>
+</section>
+<section id="interpretation-changes-with-the-model" class="level2">
+<h2 class="anchored" data-anchor-id="interpretation-changes-with-the-model">Interpretation Changes with the Model</h2>
+<p>The interpretation of <span class="math inline">\(\beta_1\)</span> <strong>changes when the model changes</strong>, because the comparison group changes:</p>
+<ul>
+<li><span class="math inline">\(\mu(\text{brain} \mid \text{gestation}) = \beta_0 + \beta_1\,\text{gestation}\)</span>
+<ul>
+<li><span class="math inline">\(\beta_1\)</span> is the mean difference in brain weight comparing gestation periods 1 day apart <strong>in the population of all mammal species</strong>.</li>
+</ul></li>
+<li><span class="math inline">\(\mu(\text{brain} \mid \text{gestation},\,\text{body}) = \beta_0 + \beta_1\,\text{gestation} + \beta_2\,\text{body}\)</span>
+<ul>
+<li><span class="math inline">\(\beta_1\)</span> is the mean difference comparing gestation periods 1 day apart <strong>in subpopulations with the same body weight</strong>.</li>
+</ul></li>
+</ul>
+</section>
+<section id="visualizing-the-coefficient-interpretation" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-the-coefficient-interpretation">Visualizing the Coefficient Interpretation</h2>
+<p>Consider artificial data with <span class="math inline">\(\beta_0 = 2\)</span>, <span class="math inline">\(\beta_1 = 1\)</span> (positive <span class="math inline">\(X_1\)</span> effect), <span class="math inline">\(\beta_2 = -3\)</span> (large negative <span class="math inline">\(X_2\)</span> effect), where <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span> are positively correlated.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="dv">2</span>; beta1 <span class="ot">&lt;-</span> <span class="dv">1</span>; beta2 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">3</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="dv">5</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">9</span>, <span class="dv">5</span>) <span class="sc">+</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">each =</span> <span class="dv">10</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>y  <span class="ot">&lt;-</span> beta0 <span class="sc">+</span> beta1 <span class="sc">*</span> x1 <span class="sc">+</span> beta2 <span class="sc">*</span> x2</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>df_fake <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x1 =</span> x1, <span class="at">y =</span> y, <span class="at">x2 =</span> <span class="fu">as.factor</span>(x2))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Without <span class="math inline">\(X_2\)</span> in the model</strong> — the marginal slope looks <strong>negative</strong> even though <span class="math inline">\(\beta_1 = 1\)</span>:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_fake, <span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_blank</span>(), <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="11_multiple_regression_files/figure-html/fake-no-x2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>With <span class="math inline">\(X_2\)</span> color-coded</strong> — the slope within each level of <span class="math inline">\(X_2\)</span> is positive (<span class="math inline">\(= \beta_1 = 1\)</span>), and the parallel lines sit at different heights:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_fake, <span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> y, <span class="at">color =</span> x2)) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_blank</span>(), <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">keywidth =</span> <span class="fl">0.1</span>, <span class="at">keyheight =</span> <span class="fl">0.1</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                               <span class="at">default.unit =</span> <span class="st">"inch"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="11_multiple_regression_files/figure-html/fake-with-x2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The figure below shows the same idea using the real brain-size data (<code>case0902</code>):</p>
+<ul>
+<li><strong>Left:</strong> a single marginal fit line for all 96 species (<span class="math inline">\(\hat\beta_1 \approx 2.23\)</span>).</li>
+<li><strong>Middle:</strong> points colored by log(Body) tertile — large-bodied species (green) drive much of the steep marginal slope because they have both long gestations and large brains.</li>
+<li><strong>Right:</strong> parallel fit lines from the additive model — every body-weight group has the same gestation slope (<span class="math inline">\(\hat\beta_1 \approx 0.67\)</span>) but sits at a different height, reflecting the body-size effect <span class="math inline">\(\beta_2\)</span>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="11_multiple_regression_files/figure-html/parallel-slopes-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1056"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="fitting-multiple-linear-regression-in-r" class="level1">
+<h1>Fitting Multiple Linear Regression in R</h1>
+<p>Want to fit: <span class="math inline">\(\mu(\text{brain} \mid \text{gestation},\,\text{body}) = \beta_0 + \beta_1\,\text{gestation} + \beta_2\,\text{body}\)</span></p>
+<ul>
+<li><span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span> are parameters (we don’t know them).</li>
+<li>We can <strong>estimate</strong> them by minimizing the sum of squared residuals.</li>
+<li>Residuals: <span class="math inline">\(Y_i - (\beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i})\)</span></li>
+<li>The resulting estimates are the OLS (ordinary least squares) estimates: <span class="math inline">\(\hat\beta_0\)</span>, <span class="math inline">\(\hat\beta_1\)</span>, <span class="math inline">\(\hat\beta_2\)</span>.</li>
+</ul>
+<p>Use <code>lm()</code> and <strong>always save the output</strong>:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(Brain <span class="sc">~</span> Gestation <span class="sc">+</span> Body, <span class="at">data =</span> case0902)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>lmout</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Brain ~ Gestation + Body, data = case0902)
+
+Coefficients:
+(Intercept)    Gestation         Body  
+    -112.19         1.45         1.03  </code></pre>
+</div>
+</div>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"><code>(Intercept)</code></th>
+<th style="text-align: center;"><code>Gestation</code></th>
+<th style="text-align: center;"><code>Body</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(\hat\beta_0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\hat\beta_1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\hat\beta_2\)</span></td>
+</tr>
+</tbody>
+</table>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(Brain <span class="sc">~</span> Gestation <span class="sc">+</span> Body <span class="sc">+</span> Litter, <span class="at">data =</span> case0902)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>lmout</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Brain ~ Gestation + Body + Litter, data = case0902)
+
+Coefficients:
+(Intercept)    Gestation         Body       Litter  
+   -225.292        1.809        0.986       27.649  </code></pre>
+</div>
+</div>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"><code>(Intercept)</code></th>
+<th style="text-align: center;"><code>Gestation</code></th>
+<th style="text-align: center;"><code>Body</code></th>
+<th style="text-align: center;"><code>Litter</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(\hat\beta_0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\hat\beta_1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\hat\beta_2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\hat\beta_3\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>We would interpret this output as:</p>
+<ul>
+<li>“We estimate that species with a 1-day longer gestation time tend to have a brain weight 1.8 grams heavier, after adjusting for body weight and litter size.”</li>
+<li>“We estimate that species with an average body weight 1 kg heavier tend to have a brain weight 0.99 grams heavier, after adjusting for gestation time and litter size.”</li>
+<li>“We estimate that species with a litter size one offspring larger tend to have a brain weight 27.6 grams heavier, after adjusting for body weight and gestation time.”</li>
+</ul>
+<hr>
+</section>
+<section id="inference" class="level1">
+<h1>Inference</h1>
+<ul>
+<li>We are usually interested in testing if <span class="math inline">\(\beta_i = 0\)</span>.</li>
+<li>We are usually interested in getting confidence intervals on the <span class="math inline">\(\beta_i\)</span>’s.</li>
+<li>We can use the usual <span class="math inline">\(t\)</span>-tools to get these.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(Brain <span class="sc">~</span> Gestation <span class="sc">+</span> Body, <span class="at">data =</span> case0902)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Brain ~ Gestation + Body, data = case0902)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1091.5   -63.2     8.2    67.1  1025.0 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept) -112.1920    43.0595   -2.61    0.011
+Gestation      1.4499     0.2752    5.27  8.9e-07
+Body           1.0326     0.0903   11.44  &lt; 2e-16
+
+Residual standard error: 226 on 93 degrees of freedom
+Multiple R-squared:  0.805, Adjusted R-squared:  0.801 
+F-statistic:  192 on 2 and 93 DF,  p-value: &lt;2e-16</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">summary</span>(lmout))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Estimate Std. Error t value  Pr(&gt;|t|)
+(Intercept) -112.192    43.0595  -2.606 1.068e-02
+Gestation      1.450     0.2752   5.268 8.889e-07
+Body           1.033     0.0903  11.436 1.984e-19</code></pre>
+</div>
+</div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: center;">Estimate</th>
+<th style="text-align: center;">Std. Error</th>
+<th style="text-align: center;">t value</th>
+<th style="text-align: center;">Pr(&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>(Intercept)</code></td>
+<td style="text-align: center;"><span class="math inline">\(\hat\beta_0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(SE(\hat\beta_0)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\hat\beta_0/SE(\hat\beta_0)\)</span></td>
+<td style="text-align: center;">p-value for <span class="math inline">\(H_0:\beta_0=0\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>Gestation</code></td>
+<td style="text-align: center;"><span class="math inline">\(\hat\beta_1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(SE(\hat\beta_1)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\hat\beta_1/SE(\hat\beta_1)\)</span></td>
+<td style="text-align: center;">p-value for <span class="math inline">\(H_0:\beta_1=0\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>Body</code></td>
+<td style="text-align: center;"><span class="math inline">\(\hat\beta_2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(SE(\hat\beta_2)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\hat\beta_2/SE(\hat\beta_2)\)</span></td>
+<td style="text-align: center;">p-value for <span class="math inline">\(H_0:\beta_2=0\)</span></td>
+</tr>
+</tbody>
+</table>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                2.5 %  97.5 %
+(Intercept) -197.6997 -26.684
+Gestation      0.9033   1.996
+Body           0.8533   1.212</code></pre>
+</div>
+</div>
+<section id="interpreting-p-values" class="level2">
+<h2 class="anchored" data-anchor-id="interpreting-p-values">Interpreting <span class="math inline">\(p\)</span>-values</h2>
+<p>The interpretation of significance <strong>depends on what other variables are in the model</strong>.</p>
+<p><span class="math inline">\(\mu(\text{brain} \mid \text{gestation}) = \beta_0 + \beta_1\,\text{gestation}\)</span></p>
+<ul>
+<li><span class="math inline">\(H_0: \beta_1 = 0\)</span> vs <span class="math inline">\(H_A: \beta_1 \neq 0\)</span></li>
+<li>Model under <span class="math inline">\(H_0\)</span>: <span class="math inline">\(\mu(\text{brain}) = \beta_0\)</span></li>
+<li>Model under <span class="math inline">\(H_A\)</span>: <span class="math inline">\(\mu(\text{brain} \mid \text{gestation}) = \beta_0 + \beta_1\,\text{gestation}\)</span></li>
+<li>If we reject <span class="math inline">\(H_0\)</span>: “We have strong evidence that gestation is related to brain weight.”</li>
+<li>If we fail to reject <span class="math inline">\(H_0\)</span>: “We do not have strong evidence that gestation is related to brain weight.”</li>
+</ul>
+<p><span class="math inline">\(\mu(\text{brain} \mid \text{gestation},\,\text{body}) = \beta_0 + \beta_1\,\text{gestation} + \beta_2\,\text{body}\)</span></p>
+<ul>
+<li><span class="math inline">\(H_0: \beta_1 = 0\)</span> vs <span class="math inline">\(H_A: \beta_1 \neq 0\)</span></li>
+<li>Model under <span class="math inline">\(H_0\)</span>: <span class="math inline">\(\mu(\text{brain} \mid \text{body}) = \beta_0 + \beta_2\,\text{body}\)</span></li>
+<li>Model under <span class="math inline">\(H_A\)</span>: <span class="math inline">\(\mu(\text{brain} \mid \text{gestation},\,\text{body}) = \beta_0 + \beta_1\,\text{gestation} + \beta_2\,\text{body}\)</span></li>
+<li>If we reject <span class="math inline">\(H_0\)</span>: “We have strong evidence that gestation is related to brain weight after adjusting for body size.”</li>
+<li>If we fail to reject <span class="math inline">\(H_0\)</span>: “We do not have strong evidence that gestation is related to brain weight after adjusting for body size.”</li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
