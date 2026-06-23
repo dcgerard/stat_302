@@ -1,0 +1,894 @@
+---
+title: "Linear Model Assumptions and Transformations"
+author: "David Gerard"
+date: today
+bibliography: "../bib.bib"
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(broom)
+knitr::opts_chunk$set(echo       = TRUE,
+                      fig.height = 3,
+                      fig.width  = 5,
+                      fig.align  = "center")
+ggplot2::theme_set(ggplot2::theme_bw())
+set.seed(1)
+```
+
+# Learning Objectives
+
+- Understand the assumptions of simple linear regression and their relative
+  importance.
+- Evaluate assumptions using scatterplots and residual plots.
+- Choose and apply appropriate remedies when assumptions are violated.
+- Interpret log-transformations of the explanatory and/or response variable.
+- Use sandwich standard errors to handle non-constant variance.
+- Perform a lack-of-fit $F$-test to assess whether a linear model is adequate.
+- Ch 8 in the book.
+
+---
+
+# Assumptions of Simple Linear Regression
+
+## Assumptions in Decreasing Order of Importance
+
+1. **Linearity** — Does the relationship look like a straight line?
+2. **Independence** — Knowledge of one observation gives no information about
+   another.
+3. **Equal Variance** — The spread is the same for every value of $x$.
+4. **Normality** — The distribution is not too skewed and there are no extreme
+   outliers. (Only a concern when outliers are present and the sample size is
+   small, thanks to the CLT.)
+
+## Problems When Violated
+
+1. **Linearity** — The regression line does not capture the actual relationship.
+2. **Independence** — The regression line is unbiased, but standard errors are
+   wrong.
+3. **Equal Variance** — The regression line is unbiased, but standard errors are
+   wrong.
+4. **Normality** — Unstable results when outliers are present and the sample size
+   is small.
+
+## Assessment Tools: Scatterplots and Residual Plots
+
+- Make a **scatterplot** of $x$ (horizontal) vs $y$ (vertical) to check for
+  non-linearity, unequal variance, and normality violations.
+- A **residual plot** (residuals on the $y$-axis, fitted values on the $x$-axis)
+  is often clearer because the linear signal is removed.
+
+---
+
+# Demonstrating the Assumptions
+
+## Dataset 1: Gold Standard
+
+```{r}
+#| label: d1-gen
+x <- rnorm(100, sd = 1)
+y <- x + rnorm(100)
+```
+
+```{r}
+#| label: d1-scatter
+#| message: false
+ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(se = FALSE)
+```
+
+```{r}
+#| label: d1-resid
+lmout <- lm(y ~ x)
+augment(lmout) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+- The mean lies on a straight line.
+- Residuals are centered at 0 for all $x$.
+- Variance looks equal for all $x$.
+- Everything looks ideal.
+
+### Don't get fooled by distribution of x
+
+The distribution of x doesn't matter. The below plot is **also** perfect
+
+```{r}
+#| label: d1a-gen
+x <- sample(1:3, size = 100, replace = TRUE)
+y <- x + rnorm(100)
+```
+
+```{r}
+#| label: d1a-scatter
+#| message: false
+#| warning: false
+ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(se = FALSE, method = lm)
+```
+
+```{r}
+#| label: d1a-resid
+lmout <- lm(y ~ x)
+augment(lmout) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+---
+
+## Dataset 2: Curved Monotone Relationship, Equal Variances
+
+```{r}
+#| label: d2-gen
+x <- rexp(100)
+x <- x - min(x) + 0.5
+y <- log(x) * 20 + rnorm(100, sd = 4)
+```
+
+```{r}
+#| label: d2-scatter
+#| message: false
+ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(se = FALSE)
+```
+
+```{r}
+#| label: d2-resid
+lmout <- lm(y ~ x)
+augment(lmout) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+- Curved but always-increasing relationship between $x$ and $y$.
+- Variance looks equal for all $x$.
+- Residual plot has a parabolic shape — a $\log$ transformation of $x$ could
+  help.
+
+```{r}
+#| label: d2-log-scatter
+#| message: false
+x_log <- log(x)
+ggplot(data.frame(x_log = x_log, y = y), aes(x = x_log, y = y)) +
+  geom_point() +
+  geom_smooth(se = FALSE) +
+  labs(x = "log(x)")
+```
+
+```{r}
+#| label: d2-log-resid
+lmout <- lm(y ~ x_log)
+augment(lmout) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+After the $\log$ transformation of $x$, the residual plot looks flat and
+even — the linearity and equal-variance assumptions are now satisfied.
+
+---
+
+## Dataset 3: Curved Non-Monotone Relationship, Equal Variances
+
+```{r}
+#| label: d3-gen
+x <- rnorm(100)
+y <- -x^2 + rnorm(100)
+```
+
+```{r}
+#| label: d3-scatter
+#| message: false
+ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(se = FALSE)
+```
+
+```{r}
+#| label: d3-resid
+lmout <- lm(y ~ x)
+augment(lmout) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+- Curved relationship that sometimes increases, sometimes decreases.
+- Variance looks equal for all $x$.
+- Residual plot has a parabolic form.
+
+**Solution 1:** Add a quadratic term:
+$$Y_i = \beta_0 + \beta_1 X_i + \beta_2 X_i^2$$
+
+```{r}
+#| label: d3-quad-fit
+x2 <- x^2
+quad_lm <- lm(y ~ x + x2)
+
+fit_df <- data.frame(x = x, fitted = fitted(quad_lm)) |> arrange(x)
+ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+  geom_point() +
+  geom_line(data = fit_df, aes(x = x, y = fitted),
+            color = "blue", linewidth = 1)
+```
+
+```{r}
+#| label: d3-quad-resid
+augment(quad_lm) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+**Solution 2:** Fit a broken-line (piecewise linear) model using the `lm.br`
+package:
+$$Y_i = \begin{cases} \beta_0 + \beta_1 X_i & \text{if } X_i < C \\ \beta_0^* + \beta_1^* X_i & \text{if } X_i > C \end{cases}$$
+
+```{r}
+#| label: d3-lmbr
+#| message: false
+library(lm.br)
+lmbr_out <- lm.br(y ~ x)
+
+fit_df2 <- data.frame(x = x, fitted = fitted(lmbr_out)) |> arrange(x)
+ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+  geom_point() +
+  geom_line(data = fit_df2, aes(x = x, y = fitted),
+            color = "blue", linewidth = 1)
+```
+
+```{r}
+#| label: d3-lmbr-resid
+augment(quad_lm) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+---
+
+## Dataset 4: Curved Relationship, Variance Increases with $Y$
+
+```{r}
+#| label: d4-gen
+x <- rnorm(100)
+y <- exp(x + rnorm(100, sd = 1/2))
+```
+
+```{r}
+#| label: d4-scatter
+#| message: false
+ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(se = FALSE)
+```
+
+```{r}
+#| label: d4-resid
+lmout <- lm(y ~ x)
+augment(lmout) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+- Curved relationship between $x$ and $y$.
+- Variance increases as $y$ increases.
+- Residual plot has a parabolic shape and shows increasing spread to the right.
+
+**Solution:** Take a log-transformation of $y$.
+
+```{r}
+#| label: d4-log-scatter
+#| message: false
+y_log <- log(y)
+ggplot(data.frame(x = x, y_log = y_log), aes(x = x, y = y_log)) +
+  geom_point() +
+  geom_smooth(se = FALSE) +
+  labs(y = "log(y)")
+```
+
+```{r}
+#| label: d4-log-resid
+lmout <- lm(y_log ~ x)
+augment(lmout) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+After taking $\log(y)$, both the linearity and equal-variance problems are
+resolved.
+
+### Again, don't get fooled by distribution of x
+
+Still look for increasing variances for increasing x, even if the distribution of x is discrete.
+
+```{r}
+#| label: d4a-gen
+x <- sample(1:3, size = 100, replace = TRUE)
+y <- exp(x + rnorm(100, sd = 1/2))
+```
+
+```{r}
+#| label: d4a-scatter
+#| message: false
+#| warning: false
+ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(se = FALSE)
+```
+
+```{r}
+#| label: d4a-resid
+lmout <- lm(y ~ x)
+augment(lmout) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+- Curved relationship between $x$ and $y$.
+- Variance increases as $y$ increases.
+- Residual plot has a parabolic shape and shows increasing spread to the right.
+
+**Solution:** Take a log-transformation of $y$.
+
+```{r}
+#| label: d4a-log-scatter
+#| message: false
+#| warning: false
+y_log <- log(y)
+ggplot(data.frame(x = x, y_log = y_log), aes(x = x, y = y_log)) +
+  geom_point() +
+  geom_smooth(se = FALSE, method = lm) +
+  labs(y = "log(y)")
+```
+
+```{r}
+#| label: d4a-log-resid
+lmout <- lm(y_log ~ x)
+augment(lmout) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+After taking $\log(y)$, both the linearity and equal-variance problems are
+resolved.
+
+---
+
+## Dataset 5: Linear Relationship, Equal Variances, Skewed Errors
+
+```{r}
+#| label: d5-gen
+x <- runif(200)
+y <- 15 * x + rexp(200, 0.2)
+```
+
+```{r}
+#| label: d5-scatter
+#| message: false
+ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(se = FALSE)
+```
+
+```{r}
+#| label: d5-resid
+lmout <- lm(y ~ x)
+augment(lmout) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+- Straight-line relationship between $x$ and $y$.
+- Variances are approximately equal for all $x$.
+- The errors are right-skewed — visible in the residual plot.
+
+**Solutions:**
+
+1. Do nothing, but report the skewness (usually acceptable for large $n$).
+2. Fit a **quantile regression** for the median:
+   $$\text{Median}(Y_i) = \beta_0 + \beta_1 X_i$$
+
+```{r}
+#| label: d5-quantreg
+#| message: false
+library(quantreg)
+qr_out <- rq(y ~ x, tau = 0.5)
+
+fit_df <- data.frame(x = x, qr_fitted = fitted(qr_out)) |> arrange(x)
+ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  geom_line(data = fit_df, aes(x = x, y = qr_fitted),
+            color = "red", linewidth = 1)
+```
+
+The quantile regression line (red) is not very different from the OLS line
+(blue) — skewness with equal variance has little practical effect on the
+coefficient estimates.
+
+---
+
+## Dataset 6: Linear Relationship, Unequal Variances
+
+```{r}
+#| label: d6-gen
+x <- runif(100) * 10
+y <- 0.85 * x + rnorm(100, sd = (x - 5)^2)
+```
+
+```{r}
+#| label: d6-scatter
+#| message: false
+ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(se = FALSE)
+```
+
+```{r}
+#| label: d6-resid
+lmout <- lm(y ~ x)
+augment(lmout) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+- Linear relationship between $x$ and $y$.
+- Variance differs across values of $x$ — clearly visible in the residual plot.
+
+**Solution:** Use **sandwich** standard errors.
+
+```{r}
+#| label: d6-sandwich
+library(sandwich)
+library(lmtest)
+coeftest(lmout, vcov = sandwich) |> tidy()
+```
+
+Compare to the standard (non-robust) standard errors:
+
+```{r}
+#| label: d6-standard
+tidy(lmout)
+```
+
+Confidence intervals with sandwich standard errors:
+
+```{r}
+#| label: d6-sandwich-ci
+coefci(lmout, vcov = sandwich)
+```
+
+The sandwich estimator yields accurate standard errors for the coefficient
+estimates as long as (1) the linearity assumption holds, and (2) the sample
+size is large enough. Note that sandwich standard errors **cannot** be used
+for prediction intervals.
+
+---
+
+# Interpreting Log Transformations
+
+## No Log on $X$, No Log on $Y$
+
+**Model:** $\mu(Y \mid X) = \beta_0 + \beta_1 X$
+
+At $X + 1$:
+$$\mu(Y \mid X+1) = \beta_0 + \beta_1(X+1) = \mu(Y \mid X) + \beta_1$$
+
+- **Observational study:** $\beta_1$ is the mean difference in $Y$ between
+  groups that differ by one unit in $X$.
+- **Randomized experiment:** $\beta_1$ is the mean increase in $Y$ when $X$ is
+  increased by one unit.
+
+---
+
+## No Log on $X$, Log on $Y$
+
+**Model:** $\mu(\log(Y) \mid X) = \beta_0 + \beta_1 X$
+
+If residuals are fairly symmetric, then
+$\text{Median}(\log Y \mid X) \approx \mu(\log Y \mid X)$, so:
+
+$$\text{Median}(Y \mid X) = \exp(\beta_0 + \beta_1 X)
+= \exp(\beta_0)\exp(\beta_1 X)$$
+
+At $X + 1$:
+$$\text{Median}(Y \mid X+1) = \text{Median}(Y \mid X) \cdot \exp(\beta_1)$$
+
+- **Observational study:** $\exp(\beta_1)$ is the ratio of medians when groups
+  differ by one unit in $X$.
+- **Randomized experiment:** $\exp(\beta_1)$ is the multiplicative change in median $Y$ when $X$ increases by one unit.
+
+**Example (Voltage and Breakdown Time):** $\hat\beta_1 = -0.51$,
+95% CI $(-0.62, -0.39)$.
+
+- $\exp(-0.51) = 0.6$: a 1 kV increase is associated with 60% of the median
+  breakdown time — a 40% decrease.
+- 95% CI for the multiplicative effect: $(\exp(-0.62), \exp(-0.39)) = (0.54,
+  0.68)$.
+
+$$\text{Median}(Y \mid X+1) - \text{Median}(Y \mid X)
+= (\exp(\beta_1) - 1)\,\text{Median}(Y \mid X) = -0.4\,\text{Median}(Y \mid X)$$
+
+---
+
+## Log on $X$, No Log on $Y$
+
+**Model:** $\mu(Y \mid X) = \beta_0 + \beta_1 \log(X)$
+
+When $X$ is doubled:
+
+$$\mu(Y \mid 2X) = \beta_0 + \beta_1\log(2X) = \mu(Y \mid X) + \beta_1\log(2)$$
+
+- **Observational study:** $\beta_1\log(2)$ is the mean difference in $Y$ when
+  one group's $X$ is twice the other's.
+- **Randomized experiment:** $\beta_1\log(2)$ is the increase in mean $Y$ when $X$
+  is doubled.
+
+A similar interpretation holds for $\beta_1\log(10)$ and a 10-fold increase in
+$X$.
+
+**Example (pH and time after slaughter):** $\hat\beta_1 = -0.726$,
+95% CI $(-0.805, -0.646)$.
+
+- Doubling the time decreases pH by $0.726\log(2) = 0.503$.
+- 95% CI: $(-0.805\log(2),\,-0.646\log(2)) = (-0.558,\,-0.448)$.
+
+---
+
+## Log on $X$, Log on $Y$
+
+**Model:** $\mu(\log(Y) \mid X) = \beta_0 + \beta_1\log(X)$
+
+Simplifying:
+$$\text{Median}(Y \mid X) = \exp(\beta_0)\,X^{\beta_1}$$
+
+When $X$ is doubled:
+$$\text{Median}(Y \mid 2X) = \text{Median}(Y \mid X) \cdot 2^{\beta_1}$$
+
+- **Observational study:** $2^{\beta_1}$ is the ratio of medians when one
+  group's $X$ is twice the other's.
+- **Randomized experiment:** $2^{\beta_1}$ is the multiplicative change in median $Y$ when $X$ is doubled.
+
+A similar interpretation holds for $10^{\beta_1}$ and a 10-fold increase in
+$X$.
+
+---
+
+## Other Transformations
+
+Other transformations (e.g., $1/Y$, $\sqrt{Y}$) may improve residual plots but
+lack clean interpretations. They are appropriate when the goal is:
+
+1. **Prediction**, or
+2. Only detecting **whether** an association exists (not describing its size).
+
+- $1/Y$ tends to fix more extreme non-constant variance.
+- $\sqrt{Y}$ tends to fix less extreme non-constant variance.
+
+---
+
+# Case Study: Voltage vs. Breakdown Time
+
+A controlled experiment studied the relationship between voltage and the
+breakdown time of an electrical insulating fluid. The researchers could control
+the voltage level of each trial.
+
+```{r}
+#| label: voltage-data
+#| message: false
+case0802 <- read_csv("https://dcgerard.github.io/stat_302/data/case0802.csv")
+glimpse(case0802)
+```
+
+## Step 1: Scatterplot
+
+```{r}
+#| label: voltage-scatter
+#| message: false
+ggplot(case0802, aes(x = Voltage, y = Time)) +
+  geom_point() +
+  geom_smooth(se = FALSE)
+```
+
+## Step 2: Residual Plot
+
+```{r}
+#| label: voltage-resid
+lmout <- lm(Time ~ Voltage, data = case0802)
+augment(lmout) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+- As the mean increases, variability increases.
+- The relationship is clearly curved.
+- A log-transformation of $Y$ is needed.
+
+## Step 3: Log-Transform and Re-evaluate
+
+```{r}
+#| label: voltage-log-scatter
+#| message: false
+case0802 <- case0802 |>
+  mutate(logTime = log(Time))
+
+ggplot(case0802, aes(x = Voltage, y = logTime)) +
+  geom_point() +
+  geom_smooth(se = FALSE) +
+  labs(y = "log(Time)")
+```
+
+```{r}
+#| label: voltage-log-resid
+lmout <- lm(logTime ~ Voltage, data = case0802)
+augment(lmout) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+After the log-transformation, the linearity and equal-variance assumptions look
+satisfied.
+
+## Step 4: Inference
+
+```{r}
+#| label: voltage-tidy
+tidy(lmout)
+```
+
+```{r}
+#| label: voltage-confint
+tidy(lmout, conf.int = TRUE)
+```
+
+## Interpretation on the Original Scale
+
+A one kV increase results in a $\exp(-0.507) = 0.60$ multiplicative change in
+median breakdown time — a 40% decrease.
+
+```{r}
+#| label: voltage-interpret
+tidy(lmout, conf.int = TRUE) |>
+  filter(term == "Voltage") |>
+  select(estimate, conf.low, conf.high) |>
+  mutate(across(everything(), exp))
+```
+
+```{r}
+#| label: voltage-pct-decrease
+tidy(lmout, conf.int = TRUE) |>
+  filter(term == "Voltage") |>
+  transmute(
+    pct_change      = (1 - exp(estimate)) * 100,
+    pct_change_low  = (1 - exp(conf.high)) * 100,
+    pct_change_high = (1 - exp(conf.low)) * 100
+  )
+```
+
+---
+
+# Lack-of-Fit $F$-Test
+
+## We Could Have Viewed This as an ANOVA Problem
+
+```{r}
+#| label: lof-boxplot
+case0802 <- case0802 |>
+  mutate(VoltageFac = as.factor(Voltage))
+
+ggplot(case0802, aes(x = VoltageFac, y = logTime)) +
+  geom_boxplot() +
+  labs(x = "Voltage", y = "log(Time)")
+```
+
+## Which Is Better?
+
+- If the linear model appears to fit fine, it is **always preferred**.
+- You can interpolate with the linear model (not with ANOVA).
+- The linear model has easier interpretations.
+- The linear model has fewer parameters.
+- We can formally test if the linear model does not fit using the $F$-testing
+  strategy if we have replicates at given values of $X$.
+
+## Lack-of-Fit $F$-Test
+
+- $H_0: E[Y_i] = \beta_0 + \beta_1X_i$ (mean is based on line)
+- $H_A: E[Y_i] = \mu_j$ where $X_i = j$ (mean is based on group)
+
+-   Full Model Estimates
+
+    ```{r}
+    #| label: lof-full-setup
+    #| message: false
+    #| echo: false
+    lmout <- lm(logTime ~ Voltage, data = case0802)
+    
+    meandf <- case0802 |>
+      group_by(VoltageFac) |>
+      summarize(mean = mean(logTime)) |>
+      mutate(z = as.numeric(VoltageFac)) |>
+      mutate(zlower = z - 1/3, zupper = z + 1/3)
+    
+    case0802 <- case0802 |>
+      mutate(jitterx = jitter(as.numeric(VoltageFac)),
+             fitted  = fitted(lmout)) |>
+      left_join(select(meandf, VoltageFac, mean), by = "VoltageFac")
+    ```
+    
+    ```{r}
+    #| label: lof-full-plot
+    #| echo: false
+    ggplot(case0802, aes(x = jitterx, y = logTime)) +
+      geom_point() +
+      scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +
+      geom_segment(data = meandf,
+                   mapping = aes(x = zlower, xend = zupper, y = mean, yend = mean),
+                   col = 2, lty = 2) +
+      labs(x = "Voltage")
+    ```
+
+-   Reduced Model Estimates
+
+    ```{r}
+    #| label: lof-reduced-plot
+    ggplot(case0802, aes(x = jitterx, y = logTime)) +
+      geom_point() +
+      scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +
+      geom_line(mapping = aes(x = (Voltage - 24) / 2, y = fitted), lty = 2, col = 2) +
+      labs(x = "Voltage")
+    ```
+
+-   Residuals Under Full
+
+    ```{r}
+    #| label: lof-resid-full
+    #| echo: false
+    ggplot(case0802, aes(x = jitterx, y = logTime)) +
+      geom_point() +
+      scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +
+      geom_segment(data = meandf,
+                   mapping = aes(x = zlower, xend = zupper, y = mean, yend = mean),
+                   col = 2, lty = 2) +
+      geom_segment(mapping = aes(x = jitterx, xend = jitterx, y = logTime, yend = mean),
+                   col = "blue") +
+      labs(x = "Voltage")
+    ```
+
+-   Residuals Under Reduced
+
+    ```{r}
+    #| label: lof-resid-reduced
+    #| echo: false
+    ggplot(case0802, aes(x = jitterx, y = logTime)) +
+      geom_point() +
+      scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +
+      geom_line(mapping = aes(x = (Voltage - 24) / 2, y = fitted), lty = 2, col = 2) +
+      geom_segment(mapping = aes(x = jitterx, xend = jitterx, y = logTime, yend = fitted),
+                   col = "blue") +
+      labs(x = "Voltage")
+    ```
+
+-   Lack-of-Fit $F$-Statistic
+
+    ```{r}
+    #| label: lof-calc
+    #| message: false
+    case0802 <- read_csv("https://dcgerard.github.io/stat_302/data/case0802.csv")
+    case0802 |>
+      mutate(logTime = log(Time)) ->
+      case0802
+    lmout <- lm(logTime ~ Voltage, data = case0802) ## estimates linear model
+    case0802 |>
+      group_by(Voltage) |>
+      mutate(mean = mean(logTime)) |> ## full model means
+      ungroup() |>
+      mutate(fitted = fitted(lmout)) ->
+      case0802
+    rss_full    <- sum((case0802$logTime - case0802$mean)^2)
+    rss_reduced <- sum((case0802$logTime - case0802$fitted)^2)
+    ESS         <- rss_reduced - rss_full
+    df_full     <- 69
+    df_reduced  <- 74
+    df_extra    <- df_reduced - df_full
+    fstat       <- (ESS / df_extra) / (rss_full / df_full)
+    ```
+
+- $RSS_{full}$ = `r rss_full`
+
+- $df_{full} = n - I$ = 76 - 7 = 69
+
+- $RSS_{reduced}$ = `r rss_reduced`
+
+- $df_{reduced} = n - 2$ = 76 - 2 = 74
+
+- $ESS = RSS_{reduced} - RSS_{full}$ = `r ESS`
+
+- $df_{extra} = df_{reduced} - df_{full}$ = 74 - 69 = 5
+
+- $F$-statistic $= \frac{ESS / df_{extra}}{RSS_{full} / df_{full}}$ = `r fstat`
+
+-   Compare to $F_{5,69}$
+
+    ```{r}
+    #| label: lof-fdist
+    #| echo: false
+    x <- seq(0, 5, length = 100)
+    y <- df(x, 5, 69)
+    
+    which_x <- x > fstat
+    polydf <- data.frame(
+      polyx = c(min(x[which_x]), x[which_x], max(x[which_x]), min(x[which_x])),
+      polyy = c(0, y[which_x], 0, 0)
+    )
+    ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+      geom_line() +
+      geom_polygon(data = polydf, aes(x = polyx, y = polyy), fill = "blue", alpha = 3/4) +
+      labs(x = "F-stat", y = "Density")
+    ```
+
+-   Calculate $p$-value
+
+    ```{r}
+    #| label: lof-pvalue
+    pf(0.5024, df1 = 5, df2 = 69, lower.tail = FALSE)
+    ```
+
+## Lack of Fit in R
+
+Create a factor variable:
+
+```{r}
+#| label: lof-factor
+case0802 <- case0802 |>
+  mutate(VoltageFac = as.factor(Voltage))
+```
+
+Fit both the ANOVA and regression models:
+
+```{r}
+#| label: lof-models
+aout  <- aov(logTime ~ VoltageFac, data = case0802)
+lmout <- lm(logTime ~ Voltage,    data = case0802)
+```
+
+Use `anova()` to get the ANOVA table:
+
+```{r}
+#| label: lof-anova
+anova(lmout, aout)
+```

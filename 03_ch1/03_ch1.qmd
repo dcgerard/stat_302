@@ -145,11 +145,10 @@ ggplot2::theme_set(ggplot2::theme_bw())
 
 ```{r case0101-eda}
 #| message: false
-library(Sleuth3)
 library(tidyverse)
 library(broom)
 
-data("case0101")
+case0101 <- read_csv("https://dcgerard.github.io/stat_302/data/case0101.csv")
 ggplot(case0101, aes(x = Treatment, y = Score)) +
   geom_boxplot(coef = Inf) +
   geom_jitter(width = 0.1, alpha = 1/2) +
@@ -362,7 +361,73 @@ ggplot(data.frame(x = diffvec), aes(x = x)) +
   coord_cartesian(xlim = c(-6.5, 6.5)) +
   labs(x = "Difference in means (Intrinsic − Extrinsic)",
        y = "Count",
-       title = "Full randomization distribution (5,000 permutations)") +
+       title = "Randomization distribution (5,000 permutations)") +
   theme_bw(base_size = 12) +
   theme(panel.grid.minor = element_blank())
 ```
+
+# Permutation Distribution
+
+- In observational studies, we can still randomly shuffle the group labels.
+  - But it is no longer simulating the random allocation of treatments.
+  - Rather, it simulates under a ficticous model where the employer randomly allocates preset salaries to individuals.
+
+- In practice, you still apply the exact same procedure as above
+  - Randomly allocate group labels, calculate average difference between groups, build up a **permutation distribution**.
+  - Compare the observed average difference to this permutation distribution.
+
+-   EDA:
+    ```{r}
+    #| message: false
+    case0102 <- read_csv("https://dcgerard.github.io/stat_302/data/case0102.csv")
+    ggplot(case0102, aes(x = Sex, y = Salary)) +
+      geom_boxplot(coef = Inf) +
+      geom_jitter(width = 0.1, alpha = 1/2)
+    ```
+
+-   Observed difference
+    ```{r}
+    obs_diff <- mean(case0102$Salary[case0102$Sex == "Male"]) -
+      mean(case0102$Salary[case0102$Sex == "Female"])
+    obs_diff
+    ```
+  
+
+-   Build up permutation distribution:
+
+    ```{r}
+    set.seed(1)
+    itermax <- 5000
+    diffvec <- numeric(itermax)
+    for (i in seq_len(itermax)) {
+      new_assign  <- sample(case0102$Sex)
+      diffvec[i]  <- mean(case0102$Salary[new_assign == "Male"]) -
+                     mean(case0102$Salary[new_assign == "Female"])
+    }
+    ```
+
+-   The p-value is about 0:
+
+    ```{r perm-dist-final}
+    #| echo: false
+    ggplot(data.frame(x = diffvec), aes(x = x)) +
+      geom_histogram(fill = "#4a90d9",
+                     color = "white", alpha = 0.85, bins = 30) +
+      geom_vline(xintercept = obs_diff, color = "#E69F00", lty = 2)
+    ```
+
+
+-   In practice, you would use a $t$-test to approximate this permutation distribution (Chapter 2).
+
+    ```{r}
+    t.test(Salary ~ Sex, data = case0102) |>
+      tidy()
+    ```
+
+- The $p$-value is about 0.000000371. In practice, we would just report this as, like, $p < 0.001$.
+
+- This indicates strong evidence that salaries were not assigned randomly.
+
+- A more detailed analysis would have to account for various confounding factors, like education, years of experience, etc.
+  - Even such a more detailed analysis alone could not prove causality by itself.
+

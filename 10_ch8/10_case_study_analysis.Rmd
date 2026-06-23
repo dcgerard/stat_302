@@ -1,0 +1,275 @@
+---
+title: "Voltage Case Study"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "metropolis"
+    slide_level: 2
+urlcolor: "blue"
+---
+
+```{r setup, include=FALSE}
+ggplot2::theme_set(
+  ggplot2::theme_bw()
+  )
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.height = 2.3, 
+                      fig.width = 3.7, 
+                      fig.align = "center")
+```
+
+
+## Objectives
+
+- Analyze Voltage vs Breakdown Time Case Study
+
+- Lack of Fit $F$-test
+
+## Case Study: Voltage vs Breakdown Time, a Controlled Experiment
+
+- Goal: study relationship between voltage and breakdown time of an electrical insulating fluid.
+
+- The authors could control the voltage level of each trial.
+
+```{r, echo = TRUE}
+library(Sleuth3)
+data("case0802")
+head(case0802)
+```
+
+
+## Step 1: Make a plot
+
+```{r, echo = TRUE, message=FALSE}
+library(ggplot2)
+qplot(Voltage, Time, data = case0802) + 
+  geom_smooth(se = FALSE)
+```
+
+
+## Try an initial fit with a residual plot
+
+```{r, echo=TRUE}
+lmout <- lm(Time ~ Voltage, data = case0802)
+resvec <- resid(lmout)
+fitvec <- fitted(lmout)
+qplot(fitvec, resvec) + geom_hline(yintercept = 0)
+```
+
+## Conclusion?
+
+- As the mean increases, the variability increases.
+
+- We see a curved relationship between $X$ and $Y$
+
+- Clearly need a log-transformation
+
+## Log-transformation and Re-plot
+
+```{r, echo = TRUE, message=FALSE}
+case0802$logTime <- log(case0802$Time)
+qplot(Voltage, logTime, data = case0802) + 
+  geom_smooth(se = FALSE)
+```
+
+
+## Log-transformation and Residual Plot
+
+```{r, echo=TRUE}
+lmout <- lm(logTime ~ Voltage, data = case0802)
+resvec <- resid(lmout)
+fitvec <- fitted(lmout)
+qplot(fitvec, resvec) + geom_hline(yintercept = 0)
+```
+
+## Conclusion
+
+- After the log-transformation, the data look pretty awesome.
+
+## Formal test if there is a relationship
+
+- There is clearly a relationship here, but you need to report $p$-values to get published, so ...
+
+\small
+```{r, echo = TRUE}
+sumout <- summary(lmout)
+coef(sumout)
+```
+\normalsize
+
+## More interesting are coefficient estimates with confidence intervals
+
+```{r, echo = TRUE}
+cbind(coef(lmout), confint(lmout))
+```
+
+## Interpret on Original Scale
+
+- A one kV increase results in a $\exp(-0.507) = 0.6$ multiplicative change in breakdown times. 
+
+- 95% confidence of 
+```{r, echo = TRUE}
+exp(confint(lmout)[2, ])
+```
+
+- A one kV increase results in a 40% decrease in breakdown time, 95% confidence interval of 
+```{r, echo = TRUE}
+(1 - exp(confint(lmout)[2, ])) * 100
+```
+
+# Lack of Fit $F$-test
+
+## We could have viewed this as an ANOVA problem
+
+```{r, echo = TRUE}
+case0802$VoltageFac <- as.factor(case0802$Voltage)
+qplot(VoltageFac, logTime, data = case0802, geom = "boxplot") +
+  xlab("Voltage")
+```
+
+## Which is better?
+
+- If the linear model appears to fit fine, it is **always preferred**.
+
+- You can interpolate with the linear model (not ANOVA).
+
+- The linear model has easier interpretations.
+
+- The linear model has fewer parameters
+
+- We can formally test if the linear model does not fit using the $F$-testing strategy if we have replicates at given values of $X$
+
+## Lack-of-fit $F$-test
+
+- $H_0: E[Y_i] = \beta_0 + \beta_1X_i$ (mean is based on line)
+
+- $H_A: E[Y_i] = \mu_j$ where $X_i = j$ (mean is based on group)
+
+## Full Model Estimates
+
+```{r, message=FALSE}
+library(tidyverse)
+case0802 %>%
+  group_by(VoltageFac) %>%
+  summarize(mean = mean(logTime)) %>%
+  mutate(z = as.numeric(VoltageFac)) %>%
+  mutate(zlower = z - 1/3, zupper = z + 1/3) ->
+  meandf
+case0802$jitterx <- jitter(as.numeric(case0802$VoltageFac))
+
+meandf %>%
+  select(VoltageFac, mean) %>%
+  left_join(case0802, by = "VoltageFac") ->
+  case0802
+
+qplot(x = jitterx, y = logTime, data = case0802, xlab = "Voltage") +
+  scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +
+  geom_segment(data = meandf, mapping = aes(x = zlower, xend = zupper, y = mean, yend = mean), col = 2, lty = 2)
+```
+
+## Reduced Model Estimates
+
+```{r, message=FALSE}
+case0802$fitted <- fitted(lmout)
+qplot(jitterx, logTime, data = case0802) +
+  xlab("Voltage") +
+  scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +
+  geom_line(mapping = aes(x = (Voltage - 24)/2, y = fitted), lty = 2, col = 2) 
+```
+
+## Residuals Fnder Full
+
+```{r}
+qplot(x = jitterx, y = logTime, data = case0802, xlab = "Voltage") +
+  scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +
+  geom_segment(data = meandf, mapping = aes(x = zlower, xend = zupper, y = mean, yend = mean), col = 2, lty = 2) +
+  geom_segment(mapping = aes(x = jitterx, xend = jitterx, y = logTime, yend = mean), col = "blue")
+```
+
+## Residuals Fnder Reduced
+
+```{r}
+qplot(jitterx, logTime, data = case0802) +
+  xlab("Voltage") +
+  scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +
+  geom_line(mapping = aes(x = (Voltage - 24)/2, y = fitted), lty = 2, col = 2)  +
+  geom_segment(mapping = aes(x = jitterx, xend = jitterx, y = logTime, yend = fitted), col = "blue")
+```
+
+## Lack-of-fit $F$-test
+
+```{r}
+rss_full <- sum((case0802$logTime - case0802$mean)^2)
+rss_reduced <- sum((case0802$logTime - case0802$fitted)^2)
+ESS <- rss_reduced - rss_full
+df_full <- 69
+df_reduced <- 74
+df_extra <- df_reduced - df_full
+fstat <- (ESS / df_extra) / (rss_full / df_full)
+```
+
+- $RSS_{full}$ =  `r rss_full`
+
+- $df_{full} = n - I$ =  76 - 7 = 69\pause
+
+- $RSS_{reduced}$ = `r rss_reduced`
+
+- $df_{reduced} = n - 2$ =  76 - 2 = 74\pause
+
+- $ESS = RSS_{reduced} - RSS_{full}$ =  `r ESS`
+
+- $df_{extra} = df_{reduced} - df_{full}$ = 74 - 69 - 5\pause
+
+- $F$-statistic = $\frac{ESS / df_{extra}}{RSS_{full} / df_{full}}$ = `r fstat`
+
+## Compare to an $F_{5, 69}$
+
+```{r}
+x <- seq(0, 5, length = 100)
+y <- df(x, 5, 69)
+
+which_x <- x > fstat
+polydf <- data.frame(polyx = c(min(x[which_x]), x[which_x], max(x[which_x]), min(x[which_x])),
+                     polyy = c(0, y[which_x], 0, 0))
+qplot(x, y, geom = "line") +
+  geom_polygon(data = polydf, mapping = aes(x = polyx, y = polyy), 
+               fill = "blue", alpha = 3/4) +
+  xlab("F-stat") +
+  ylab("Density")
+```
+
+## Calculate $p$-value
+
+```{r, echo = TRUE}
+pf(0.5024, df1 = 5, df2 = 69, lower.tail = FALSE)
+```
+
+
+## Lack of Fit in R
+
+- Create a factor variable
+```{r, echo = TRUE}
+case0802$VoltageFac <- as.factor(case0802$Voltage)
+```
+
+- Fit both the ANOVA and regression models
+```{r, echo = TRUE}
+aout  <- aov(logTime ~ VoltageFac, data = case0802)
+lmout <- lm(logTime ~ Voltage, data = case0802)
+```
+
+
+## Lack of Fit in R
+
+- Use `anova()` to get ANOVA table
+```{r, echo = TRUE}
+anova(lmout, aout)
+```
+
+
+
+
+
+
+

@@ -355,7 +355,7 @@ predict(lmout, newdata = data.frame(Velocity = 100),
 #| label: ci-band
 ggplot(case0701, aes(x = Velocity, y = Distance)) +
   geom_point() +
-  geom_smooth(method = "lm") +
+  geom_smooth(method = "lm", formula = y ~ x) +
   labs(x = "Recession velocity (km/s)", y = "Distance (megaparsecs)")
 ```
 
@@ -439,11 +439,11 @@ ggplot(case0701, aes(x = Velocity, y = Distance)) +
   geom_line(data = newdf, aes(x = Velocity, y = Fit),
             linewidth = 0.8, color = "black") +
   geom_ribbon(data = banddf, aes(x = Velocity, ymin = Lower, ymax = Upper,
-                                  fill = Type), inherit.aes = FALSE,
-              alpha = 0.25) +
-  scale_fill_manual(values = c("Pointwise CI"       = "#0066cc",
-                               "Simultaneous band"  = "#cc3300",
-                               "Prediction interval"= "#198754")) +
+                                  color = Type), inherit.aes = FALSE,
+              alpha = 0.25, fill = NA) +
+  scale_color_manual(values = c("Pointwise CI"       = "#E69F00",
+                               "Simultaneous band"  = "#56B4E9",
+                               "Prediction interval"= "#009E73")) +
   labs(x = "Recession velocity (km/s)", y = "Distance (megaparsecs)",
        fill = NULL) +
   theme(legend.position = "bottom")
@@ -475,20 +475,20 @@ x_extrap <- 1700
 p_in <- ggplot(case0701, aes(x = Velocity, y = Distance)) +
   geom_point() +
   geom_abline(slope = coef(lmout)[2], intercept = coef(lmout)[1],
-              color = "blue", alpha = 0.6) +
+              color = "#56B4E9", alpha = 0.6) +
   geom_segment(aes(x = x_interp, xend = x_interp, y = 0,
                    yend = coef(lmout)[1] + x_interp * coef(lmout)[2]),
-               color = "red", linetype = "dashed") +
+               color = "#E69F00", linetype = "dashed") +
   ylim(0, 2.1) +
   ggtitle("Interpolation (safe)")
 
 p_ex <- ggplot(case0701, aes(x = Velocity, y = Distance)) +
   geom_point() +
   geom_abline(slope = coef(lmout)[2], intercept = coef(lmout)[1],
-              color = "blue", alpha = 0.6) +
+              color = "#56B4E9", alpha = 1) +
   geom_segment(aes(x = x_extrap, xend = x_extrap, y = 0,
                    yend = coef(lmout)[1] + x_extrap * coef(lmout)[2]),
-               color = "red", linetype = "dashed") +
+               color = "#E69F00", linetype = "dashed") +
   xlim(min(case0701$Velocity), 2000) +
   ylim(0, 3.2) +
   ggtitle("Extrapolation (risky)")

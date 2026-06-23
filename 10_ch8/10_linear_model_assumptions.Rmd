@@ -1,0 +1,470 @@
+---
+title: "Demonstrating Linear Model Assumptions"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "metropolis"
+    slide_level: 2
+urlcolor: "blue"
+---
+
+```{r setup, include=FALSE}
+ggplot2::theme_set(
+  ggplot2::theme_bw()
+  )
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.height = 2.3, 
+                      fig.width = 3.7, 
+                      fig.align = "center")
+```
+
+
+```{r}
+set.seed(1)
+library(ggplot2)
+```
+
+## Objectives
+
+- Understand assumptions of linear regression.
+- Evaluate assumptions of linear regression.
+- Solve problems of linear regression.
+- Ch 8 in the book.
+
+<!-- ## Case Study: Voltage vs Breakdown Time, a Controlled Experiment -->
+
+<!-- - Goal: study relationship between voltage and breakdown time of an electrical insulating fluid. -->
+
+<!-- - The authors could control the voltage level of each trial. -->
+
+<!-- ```{r, echo = TRUE} -->
+<!-- library(Sleuth3) -->
+<!-- data("case0802") -->
+<!-- head(case0802) -->
+<!-- ``` -->
+
+
+## Assumptions in Decreasing Order of Importance
+
+1. **Linearity** - Does the relationship look like a straight line?
+
+2. **Independence** - knowledge of the value of one observation does not give you any information on the value of another.
+
+3. **Equal Variance** - The spread is the same for every value of $x$
+
+4. **Normality** - The distribution isn't too skewed and there aren't any too extreme points. (only an issue if you have outliers and a small number of observations because of the CLT).
+
+## Problems when Violated
+
+1. **Linearity** - Linear regression line does not pick up actual relationship
+
+2. **Independence** - Linear regression line is unbiased, but standard errors are off.
+
+3. **Equal Variance** - Linear regression line is unbiased, but standard errors are off.
+
+4. **Normality** - Unstable results if outliers are present and sample size is small.
+
+## Assessment Tools: Scatterplots and Residual Plots
+
+- Make a scatterplot of the explanatory variable ($x$-axis) vs the response ($y$-axis) to check for non-linearity, equal variance, and normality violations.
+
+- Residuals ($y$-axis) vs fitted values ($x$-axis) is sometimes more clear because the signal is removed.
+
+# Dataset 1: Gold Standard
+
+## Dataset 1: Scatterplot
+```{r}
+x <- rnorm(100, sd = 1); y <- x + rnorm(100);
+```
+
+
+```{r, echo = TRUE, message=FALSE}
+qplot(x, y) + geom_smooth(se = FALSE)
+```
+
+## Dataset 1: Residual Plot
+```{r, echo = TRUE, message=FALSE}
+lmout <- lm(y ~ x)
+res_vec <- resid(lmout)
+fit_vec <- fitted(lmout)
+qplot(fit_vec, res_vec) + geom_hline(yintercept = 0)
+```
+
+## Dataset 1: Summary
+
+- Means are straight lines
+
+- Residuals seem to be centered at 0 for all $x$
+
+- Variance looks equal for all $x$
+
+- Everything looks perfect
+
+# Dataset 2: Curved Monotone Relationship, Equal Variances
+
+## Dataset 2: Scatterplot
+
+```{r}
+x <- rexp(100)
+x <- x - min(x) + 0.5
+y <- log(x) * 20 + rnorm(100, sd = 4)
+```
+
+
+```{r, echo = TRUE, message=FALSE}
+qplot(x, y) + geom_smooth(se = FALSE)
+```
+
+
+## Dataset 2: Residual Plot
+
+```{r, echo = TRUE, message=FALSE}
+lmout <- lm(y ~ x)
+res_vec <- resid(lmout)
+fit_vec <- fitted(lmout)
+qplot(fit_vec, res_vec) + geom_hline(yintercept = 0)
+```
+
+## Dataset 2: Summary
+
+- Curved (but always increasing) relationship between $x$ and $y$.
+
+- Variance looks equal for all $x$
+
+- Residual plot has a parabolic shape.
+
+- These indicate a $\log$ transformation of $x$ could help.
+
+## Dataset 2: Transformed $x$ Scatterplot
+```{r, echo = TRUE, message=FALSE}
+x_log <- log(x)
+qplot(x_log, y) + geom_smooth(se = FALSE)
+```
+
+## Dataset 2: Transformed $x$ Residual Plot
+
+```{r, echo = TRUE, message=FALSE}
+lmout <- lm(y ~ x_log)
+res_vec <- resid(lmout)
+fit_vec <- fitted(lmout)
+qplot(fit_vec, res_vec) + geom_hline(yintercept = 0)
+```
+
+# Dataset 3: Curved Non-monotone Relationship, Equal Variances
+
+## Dataset 3: Scatterplot
+
+```{r}
+x <- rnorm(100)
+y <- -x^2 + rnorm(100)
+```
+
+
+```{r, echo = TRUE, message=FALSE}
+qplot(x, y) + geom_smooth(se = FALSE)
+```
+
+
+## Dataset 3: Residual Plot
+
+```{r, echo = TRUE, message=FALSE}
+lmout <- lm(y ~ x)
+res_vec <- resid(lmout)
+fit_vec <- fitted(lmout)
+qplot(fit_vec, res_vec) + geom_hline(yintercept = 0)
+```
+
+## Dataset 3: Summary
+
+- Curved relationship between $x$ and $y$
+
+- Sometimes the relationship is increasing, sometimes it is decreasing.
+
+- Variance looks equal for all $x$
+
+- Residual plot has a parabolic form.
+
+## Dataset 3: Solution
+
+- Two Solutions
+
+1. Fit model:
+
+$$
+Y_i = \beta_0 + \beta_1 X_i + \beta_2 X_i^2
+$$
+
+2. Or fit model
+$$
+Y_i = 
+\begin{cases}
+\beta_0 + \beta_1 X_i & \text{ if } X_i < C\\
+\beta_0^* + \beta_1^* X_i & \text{ if } X_i > C\\
+\end{cases}
+$$
+
+## Dataset 3: Solution 1
+
+```{r, echo = TRUE, fig.height=2}
+x2 <- x^2
+quad_lm <- lm(y ~ x2 + x)
+fit_vec <- fitted(quad_lm)
+qplot(x, y) +
+  geom_line(data = data.frame(x = x, y = fit_vec), 
+            mapping = aes(x = x, y = y), col = "blue", lwd = 1)
+```
+
+## Dataset 3: Solution 1 Residuals
+
+```{r, echo = TRUE}
+res_vec <- resid(quad_lm)
+qplot(fit_vec, res_vec) + geom_hline(yintercept = 0)
+```
+
+## Dataset 3: Solution 2
+
+```{r, echo=TRUE, fig.height=2, message=FALSE}
+library(lm.br)
+lmbr_out <- lm.br(y ~ x)
+fit_vec <- fitted(lmbr_out)
+qplot(x, y) +
+  geom_line(data = data.frame(x = x, y = fit_vec), 
+            mapping = aes(x = x, y = y), col = "blue", lwd = 1)
+```
+
+## Dataset 3: Solution 2 Residuals
+
+```{r, echo = TRUE}
+res_vec <- resid(lmbr_out)
+qplot(fit_vec, res_vec) + geom_hline(yintercept = 0)
+```
+
+# Dataset 4: Curved Relationship, Variance Increases with $Y$
+
+## Dataset 4: Scatterplot
+
+```{r}
+x <- rnorm(100)
+y <- exp(x + rnorm(100, sd = 1/2))
+```
+
+```{r, echo = TRUE, message=FALSE}
+qplot(x, y) + geom_smooth(se = FALSE)
+```
+
+
+## Dataset 4: Residual Plot
+
+```{r, echo = TRUE, message=FALSE}
+lmout <- lm(y ~ x)
+res_vec <- resid(lmout)
+fit_vec <- fitted(lmout)
+qplot(fit_vec, res_vec) + geom_hline(yintercept = 0)
+```
+
+
+## Dataset 4: Summary
+
+- Curved relationship between $x$ and $y$
+
+- Variance looks like it increases as $y$ increases
+
+- Residual plot has a parabolic form.
+
+- Residual plot variance looks larger to the right and smaller to the left.
+
+## Dataset 4: Solution
+
+- Take a log-transformation of $y$.
+
+```{r, echo = TRUE, message = FALSE}
+y_log <- log(y)
+qplot(x, y_log) + geom_smooth(se = FALSE)
+```
+
+## Dataset 4: Solution
+
+```{r, echo = TRUE, message=FALSE}
+lmout <- lm(y_log ~ x)
+res_vec <- resid(lmout)
+fit_vec <- fitted(lmout)
+qplot(fit_vec, res_vec) + geom_hline(yintercept = 0)
+```
+
+# Dataset 5: Linear Relationship, Equal Variances, Skewed Distribution
+
+## Dataset 5: Scatterplot
+
+```{r}
+x <- runif(200)
+y <- 15 * x + rexp(200, 0.2)
+```
+
+```{r, echo = TRUE, message = FALSE}
+qplot(x, y) + geom_smooth(se = FALSE)
+```
+
+## Dataset 5: Residual Plot
+
+```{r, echo = TRUE, message=FALSE}
+lmout <- lm(y ~ x)
+res_vec <- resid(lmout)
+fit_vec <- fitted(lmout)
+qplot(fit_vec, res_vec) + geom_hline(yintercept = 0)
+```
+
+## Dataset 5: Summary
+
+- Straight line relationship between $x$ and $y$.
+
+- Variances about equal for all $x$
+
+- Skew for all $x$
+
+- Residual plots show skew.
+
+## Dataset 5: Solution
+
+- Do nothing, but report skew (usually ok to do)
+
+- Be fancy, fit quantile regression:
+
+$$
+Median(Y_i) = \beta_0 + \beta_1 X_i
+$$
+
+## Dataset 5: Quantile Regression
+
+```{r, echo = TRUE, message=FALSE, fig.height=2}
+library(quantreg)
+qr_out <- rq(y ~ x, tau = 0.5)
+fit_vec <- fitted(qr_out)
+qplot(x, y) +
+  geom_line(data = data.frame(x = x, y = fit_vec), 
+            mapping = aes(x = x, y = y), col = "red", lwd = 1)
+```
+
+## Solution 5: Not too different from regression line
+```{r}
+qplot(x, y) +
+  geom_line(data = data.frame(x = x, y = fit_vec), 
+            mapping = aes(x = x, y = y), col = "red", lwd = 1) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+# Dataset 6: Linear Relationship, Unequal Variances
+
+## Dataset 6: Scatterplot
+
+```{r}
+x <- runif(100) * 10
+y <- 0.85 * x + rnorm(100, sd = (x - 5) ^ 2)
+```
+
+```{r, echo = TRUE, message=FALSE}
+qplot(x, y) + geom_smooth(se = FALSE)
+```
+
+## Dataset 6: Residual Plot
+
+```{r, echo = TRUE, message=FALSE}
+lmout <- lm(y ~ x)
+res_vec <- resid(lmout)
+fit_vec <- fitted(lmout)
+qplot(fit_vec, res_vec) + geom_hline(yintercept = 0)
+```
+
+## Dataset 6: Summary
+
+- Linear relationshp between $x$ and $y$.
+
+- Variance is different for different values of $x$.
+
+- Residual plots really good at showing this.
+
+## Dataset 6: Solution
+
+- The modern solution is to use **sandwich** estimates of the standard errors.
+
+```{r, echo = TRUE}
+library(sandwich)
+sandwich(lmout)
+```
+
+- The new standard error of $\hat{\beta}_0$ is the square root of `r sandwich(lmout)[1,1]`
+
+- The new standard error of $\hat{\beta}_1$ is the square root of `r sandwich(lmout)[2,2]`
+
+- The `r sandwich(lmout)[1,2]` is the estimated covariance between $\hat{\beta}_0$ and $\hat{\beta}_1$.
+
+## Compare new with old
+
+```{r, echo = TRUE}
+sqrt(diag(sandwich(lmout)))
+sqrt(diag(vcov(lmout)))
+```
+
+
+## Using Sandwich in $t$-tests
+
+```{r, echo = TRUE}
+betahat1_se <- sqrt(sandwich(lmout)[2, 2])
+tstat <- coef(lmout)[2] /  betahat1_se
+2 * pt(-abs(tstat), df = lmout$df.residual)
+```
+
+Compare to Original:
+```{r, echo = TRUE}
+coef(summary(lmout))[2, 4]
+```
+
+
+## Using Sandwich in Confidence Intervals
+
+```{r, echo = TRUE}
+betahat1_se <- sqrt(sandwich(lmout)[2, 2])
+betahat1    <- coef(lmout)[2]
+quant975    <- qt(0.975, df = lmout$df.residual)
+lower <- betahat1 - quant975 * betahat1_se
+upper <- betahat1 + quant975 * betahat1_se
+c(lower, upper)
+```
+
+Compare to Original
+```{r, echo = TRUE}
+confint(lmout)
+```
+
+
+
+## Intuition of Sandwich Estimator of Variance
+
+- Simplified Model: $Y_i = \beta_1 x_i$ (so zero intercept)
+
+- Using Calculus: $\hat{\beta}_1 = \frac{\sum_{i = 1}^n x_i y_i}{\sum_{i = 1}^n x_i^2}$\pause
+
+So
+\begin{align*}
+Var(\hat{\beta}_1) &= Var\left(\frac{\sum_{i = 1}^n x_i y_i}{\sum_{i = 1}^n x_i^2}\right)\\
+&=\frac{\sum_{i = 1}^n x_i^2 Var(y_i|x_i)}{\left(\sum_{i = 1}^n x_i^2\right)^2}
+\end{align*}\pause
+
+- Usual Method: Estimate $Var(y_i|x_i)$ with $s_p^2$ 
+
+    - Assumes variance estimate is same for all $i$
+
+- Sandwich Method: Estimate $Var(y_i|x_i)$ with $(y_i - \hat{\beta}_1x_i)^2$ 
+
+    - Allows variance estimate to differ at each $i$
+
+## Notes on Sandwich
+
+- They result in accurate standard errors of the coefficient estimates as long as
+
+    1. The linearity assumption is satisfied.
+    
+    2. You have a large enough sample size.
+    
+- You cannot use them for prediction intervals
+

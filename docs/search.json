@@ -606,7 +606,7 @@
     "href": "03_ch1/03_ch1.html#exploratory-data-analysis",
     "title": "Causality and Generalizability",
     "section": "Exploratory Data Analysis",
-    "text": "Exploratory Data Analysis\n\nlibrary(Sleuth3)\nlibrary(tidyverse)\nlibrary(broom)\n\ndata(\"case0101\")\nggplot(case0101, aes(x = Treatment, y = Score)) +\n  geom_boxplot(coef = Inf) +\n  geom_jitter(width = 0.1, alpha = 1/2) +\n  xlab(\"Treatment\") +\n  ylab(\"Creativity Score\")"
+    "text": "Exploratory Data Analysis\n\nlibrary(tidyverse)\nlibrary(broom)\n\ncase0101 &lt;- read_csv(\"https://dcgerard.github.io/stat_302/data/case0101.csv\")\nggplot(case0101, aes(x = Treatment, y = Score)) +\n  geom_boxplot(coef = Inf) +\n  geom_jitter(width = 0.1, alpha = 1/2) +\n  xlab(\"Treatment\") +\n  ylab(\"Creativity Score\")"
   },
   {
     "objectID": "03_ch1/03_ch1.html#observed-difference",
@@ -935,7 +935,7 @@
     "href": "09_ch7/09_ch7.html#pointwise-confidence-intervals",
     "title": "Simple Linear Regression",
     "section": "Pointwise Confidence Intervals",
-    "text": "Pointwise Confidence Intervals\nA pointwise confidence interval at \\(X_0\\) estimates the mean response \\(\\beta_0 + \\beta_1 X_0\\):\n\\[\\hat\\beta_0 + \\hat\\beta_1 X_0 \\;\\pm\\; t_{n-2}(0.975) \\cdot\nSE\\!\\left(\\hat\\beta_0 + \\hat\\beta_1 X_0\\right),\\]\nwhere\n\\[SE\\!\\left(\\hat\\beta_0 + \\hat\\beta_1 X_0\\right)\n= \\hat\\sigma \\sqrt{\\frac{1}{n} + \\frac{(X_0 - \\bar X)^2}{(n-1)s_X^2}}.\\]\nIn R, use predict() with interval = \"confidence\":\n\npredict(lmout, newdata = data.frame(Velocity = 100),\n        interval = \"confidence\")\n\n     fit    lwr    upr\n1 0.5364 0.3216 0.7512\n\n\ngeom_smooth(method = \"lm\") draws these pointwise intervals as a shaded band:\n\nggplot(case0701, aes(x = Velocity, y = Distance)) +\n  geom_point() +\n  geom_smooth(method = \"lm\") +\n  labs(x = \"Recession velocity (km/s)\", y = \"Distance (megaparsecs)\")\n\n`geom_smooth()` using formula = 'y ~ x'"
+    "text": "Pointwise Confidence Intervals\nA pointwise confidence interval at \\(X_0\\) estimates the mean response \\(\\beta_0 + \\beta_1 X_0\\):\n\\[\\hat\\beta_0 + \\hat\\beta_1 X_0 \\;\\pm\\; t_{n-2}(0.975) \\cdot\nSE\\!\\left(\\hat\\beta_0 + \\hat\\beta_1 X_0\\right),\\]\nwhere\n\\[SE\\!\\left(\\hat\\beta_0 + \\hat\\beta_1 X_0\\right)\n= \\hat\\sigma \\sqrt{\\frac{1}{n} + \\frac{(X_0 - \\bar X)^2}{(n-1)s_X^2}}.\\]\nIn R, use predict() with interval = \"confidence\":\n\npredict(lmout, newdata = data.frame(Velocity = 100),\n        interval = \"confidence\")\n\n     fit    lwr    upr\n1 0.5364 0.3216 0.7512\n\n\ngeom_smooth(method = \"lm\") draws these pointwise intervals as a shaded band:\n\nggplot(case0701, aes(x = Velocity, y = Distance)) +\n  geom_point() +\n  geom_smooth(method = \"lm\", formula = y ~ x) +\n  labs(x = \"Recession velocity (km/s)\", y = \"Distance (megaparsecs)\")"
   },
   {
     "objectID": "09_ch7/09_ch7.html#simultaneous-confidence-bands",
@@ -978,5 +978,243 @@
     "title": "STAT-302 Homepage",
     "section": "",
     "text": "Syllabus\n\nChapter 0: R\n\nR and Data Frames\nR Graphics\nR Cheat Sheet\n\nReview:\n\nBasic Statistics Review\nProbability Review\n\nChapter 1:\n\nCausality and Generalizability\nChapter 1 Worksheet\n\nChapter 2:\n\nPaired and Two-Sample t-Tests\nChapter 2 Worksheet\n\nChapter 3:\n\nAssumptions of t-Tools\nReview: Logarithms and Exponentials\nChapter 3 Worksheet\n\nChapter 4:\n\nNonparameterics\n\nChapter 5:\n\nOne-Way ANOVA\nChapter 5 Worksheet\n\nChapter 6:\n\nLinear Combinations of Group Means\nMultiple Comparisons\nChapter 6 Worksheet\n\nChapter 7:\n\nSimple Linear Regression\nChapter 7 Worksheet\n\nChapters 9–11:\n\nMultiple Regression\n\nChapter 20:\n\nLogistic Regression"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html",
+    "href": "10_ch8/10_ch8.html",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "",
+    "text": "Understand the assumptions of simple linear regression and their relative importance.\nEvaluate assumptions using scatterplots and residual plots.\nChoose and apply appropriate remedies when assumptions are violated.\nInterpret log-transformations of the explanatory and/or response variable.\nUse sandwich standard errors to handle non-constant variance.\nPerform a lack-of-fit \\(F\\)-test to assess whether a linear model is adequate.\nCh 8 in the book."
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#assumptions-in-decreasing-order-of-importance",
+    "href": "10_ch8/10_ch8.html#assumptions-in-decreasing-order-of-importance",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Assumptions in Decreasing Order of Importance",
+    "text": "Assumptions in Decreasing Order of Importance\n\nLinearity — Does the relationship look like a straight line?\nIndependence — Knowledge of one observation gives no information about another.\nEqual Variance — The spread is the same for every value of \\(x\\).\nNormality — The distribution is not too skewed and there are no extreme outliers. (Only a concern when outliers are present and the sample size is small, thanks to the CLT.)"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#problems-when-violated",
+    "href": "10_ch8/10_ch8.html#problems-when-violated",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Problems When Violated",
+    "text": "Problems When Violated\n\nLinearity — The regression line does not capture the actual relationship.\nIndependence — The regression line is unbiased, but standard errors are wrong.\nEqual Variance — The regression line is unbiased, but standard errors are wrong.\nNormality — Unstable results when outliers are present and the sample size is small."
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#assessment-tools-scatterplots-and-residual-plots",
+    "href": "10_ch8/10_ch8.html#assessment-tools-scatterplots-and-residual-plots",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Assessment Tools: Scatterplots and Residual Plots",
+    "text": "Assessment Tools: Scatterplots and Residual Plots\n\nMake a scatterplot of \\(x\\) (horizontal) vs \\(y\\) (vertical) to check for non-linearity, unequal variance, and normality violations.\nA residual plot (residuals on the \\(y\\)-axis, fitted values on the \\(x\\)-axis) is often clearer because the linear signal is removed."
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#dataset-1-gold-standard",
+    "href": "10_ch8/10_ch8.html#dataset-1-gold-standard",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Dataset 1: Gold Standard",
+    "text": "Dataset 1: Gold Standard\n\nx &lt;- rnorm(100, sd = 1)\ny &lt;- x + rnorm(100)\n\n\nggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +\n  geom_point() +\n  geom_smooth(se = FALSE)\n\n\n\n\n\n\n\n\n\nlmout &lt;- lm(y ~ x)\naugment(lmout) |&gt;\n  ggplot(aes(x = .fitted, y = .resid)) +\n  geom_point() +\n  geom_hline(yintercept = 0) +\n  labs(x = \"Fitted values\", y = \"Residuals\")\n\n\n\n\n\n\n\n\n\nThe mean lies on a straight line.\nResiduals are centered at 0 for all \\(x\\).\nVariance looks equal for all \\(x\\).\nEverything looks ideal.\n\n\nDon’t get fooled by distribution of x\nThe distribution of x doesn’t matter. The below plot is also perfect\n\nx &lt;- sample(1:3, size = 100, replace = TRUE)\ny &lt;- x + rnorm(100)\n\n\nggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +\n  geom_point() +\n  geom_smooth(se = FALSE, method = lm)\n\n\n\n\n\n\n\n\n\nlmout &lt;- lm(y ~ x)\naugment(lmout) |&gt;\n  ggplot(aes(x = .fitted, y = .resid)) +\n  geom_point() +\n  geom_hline(yintercept = 0) +\n  labs(x = \"Fitted values\", y = \"Residuals\")"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#dataset-2-curved-monotone-relationship-equal-variances",
+    "href": "10_ch8/10_ch8.html#dataset-2-curved-monotone-relationship-equal-variances",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Dataset 2: Curved Monotone Relationship, Equal Variances",
+    "text": "Dataset 2: Curved Monotone Relationship, Equal Variances\n\nx &lt;- rexp(100)\nx &lt;- x - min(x) + 0.5\ny &lt;- log(x) * 20 + rnorm(100, sd = 4)\n\n\nggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +\n  geom_point() +\n  geom_smooth(se = FALSE)\n\n\n\n\n\n\n\n\n\nlmout &lt;- lm(y ~ x)\naugment(lmout) |&gt;\n  ggplot(aes(x = .fitted, y = .resid)) +\n  geom_point() +\n  geom_hline(yintercept = 0) +\n  labs(x = \"Fitted values\", y = \"Residuals\")\n\n\n\n\n\n\n\n\n\nCurved but always-increasing relationship between \\(x\\) and \\(y\\).\nVariance looks equal for all \\(x\\).\nResidual plot has a parabolic shape — a \\(\\log\\) transformation of \\(x\\) could help.\n\n\nx_log &lt;- log(x)\nggplot(data.frame(x_log = x_log, y = y), aes(x = x_log, y = y)) +\n  geom_point() +\n  geom_smooth(se = FALSE) +\n  labs(x = \"log(x)\")\n\n\n\n\n\n\n\n\n\nlmout &lt;- lm(y ~ x_log)\naugment(lmout) |&gt;\n  ggplot(aes(x = .fitted, y = .resid)) +\n  geom_point() +\n  geom_hline(yintercept = 0) +\n  labs(x = \"Fitted values\", y = \"Residuals\")\n\n\n\n\n\n\n\n\nAfter the \\(\\log\\) transformation of \\(x\\), the residual plot looks flat and even — the linearity and equal-variance assumptions are now satisfied."
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#dataset-3-curved-non-monotone-relationship-equal-variances",
+    "href": "10_ch8/10_ch8.html#dataset-3-curved-non-monotone-relationship-equal-variances",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Dataset 3: Curved Non-Monotone Relationship, Equal Variances",
+    "text": "Dataset 3: Curved Non-Monotone Relationship, Equal Variances\n\nx &lt;- rnorm(100)\ny &lt;- -x^2 + rnorm(100)\n\n\nggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +\n  geom_point() +\n  geom_smooth(se = FALSE)\n\n\n\n\n\n\n\n\n\nlmout &lt;- lm(y ~ x)\naugment(lmout) |&gt;\n  ggplot(aes(x = .fitted, y = .resid)) +\n  geom_point() +\n  geom_hline(yintercept = 0) +\n  labs(x = \"Fitted values\", y = \"Residuals\")\n\n\n\n\n\n\n\n\n\nCurved relationship that sometimes increases, sometimes decreases.\nVariance looks equal for all \\(x\\).\nResidual plot has a parabolic form.\n\nSolution 1: Add a quadratic term: \\[Y_i = \\beta_0 + \\beta_1 X_i + \\beta_2 X_i^2\\]\n\nx2 &lt;- x^2\nquad_lm &lt;- lm(y ~ x + x2)\n\nfit_df &lt;- data.frame(x = x, fitted = fitted(quad_lm)) |&gt; arrange(x)\nggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +\n  geom_point() +\n  geom_line(data = fit_df, aes(x = x, y = fitted),\n            color = \"blue\", linewidth = 1)\n\n\n\n\n\n\n\n\n\naugment(quad_lm) |&gt;\n  ggplot(aes(x = .fitted, y = .resid)) +\n  geom_point() +\n  geom_hline(yintercept = 0) +\n  labs(x = \"Fitted values\", y = \"Residuals\")\n\n\n\n\n\n\n\n\nSolution 2: Fit a broken-line (piecewise linear) model using the lm.br package: \\[Y_i = \\begin{cases} \\beta_0 + \\beta_1 X_i & \\text{if } X_i &lt; C \\\\ \\beta_0^* + \\beta_1^* X_i & \\text{if } X_i &gt; C \\end{cases}\\]\n\nlibrary(lm.br)\nlmbr_out &lt;- lm.br(y ~ x)\n\nfit_df2 &lt;- data.frame(x = x, fitted = fitted(lmbr_out)) |&gt; arrange(x)\nggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +\n  geom_point() +\n  geom_line(data = fit_df2, aes(x = x, y = fitted),\n            color = \"blue\", linewidth = 1)\n\n\n\n\n\n\n\n\n\naugment(quad_lm) |&gt;\n  ggplot(aes(x = .fitted, y = .resid)) +\n  geom_point() +\n  geom_hline(yintercept = 0) +\n  labs(x = \"Fitted values\", y = \"Residuals\")"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#dataset-4-curved-relationship-variance-increases-with-y",
+    "href": "10_ch8/10_ch8.html#dataset-4-curved-relationship-variance-increases-with-y",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Dataset 4: Curved Relationship, Variance Increases with \\(Y\\)",
+    "text": "Dataset 4: Curved Relationship, Variance Increases with \\(Y\\)\n\nx &lt;- rnorm(100)\ny &lt;- exp(x + rnorm(100, sd = 1/2))\n\n\nggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +\n  geom_point() +\n  geom_smooth(se = FALSE)\n\n\n\n\n\n\n\n\n\nlmout &lt;- lm(y ~ x)\naugment(lmout) |&gt;\n  ggplot(aes(x = .fitted, y = .resid)) +\n  geom_point() +\n  geom_hline(yintercept = 0) +\n  labs(x = \"Fitted values\", y = \"Residuals\")\n\n\n\n\n\n\n\n\n\nCurved relationship between \\(x\\) and \\(y\\).\nVariance increases as \\(y\\) increases.\nResidual plot has a parabolic shape and shows increasing spread to the right.\n\nSolution: Take a log-transformation of \\(y\\).\n\ny_log &lt;- log(y)\nggplot(data.frame(x = x, y_log = y_log), aes(x = x, y = y_log)) +\n  geom_point() +\n  geom_smooth(se = FALSE) +\n  labs(y = \"log(y)\")\n\n\n\n\n\n\n\n\n\nlmout &lt;- lm(y_log ~ x)\naugment(lmout) |&gt;\n  ggplot(aes(x = .fitted, y = .resid)) +\n  geom_point() +\n  geom_hline(yintercept = 0) +\n  labs(x = \"Fitted values\", y = \"Residuals\")\n\n\n\n\n\n\n\n\nAfter taking \\(\\log(y)\\), both the linearity and equal-variance problems are resolved.\n\nAgain, don’t get fooled by distribution of x\nStill look for increasing variances for increasing x, even if the distribution of x is discrete.\n\nx &lt;- sample(1:3, size = 100, replace = TRUE)\ny &lt;- exp(x + rnorm(100, sd = 1/2))\n\n\nggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +\n  geom_point() +\n  geom_smooth(se = FALSE)\n\n\n\n\n\n\n\n\n\nlmout &lt;- lm(y ~ x)\naugment(lmout) |&gt;\n  ggplot(aes(x = .fitted, y = .resid)) +\n  geom_point() +\n  geom_hline(yintercept = 0) +\n  labs(x = \"Fitted values\", y = \"Residuals\")\n\n\n\n\n\n\n\n\n\nCurved relationship between \\(x\\) and \\(y\\).\nVariance increases as \\(y\\) increases.\nResidual plot has a parabolic shape and shows increasing spread to the right.\n\nSolution: Take a log-transformation of \\(y\\).\n\ny_log &lt;- log(y)\nggplot(data.frame(x = x, y_log = y_log), aes(x = x, y = y_log)) +\n  geom_point() +\n  geom_smooth(se = FALSE, method = lm) +\n  labs(y = \"log(y)\")\n\n\n\n\n\n\n\n\n\nlmout &lt;- lm(y_log ~ x)\naugment(lmout) |&gt;\n  ggplot(aes(x = .fitted, y = .resid)) +\n  geom_point() +\n  geom_hline(yintercept = 0) +\n  labs(x = \"Fitted values\", y = \"Residuals\")\n\n\n\n\n\n\n\n\nAfter taking \\(\\log(y)\\), both the linearity and equal-variance problems are resolved."
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#dataset-5-linear-relationship-equal-variances-skewed-errors",
+    "href": "10_ch8/10_ch8.html#dataset-5-linear-relationship-equal-variances-skewed-errors",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Dataset 5: Linear Relationship, Equal Variances, Skewed Errors",
+    "text": "Dataset 5: Linear Relationship, Equal Variances, Skewed Errors\n\nx &lt;- runif(200)\ny &lt;- 15 * x + rexp(200, 0.2)\n\n\nggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +\n  geom_point() +\n  geom_smooth(se = FALSE)\n\n\n\n\n\n\n\n\n\nlmout &lt;- lm(y ~ x)\naugment(lmout) |&gt;\n  ggplot(aes(x = .fitted, y = .resid)) +\n  geom_point() +\n  geom_hline(yintercept = 0) +\n  labs(x = \"Fitted values\", y = \"Residuals\")\n\n\n\n\n\n\n\n\n\nStraight-line relationship between \\(x\\) and \\(y\\).\nVariances are approximately equal for all \\(x\\).\nThe errors are right-skewed — visible in the residual plot.\n\nSolutions:\n\nDo nothing, but report the skewness (usually acceptable for large \\(n\\)).\nFit a quantile regression for the median: \\[\\text{Median}(Y_i) = \\beta_0 + \\beta_1 X_i\\]\n\n\nlibrary(quantreg)\nqr_out &lt;- rq(y ~ x, tau = 0.5)\n\nfit_df &lt;- data.frame(x = x, qr_fitted = fitted(qr_out)) |&gt; arrange(x)\nggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +\n  geom_point() +\n  geom_smooth(method = \"lm\", se = FALSE) +\n  geom_line(data = fit_df, aes(x = x, y = qr_fitted),\n            color = \"red\", linewidth = 1)\n\n\n\n\n\n\n\n\nThe quantile regression line (red) is not very different from the OLS line (blue) — skewness with equal variance has little practical effect on the coefficient estimates."
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#dataset-6-linear-relationship-unequal-variances",
+    "href": "10_ch8/10_ch8.html#dataset-6-linear-relationship-unequal-variances",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Dataset 6: Linear Relationship, Unequal Variances",
+    "text": "Dataset 6: Linear Relationship, Unequal Variances\n\nx &lt;- runif(100) * 10\ny &lt;- 0.85 * x + rnorm(100, sd = (x - 5)^2)\n\n\nggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +\n  geom_point() +\n  geom_smooth(se = FALSE)\n\n\n\n\n\n\n\n\n\nlmout &lt;- lm(y ~ x)\naugment(lmout) |&gt;\n  ggplot(aes(x = .fitted, y = .resid)) +\n  geom_point() +\n  geom_hline(yintercept = 0) +\n  labs(x = \"Fitted values\", y = \"Residuals\")\n\n\n\n\n\n\n\n\n\nLinear relationship between \\(x\\) and \\(y\\).\nVariance differs across values of \\(x\\) — clearly visible in the residual plot.\n\nSolution: Use sandwich standard errors.\n\nlibrary(sandwich)\nlibrary(lmtest)\n\nLoading required package: zoo\n\n\n\nAttaching package: 'zoo'\n\n\nThe following objects are masked from 'package:base':\n\n    as.Date, as.Date.numeric\n\ncoeftest(lmout, vcov = sandwich) |&gt; tidy()\n\n# A tibble: 2 × 5\n  term        estimate std.error statistic p.value\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;\n1 (Intercept)    -3.46     3.05      -1.13 0.260  \n2 x               1.66     0.625      2.66 0.00905\n\n\nCompare to the standard (non-robust) standard errors:\n\ntidy(lmout)\n\n# A tibble: 2 × 5\n  term        estimate std.error statistic  p.value\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;\n1 (Intercept)    -3.46     2.63      -1.31 0.192   \n2 x               1.66     0.436      3.82 0.000234\n\n\nConfidence intervals with sandwich standard errors:\n\ncoefci(lmout, vcov = sandwich)\n\n             2.5 % 97.5 %\n(Intercept) -9.512  2.600\nx            0.424  2.904\n\n\nThe sandwich estimator yields accurate standard errors for the coefficient estimates as long as (1) the linearity assumption holds, and (2) the sample size is large enough. Note that sandwich standard errors cannot be used for prediction intervals."
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#no-log-on-x-no-log-on-y",
+    "href": "10_ch8/10_ch8.html#no-log-on-x-no-log-on-y",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "No Log on \\(X\\), No Log on \\(Y\\)",
+    "text": "No Log on \\(X\\), No Log on \\(Y\\)\nModel: \\(\\mu(Y \\mid X) = \\beta_0 + \\beta_1 X\\)\nAt \\(X + 1\\): \\[\\mu(Y \\mid X+1) = \\beta_0 + \\beta_1(X+1) = \\mu(Y \\mid X) + \\beta_1\\]\n\nObservational study: \\(\\beta_1\\) is the mean difference in \\(Y\\) between groups that differ by one unit in \\(X\\).\nRandomized experiment: \\(\\beta_1\\) is the mean increase in \\(Y\\) when \\(X\\) is increased by one unit."
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#no-log-on-x-log-on-y",
+    "href": "10_ch8/10_ch8.html#no-log-on-x-log-on-y",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "No Log on \\(X\\), Log on \\(Y\\)",
+    "text": "No Log on \\(X\\), Log on \\(Y\\)\nModel: \\(\\mu(\\log(Y) \\mid X) = \\beta_0 + \\beta_1 X\\)\nIf residuals are fairly symmetric, then \\(\\text{Median}(\\log Y \\mid X) \\approx \\mu(\\log Y \\mid X)\\), so:\n\\[\\text{Median}(Y \\mid X) = \\exp(\\beta_0 + \\beta_1 X)\n= \\exp(\\beta_0)\\exp(\\beta_1 X)\\]\nAt \\(X + 1\\): \\[\\text{Median}(Y \\mid X+1) = \\text{Median}(Y \\mid X) \\cdot \\exp(\\beta_1)\\]\n\nObservational study: \\(\\exp(\\beta_1)\\) is the ratio of medians when groups differ by one unit in \\(X\\).\nRandomized experiment: \\(\\exp(\\beta_1)\\) is the multiplicative change in median \\(Y\\) when \\(X\\) increases by one unit.\n\nExample (Voltage and Breakdown Time): \\(\\hat\\beta_1 = -0.51\\), 95% CI \\((-0.62, -0.39)\\).\n\n\\(\\exp(-0.51) = 0.6\\): a 1 kV increase is associated with 60% of the median breakdown time — a 40% decrease.\n95% CI for the multiplicative effect: \\((\\exp(-0.62), \\exp(-0.39)) = (0.54,\n0.68)\\).\n\n\\[\\text{Median}(Y \\mid X+1) - \\text{Median}(Y \\mid X)\n= (\\exp(\\beta_1) - 1)\\,\\text{Median}(Y \\mid X) = -0.4\\,\\text{Median}(Y \\mid X)\\]"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#log-on-x-no-log-on-y",
+    "href": "10_ch8/10_ch8.html#log-on-x-no-log-on-y",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Log on \\(X\\), No Log on \\(Y\\)",
+    "text": "Log on \\(X\\), No Log on \\(Y\\)\nModel: \\(\\mu(Y \\mid X) = \\beta_0 + \\beta_1 \\log(X)\\)\nWhen \\(X\\) is doubled:\n\\[\\mu(Y \\mid 2X) = \\beta_0 + \\beta_1\\log(2X) = \\mu(Y \\mid X) + \\beta_1\\log(2)\\]\n\nObservational study: \\(\\beta_1\\log(2)\\) is the mean difference in \\(Y\\) when one group’s \\(X\\) is twice the other’s.\nRandomized experiment: \\(\\beta_1\\log(2)\\) is the increase in mean \\(Y\\) when \\(X\\) is doubled.\n\nA similar interpretation holds for \\(\\beta_1\\log(10)\\) and a 10-fold increase in \\(X\\).\nExample (pH and time after slaughter): \\(\\hat\\beta_1 = -0.726\\), 95% CI \\((-0.805, -0.646)\\).\n\nDoubling the time decreases pH by \\(0.726\\log(2) = 0.503\\).\n95% CI: \\((-0.805\\log(2),\\,-0.646\\log(2)) = (-0.558,\\,-0.448)\\)."
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#log-on-x-log-on-y",
+    "href": "10_ch8/10_ch8.html#log-on-x-log-on-y",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Log on \\(X\\), Log on \\(Y\\)",
+    "text": "Log on \\(X\\), Log on \\(Y\\)\nModel: \\(\\mu(\\log(Y) \\mid X) = \\beta_0 + \\beta_1\\log(X)\\)\nSimplifying: \\[\\text{Median}(Y \\mid X) = \\exp(\\beta_0)\\,X^{\\beta_1}\\]\nWhen \\(X\\) is doubled: \\[\\text{Median}(Y \\mid 2X) = \\text{Median}(Y \\mid X) \\cdot 2^{\\beta_1}\\]\n\nObservational study: \\(2^{\\beta_1}\\) is the ratio of medians when one group’s \\(X\\) is twice the other’s.\nRandomized experiment: \\(2^{\\beta_1}\\) is the multiplicative change in median \\(Y\\) when \\(X\\) is doubled.\n\nA similar interpretation holds for \\(10^{\\beta_1}\\) and a 10-fold increase in \\(X\\)."
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#other-transformations",
+    "href": "10_ch8/10_ch8.html#other-transformations",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Other Transformations",
+    "text": "Other Transformations\nOther transformations (e.g., \\(1/Y\\), \\(\\sqrt{Y}\\)) may improve residual plots but lack clean interpretations. They are appropriate when the goal is:\n\nPrediction, or\nOnly detecting whether an association exists (not describing its size).\n\n\n\\(1/Y\\) tends to fix more extreme non-constant variance.\n\\(\\sqrt{Y}\\) tends to fix less extreme non-constant variance."
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#step-1-scatterplot",
+    "href": "10_ch8/10_ch8.html#step-1-scatterplot",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Step 1: Scatterplot",
+    "text": "Step 1: Scatterplot\n\nggplot(case0802, aes(x = Voltage, y = Time)) +\n  geom_point() +\n  geom_smooth(se = FALSE)"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#step-2-residual-plot",
+    "href": "10_ch8/10_ch8.html#step-2-residual-plot",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Step 2: Residual Plot",
+    "text": "Step 2: Residual Plot\n\nlmout &lt;- lm(Time ~ Voltage, data = case0802)\naugment(lmout) |&gt;\n  ggplot(aes(x = .fitted, y = .resid)) +\n  geom_point() +\n  geom_hline(yintercept = 0) +\n  labs(x = \"Fitted values\", y = \"Residuals\")\n\n\n\n\n\n\n\n\n\nAs the mean increases, variability increases.\nThe relationship is clearly curved.\nA log-transformation of \\(Y\\) is needed."
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#step-3-log-transform-and-re-evaluate",
+    "href": "10_ch8/10_ch8.html#step-3-log-transform-and-re-evaluate",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Step 3: Log-Transform and Re-evaluate",
+    "text": "Step 3: Log-Transform and Re-evaluate\n\ncase0802 &lt;- case0802 |&gt;\n  mutate(logTime = log(Time))\n\nggplot(case0802, aes(x = Voltage, y = logTime)) +\n  geom_point() +\n  geom_smooth(se = FALSE) +\n  labs(y = \"log(Time)\")\n\n\n\n\n\n\n\n\n\nlmout &lt;- lm(logTime ~ Voltage, data = case0802)\naugment(lmout) |&gt;\n  ggplot(aes(x = .fitted, y = .resid)) +\n  geom_point() +\n  geom_hline(yintercept = 0) +\n  labs(x = \"Fitted values\", y = \"Residuals\")\n\n\n\n\n\n\n\n\nAfter the log-transformation, the linearity and equal-variance assumptions look satisfied."
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#step-4-inference",
+    "href": "10_ch8/10_ch8.html#step-4-inference",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Step 4: Inference",
+    "text": "Step 4: Inference\n\ntidy(lmout)\n\n# A tibble: 2 × 5\n  term        estimate std.error statistic  p.value\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;\n1 (Intercept)   19.0      1.91        9.92 3.05e-15\n2 Voltage       -0.507    0.0574     -8.84 3.34e-13\n\n\n\ntidy(lmout, conf.int = TRUE)\n\n# A tibble: 2 × 7\n  term        estimate std.error statistic  p.value conf.low conf.high\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;\n1 (Intercept)   19.0      1.91        9.92 3.05e-15   15.1      22.8  \n2 Voltage       -0.507    0.0574     -8.84 3.34e-13   -0.622    -0.393"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#interpretation-on-the-original-scale",
+    "href": "10_ch8/10_ch8.html#interpretation-on-the-original-scale",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Interpretation on the Original Scale",
+    "text": "Interpretation on the Original Scale\nA one kV increase results in a \\(\\exp(-0.507) = 0.60\\) multiplicative change in median breakdown time — a 40% decrease.\n\ntidy(lmout, conf.int = TRUE) |&gt;\n  filter(term == \"Voltage\") |&gt;\n  select(estimate, conf.low, conf.high) |&gt;\n  mutate(across(everything(), exp))\n\n# A tibble: 1 × 3\n  estimate conf.low conf.high\n     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;\n1    0.602    0.537     0.675\n\n\n\ntidy(lmout, conf.int = TRUE) |&gt;\n  filter(term == \"Voltage\") |&gt;\n  transmute(\n    pct_change      = (1 - exp(estimate)) * 100,\n    pct_change_low  = (1 - exp(conf.high)) * 100,\n    pct_change_high = (1 - exp(conf.low)) * 100\n  )\n\n# A tibble: 1 × 3\n  pct_change pct_change_low pct_change_high\n       &lt;dbl&gt;          &lt;dbl&gt;           &lt;dbl&gt;\n1       39.8           32.5            46.3"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#viewing-the-data-as-one-way-anova",
+    "href": "10_ch8/10_ch8.html#viewing-the-data-as-one-way-anova",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Viewing the Data as One-Way ANOVA",
+    "text": "Viewing the Data as One-Way ANOVA\n\ncase0802 &lt;- case0802 |&gt;\n  mutate(VoltageFac = as.factor(Voltage))\n\nggplot(case0802, aes(x = VoltageFac, y = logTime)) +\n  geom_boxplot() +\n  labs(x = \"Voltage\", y = \"log(Time)\")"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#why-prefer-the-linear-model",
+    "href": "10_ch8/10_ch8.html#why-prefer-the-linear-model",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Why Prefer the Linear Model?",
+    "text": "Why Prefer the Linear Model?\nWhen the linear model fits, it is always preferred over the group-means ANOVA because it:\n\nAllows interpolation between observed \\(X\\) values.\nOffers cleaner interpretations of coefficients.\nUses fewer parameters, giving more precise estimates."
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#performing-the-test-in-r",
+    "href": "10_ch8/10_ch8.html#performing-the-test-in-r",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Performing the Test in R",
+    "text": "Performing the Test in R\nCreate the factor variable, fit both models, then use anova():\n\naout  &lt;- aov(logTime ~ VoltageFac, data = case0802)\nlmout &lt;- lm(logTime ~ Voltage,    data = case0802)\nanova(lmout, aout)\n\nAnalysis of Variance Table\n\nModel 1: logTime ~ Voltage\nModel 2: logTime ~ VoltageFac\n  Res.Df RSS Df Sum of Sq   F Pr(&gt;F)\n1     74 180                        \n2     69 174  5      6.33 0.5   0.77\n\n\nA large \\(p\\)-value means we cannot distinguish the linear model from the saturated model — we retain the linear model."
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#we-could-have-viewed-this-as-an-anova-problem",
+    "href": "10_ch8/10_ch8.html#we-could-have-viewed-this-as-an-anova-problem",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "We Could Have Viewed This as an ANOVA Problem",
+    "text": "We Could Have Viewed This as an ANOVA Problem\n\ncase0802 &lt;- case0802 |&gt;\n  mutate(VoltageFac = as.factor(Voltage))\n\nggplot(case0802, aes(x = VoltageFac, y = logTime)) +\n  geom_boxplot() +\n  labs(x = \"Voltage\", y = \"log(Time)\")"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#which-is-better",
+    "href": "10_ch8/10_ch8.html#which-is-better",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Which Is Better?",
+    "text": "Which Is Better?\n\nIf the linear model appears to fit fine, it is always preferred.\nYou can interpolate with the linear model (not with ANOVA).\nThe linear model has easier interpretations.\nThe linear model has fewer parameters.\nWe can formally test if the linear model does not fit using the \\(F\\)-testing strategy if we have replicates at given values of \\(X\\)."
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#lack-of-fit-f-test-1",
+    "href": "10_ch8/10_ch8.html#lack-of-fit-f-test-1",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Lack-of-Fit \\(F\\)-Test",
+    "text": "Lack-of-Fit \\(F\\)-Test\n\n\\(H_0: E[Y_i] = \\beta_0 + \\beta_1X_i\\) (mean is based on line)\n\\(H_A: E[Y_i] = \\mu_j\\) where \\(X_i = j\\) (mean is based on group)\nFull Model Estimates\n\n\n\n\n\n\n\n\n\nReduced Model Estimates\n\nggplot(case0802, aes(x = jitterx, y = logTime)) +\n  geom_point() +\n  scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +\n  geom_line(mapping = aes(x = (Voltage - 24) / 2, y = fitted), lty = 2, col = 2) +\n  labs(x = \"Voltage\")\n\n\n\n\n\n\n\n\nResiduals Under Full\n\n\n\n\n\n\n\n\n\nResiduals Under Reduced\n\n\n\n\n\n\n\n\n\nLack-of-Fit \\(F\\)-Statistic\n\ncase0802 &lt;- read_csv(\"https://dcgerard.github.io/stat_302/data/case0802.csv\")\ncase0802 |&gt;\n  mutate(logTime = log(Time)) -&gt;\n  case0802\nlmout &lt;- lm(logTime ~ Voltage, data = case0802) ## estimates linear model\ncase0802 |&gt;\n  group_by(Voltage) |&gt;\n  mutate(mean = mean(logTime)) |&gt; ## full model means\n  ungroup() |&gt;\n  mutate(fitted = fitted(lmout)) -&gt;\n  case0802\nrss_full    &lt;- sum((case0802$logTime - case0802$mean)^2)\nrss_reduced &lt;- sum((case0802$logTime - case0802$fitted)^2)\nESS         &lt;- rss_reduced - rss_full\ndf_full     &lt;- 69\ndf_reduced  &lt;- 74\ndf_extra    &lt;- df_reduced - df_full\nfstat       &lt;- (ESS / df_extra) / (rss_full / df_full)\n\n\\(RSS_{full}\\) = 173.7489\n\\(df_{full} = n - I\\) = 76 - 7 = 69\n\\(RSS_{reduced}\\) = 180.0748\n\\(df_{reduced} = n - 2\\) = 76 - 2 = 74\n\\(ESS = RSS_{reduced} - RSS_{full}\\) = 6.3259\n\\(df_{extra} = df_{reduced} - df_{full}\\) = 74 - 69 = 5\n\\(F\\)-statistic \\(= \\frac{ESS / df_{extra}}{RSS_{full} / df_{full}}\\) = 0.5024\nCompare to \\(F_{5,69}\\)\n\n\n\n\n\n\n\n\n\nCalculate \\(p\\)-value\n\npf(0.5024, df1 = 5, df2 = 69, lower.tail = FALSE)\n\n[1] 0.7734"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#full-model-estimates",
+    "href": "10_ch8/10_ch8.html#full-model-estimates",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Full Model Estimates",
+    "text": "Full Model Estimates\n\nlmout &lt;- lm(logTime ~ Voltage, data = case0802)\n\nmeandf &lt;- case0802 |&gt;\n  group_by(VoltageFac) |&gt;\n  summarize(mean = mean(logTime)) |&gt;\n  mutate(z = as.numeric(VoltageFac)) |&gt;\n  mutate(zlower = z - 1/3, zupper = z + 1/3)\n\ncase0802 &lt;- case0802 |&gt;\n  mutate(jitterx = jitter(as.numeric(VoltageFac)),\n         fitted  = fitted(lmout)) |&gt;\n  left_join(select(meandf, VoltageFac, mean), by = \"VoltageFac\")\n\n\nggplot(case0802, aes(x = jitterx, y = logTime)) +\n  geom_point() +\n  scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +\n  geom_segment(data = meandf,\n               mapping = aes(x = zlower, xend = zupper, y = mean, yend = mean),\n               col = 2, lty = 2) +\n  labs(x = \"Voltage\")"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#reduced-model-estimates",
+    "href": "10_ch8/10_ch8.html#reduced-model-estimates",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Reduced Model Estimates",
+    "text": "Reduced Model Estimates\n\nggplot(case0802, aes(x = jitterx, y = logTime)) +\n  geom_point() +\n  scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +\n  geom_line(mapping = aes(x = (Voltage - 24) / 2, y = fitted), lty = 2, col = 2) +\n  labs(x = \"Voltage\")"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#residuals-under-full",
+    "href": "10_ch8/10_ch8.html#residuals-under-full",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Residuals Under Full",
+    "text": "Residuals Under Full\n\nggplot(case0802, aes(x = jitterx, y = logTime)) +\n  geom_point() +\n  scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +\n  geom_segment(data = meandf,\n               mapping = aes(x = zlower, xend = zupper, y = mean, yend = mean),\n               col = 2, lty = 2) +\n  geom_segment(mapping = aes(x = jitterx, xend = jitterx, y = logTime, yend = mean),\n               col = \"blue\") +\n  labs(x = \"Voltage\")"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#residuals-under-reduced",
+    "href": "10_ch8/10_ch8.html#residuals-under-reduced",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Residuals Under Reduced",
+    "text": "Residuals Under Reduced\n\nggplot(case0802, aes(x = jitterx, y = logTime)) +\n  geom_point() +\n  scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +\n  geom_line(mapping = aes(x = (Voltage - 24) / 2, y = fitted), lty = 2, col = 2) +\n  geom_segment(mapping = aes(x = jitterx, xend = jitterx, y = logTime, yend = fitted),\n               col = \"blue\") +\n  labs(x = \"Voltage\")"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#lack-of-fit-f-statistic",
+    "href": "10_ch8/10_ch8.html#lack-of-fit-f-statistic",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Lack-of-Fit \\(F\\)-Statistic",
+    "text": "Lack-of-Fit \\(F\\)-Statistic\n\nrss_full    &lt;- sum((case0802$logTime - case0802$mean)^2)\nrss_reduced &lt;- sum((case0802$logTime - case0802$fitted)^2)\nESS         &lt;- rss_reduced - rss_full\ndf_full     &lt;- 69\ndf_reduced  &lt;- 74\ndf_extra    &lt;- df_reduced - df_full\nfstat       &lt;- (ESS / df_extra) / (rss_full / df_full)\n\n\n\\(RSS_{full}\\) = 173.7489\n\\(df_{full} = n - I\\) = 76 - 7 = 69\n\\(RSS_{reduced}\\) = 180.0748\n\\(df_{reduced} = n - 2\\) = 76 - 2 = 74\n\\(ESS = RSS_{reduced} - RSS_{full}\\) = 6.3259\n\\(df_{extra} = df_{reduced} - df_{full}\\) = 74 - 69 = 5\n\\(F\\)-statistic \\(= \\frac{ESS / df_{extra}}{RSS_{full} / df_{full}}\\) = 0.5024"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#compare-to-f_569",
+    "href": "10_ch8/10_ch8.html#compare-to-f_569",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Compare to \\(F_{5,69}\\)",
+    "text": "Compare to \\(F_{5,69}\\)\n\nx &lt;- seq(0, 5, length = 100)\ny &lt;- df(x, 5, 69)\n\nwhich_x &lt;- x &gt; fstat\npolydf &lt;- data.frame(\n  polyx = c(min(x[which_x]), x[which_x], max(x[which_x]), min(x[which_x])),\n  polyy = c(0, y[which_x], 0, 0)\n)\nggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +\n  geom_line() +\n  geom_polygon(data = polydf, aes(x = polyx, y = polyy), fill = \"blue\", alpha = 3/4) +\n  labs(x = \"F-stat\", y = \"Density\")"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#calculate-p-value",
+    "href": "10_ch8/10_ch8.html#calculate-p-value",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Calculate \\(p\\)-value",
+    "text": "Calculate \\(p\\)-value\n\npf(0.5024, df1 = 5, df2 = 69, lower.tail = FALSE)\n\n[1] 0.7734"
+  },
+  {
+    "objectID": "10_ch8/10_ch8.html#lack-of-fit-in-r",
+    "href": "10_ch8/10_ch8.html#lack-of-fit-in-r",
+    "title": "Linear Model Assumptions and Transformations",
+    "section": "Lack of Fit in R",
+    "text": "Lack of Fit in R\nCreate a factor variable:\n\ncase0802 &lt;- case0802 |&gt;\n  mutate(VoltageFac = as.factor(Voltage))\n\nFit both the ANOVA and regression models:\n\naout  &lt;- aov(logTime ~ VoltageFac, data = case0802)\nlmout &lt;- lm(logTime ~ Voltage,    data = case0802)\n\nUse anova() to get the ANOVA table:\n\nanova(lmout, aout)\n\nAnalysis of Variance Table\n\nModel 1: logTime ~ Voltage\nModel 2: logTime ~ VoltageFac\n  Res.Df RSS Df Sum of Sq   F Pr(&gt;F)\n1     74 180                        \n2     69 174  5      6.33 0.5   0.77"
   }
 ]
