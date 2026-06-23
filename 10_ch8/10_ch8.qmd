@@ -530,7 +530,9 @@ The sandwich estimator yields accurate standard errors for the coefficient
 estimates as long as:
 
 1. The linearity assumption holds, and 
-2. The sample size is large enough. Note that sandwich standard errors **cannot** be used for prediction intervals.
+2. The sample size is large enough. 
+
+Note that sandwich standard errors **cannot** be used for prediction intervals.
 
 ---
 

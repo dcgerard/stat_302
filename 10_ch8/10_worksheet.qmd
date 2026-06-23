@@ -1,0 +1,94 @@
+---
+title: "Linear Model Assumptions Worksheet"
+author: "David Gerard"
+date: today
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(broom)
+knitr::opts_chunk$set(echo       = TRUE,
+                      eval       = FALSE,
+                      fig.height = 3,
+                      fig.width  = 4,
+                      fig.align  = "center")
+```
+
+# Wine Consumption and Heart Disease
+
+Data frame `ex0823` from the `Sleuth3` package contains the average wine
+consumption rates (in liters per person) and number of ischemic heart disease
+deaths (per 1,000 men aged 55 to 64 years old) for 18 industrial countries. Do
+these data suggest that the heart disease death rate is associated with average
+wine consumption? If so, how can that relationship be described? Do any
+countries have substantially higher or lower death rates than others with
+similar wine consumption rates? We will answer these questions.
+
+Load the data with:
+
+```{r}
+#| label: load-data
+#| eval: true
+#| message: false
+library(tidyverse)
+ex0823 <- read_csv("https://dcgerard.github.io/stat_302/data/ex0823.csv")
+glimpse(ex0823)
+```
+
+**1.** What is the explanatory variable? What is the response variable? What
+are the observational units? Is this an observational study or a randomized
+experiment?
+
+**2.** Make a scatterplot of `Wine` (x-axis) vs `Mortality` (y-axis). Describe
+the relationship — does it look linear? Comment on the direction and strength
+of any trend you see.
+
+```{r}
+
+```
+
+**3.** Based on the scatterplot, which of the four linear model assumptions
+(linearity, independence, equal variance, normality) appear potentially
+violated? Explain briefly.
+
+**4.** Fit an initial simple linear regression of `Mortality` on `Wine` using
+`lm()`. Then create a residual plot (fitted values on the $x$-axis, residuals
+on the $y$-axis) using `augment()` from the `broom` package.
+
+```{r}
+
+```
+
+**5.** Examine the residual plot. What patterns, if any, do you see? Which
+assumption(s) does this suggest are violated? What transformation(s) might
+address these issues?
+
+**6.** Try the following transformations one at a time and evaluate each with
+a scatterplot and residual plot:
+
+  a. Log-transform `Mortality` only: fit `log(Mortality) ~ Wine`.
+  b. Log-transform `Wine` only: fit `Mortality ~ log(Wine)`.
+  c. Log-transform both variables: fit `log(Mortality) ~ log(Wine)`.
+
+For each, note whether the residual plot looks better or worse than the
+original. Which combination, if any, satisfies the linearity and equal-variance
+assumptions?
+
+```{r}
+
+```
+
+**7.** Using your final model from Question 6, report the estimated slope
+coefficient. Then compute the appropriate back-transformed estimate and 95%
+confidence interval. Write a one-sentence plain-language interpretation of the
+slope on the original scale, in the context of this study.
+
+```{r}
+
+```
+
+**8.** Is it appropriate to use causal language such as "drinking more wine
+*causes* lower heart disease mortality"? Explain your reasoning based on the
+study design.

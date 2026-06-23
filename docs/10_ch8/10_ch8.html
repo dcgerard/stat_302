@@ -868,7 +868,12 @@ x            0.424  2.904</code></pre>
 <li><strong>Usual method:</strong> Estimate <span class="math inline">\(\text{Var}(Y_i \mid X_i)\)</span> with <span class="math inline">\(s_p^2\)</span> — assumes the same variance for all <span class="math inline">\(i\)</span>.</li>
 <li><strong>Sandwich method:</strong> Estimate <span class="math inline">\(\text{Var}(Y_i \mid X_i)\)</span> with <span class="math inline">\((Y_i - \hat{\beta}_1 X_i)^2\)</span> — allows a different variance at each <span class="math inline">\(i\)</span>.</li>
 </ul>
-<p>The sandwich estimator yields accurate standard errors for the coefficient estimates as long as (1) the linearity assumption holds, and (2) the sample size is large enough. Note that sandwich standard errors <strong>cannot</strong> be used for prediction intervals.</p>
+<p>The sandwich estimator yields accurate standard errors for the coefficient estimates as long as:</p>
+<ol type="1">
+<li>The linearity assumption holds, and</li>
+<li>The sample size is large enough.</li>
+</ol>
+<p>Note that sandwich standard errors <strong>cannot</strong> be used for prediction intervals.</p>
 <hr>
 </section>
 </section>
