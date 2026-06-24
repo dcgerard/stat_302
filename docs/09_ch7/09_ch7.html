@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-23">
+<meta name="dcterms.date" content="2026-06-24">
 
 <title>Simple Linear Regression – Stat 302: Intermediate Statistics</title>
 <style>
@@ -249,7 +249,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 23, 2026</p>
+      <p class="date">June 24, 2026</p>
     </div>
   </div>
   
@@ -729,10 +729,12 @@ Note
 <p>If we nonetheless assume the Big Bang model and force <span class="math inline">\(\beta_0 = 0\)</span>, we fit a line through the origin with <code>- 1</code>:</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>lm_noint <span class="ot">&lt;-</span> <span class="fu">lm</span>(Distance <span class="sc">~</span> Velocity <span class="sc">-</span> <span class="dv">1</span>, <span class="at">data =</span> case0701)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="at">estimate =</span> <span class="fu">coef</span>(lm_noint), <span class="fu">confint</span>(lm_noint))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_noint, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>         estimate    2.5 %   97.5 %
-Velocity 0.001921 0.001526 0.002317</code></pre>
+<pre><code># A tibble: 1 × 7
+  term     estimate std.error statistic  p.value conf.low conf.high
+  &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 Velocity  0.00192  0.000191      10.0 7.05e-10  0.00153   0.00232</code></pre>
 </div>
 </div>
 <p>The estimated age is approximately 0.00192 megaparsec-seconds per km (95% CI: 0.00153 to 0.00232). Converting to years gives an estimate of roughly 1.9 billion years — far too young by modern standards (the universe is approximately 13.8 billion years old), reflecting the limited accuracy of Hubble’s early distance measurements.</p>

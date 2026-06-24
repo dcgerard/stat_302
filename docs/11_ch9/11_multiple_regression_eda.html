@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-23">
+<meta name="dcterms.date" content="2026-06-24">
 
 <title>Multiple Regression EDA – Stat 302: Intermediate Statistics</title>
 <style>
@@ -191,7 +191,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 23, 2026</p>
+      <p class="date">June 24, 2026</p>
     </div>
   </div>
   
@@ -223,16 +223,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Possible variables: Body weight (kg), gestation period (days), litter size.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"case0902"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>case0902 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0902.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(case0902)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>           Species  Brain    Body Gestation Litter
-1         Aardvark    9.6    2.20        31    5.0
-2         Acouchis    9.9    0.78        98    1.2
-3 African elephant 4480.0 2800.00       655    1.0
-4          Agoutis   20.3    2.80       104    1.3
-5        Axis deer  219.0   89.00       218    1.0
-6           Badger   53.0    6.00        60    2.2</code></pre>
+<pre><code># A tibble: 6 × 5
+  Species           Brain    Body Gestation Litter
+  &lt;chr&gt;             &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;
+1 Aardvark            9.6    2.2         31    5  
+2 Acouchis            9.9    0.78        98    1.2
+3 African elephant 4480   2800          655    1  
+4 Agoutis            20.3    2.8        104    1.3
+5 Axis deer         219     89          218    1  
+6 Badger             53      6           60    2.2</code></pre>
 </div>
 </div>
 <hr>
@@ -495,7 +497,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>If you have categorical explanatory variables, you can code their levels by <strong>colors</strong> (more preferable) and <strong>shapes</strong> (less preferable) and include this on a scatterplot of two quantitative variables.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"case0901"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>case0901 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0901.csv"</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>case0901<span class="sc">$</span>Time <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(case0901<span class="sc">$</span>Time)</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0901, <span class="fu">aes</span>(<span class="at">x =</span> Intensity, <span class="at">y =</span> Flowers, <span class="at">color =</span> Time)) <span class="sc">+</span></span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>

@@ -8,8 +8,6 @@ bibliography: "../bib.bib"
 ```{r}
 #| label: setup
 #| include: false
-library(tidyverse)
-library(Sleuth3)
 library(patchwork)
 knitr::opts_chunk$set(echo       = TRUE,
                       fig.height = 3,
@@ -43,8 +41,11 @@ set.seed(1)
 
 ```{r}
 #| label: brain-data
-data("case0902")
-head(case0902)
+#| message: false
+library(tidyverse)
+library(broom)
+case0902 <- read_csv("https://dcgerard.github.io/stat_302/data/case0902.csv")
+glimpse(case0902)
 ```
 
 ---
@@ -60,6 +61,7 @@ Simple linear regression:
 
 ```{r}
 #| label: slr-scatter
+#| message: false
 ggplot(case0902, aes(x = log(Body), y = log(Brain))) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE)
@@ -94,7 +96,7 @@ To interpret $\beta_1$ in an **observational study**:
 - The $X_i$'s cannot be fixed independently of one another.
 - Consider a subpopulation that has the same values of the $X_j$'s, where $j \neq 1$. Then the expected difference in means between species that differ in $X_1$ only by one unit is $\beta_1$.
 - $\beta_1$ is the expected difference in $Y$'s when we compare units with $X_1$ and $X_1 + 1$.
-- "For any subpopulation of mammal species with the same body weight, species with a one-day longer gestation length tend to have a mean brain weight $\beta_1$ grams larger."
+- "For any subpopulation of mammal species with the same body weight, species with a one-day longer gestation length have a mean brain weight $\beta_1$ grams larger."
 
 ## A Useful Notation
 
@@ -129,6 +131,7 @@ df_fake <- data.frame(x1 = x1, y = y, x2 = as.factor(x2))
 
 ```{r}
 #| label: fake-no-x2
+#| message: false
 ggplot(df_fake, aes(x = x1, y = y)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
@@ -139,6 +142,7 @@ ggplot(df_fake, aes(x = x1, y = y)) +
 
 ```{r}
 #| label: fake-with-x2
+#| message: false
 ggplot(df_fake, aes(x = x1, y = y, color = x2)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
@@ -253,9 +257,9 @@ lmout
 
 We would interpret this output as:
 
-- "We estimate that species with a 1-day longer gestation time tend to have a brain weight 1.8 grams heavier, after adjusting for body weight and litter size."
-- "We estimate that species with an average body weight 1 kg heavier tend to have a brain weight 0.99 grams heavier, after adjusting for gestation time and litter size."
-- "We estimate that species with a litter size one offspring larger tend to have a brain weight 27.6 grams heavier, after adjusting for body weight and gestation time."
+- "We estimate that species with a 1-day longer gestation time have a mean brain weight 1.8 grams heavier, after adjusting for body weight and litter size."
+- "We estimate that species with an average body weight 1 kg heavier have a mean brain weight 0.99 grams heavier, after adjusting for gestation time and litter size."
+- "We estimate that species with a litter size one offspring larger have a mean brain weight 27.6 grams heavier, after adjusting for body weight and gestation time."
 
 ---
 
@@ -266,25 +270,25 @@ We would interpret this output as:
 - We can use the usual $t$-tools to get these.
 
 ```{r}
-#| label: inference-summary
+#| label: inference-tidy
 lmout <- lm(Brain ~ Gestation + Body, data = case0902)
-summary(lmout)
+tidy(lmout)
 ```
 
-```{r}
-#| label: coef-table
-coef(summary(lmout))
-```
-
-| | Estimate | Std. Error | t value | Pr(\>|t|) |
+| `term` | `estimate` | `std.error` | `statistic` | `p.value` |
 |:--|:-:|:-:|:-:|:-:|
 | `(Intercept)` | $\hat\beta_0$ | $SE(\hat\beta_0)$ | $\hat\beta_0/SE(\hat\beta_0)$ | p-value for $H_0:\beta_0=0$ |
 | `Gestation`   | $\hat\beta_1$ | $SE(\hat\beta_1)$ | $\hat\beta_1/SE(\hat\beta_1)$ | p-value for $H_0:\beta_1=0$ |
 | `Body`        | $\hat\beta_2$ | $SE(\hat\beta_2)$ | $\hat\beta_2/SE(\hat\beta_2)$ | p-value for $H_0:\beta_2=0$ |
 
 ```{r}
+#| label: inference-glance
+glance(lmout)
+```
+
+```{r}
 #| label: confint-output
-confint(lmout)
+tidy(lmout, conf.int = TRUE)
 ```
 
 ## Interpreting $p$-values

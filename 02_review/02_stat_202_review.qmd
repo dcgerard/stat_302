@@ -373,11 +373,12 @@ ggplot2::theme_set(ggplot2::theme_bw())
 
 - We will go through a lot of examples of this below    
 
--   For the examples below, we will use the data from the Sleuth3 package in R.
-    
+-   For the examples below, we will use datasets available on the
+    [course data page](https://dcgerard.github.io/stat_302/data.html),
+    loaded with `read_csv()`.
+
     ```{r}
     #| message: false
-    library(Sleuth3)
     library(tidyverse)
     library(broom)
     ```
@@ -422,6 +423,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
 -   Variable: The difference in volume in the left hippocampus between the twins.
   We derived this quantitative variable by subtracting one volume from another.
     ```{r}
+    #| message: false
+    case0202 <- read_csv("https://dcgerard.github.io/stat_302/data/case0202.csv")
     case0202 %>%
       as_tibble() %>%
       mutate(diff = Unaffected - Affected) %>%
@@ -617,7 +620,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
   hypothesized that finches with deeper peaks were more likely to survive.
   
     ```{r}
-    data("case0201")
+    #| message: false
+    case0201 <- read_csv("https://dcgerard.github.io/stat_302/data/case0201.csv")
     case0201 %>%
       mutate(Year = as.factor(Year)) ->
       finch
@@ -709,7 +713,7 @@ ggplot2::theme_set(ggplot2::theme_bw())
     ```{r}
     #| echo: false
     #| eval: false
-    data("ex0222")
+    ex0222 <- read_csv("https://dcgerard.github.io/stat_302/data/ex0222.csv")
     afqt <- ex0222
     afqt %>%
       gather(-Gender, key = "Test", value = "Score") %>%
@@ -764,7 +768,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
 -   Example: Seeded clouds with either silver iodide or a control substance. Measured rainfall.
 
     ```{r}
-    data("case0301")
+    #| message: false
+    case0301 <- read_csv("https://dcgerard.github.io/stat_302/data/case0301.csv")
     ggplot(case0301, aes(x = Treatment, y = Rainfall)) +
       geom_boxplot()
     
@@ -817,7 +822,7 @@ ggplot2::theme_set(ggplot2::theme_bw())
     ```{r}
     #| echo: false
     #| eval: false
-    data("ex0330")
+    ex0330 <- read_csv("https://dcgerard.github.io/stat_302/data/ex0330.csv")
     ex0330 %>%
       mutate(Educ = factor(Educ)) ->
       educ

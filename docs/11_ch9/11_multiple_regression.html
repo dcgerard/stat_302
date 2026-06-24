@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-23">
+<meta name="dcterms.date" content="2026-06-24">
 
 <title>Multiple Regression – Stat 302: Intermediate Statistics</title>
 <style>
@@ -223,7 +223,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 23, 2026</p>
+      <p class="date">June 24, 2026</p>
     </div>
   </div>
   
@@ -259,16 +259,18 @@ window.Quarto = {
 <li>Possible variables: Body weight (kg), gestation period (days), litter size.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"case0902"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(case0902)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>case0902 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0902.csv"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(case0902)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>           Species  Brain    Body Gestation Litter
-1         Aardvark    9.6    2.20        31    5.0
-2         Acouchis    9.9    0.78        98    1.2
-3 African elephant 4480.0 2800.00       655    1.0
-4          Agoutis   20.3    2.80       104    1.3
-5        Axis deer  219.0   89.00       218    1.0
-6           Badger   53.0    6.00        60    2.2</code></pre>
+<pre><code>Rows: 96
+Columns: 5
+$ Species   &lt;chr&gt; "Aardvark", "Acouchis", "African elephant", "Agoutis", "Axis…
+$ Brain     &lt;dbl&gt; 9.60, 9.90, 4480.00, 20.30, 219.00, 53.00, 210.00, 124.00, 2…
+$ Body      &lt;dbl&gt; 2.2e+00, 7.8e-01, 2.8e+03, 2.8e+00, 8.9e+01, 6.0e+00, 6.6e+0…
+$ Gestation &lt;dbl&gt; 31, 98, 655, 104, 218, 60, 158, 183, 65, 240, 128, 180, 135,…
+$ Litter    &lt;dbl&gt; 5.0, 1.2, 1.0, 1.3, 1.0, 2.2, 1.2, 1.1, 4.0, 1.8, 4.0, 1.0, …</code></pre>
 </div>
 </div>
 <hr>
@@ -286,9 +288,6 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0902, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log</span>(Body), <span class="at">y =</span> <span class="fu">log</span>(Brain))) <span class="sc">+</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
-</div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -324,7 +323,7 @@ window.Quarto = {
 <li>The <span class="math inline">\(X_i\)</span>’s cannot be fixed independently of one another.</li>
 <li>Consider a subpopulation that has the same values of the <span class="math inline">\(X_j\)</span>’s, where <span class="math inline">\(j \neq 1\)</span>. Then the expected difference in means between species that differ in <span class="math inline">\(X_1\)</span> only by one unit is <span class="math inline">\(\beta_1\)</span>.</li>
 <li><span class="math inline">\(\beta_1\)</span> is the expected difference in <span class="math inline">\(Y\)</span>’s when we compare units with <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_1 + 1\)</span>.</li>
-<li>“For any subpopulation of mammal species with the same body weight, species with a one-day longer gestation length tend to have a mean brain weight <span class="math inline">\(\beta_1\)</span> grams larger.”</li>
+<li>“For any subpopulation of mammal species with the same body weight, species with a one-day longer gestation length have a mean brain weight <span class="math inline">\(\beta_1\)</span> grams larger.”</li>
 </ul>
 <section id="a-useful-notation" class="level2">
 <h2 class="anchored" data-anchor-id="a-useful-notation">A Useful Notation</h2>
@@ -357,21 +356,18 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="visualizing-the-coefficient-interpretation">Visualizing the Coefficient Interpretation</h2>
 <p>Consider artificial data with <span class="math inline">\(\beta_0 = 2\)</span>, <span class="math inline">\(\beta_1 = 1\)</span> (positive <span class="math inline">\(X_1\)</span> effect), <span class="math inline">\(\beta_2 = -3\)</span> (large negative <span class="math inline">\(X_2\)</span> effect), where <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span> are positively correlated.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="dv">2</span>; beta1 <span class="ot">&lt;-</span> <span class="dv">1</span>; beta2 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">3</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="dv">5</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">9</span>, <span class="dv">5</span>) <span class="sc">+</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">each =</span> <span class="dv">10</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>y  <span class="ot">&lt;-</span> beta0 <span class="sc">+</span> beta1 <span class="sc">*</span> x1 <span class="sc">+</span> beta2 <span class="sc">*</span> x2</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>df_fake <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x1 =</span> x1, <span class="at">y =</span> y, <span class="at">x2 =</span> <span class="fu">as.factor</span>(x2))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="dv">2</span>; beta1 <span class="ot">&lt;-</span> <span class="dv">1</span>; beta2 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">3</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="dv">5</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">9</span>, <span class="dv">5</span>) <span class="sc">+</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">each =</span> <span class="dv">10</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>y  <span class="ot">&lt;-</span> beta0 <span class="sc">+</span> beta1 <span class="sc">*</span> x1 <span class="sc">+</span> beta2 <span class="sc">*</span> x2</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>df_fake <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x1 =</span> x1, <span class="at">y =</span> y, <span class="at">x2 =</span> <span class="fu">as.factor</span>(x2))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>Without <span class="math inline">\(X_2\)</span> in the model</strong> — the marginal slope looks <strong>negative</strong> even though <span class="math inline">\(\beta_1 = 1\)</span>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_fake, <span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> y)) <span class="sc">+</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_blank</span>(), <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_fake, <span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_blank</span>(), <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -382,15 +378,12 @@ window.Quarto = {
 </div>
 <p><strong>With <span class="math inline">\(X_2\)</span> color-coded</strong> — the slope within each level of <span class="math inline">\(X_2\)</span> is positive (<span class="math inline">\(= \beta_1 = 1\)</span>), and the parallel lines sit at different heights:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_fake, <span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> y, <span class="at">color =</span> x2)) <span class="sc">+</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_blank</span>(), <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">keywidth =</span> <span class="fl">0.1</span>, <span class="at">keyheight =</span> <span class="fl">0.1</span>,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                               <span class="at">default.unit =</span> <span class="st">"inch"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_fake, <span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> y, <span class="at">color =</span> x2)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_blank</span>(), <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">keywidth =</span> <span class="fl">0.1</span>, <span class="at">keyheight =</span> <span class="fl">0.1</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                               <span class="at">default.unit =</span> <span class="st">"inch"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -428,8 +421,8 @@ window.Quarto = {
 </ul>
 <p>Use <code>lm()</code> and <strong>always save the output</strong>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(Brain <span class="sc">~</span> Gestation <span class="sc">+</span> Body, <span class="at">data =</span> case0902)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>lmout</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(Brain <span class="sc">~</span> Gestation <span class="sc">+</span> Body, <span class="at">data =</span> case0902)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>lmout</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -457,8 +450,8 @@ Coefficients:
 </tbody>
 </table>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(Brain <span class="sc">~</span> Gestation <span class="sc">+</span> Body <span class="sc">+</span> Litter, <span class="at">data =</span> case0902)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>lmout</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(Brain <span class="sc">~</span> Gestation <span class="sc">+</span> Body <span class="sc">+</span> Litter, <span class="at">data =</span> case0902)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>lmout</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -489,9 +482,9 @@ Coefficients:
 </table>
 <p>We would interpret this output as:</p>
 <ul>
-<li>“We estimate that species with a 1-day longer gestation time tend to have a brain weight 1.8 grams heavier, after adjusting for body weight and litter size.”</li>
-<li>“We estimate that species with an average body weight 1 kg heavier tend to have a brain weight 0.99 grams heavier, after adjusting for gestation time and litter size.”</li>
-<li>“We estimate that species with a litter size one offspring larger tend to have a brain weight 27.6 grams heavier, after adjusting for body weight and gestation time.”</li>
+<li>“We estimate that species with a 1-day longer gestation time have a mean brain weight 1.8 grams heavier, after adjusting for body weight and litter size.”</li>
+<li>“We estimate that species with an average body weight 1 kg heavier have a mean brain weight 0.99 grams heavier, after adjusting for gestation time and litter size.”</li>
+<li>“We estimate that species with a litter size one offspring larger have a mean brain weight 27.6 grams heavier, after adjusting for body weight and gestation time.”</li>
 </ul>
 <hr>
 </section>
@@ -503,35 +496,15 @@ Coefficients:
 <li>We can use the usual <span class="math inline">\(t\)</span>-tools to get these.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(Brain <span class="sc">~</span> Gestation <span class="sc">+</span> Body, <span class="at">data =</span> case0902)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(Brain <span class="sc">~</span> Gestation <span class="sc">+</span> Body, <span class="at">data =</span> case0902)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = Brain ~ Gestation + Body, data = case0902)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--1091.5   -63.2     8.2    67.1  1025.0 
-
-Coefficients:
-             Estimate Std. Error t value Pr(&gt;|t|)
-(Intercept) -112.1920    43.0595   -2.61    0.011
-Gestation      1.4499     0.2752    5.27  8.9e-07
-Body           1.0326     0.0903   11.44  &lt; 2e-16
-
-Residual standard error: 226 on 93 degrees of freedom
-Multiple R-squared:  0.805, Adjusted R-squared:  0.801 
-F-statistic:  192 on 2 and 93 DF,  p-value: &lt;2e-16</code></pre>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">summary</span>(lmout))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>            Estimate Std. Error t value  Pr(&gt;|t|)
-(Intercept) -112.192    43.0595  -2.606 1.068e-02
-Gestation      1.450     0.2752   5.268 8.889e-07
-Body           1.033     0.0903  11.436 1.984e-19</code></pre>
+<pre><code># A tibble: 3 × 5
+  term        estimate std.error statistic  p.value
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept)  -112.     43.1        -2.61 1.07e- 2
+2 Gestation       1.45    0.275       5.27 8.89e- 7
+3 Body            1.03    0.0903     11.4  1.98e-19</code></pre>
 </div>
 </div>
 <table class="caption-top table">
@@ -544,11 +517,11 @@ Body           1.033     0.0903  11.436 1.984e-19</code></pre>
 </colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;"></th>
-<th style="text-align: center;">Estimate</th>
-<th style="text-align: center;">Std. Error</th>
-<th style="text-align: center;">t value</th>
-<th style="text-align: center;">Pr(&gt;</th>
+<th style="text-align: left;"><code>term</code></th>
+<th style="text-align: center;"><code>estimate</code></th>
+<th style="text-align: center;"><code>std.error</code></th>
+<th style="text-align: center;"><code>statistic</code></th>
+<th style="text-align: center;"><code>p.value</code></th>
 </tr>
 </thead>
 <tbody>
@@ -576,12 +549,24 @@ Body           1.033     0.0903  11.436 1.984e-19</code></pre>
 </tbody>
 </table>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                2.5 %  97.5 %
-(Intercept) -197.6997 -26.684
-Gestation      0.9033   1.996
-Body           0.8533   1.212</code></pre>
+<pre><code># A tibble: 1 × 12
+  r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.805         0.801  226.      192. 1.02e-33     2  -655. 1318. 1329.
+# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 7
+  term        estimate std.error statistic  p.value conf.low conf.high
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)  -112.     43.1        -2.61 1.07e- 2 -198.       -26.7 
+2 Gestation       1.45    0.275       5.27 8.89e- 7    0.903      2.00
+3 Body            1.03    0.0903     11.4  1.98e-19    0.853      1.21</code></pre>
 </div>
 </div>
 <section id="interpreting-p-values" class="level2">

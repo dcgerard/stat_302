@@ -643,7 +643,7 @@ line through the origin with `- 1`:
 ```{r}
 #| label: no-intercept-age
 lm_noint <- lm(Distance ~ Velocity - 1, data = case0701)
-cbind(estimate = coef(lm_noint), confint(lm_noint))
+tidy(lm_noint, conf.int = TRUE)
 ```
 
 The estimated age is approximately 0.00192 megaparsec-seconds per km

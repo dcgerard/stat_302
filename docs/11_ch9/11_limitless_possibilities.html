@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-23">
+<meta name="dcterms.date" content="2026-06-24">
 
 <title>Creating New Explanatory Variables – Stat 302: Intermediate Statistics</title>
 <style>
@@ -224,7 +224,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 23, 2026</p>
+      <p class="date">June 24, 2026</p>
     </div>
   </div>
   
@@ -247,7 +247,7 @@ window.Quarto = {
 <section id="adding-curvature" class="level1">
 <h1>Adding Curvature</h1>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"ex0915"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ex0915 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/ex0915.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ex0915, <span class="fu">aes</span>(<span class="at">x =</span> Rainfall, <span class="at">y =</span> Yield)) <span class="sc">+</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -353,16 +353,18 @@ Coefficients:
 <li>Explanatory variables: Timing of light (early/late, binary), intensity of light (quantitative).</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(case0901)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>case0901 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0901.csv"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(case0901)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  Flowers Time Intensity
-1    62.3    1       150
-2    77.4    1       150
-3    55.3    1       300
-4    54.2    1       300
-5    49.6    1       450
-6    61.9    1       450</code></pre>
+<pre><code># A tibble: 6 × 3
+  Flowers  Time Intensity
+    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
+1    62.3     1       150
+2    77.4     1       150
+3    55.3     1       300
+4    54.2     1       300
+5    49.6     1       450
+6    61.9     1       450</code></pre>
 </div>
 </div>
 <p>Model: <span class="math inline">\(\mu(\text{Flowers} \mid \text{Time},\,\text{Intensity}) = \beta_0 + \beta_1\,\text{Time} + \beta_2\,\text{Intensity}\)</span></p>

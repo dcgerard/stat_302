@@ -9,7 +9,6 @@ bibliography: "../bib.bib"
 #| label: setup
 #| include: false
 library(tidyverse)
-library(Sleuth3)
 knitr::opts_chunk$set(echo       = TRUE,
                       fig.height = 3,
                       fig.width  = 5,
@@ -36,7 +35,8 @@ set.seed(1)
 
 ```{r}
 #| label: brain-data
-data("case0902")
+#| message: false
+case0902 <- read_csv("https://dcgerard.github.io/stat_302/data/case0902.csv")
 head(case0902)
 ```
 
@@ -219,7 +219,8 @@ ggplot(case0902, aes(x = logBody, y = logBrain, size = logGestation)) +
 
 ```{r}
 #| label: coded-color
-data("case0901")
+#| message: false
+case0901 <- read_csv("https://dcgerard.github.io/stat_302/data/case0901.csv")
 case0901$Time <- as.factor(case0901$Time)
 ggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +
   geom_point()

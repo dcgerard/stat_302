@@ -9,7 +9,6 @@ bibliography: "../bib.bib"
 #| label: setup
 #| include: false
 library(tidyverse)
-library(Sleuth3)
 knitr::opts_chunk$set(echo       = TRUE,
                       fig.height = 3,
                       fig.width  = 5,
@@ -31,7 +30,8 @@ set.seed(1)
 
 ```{r}
 #| label: corn-scatter
-data("ex0915")
+#| message: false
+ex0915 <- read_csv("https://dcgerard.github.io/stat_302/data/ex0915.csv")
 ggplot(ex0915, aes(x = Rainfall, y = Yield)) +
   geom_point()
 ```
@@ -96,7 +96,8 @@ Researchers studied the effect of timing and light intensity on flower yield:
 
 ```{r}
 #| label: flowers-head
-data(case0901)
+#| message: false
+case0901 <- read_csv("https://dcgerard.github.io/stat_302/data/case0901.csv")
 head(case0901)
 ```
 

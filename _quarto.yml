@@ -15,6 +15,7 @@ website:
 
 execute:
   dir: file
+  freeze: auto
 
 format:
   html:
