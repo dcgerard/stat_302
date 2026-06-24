@@ -1,0 +1,265 @@
+---
+title: "F-tests for Nested Models"
+author: "David Gerard"
+date: today
+bibliography: "../bib.bib"
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(broom)
+knitr::opts_chunk$set(echo       = TRUE,
+                      fig.height = 3,
+                      fig.width  = 5,
+                      fig.align  = "center")
+ggplot2::theme_set(ggplot2::theme_bw())
+set.seed(1)
+```
+
+# Learning Objectives
+
+- Test whether a **group** of explanatory variables jointly improves a model.
+- Distinguish *nested* from *non-nested* model pairs.
+- Interpret the $F$-statistic and its degrees of freedom.
+- Use `anova()` in R to run the $F$-test.
+- Section 10.3 in the textbook.
+
+---
+
+# Motivation
+
+## The Problem with Individual $t$-tests
+
+- In multiple regression we can test each coefficient with a $t$-test.
+- But some variables enter the model through **multiple terms** (e.g., $X$ and $X^2$).
+- Testing $\beta_1 = 0$ and $\beta_2 = 0$ separately does not answer "does $X$ matter at all?"
+- We need to test $H_0: \beta_1 = 0$ **and** $\beta_2 = 0$ **simultaneously** — a joint test.
+
+## Case Study: Kentucky Derby
+
+- The Kentucky Derby is a famous horse race held annually since 1875.
+- We have the winning speed (mph) and the year of each race.
+- Does year explain speed? (Speed has increased over time as breeding and track conditions improved.)
+
+```{r}
+#| label: derby-load
+#| message: false
+ex0920 <- read_csv("https://dcgerard.github.io/stat_302/data/ex0920.csv")
+glimpse(ex0920)
+```
+
+```{r}
+#| label: derby-scatter
+#| message: false
+ggplot(ex0920, aes(x = Year, y = Speed)) +
+  geom_point() +
+  geom_smooth(se = FALSE) +
+  labs(y = "Winning Speed (mph)")
+```
+
+- The trend is clearly **nonlinear**: speed rose sharply in the early 20th century then leveled off.
+- A quadratic model is appropriate:
+$$\mu(\text{Speed} \mid \text{Year}) = \beta_0 + \beta_1\,\text{Year} + \beta_2\,\text{Year}^2$$
+- **Question**: Is year *at all* associated with winning speed?
+- $H_0: \beta_1 = 0$ and $\beta_2 = 0$
+- $H_A: \beta_1 \neq 0$ or $\beta_2 \neq 0$
+
+---
+
+# Nested Models
+
+## Definition
+
+- A model is **nested** inside another if it can be obtained by setting some coefficients
+  in the larger model to zero.
+- The larger model is the **full model**.
+- The smaller model is the **reduced model**.
+
+## Kentucky Derby Example
+
+| Model | Equation |
+|:--|:--|
+| **Full** | $\mu(\text{Speed} \mid \text{Year}) = \beta_0 + \beta_1\,\text{Year} + \beta_2\,\text{Year}^2$ |
+| **Reduced** (under $H_0$) | $\mu(\text{Speed}) = \beta_0$ |
+
+- The reduced model is the full model with $\beta_1 = \beta_2 = 0$.
+
+## Non-Nested Models (Counter-example)
+
+- Model A: $\mu(\text{Speed} \mid \text{Year}) = \beta_0 + \beta_1\,\text{Year} + \beta_2\,\text{Year}^2$
+- Model B: $\mu(\text{Speed} \mid \text{Starters}) = \beta_0 + \beta_1\,\text{Starters} + \beta_2\,\text{Starters}^2$
+- Neither is a special case of the other — **cannot** use an $F$-test.
+- For non-nested models, use AIC or BIC (see the model selection lecture).
+
+## Intuition: Residuals Tell the Story
+
+- If the full model fits much better (smaller residuals), we have evidence against $H_0$.
+- We compare the **residual sum of squares** (RSS) under each model.
+
+```{r}
+#| label: derby-models
+ex0920 <- ex0920 |> mutate(Year2 = Year^2)
+lm_full    <- lm(Speed ~ Year + Year2, data = ex0920)
+lm_reduced <- lm(Speed ~ 1,            data = ex0920)
+
+ex0920 <- ex0920 |>
+  mutate(fit_full = fitted(lm_full),
+         fit_red  = fitted(lm_reduced))
+```
+
+```{r}
+#| label: resid-full
+#| echo: false
+ggplot(ex0920, aes(x = Year, y = Speed)) +
+  geom_segment(aes(xend = Year, yend = fit_full), alpha = 0.35, color = "steelblue") +
+  geom_point(size = 1.5) +
+  geom_line(aes(y = fit_full), color = "steelblue", linewidth = 1) +
+  labs(title = "Full model residuals (small)", y = "Speed (mph)")
+```
+
+```{r}
+#| label: resid-reduced
+#| echo: false
+ggplot(ex0920, aes(x = Year, y = Speed)) +
+  geom_segment(aes(xend = Year, yend = fit_red), alpha = 0.35, color = "tomato") +
+  geom_point(size = 1.5) +
+  geom_line(aes(y = fit_red), color = "tomato", linewidth = 1) +
+  labs(title = "Reduced model residuals (large)", y = "Speed (mph)")
+```
+
+- The full model fits much better — the residuals are far smaller.
+- This large difference in fit is strong evidence against $H_0$.
+
+---
+
+# The $F$-Statistic
+
+## Key Quantities
+
+Let $p_F$ = number of parameters in the full model, $p_R$ = number in the reduced, $n$ = sample size.
+
+| Symbol | Meaning |
+|:--|:--|
+| $RSS_F$ | Sum of squared residuals under the full model |
+| $RSS_R$ | Sum of squared residuals under the reduced model |
+| $ESS$ | **Extra sum of squares** $= RSS_R - RSS_F$ (how much better the full fits) |
+| $df_{\text{extra}}$ | $p_F - p_R$ (extra parameters in the full model) |
+| $df_F$ | $n - p_F$ (residual degrees of freedom for the full model) |
+
+## Formula and Distribution
+
+$$F = \frac{ESS / \, df_{\text{extra}}}{RSS_F / \, df_F}$$
+
+- **Numerator**: average extra variability explained per additional parameter.
+- **Denominator**: average residual variability per degree of freedom (an estimate of $\sigma^2$).
+- Under $H_0$: $F$ follows an $F$-distribution with $(df_{\text{extra}},\, df_F)$ degrees of freedom.
+- A **large** $F$ means the full model explains substantially more — evidence against $H_0$.
+
+---
+
+# Running the $F$-Test in R
+
+Use `anova()` with the **reduced** model first, the **full** model second:
+
+```{r}
+#| label: anova-derby
+anova(lm_reduced, lm_full)
+```
+
+## Reading the Output
+
+| Column | Meaning |
+|:--|:--|
+| `Res.Df` | Residual degrees of freedom for each model |
+| `RSS` | Residual sum of squares for each model |
+| `Df` | $df_{\text{extra}} = p_F - p_R$ |
+| `Sum of Sq` | $ESS = RSS_R - RSS_F$ |
+| `F` | $F$-statistic |
+| `Pr(>F)` | $p$-value |
+
+- **Conclusion**: We have overwhelming evidence that year is associated with winning speed
+  ($F = 104.6$ on 2 and 119 df, $p < 0.001$).
+
+---
+
+# Another Example: Do Starters Matter?
+
+## Setup
+
+- `Starters`: number of horses that started the race.
+- After accounting for a quadratic trend in year, does the number of starters add anything?
+
+$$H_0: \beta_3 = \beta_4 = 0 \text{ in:}$$
+$$\mu(\text{Speed} \mid \text{Year}, \text{Starters}) = \beta_0 + \beta_1\,\text{Year} + \beta_2\,\text{Year}^2
+  + \beta_3\,\text{Starters} + \beta_4\,\text{Starters}^2$$
+
+- **Full**: Year + Year² + Starters + Starters²
+- **Reduced**: Year + Year² (same as the full model above)
+
+```{r}
+#| label: anova-starters
+ex0920 <- ex0920 |> mutate(Starters2 = Starters^2)
+lm_full2    <- lm(Speed ~ Year + Year2 + Starters + Starters2, data = ex0920)
+lm_reduced2 <- lm(Speed ~ Year + Year2,                        data = ex0920)
+anova(lm_reduced2, lm_full2)
+```
+
+- **Conclusion**: We do have some evidence that the number of starters is associated with speed after adjusting for year ($F = 3.92$ on 2 and 111 df, $p = 0.023$).
+
+---
+
+# Exercises
+
+**1.** The brain size dataset (`case0902`) has three potential explanatory variables for
+`Brain` weight (grams): `Body` (kg), `Gestation` (days), and `Litter` size.
+
+Load the data:
+```r
+case0902 <- read_csv("https://dcgerard.github.io/stat_302/data/case0902.csv")
+```
+
+Then consider:
+- **Reduced model**: `Brain ~ Body`
+- **Full model**: `Brain ~ Body + Gestation + Litter`
+
+a. Write out $H_0$ and $H_A$ in terms of the $\beta$ coefficients. In plain English,
+   what does the null hypothesis claim?
+
+b. Run `anova(lm_reduced, lm_full)` in R. Report the $F$-statistic, the two degrees
+   of freedom, and the $p$-value.
+
+c. State a conclusion in context.
+
+---
+
+**2.** Which of the following pairs of models are nested? For nested pairs, identify
+which is the reduced and which is the full model.
+
+a. Model A: $\mu(Y \mid X_1, X_2) = \beta_0 + \beta_1 X_1 + \beta_2 X_2$
+   Model B: $\mu(Y \mid X_1) = \beta_0 + \beta_1 X_1$
+
+b. Model A: $\mu(Y \mid X_1, X_2) = \beta_0 + \beta_1 X_1 + \beta_2 X_2$
+   Model B: $\mu(Y \mid X_1, X_3) = \beta_0 + \beta_1 X_1 + \beta_3 X_3$
+
+c. Model A: $\mu(Y \mid X_1) = \beta_0 + \beta_1 X_1 + \beta_2 X_1^2$
+   Model B: $\mu(Y \mid X_1) = \beta_0 + \beta_1 X_1$
+
+d. Model A: $\mu(Y \mid X_1, X_2, X_3) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3$
+   Model B: $\mu(Y \mid X_1, X_2) = \beta_0 + \beta_1 X_1 + \beta_2 X_2$
+
+---
+
+**3.** Using the Kentucky Derby data, test whether the **quadratic** term `Year²` adds
+significantly on top of the **linear** term `Year` alone.
+
+- Reduced model: `Speed ~ Year`
+- Full model: `Speed ~ Year + Year2`
+
+a. Write out $H_0$ and $H_A$.
+
+b. Run the test and report the results.
+
+c. Compare the $p$-value to the one from the bigger test (intercept-only reduced model)
+   earlier in this lecture. Why are they different?

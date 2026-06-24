@@ -1,0 +1,191 @@
+---
+title: "F-test in Multiple Regression"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation:
+    slide_level: 2
+    theme: "metropolis"
+urlcolor: "blue"
+---
+
+```{r setup, include=FALSE}
+ggplot2::theme_set(
+  ggplot2::theme_bw()
+  )
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.height = 2.3, 
+                      fig.width = 3.7, 
+                      fig.align = "center")
+```
+
+
+```{r}
+set.seed(1)
+library(ggplot2)
+```
+
+## Learning Objective
+
+- Test for including multiple variables at the same time.
+
+- Section 10.3 in the book
+
+## Case Study
+
+- Kentucky Derby
+
+- `Speed` vs `Year` and `Yeat`$^2$.
+
+```{r, echo = TRUE}
+library(Sleuth3)
+data(ex0920)
+head(ex0920)
+```
+
+## Year vs Speed
+
+```{r, echo = TRUE, message=FALSE}
+qplot(Year, Speed, data = ex0920) +
+  geom_smooth(se = FALSE)
+```
+
+## Goal
+
+- Get a $p$-value for the association between year and Speed.
+
+- It is clear that a quadratic model would be better than a linear model.
+
+- $\mu(Speed|Year) = \beta_0 + \beta_1 Year + \beta_2 Year^2$
+
+- So to see if year is important, we need to test:
+
+    - $H_0: \beta_1 = \beta_2 = 0$
+    
+    - $H_A: \text{ either } \beta_1 \neq 0 \text{ or } \beta_2 \neq 0$
+    
+## Full and Reduced Models:
+
+- Full Model: $\mu(Speed|Year) = \beta_0 + \beta_1 Year + \beta_2 Year^2$
+
+- Reduced Model: $\mu(Speed|Year) = \beta_0$
+
+- Use $F$-test strategy to run this hypothesis test.
+
+    1. Fit both full and reduced models.
+    2. Calculate sum of squared residuals under both models and the corresponding degrees of freedom.
+    3. Calculate the $F$-statistic.
+    4. Compare to theoretical $F$-distribution under $H_0$
+    
+
+## Fit Under Full
+
+```{r}
+ex0920$Year2 <- ex0920$Year ^ 2
+lmfull <- lm(Speed ~ Year + Year2, data = ex0920)
+lmreduced <- lm(Speed ~ 1, data = ex0920)
+
+ex0920$fit_full <- fitted(lmfull)
+ex0920$fit_red  <- fitted(lmreduced)
+
+qplot(Year, Speed, data = ex0920) +
+  geom_line(mapping = aes(y = fit_full), lwd = 1, color = "blue")
+```
+
+## Residuals under Full
+
+```{r}
+qplot(Year, Speed, data = ex0920) +
+  geom_line(mapping = aes(y = fit_full), lwd = 1, color = "blue") +
+  geom_segment(aes(x = Year, xend = Year, y = fit_full, yend = Speed), alpha = 1/2)
+```
+
+## Fit under Reduced
+
+```{r}
+qplot(Year, Speed, data = ex0920) +
+  geom_line(mapping = aes(y = fit_red), lwd = 1, color = "blue")
+```
+
+## Residuals under Reduced
+
+```{r}
+qplot(Year, Speed, data = ex0920) +
+  geom_line(mapping = aes(y = fit_red), lwd = 1, color = "blue") +
+  geom_segment(aes(x = Year, xend = Year, y = fit_red, yend = Speed), alpha = 1/2)
+```
+
+    
+## In R
+
+- First, fit both models
+
+```{r, echo = TRUE}
+ex0920$Year2 <- ex0920$Year ^ 2
+lmfull <- lm(Speed ~ Year + Year2, data = ex0920)
+lmreduced <- lm(Speed ~ 1, data = ex0920)
+```
+
+- Then use `anova()` with the reduced model as the first argument.
+
+\footnotesize
+```{r, echo = TRUE}
+anova(lmreduced, lmfull)
+```
+\normalsize
+
+
+## What is that Table?
+
+```{r}
+anova(lmreduced, lmfull)
+```
+
+\begin{center}
+\begin{tabular}{llllll}
+  Res.Df  & RSS & Df &  Sum of Sq   & F &  Pr(>F)\\
+  $df_{reduced}$ & $RSS_{reduced}$ & & & & \\
+  $df_{full}$ & $RSS_{full}$ & $df_{extra}$ & $ESS$ & $F$-stat & $p$-value\\
+\end{tabular}
+\end{center}
+
+
+## $F$-test
+
+- We can use the $F$-test for any two **nested** models.
+
+- **Nested**: The reduced model is a special case of the full model by setting constraints on some of the parameters of the full.
+
+## Another Example
+
+- $\mu(Speed|Year,Starters) = \beta_0 + \beta_1Year + \beta_2Year^2 + \beta_3Starters + \beta_4Starters^2$
+
+- $H_0: \beta_3 = \beta_4 = 0$
+    
+- $H_A: \text{ either } \beta_3 \neq 0 \text{ or } \beta_4 \neq 0$
+
+- Full Model: $\mu(Speed|Year,Starters) = \beta_0 + \beta_1Year + \beta_2Year^2 + \beta_3Starters + \beta_4Starters^2$
+
+- Reduced Model: $\mu(Speed|Year,Starters) = \beta_0 + \beta_1Year + \beta_2Year^2$
+
+## Another Example
+
+```{r, echo = TRUE}
+ex0920$Starters2 <- ex0920$Starters ^ 2
+lmfull <- lm(Speed ~ Year + Year2 + Starters + 
+               Starters2, data = ex0920)
+lmreduced <- lm(Speed ~ Year + Year2, data = ex0920)
+anova(lmreduced, lmfull)
+```
+
+## Example of a **non**-nested model
+
+- Model 1: $\mu(Speed|Year,Starters) = \beta_0 + \beta_1Year + \beta_2Year^2$
+
+- Model 2: $\mu(Speed|Year,Starters) = \beta_0 + \beta_1Starters + \beta_2Starters^2$
+
+- **Cannot** use an $F$-test to compare these two models.
+
+- Why? Mathematical theory only gaurantees the $F$-distribution when the models are nested.
+
+- When models are not nested, use adjusted $R^2$, $C_p$, AIC, or BIC methods from section 12.4 (more on this later).

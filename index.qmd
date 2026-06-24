@@ -41,6 +41,9 @@ author: David Gerard
   - [Multiple Linear Regression](./11_ch9/11_multiple_regression.qmd)
   - [Transformations](./11_ch9/11_limitless_possibilities.qmd)
   - [MLR EDA](./11_ch9/11_multiple_regression_eda.qmd)
-- Chapter 10
-- Chapter 11
+- Chapters 10–12:
+  - [F-tests for Nested Models](./12_modeling/12_f_tests.qmd)
+  - [Model Selection](./12_modeling/12_model_selection.qmd)
+  - [Outliers and Influential Observations](./12_modeling/12_outliers.qmd)
+  - [Chapters 10–12 Worksheet](./12_modeling/12_worksheet.qmd)
 - Chapter 20:

@@ -1,0 +1,322 @@
+---
+title: "Outliers and Influential Observations"
+author: "David Gerard"
+date: today
+bibliography: "../bib.bib"
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(broom)
+library(GGally)
+library(patchwork)
+knitr::opts_chunk$set(echo       = TRUE,
+                      fig.height = 3,
+                      fig.width  = 5,
+                      fig.align  = "center")
+ggplot2::theme_set(ggplot2::theme_bw())
+set.seed(1)
+```
+
+# Learning Objectives
+
+- Distinguish between outliers, high-leverage points, and influential observations.
+- Compute and plot leverage values, studentized residuals, and Cook's distance.
+- Know how to responsibly handle influential observations.
+- Sections 11.3–11.4 in the textbook.
+
+---
+
+# Types of Unusual Observations
+
+## Three Concepts
+
+| Type | What makes it unusual | Effect on the fit |
+|:--|:--|:--|
+| **Outlier** | Large residual — unusual $Y$ for its $X$ values | May or may not influence the line |
+| **High-leverage point** | Unusual $X$ values — far from the center of the predictor space | May or may not have a large residual |
+| **Influential observation** | Removing it noticeably changes the fitted line | High leverage *and* an outlier |
+
+- High leverage alone is not harmful if the point happens to fall on the regression line.
+- An outlier at the center of the $X$ range tugs the intercept but not the slope.
+- A point with both high leverage **and** a large residual is the dangerous combination.
+
+## Why High Leverage Is Hard to Spot Marginally
+
+- You cannot find a multivariate outlier just by looking at histograms of each variable
+  separately.
+- Example: a point at $(X_1, X_2) = (0.75, -0.17)$ below appears extreme in the 2-D
+  cloud but looks perfectly ordinary in either histogram alone.
+
+```{r}
+#| label: leverage-illustration
+#| echo: false
+#| fig-width: 7
+n  <- 100
+x1 <- runif(n, 0, 1)
+x2 <- -x1 + rnorm(n, mean = 0, sd = 0.1)
+cloud <- data.frame(x1 = c(x1, 0.75), x2 = c(x2, -0.17),
+                    type = c(rep("Bulk", n), "Outlier"))
+p_scatter <- ggplot(cloud, aes(x1, x2, color = type, size = type)) +
+  geom_point() +
+  scale_color_manual(values = c("gray50", "red")) +
+  scale_size_manual(values = c(1.5, 3)) +
+  annotate("text", x = 0.75, y = -0.24, label = "Far from cloud", color = "red", size = 3) +
+  theme(legend.position = "none") +
+  labs(title = "2-D scatter: obvious outlier")
+
+p_h1 <- ggplot(cloud, aes(x1, fill = type)) +
+  geom_histogram(bins = 15, alpha = 0.8) +
+  scale_fill_manual(values = c("gray60", "red")) +
+  theme(legend.position = "none") +
+  labs(title = "Marginal histogram of X1: not obvious")
+
+p_scatter + p_h1
+```
+
+---
+
+# Case Study: Blood-Brain Barrier
+
+## Background
+
+- Researchers developed a treatment to disrupt the blood-brain barrier (BBB) so that
+  anti-cancer drugs can reach brain tumors more effectively.
+- Rats with brain tumors were randomized to receive the BBB-disrupting treatment or a
+  saline control.
+- Response: `Ratio` = drug concentration in brain / drug concentration in liver.
+  - Higher ratio means more drug reached the brain.
+- Other measured variables: sacrifice time, sex, initial weight, weight loss, tumor weight,
+  days post-inoculation.
+
+```{r}
+#| label: bbb-load
+#| message: false
+case1102 <- read_csv("https://dcgerard.github.io/stat_302/data/case1102.csv")
+case1102 <- case1102 |>
+  mutate(Ratio    = Brain / Liver,
+         logRatio = log(Ratio),
+         logTime  = log(Time))
+glimpse(case1102)
+```
+
+## EDA
+
+```{r}
+#| label: bbb-eda
+ggplot(case1102, aes(x = logTime, y = logRatio, color = Treatment)) +
+  geom_point() +
+  labs(x = "log(Sacrifice Time)", y = "log(Brain/Liver Ratio)")
+```
+
+- The treatment appears to increase the brain/liver ratio — the BD-treated group sits higher.
+- Log transformations of both `Ratio` and `Time` make the relationship more linear and
+  stabilize variance.
+
+## Fitting the Rich Model
+
+- Use `as.factor(logTime)` to treat sacrifice time as categorical
+  (three distinct time points were used).
+- Include all available variables and an interaction between treatment and time.
+
+```{r}
+#| label: bbb-rich
+lm_rich <- lm(logRatio ~ as.factor(logTime) * Treatment +
+                Sex + Weight + Loss + Tumor,
+              data = case1102)
+```
+
+```{r}
+#| label: bbb-resid
+aug_rich <- augment(lm_rich)
+
+ggplot(aug_rich, aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+- Two points stand out with large residuals — worth investigating further.
+
+---
+
+# Leverage
+
+## Definition
+
+- **Leverage** measures how far an observation's $X$ values are from the center of the
+  predictor space.
+- A high-leverage point has the *potential* to pull the regression line.
+- Leverage values (often called "hat values") are always between 0 and 1.
+- A typical leverage value is $p / n$, where $p$ = number of parameters.
+- **Rule of thumb**: leverage $> 2p/n$ is "high."
+
+## Computing Leverage in R
+
+```{r}
+#| label: leverage-plot
+n <- nrow(case1102)
+p <- length(coef(lm_rich))
+lev <- hatvalues(lm_rich)
+
+tibble(obs = seq_along(lev), leverage = lev) |>
+  ggplot(aes(x = obs, y = leverage)) +
+  geom_point() +
+  geom_hline(yintercept = 2 * p / n, linetype = "dashed", color = "tomato") +
+  labs(x = "Observation number", y = "Leverage",
+       title = "Dashed line = 2p/n threshold")
+```
+
+- Several observations exceed the $2p/n$ threshold — worth noting, but not automatically
+  alarming.
+
+---
+
+# Studentized Residuals
+
+## Definition
+
+- Ordinary residuals have different variances depending on the observation's leverage.
+- **Studentized residuals** correct for this: they measure how many standard deviations
+  an observation's residual is from zero.
+- Under the model assumptions, studentized residuals follow a $t$-distribution.
+- **Rule of thumb**: expect about 5% of studentized residuals to fall outside $\pm 2$
+  by chance. Many more than 5% suggests model problems.
+
+## Computing Studentized Residuals in R
+
+```{r}
+#| label: stud-resid-plot
+stud_res <- rstudent(lm_rich)
+fitted_vals <- fitted(lm_rich)
+
+tibble(fitted = fitted_vals, stud_res = stud_res) |>
+  ggplot(aes(x = fitted, y = stud_res)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  geom_hline(yintercept = c(-2, 2), linetype = "dashed", color = "tomato") +
+  labs(x = "Fitted values", y = "Studentized residuals")
+```
+
+- Two observations have studentized residuals exceeding $\pm 2$ — consistent with what
+  we saw in the raw residual plot.
+
+---
+
+# Cook's Distance
+
+## Definition
+
+- **Cook's distance** measures the *overall influence* of an observation: how much do
+  all the fitted values change when this observation is removed?
+- It combines both leverage and residual size into a single number.
+- Cook's distance is always positive.
+- **Rule of thumb**: Cook's distance $> 1$ indicates a strongly influential observation.
+
+## Computing Cook's Distance in R
+
+```{r}
+#| label: cooks-plot
+cook <- cooks.distance(lm_rich)
+
+tibble(obs = seq_along(cook), cook = cook) |>
+  ggplot(aes(x = obs, y = cook)) +
+  geom_point() +
+  geom_hline(yintercept = 1, linetype = "dashed", color = "tomato") +
+  labs(x = "Observation number", y = "Cook's distance",
+       title = "Dashed line = rule-of-thumb threshold of 1")
+```
+
+- No observation exceeds Cook's distance of 1 in this dataset.
+- The two observations with large studentized residuals are noticeable but not enormously
+  influential overall.
+
+---
+
+# Putting It All Together
+
+## Using `augment()` for Diagnostics
+
+The `augment()` function from `broom` adds model diagnostics directly to the data frame:
+
+| Column | Description |
+|:--|:--|
+| `.fitted` | Fitted values $\hat{Y}_i$ |
+| `.resid` | Residuals $Y_i - \hat{Y}_i$ |
+| `.hat` | Leverage values |
+| `.std.resid` | Standardized residuals (similar to studentized) |
+| `.cooksd` | Cook's distance |
+
+```{r}
+#| label: augment-diag
+augment(lm_rich) |>
+  select(.fitted, .resid, .hat, .std.resid, .cooksd) |>
+  arrange(desc(.cooksd)) |>
+  head(5)
+```
+
+---
+
+# What To Do With Influential Observations
+
+## Step 1: Investigate
+
+- Look at the actual data values for high-influence points.
+- Is there a data entry error? A species misclassified? An impossible value?
+- If so, correct or remove and document why.
+
+## Step 2: Fit With and Without
+
+- If no data error is found, **do not automatically discard the point**.
+- Fit your final model both **including** and **excluding** the influential observations.
+    - If conclusions do not change: keep them, report the full analysis.
+    - If conclusions change substantially: report both results and note the sensitivity.
+- State the scope of inference — e.g., "Results apply to rats weighing between 200 and 400 g."
+
+## Step 3: Never Cherry-Pick
+
+- Removing an observation purely because it disagrees with your hypothesis is scientific
+  misconduct.
+- Document every exclusion decision and your reason for it.
+
+---
+
+# Exercises
+
+**1.** Use the blood-brain barrier data to identify which observation(s) have the highest
+leverage and the largest studentized residuals.
+
+a. Filter `augment(lm_rich)` to show all rows where `.hat > 2 * p / n` (using the values
+   of `p` and `n` defined in this lecture). Which sacrifice-time / treatment combinations
+   correspond to these high-leverage points?
+
+b. Which observation has the largest absolute studentized residual? Look at its raw data
+   values. Does anything seem unusual about it?
+
+c. Is there a single observation with *both* high leverage and a large studentized residual?
+   Check its Cook's distance. Does it exceed the rule-of-thumb threshold?
+
+---
+
+**2.** Fit the simpler final model below to the blood-brain barrier data:
+
+```r
+lm_final <- lm(logRatio ~ logTime + Treatment, data = case1102)
+```
+
+a. Produce a residual plot and a QQ-plot of the residuals. Do the linearity and normality
+   assumptions look reasonable?
+
+b. Compute and plot Cook's distances. Are any observations strongly influential?
+
+c. Identify the observation with the highest Cook's distance. Refit the model without it
+   and compare the coefficient for `TreatmentBD` from the two fits (with and without).
+   Does removing this observation change the conclusion?
+
+---
+
+**3.** Explain in your own words why a point with high leverage but a *small* residual is
+not necessarily a problem, whereas a point with high leverage and a *large* residual is
+the most dangerous combination for a regression analysis.

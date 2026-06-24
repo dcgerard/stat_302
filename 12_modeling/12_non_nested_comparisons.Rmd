@@ -1,0 +1,286 @@
+---
+title: "Non-nested Comparisons"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation:
+    slide_level: 2
+    theme: "metropolis"
+urlcolor: "blue"
+---
+
+```{r setup, include=FALSE}
+ggplot2::theme_set(
+  ggplot2::theme_bw()
+  )
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.height = 2.3, 
+                      fig.width = 3.7, 
+                      fig.align = "center")
+```
+
+
+```{r}
+set.seed(1)
+library(ggplot2)
+```
+
+## Learning Objective
+
+- Sections 10.4.1 and 12.4
+
+- Choosing Between Non-nested Models
+
+# Case Study and EDA
+
+
+## Case Study: Sex Descrimination
+
+- Same study as in Case Study 0102
+
+- Looked at beginning salary at a bank with respect to sex.
+
+- Want to control for many different variables.
+
+## Case Study: Sex Descrimination
+
+```{r, echo = TRUE}
+library(Sleuth3)
+data(case1202)
+head(case1202)
+```
+
+
+## EDA
+
+```{r, echo = TRUE, message=FALSE}
+library(GGally)
+ggpairs(case1202, columns = c(1, 2, 4, 5, 6, 7), 
+        aes(size = I(0.1)))
+```
+
+## EDA
+
+```{r, echo = TRUE, message=FALSE}
+case1202$logBsal <- log(case1202$Bsal)
+ggpairs(case1202, columns = c(2, 4, 5, 6, 7, 8), 
+        aes(size = I(0.1)))
+```
+
+## EDA Summary
+
+- Loging `Bsal` seems to help a lot.
+
+- Age and Experience might need a quadratic transformation.
+
+# Step-wise Procedures (Section 12.3)
+
+## Step-wise Regression
+
+- Start with a complicated model.
+
+- Look at $p$-values (when testing that a coefficient is 0)
+
+- Drop the one with the largest $p$-value.
+
+- Continue until all $p$-values are less than some threshold (usually 0.05).
+
+- Note, you cannot interpret $p$-values the way we define them anymore if you do this.
+
+## Step-wise Regression, the manual way
+
+```{r, echo = TRUE}
+case1202$Age2   <- case1202$Age ^ 2
+case1202$Exper2 <- case1202$Exper ^ 2
+lm1 <- lm(logBsal ~ Senior + Age + Age2 + 
+            Senior + Educ + Exper + Exper2,
+          data = case1202)
+```
+
+## Step-wise Regression, the manual way
+
+```{r, echo = TRUE}
+coef(summary(lm1))
+```
+
+- Drop `Age2` ($p$-value of 0.97)
+
+## Step-wise Regression, the manual way
+
+```{r}
+lm2 <- lm(logBsal ~ Senior + Age + 
+            Senior + Educ + Exper + Exper2,
+          data = case1202)
+coef(summary(lm2))
+```
+
+## Step-wise Regression
+
+- Can also start at the simplest model,
+
+    - add the variable that has the smallest $p$-value
+    
+    - continue until no new variables would have a $p$-value less than 0.05
+    
+- Can also both add and drop variables based on $p$-values.
+
+## Step-wise Regression in R
+
+- Use the `step()` function to do this automatically
+    - It actually uses AIC (not $p$-values) to choose between models, but the idea is similar. See later for AIC.
+
+\footnotesize
+```{r, echo = TRUE}
+lm1 <- lm(logBsal ~ Senior + Age + Age2 + 
+            Senior + Educ + Exper + Exper2,
+          data = case1202)
+stepout <- step(object = lm1, trace = FALSE)
+stepout
+```
+\normalsize
+
+## Step-wise Regression in R
+
+- The output of `step()` is also an `lm` object, so you can get coefficients, $p$-values, confidence intervals, fits, predictions, residuals, etc directly from it.
+
+```{r, echo = TRUE}
+confint(stepout)
+```
+
+# Comparing Non-nested Models (Section 12.4)
+
+## Motivation
+
+- What if we want to decide between the following two models
+
+- $\mu(logBsal|...) = Senior + Educ + Exper + Exper^2$
+
+- $\mu(logBsal|...) = Senior + Educ + Age + Age^2$
+
+- These models are non-nested, so we cannot apply $F$-test techniques to them.
+
+## BIC and AIC
+
+- BIC (Bayesian Information Criterion) and AIC (Akaike Information Criterion) return the log of the sum of square residuals **plus** a penalty due to the number of parameters in the model.
+
+- Best model has the smallest BIC or AIC.
+
+- BIC: $n\log(SSR/n) + \log(n)(p + 1)$
+
+- AIC: $n\log(SSR/n) + 2(p+1)$
+
+- BIC penalizes more when the sample size is larger.
+
+- BIC is better for model selection (get interpretable model), AIC is better for prediction (goal is prediction).
+
+## BIC and AIC in R
+- Fit both models, then use the `AIC()` and `BIC()` functions.
+\tiny
+```{r, echo = TRUE}
+lm_mod1 <- lm(logBsal ~ Senior + Educ + Exper + Exper2, 
+              data = case1202)
+lm_mod2 <- lm(logBsal ~ Senior + Educ + Age + Age2, 
+              data = case1202)
+BIC(lm_mod1)
+BIC(lm_mod2)
+AIC(lm_mod1)
+AIC(lm_mod2)
+```
+\normalsize
+
+## Mallow's $C_p$ statistic
+
+- $Bias(\hat{Y}_i) = \mu(\hat{Y}_i) - \mu(Y_{i})$
+
+- $MSE(\hat{Y}_i) = Bias(\hat{Y}_i)^2 + Var(\hat{Y}_i)$
+
+- $TMSE = \sum_{i = 1}^n MSE(\hat{Y}_i)$
+
+- We don't know the $TMSE$, but Mallow's $C_p$ **estimates** it.
+
+## $C_p$ plot
+
+- You obtain Mallow's $C_p$ for **every** possible model.
+
+- Only feasible if you have less than $p = 10$ or so explanatory variables ($2^p$ models are possible).
+
+- Plot $C_p$ on the $y$-axis and the number of parameters on the $x$-axis.
+
+- Models below the $y = x$ line are candidate models 
+
+    - Models without bias should have a $C_p$ of about $p$
+    
+    - So if $C_p$ is below $p$, the model probably does not have any bias issues.
+    
+## $C_p$ in R
+
+- We will use the `leaps()` function in the `leaps` library.
+
+```{r, echo = TRUE}
+library(leaps)
+lm1 <- lm(logBsal ~ Senior + Age + Age2 + 
+            Senior + Educ + Exper + Exper2,
+          data = case1202)
+X <- model.matrix(lm1)
+leapsout <- leaps(x =  X, 
+                  y = case1202$logBsal,
+                  int = FALSE)
+```
+
+## $C_p$ in R
+
+```{r, echo = TRUE}
+qplot(leapsout$size, leapsout$Cp, 
+      xlab = "Number of Parameters",
+      ylab = "Cp") +
+  geom_abline(slope = 1, intercept = 0)
+```
+
+## $C_p$ in R
+
+```{r, echo = TRUE}
+goodmodel <- leapsout$Cp < 1000
+qplot(leapsout$size[goodmodel], leapsout$Cp[goodmodel], 
+      xlab = "Number of Parameters",
+      ylab = "Cp") +
+  geom_abline(slope = 1, intercept = 0) +
+  ylim(0, 60)
+```
+
+
+
+
+# Back to Case Study
+
+## Back to Case Study
+
+- We chose a model with 
+$$\mu(logBsal|...) = Senior + Age + Senior + Educ + Exper + Exper^2$$
+
+- Now let's answer the question if `Sex` is still associated with base salary after adjusting for these variables.
+
+## Results
+
+```{r, echo=TRUE}
+lmfinal <- lm(logBsal ~ Sex + Senior + Age + 
+                Senior + Educ + Exper + Exper2,
+              data = case1202)
+coef(summary(lmfinal))
+```
+
+## Results
+
+```{r, echo=TRUE}
+cbind(coef(lmfinal), confint(lmfinal))
+```
+
+## Results
+
+```{r, echo=TRUE}
+exp(coef(lmfinal)[2])
+exp(confint(lmfinal)[2, ])
+```
+
+
+
+

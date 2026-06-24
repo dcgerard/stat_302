@@ -1,0 +1,364 @@
+---
+title: "Model Selection and Evaluation Worksheet"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output: pdf_document
+urlcolor: "blue"
+bibliography: "../bib/614_bib.bib"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, eval = FALSE, fig.height = 3, fig.width = 4, fig.align = "center")
+ggplot2::theme_set(
+  ggplot2::theme_bw()
+)
+```
+
+
+# Pollution and Mortality
+
+Does pollution kill people? Data in one early study designed to explore this issue came from five Standard Metropolitan Areas (SMSA) in the United States, obtained for the years 1959-1961. The variables in these data are:
+
+- `CITY`: a character vector indicating the city
+- `Mortality`: total age-adjusted mortality from all causes
+- `Precip`: mean annual precipitation (inches)
+- `Humidity`: percent relative humidity (annual average at 1:00pm)
+- `JanTemp`: mean January temperature (degrees F)
+- `JulyTemp`: mean July temperature (degrees F)
+- `Over65`: percentage of the population aged 65 years or over
+- `House`: population per household
+- `Educ`: median number of school years completed for persons 25 years or older
+- `Sound`: percentage of the housing that is sound with all facilities
+- `Density`: population density (in persons per square mile of urbanized area)
+- `NonWhite`: percentage of population that is nonwhite
+- `WhiteCol`: percentage of employment in white collar occupations
+- `Poor`: percentage of households with annual income under $3,000 in 1960
+- `HC`: relative pollution potential of hydrocarbons
+- `NOX`: relative pollution potential of oxides of nitrogen
+- `SO2`: relative pollution potential of sulfur dioxide
+
+The goal of the study is to determine if the pollution variables (`HC`, `NOX`, and `SO2`) are associated with mortality after the other climate and socioeconomic variables are accounted for. (*Note*: These data are spatially dependent, but we'll ignore that for this worksheet)
+
+You can load these data into R using:
+```{r, echo = TRUE}
+library(Sleuth3)
+data("ex1217")
+head(ex1217)
+```
+
+1. What is the response variable? What are the explanatory variables? What are the observational units? How many observational units are there?
+
+```{block}
+- `Mortality` is the response.
+- `CITY` is a label.
+- The rest of the variables are potential explanatory variables.
+- The observational units are the cities.
+```
+
+2. Run an exploratory data analysis. Do you notice any variables that might need to be transformed? Do you notice any outlying observations? Apply any transformations where needed and comment on any potential outlying observations.
+
+```{r}
+library(ggplot2)
+library(GGally)
+qplot(Precip,   Mortality, data = ex1217)
+qplot(Humidity, Mortality, data = ex1217)
+qplot(JanTemp,  Mortality, data = ex1217)
+qplot(JulyTemp, Mortality, data = ex1217)
+qplot(Over65,   Mortality, data = ex1217)
+qplot(House,    Mortality, data = ex1217)
+qplot(Educ,     Mortality, data = ex1217)
+qplot(Sound,    Mortality, data = ex1217)
+qplot(Density,  Mortality, data = ex1217)
+qplot(NonWhite, Mortality, data = ex1217)
+qplot(WhiteCol, Mortality, data = ex1217)
+qplot(Poor,     Mortality, data = ex1217)
+qplot(HC,       Mortality, data = ex1217)
+qplot(NOX,      Mortality, data = ex1217)
+qplot(SO2,      Mortality, data = ex1217)
+```
+
+```{r}
+ex1217$CITY[ex1217$Humidity < 40]
+```
+
+
+```{block}
+It seems that we should log all of the pollution variables. I don't see any other variables that need to be logged.
+
+For humidity, though, there appears to be a very dry city (Denver). We should be wary of this observation as it might overly influence the regression model.
+```
+
+```{r}
+ex1217$logHC  <- log(ex1217$HC)
+ex1217$logNOX <- log(ex1217$NOX)
+ex1217$logSO2 <- log(ex1217$SO2)
+qplot(logHC,  Mortality, data = ex1217)
+qplot(logNOX, Mortality, data = ex1217)
+qplot(logSO2, Mortality, data = ex1217)
+```
+
+```{r}
+ex1217$CITY[ex1217$Mortality > 1000 & ex1217$logSO2 < 1]
+```
+
+
+```{block}
+There appears to be one observation where there is a high mortality rate but a low `SO2` value (New Orleans). This city doesn't fit the pattern of the rest of the data, so we should be wary of it.
+
+Also for `NOX` and `HC`, the association appears mostly positive, but there are four cities that buck the trend. We'll look out for any major outliers in these data later.
+```
+
+2. Fit a tentative rich model with all variables except the pollution variables (and no interactions) and comment on any issues you see with the residuals.
+
+```{r}
+lmrich <- lm(Mortality ~ Precip + Humidity + JanTemp + JulyTemp + 
+               Over65 + House + Educ + Sound + Density + NonWhite + 
+               WhiteCol + Poor, data = ex1217)
+fitvec <- fitted(lmrich)
+resvec <- resid(lmrich)
+qplot(fitvec, resvec) + geom_hline(yintercept = 0)
+qplot(sample = resvec) +
+  geom_qq_line()
+```
+
+```{block}
+The residuals look really good.
+```
+
+3. Calculate Cook's distance, the studentized residuals, and the leverage values in this rich model. Are there any extreme observations?
+
+```{r}
+lev_vec  <- hatvalues(lmrich)
+cook_vec <- cooks.distance(lmrich)
+stud_res <- rstandard(lmrich)
+order_num <- 1:nrow(ex1217)
+```
+
+```{r}
+## High Leverage Cities
+## 2 * p / n
+lev_thresh <- 2 * 13 / nrow(ex1217)
+qplot(order_num, lev_vec) +
+  geom_hline(yintercept = lev_thresh)
+ex1217$CITY[lev_vec > lev_thresh]
+```
+
+```{block}
+There are five very influential observations. San Jose, Miami, Los Angeles, Denver, and York.
+```
+
+```{r}
+## High Cooks Distance Cities
+qplot(order_num, cook_vec) +
+  geom_hline(yintercept = 1)
+```
+
+```{block}
+No observations have high Cook's distance, but that might just be because there are five cities with high leverage that cluster near each other. So removing one at a time wouldn't remove the effects of the other four.
+```
+
+```{r}
+## Studentized residuals
+qplot(fitvec, stud_res) +
+  geom_hline(yintercept = -2, lty = 2) +
+  geom_hline(yintercept = 2, lty = 2)
+```
+
+```{block}
+Only 5 of the 60 observations are outside of +/-2. This isn't too far way from the expected number of 60 * 0.05 = 3
+```
+
+4. Use `step()` to run a step-wise procedure to select important variables. Make sure you don't include any of the pollution variables in the model. What variables were included?
+
+```{r}
+step_out <- step(lmrich, trace = FALSE)
+step_out
+```
+
+```{block}
+- `Precip`, `JanTemp`, `JulyTemp`, `House`, `Educ`, `Density`, and `NonWhite` were included in the model.
+```
+
+
+
+5. Reevaluate the residuals (and case-influence statistics) from the final final selected by the step-wise procedure. Are the assumptions of the linear model ok?
+
+```{r}
+res_vec <- resid(step_out)
+fit_vec <- fitted(step_out)
+qplot(fit_vec, res_vec) +
+  geom_hline(yintercept = 0)
+qplot(sample = res_vec) +
+  geom_qq_line()
+```
+
+```{block}
+- There appears to be no excess curvature in the model. The residuals look great.
+```
+
+```{r}
+lev_vec  <- hatvalues(step_out)
+cook_vec <- cooks.distance(step_out)
+stud_res <- rstandard(step_out)
+order_num <- 1:nrow(ex1217)
+```
+
+
+
+```{r}
+lev_thresh <- 2 * 8 / nrow(ex1217)
+qplot(order_num, lev_vec) +
+  geom_hline(yintercept = lev_thresh)
+ex1217$CITY[lev_vec > lev_thresh]
+```
+
+```{r}
+## High Cooks Distance Cities
+qplot(order_num, cook_vec) +
+  geom_hline(yintercept = 1)
+```
+
+```{r}
+## Studentized residuals
+qplot(fitvec, stud_res) +
+  geom_hline(yintercept = -2, lty = 2) +
+  geom_hline(yintercept = 2, lty = 2)
+```
+
+```{block}
+Now there appears to be just 4 high-leverage Cities: San Jose, Miami, San Francisco, and York. The cooks distance and studentized residuals still look fine.
+```
+
+6. Now we will include the pollution variables to the variables selected in the previous part. Write out the linear regression model.
+
+```{block}
+\begin{align*}
+\mu(Mortality|\cdots) &= \beta_0 + \beta_1Precip + \beta_3JanTemp + +\beta_4JulyTemp + \beta_5House + \beta_6Educ\\
+&= + \beta_7Density + \beta_8NonWhite + \beta_9logHC + \beta_10logNOX + \beta_11logSO2
+\end{align*}
+```
+
+7. Fit this model and evaluate the residuals and case-influence statistics.
+
+```{r}
+lmfinal <- lm(Mortality ~ Precip + JanTemp + JulyTemp + House + 
+                Educ + Density + NonWhite + logHC + logNOX + 
+                logSO2, data = ex1217)
+res_vec <- resid(lmfinal)
+fit_vec <- fitted(lmfinal)
+
+qplot(fit_vec, res_vec) + geom_hline(yintercept = 0)
+qplot(sample = res_vec) +
+  geom_qq_line()
+```
+
+```{r}
+lev_vec  <- hatvalues(lmfinal)
+lev_thresh <- 2 * 11 / nrow(ex1217)
+qplot(order_num, lev_vec) +
+  geom_hline(yintercept = lev_thresh)
+ex1217$CITY[lev_vec > lev_thresh]
+```
+
+```{r}
+cook_vec <- cooks.distance(step_out)
+qplot(order_num, cook_vec) +
+  geom_hline(yintercept = 1)
+```
+
+```{r}
+stud_res <- rstandard(step_out)
+qplot(fitvec, stud_res) +
+  geom_hline(yintercept = -2, lty = 2) +
+  geom_hline(yintercept = 2, lty = 2)
+```
+
+
+```{block}
+The residuals look fine. But you still have those influential observations in San Jose, Miami, San Francisco, York, and New Orleans.
+```
+
+
+7. Write out the hypothesis tests for testing if **any** of the pollution variables are associated with mortality.
+
+```{block}
+- $H_0$: $\beta_9 = \beta_{10} = \beta_{11} = 0$
+- $H_A$: At least one $\beta_9 \neq 0$ or $\beta_{10} \neq 0$ or $\beta_{11} \neq 0$.
+```
+
+8. Run the above hypothesis test in R. State your conclusion. Include estimates and 95% confidence intervals for the estimated effects of pollution on mortality.
+
+```{r}
+anova(step_out, lmfinal)
+```
+
+```{r}
+cbind(coef(lmfinal)[9:11] * log(2), confint(lmfinal)[9:11, ] * log(2))
+```
+
+
+
+```{block}
+We have moderate evidence that pollution is associated with mortality after adjusting for common environmental and socioeconomic variables ($p$ = 0.0082).
+
+Note that we are adjusting for all variables that we measured, not just the ones in our final model. This is because we gave them a chance to be included in the final model during the step-wise procedure.
+
+Doubling NOX is associated with increasing mortality by 31.6 (95% CI of 11.8 to 51.3) after adjusting for other variables. While the other two pollution variables are associated with a *decline* in mortality: -20.2 when you double HC (95% CI of -49.6 to 0.08) and -5.4 when you double SO2 (95% CI of -14.6 to 3.8). We can explain this unintuitive result based on the high correlation between the explanatory variables.
+```
+
+```{r}
+ggpairs(ex1217, columns = 18:20)
+```
+
+```{block}
+All of these variables are adjusting for **each other**, so higher HC is associated with lower mortality only because we are keeping NOX and SO2 levels fixed. Interpreting the results in this way is a hazard because of the high correlation between the explanatory variables.
+
+The $p$-value from the $F$-test is still valid, though. The high collinearity doesn't affect these results.
+```
+
+9. If you have time, try re-running the analysis (step-wise regression and $F$-test) by excluding any high-leverage cities. Do your results change?
+
+```{r}
+lev_vec  <- hatvalues(lmfinal)
+lev_thresh <- 2 * 11 / nrow(ex1217)
+is_good <- lev_vec < lev_thresh
+sub_df <- ex1217[is_good, ]
+lm_rich_sub <- lm(Mortality ~ Precip + Humidity + JanTemp + JulyTemp + 
+                    Over65 + House + Educ + Sound + Density + NonWhite + 
+                    WhiteCol + Poor, data = sub_df)
+step_out_sub <- step(lm_rich_sub, trace = FALSE)
+lm_final_sub <- lm(Mortality ~ Precip + JanTemp + JulyTemp + Educ +
+                     Density + NonWhite + logHC + logNOX + logSO2,
+                   data = sub_df)
+anova(step_out_sub, lm_final_sub)
+```
+
+```{block}
+The $p$-value increases a little bit, but we still find a significant association between pollution and mortality ($p$ = 0.034).
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

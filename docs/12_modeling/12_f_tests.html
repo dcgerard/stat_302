@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="David Gerard">
+<meta name="dcterms.date" content="2026-06-24">
+
+<title>F-tests for Nested Models – Stat 302: Intermediate Statistics</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-33269adcf1721b81efc5ea7fcfe7f0ee.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">dHJ1ZQ==</script>
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-0e01d36e12aedd38e6bb7bd9a7358603.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Stat 302: Intermediate Statistics</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../data.html"> 
+<span class="menu-text">Data</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation">Motivation</a>
+  <ul class="collapse">
+  <li><a href="#the-problem-with-individual-t-tests" id="toc-the-problem-with-individual-t-tests" class="nav-link" data-scroll-target="#the-problem-with-individual-t-tests">The Problem with Individual <span class="math inline">\(t\)</span>-tests</a></li>
+  <li><a href="#case-study-kentucky-derby" id="toc-case-study-kentucky-derby" class="nav-link" data-scroll-target="#case-study-kentucky-derby">Case Study: Kentucky Derby</a></li>
+  </ul></li>
+  <li><a href="#nested-models" id="toc-nested-models" class="nav-link" data-scroll-target="#nested-models">Nested Models</a>
+  <ul class="collapse">
+  <li><a href="#definition" id="toc-definition" class="nav-link" data-scroll-target="#definition">Definition</a></li>
+  <li><a href="#kentucky-derby-example" id="toc-kentucky-derby-example" class="nav-link" data-scroll-target="#kentucky-derby-example">Kentucky Derby Example</a></li>
+  <li><a href="#non-nested-models-counter-example" id="toc-non-nested-models-counter-example" class="nav-link" data-scroll-target="#non-nested-models-counter-example">Non-Nested Models (Counter-example)</a></li>
+  <li><a href="#intuition-residuals-tell-the-story" id="toc-intuition-residuals-tell-the-story" class="nav-link" data-scroll-target="#intuition-residuals-tell-the-story">Intuition: Residuals Tell the Story</a></li>
+  </ul></li>
+  <li><a href="#the-f-statistic" id="toc-the-f-statistic" class="nav-link" data-scroll-target="#the-f-statistic">The <span class="math inline">\(F\)</span>-Statistic</a>
+  <ul class="collapse">
+  <li><a href="#key-quantities" id="toc-key-quantities" class="nav-link" data-scroll-target="#key-quantities">Key Quantities</a></li>
+  <li><a href="#formula-and-distribution" id="toc-formula-and-distribution" class="nav-link" data-scroll-target="#formula-and-distribution">Formula and Distribution</a></li>
+  </ul></li>
+  <li><a href="#running-the-f-test-in-r" id="toc-running-the-f-test-in-r" class="nav-link" data-scroll-target="#running-the-f-test-in-r">Running the <span class="math inline">\(F\)</span>-Test in R</a>
+  <ul class="collapse">
+  <li><a href="#reading-the-output" id="toc-reading-the-output" class="nav-link" data-scroll-target="#reading-the-output">Reading the Output</a></li>
+  </ul></li>
+  <li><a href="#another-example-do-starters-matter" id="toc-another-example-do-starters-matter" class="nav-link" data-scroll-target="#another-example-do-starters-matter">Another Example: Do Starters Matter?</a>
+  <ul class="collapse">
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a></li>
+  </ul></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">F-tests for Nested Models</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>David Gerard </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 24, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="learning-objectives" class="level1">
+<h1>Learning Objectives</h1>
+<ul>
+<li>Test whether a <strong>group</strong> of explanatory variables jointly improves a model.</li>
+<li>Distinguish <em>nested</em> from <em>non-nested</em> model pairs.</li>
+<li>Interpret the <span class="math inline">\(F\)</span>-statistic and its degrees of freedom.</li>
+<li>Use <code>anova()</code> in R to run the <span class="math inline">\(F\)</span>-test.</li>
+<li>Section 10.3 in the textbook.</li>
+</ul>
+<hr>
+</section>
+<section id="motivation" class="level1">
+<h1>Motivation</h1>
+<section id="the-problem-with-individual-t-tests" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-with-individual-t-tests">The Problem with Individual <span class="math inline">\(t\)</span>-tests</h2>
+<ul>
+<li>In multiple regression we can test each coefficient with a <span class="math inline">\(t\)</span>-test.</li>
+<li>But some variables enter the model through <strong>multiple terms</strong> (e.g., <span class="math inline">\(X\)</span> and <span class="math inline">\(X^2\)</span>).</li>
+<li>Testing <span class="math inline">\(\beta_1 = 0\)</span> and <span class="math inline">\(\beta_2 = 0\)</span> separately does not answer “does <span class="math inline">\(X\)</span> matter at all?”</li>
+<li>We need to test <span class="math inline">\(H_0: \beta_1 = 0\)</span> <strong>and</strong> <span class="math inline">\(\beta_2 = 0\)</span> <strong>simultaneously</strong> — a joint test.</li>
+</ul>
+</section>
+<section id="case-study-kentucky-derby" class="level2">
+<h2 class="anchored" data-anchor-id="case-study-kentucky-derby">Case Study: Kentucky Derby</h2>
+<ul>
+<li>The Kentucky Derby is a famous horse race held annually since 1875.</li>
+<li>We have the winning speed (mph) and the year of each race.</li>
+<li>Does year explain speed? (Speed has increased over time as breeding and track conditions improved.)</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ex0920 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/ex0920.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(ex0920)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 116
+Columns: 8
+$ Year        &lt;dbl&gt; 1896, 1897, 1898, 1899, 1900, 1901, 1902, 1903, 1904, 1905…
+$ Winner      &lt;chr&gt; "Ben Brush", "Typhoon II", "Plaudit", "Manuel", "Lieut. Gi…
+$ Starters    &lt;dbl&gt; 8, 6, 4, 5, 7, 5, 4, 6, 5, 3, 6, 6, 8, 10, 7, 7, 7, 8, 7, …
+$ NetToWinner &lt;dbl&gt; 4850, 4850, 4850, 4850, 4850, 4850, 4850, 4850, 4850, 4850…
+$ Time        &lt;dbl&gt; 127.8, 132.5, 129.0, 132.0, 126.2, 127.8, 128.8, 129.0, 12…
+$ Speed       &lt;dbl&gt; 35.23, 33.96, 34.88, 34.09, 35.64, 35.23, 34.95, 34.88, 35…
+$ Track       &lt;chr&gt; "Dusty", "Heavy", "Good", "Fast", "Fast", "Fast", "Fast", …
+$ Conditions  &lt;chr&gt; "Fast", "Slow", "Fast", "Fast", "Fast", "Fast", "Fast", "F…</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ex0920, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Speed)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Winning Speed (mph)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="12_f_tests_files/figure-html/derby-scatter-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>The trend is clearly <strong>nonlinear</strong>: speed rose sharply in the early 20th century then leveled off.</li>
+<li>A quadratic model is appropriate: <span class="math display">\[\mu(\text{Speed} \mid \text{Year}) = \beta_0 + \beta_1\,\text{Year} + \beta_2\,\text{Year}^2\]</span></li>
+<li><strong>Question</strong>: Is year <em>at all</em> associated with winning speed?</li>
+<li><span class="math inline">\(H_0: \beta_1 = 0\)</span> and <span class="math inline">\(\beta_2 = 0\)</span></li>
+<li><span class="math inline">\(H_A: \beta_1 \neq 0\)</span> or <span class="math inline">\(\beta_2 \neq 0\)</span></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="nested-models" class="level1">
+<h1>Nested Models</h1>
+<section id="definition" class="level2">
+<h2 class="anchored" data-anchor-id="definition">Definition</h2>
+<ul>
+<li>A model is <strong>nested</strong> inside another if it can be obtained by setting some coefficients in the larger model to zero.</li>
+<li>The larger model is the <strong>full model</strong>.</li>
+<li>The smaller model is the <strong>reduced model</strong>.</li>
+</ul>
+</section>
+<section id="kentucky-derby-example" class="level2">
+<h2 class="anchored" data-anchor-id="kentucky-derby-example">Kentucky Derby Example</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model</th>
+<th style="text-align: left;">Equation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Full</strong></td>
+<td style="text-align: left;"><span class="math inline">\(\mu(\text{Speed} \mid \text{Year}) = \beta_0 + \beta_1\,\text{Year} + \beta_2\,\text{Year}^2\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Reduced</strong> (under <span class="math inline">\(H_0\)</span>)</td>
+<td style="text-align: left;"><span class="math inline">\(\mu(\text{Speed}) = \beta_0\)</span></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>The reduced model is the full model with <span class="math inline">\(\beta_1 = \beta_2 = 0\)</span>.</li>
+</ul>
+</section>
+<section id="non-nested-models-counter-example" class="level2">
+<h2 class="anchored" data-anchor-id="non-nested-models-counter-example">Non-Nested Models (Counter-example)</h2>
+<ul>
+<li>Model A: <span class="math inline">\(\mu(\text{Speed} \mid \text{Year}) = \beta_0 + \beta_1\,\text{Year} + \beta_2\,\text{Year}^2\)</span></li>
+<li>Model B: <span class="math inline">\(\mu(\text{Speed} \mid \text{Starters}) = \beta_0 + \beta_1\,\text{Starters} + \beta_2\,\text{Starters}^2\)</span></li>
+<li>Neither is a special case of the other — <strong>cannot</strong> use an <span class="math inline">\(F\)</span>-test.</li>
+<li>For non-nested models, use AIC or BIC (see the model selection lecture).</li>
+</ul>
+</section>
+<section id="intuition-residuals-tell-the-story" class="level2">
+<h2 class="anchored" data-anchor-id="intuition-residuals-tell-the-story">Intuition: Residuals Tell the Story</h2>
+<ul>
+<li>If the full model fits much better (smaller residuals), we have evidence against <span class="math inline">\(H_0\)</span>.</li>
+<li>We compare the <strong>residual sum of squares</strong> (RSS) under each model.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ex0920 <span class="ot">&lt;-</span> ex0920 <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Year2 =</span> Year<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>lm_full    <span class="ot">&lt;-</span> <span class="fu">lm</span>(Speed <span class="sc">~</span> Year <span class="sc">+</span> Year2, <span class="at">data =</span> ex0920)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>lm_reduced <span class="ot">&lt;-</span> <span class="fu">lm</span>(Speed <span class="sc">~</span> <span class="dv">1</span>,            <span class="at">data =</span> ex0920)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>ex0920 <span class="ot">&lt;-</span> ex0920 <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fit_full =</span> <span class="fu">fitted</span>(lm_full),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">fit_red  =</span> <span class="fu">fitted</span>(lm_reduced))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="12_f_tests_files/figure-html/resid-full-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="12_f_tests_files/figure-html/resid-reduced-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>The full model fits much better — the residuals are far smaller.</li>
+<li>This large difference in fit is strong evidence against <span class="math inline">\(H_0\)</span>.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="the-f-statistic" class="level1">
+<h1>The <span class="math inline">\(F\)</span>-Statistic</h1>
+<section id="key-quantities" class="level2">
+<h2 class="anchored" data-anchor-id="key-quantities">Key Quantities</h2>
+<p>Let <span class="math inline">\(p_F\)</span> = number of parameters in the full model, <span class="math inline">\(p_R\)</span> = number in the reduced, <span class="math inline">\(n\)</span> = sample size.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(RSS_F\)</span></td>
+<td style="text-align: left;">Sum of squared residuals under the full model</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(RSS_R\)</span></td>
+<td style="text-align: left;">Sum of squared residuals under the reduced model</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(ESS\)</span></td>
+<td style="text-align: left;"><strong>Extra sum of squares</strong> <span class="math inline">\(= RSS_R - RSS_F\)</span> (how much better the full fits)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(df_{\text{extra}}\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(p_F - p_R\)</span> (extra parameters in the full model)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(df_F\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(n - p_F\)</span> (residual degrees of freedom for the full model)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="formula-and-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="formula-and-distribution">Formula and Distribution</h2>
+<p><span class="math display">\[F = \frac{ESS / \, df_{\text{extra}}}{RSS_F / \, df_F}\]</span></p>
+<ul>
+<li><strong>Numerator</strong>: average extra variability explained per additional parameter.</li>
+<li><strong>Denominator</strong>: average residual variability per degree of freedom (an estimate of <span class="math inline">\(\sigma^2\)</span>).</li>
+<li>Under <span class="math inline">\(H_0\)</span>: <span class="math inline">\(F\)</span> follows an <span class="math inline">\(F\)</span>-distribution with <span class="math inline">\((df_{\text{extra}},\, df_F)\)</span> degrees of freedom.</li>
+<li>A <strong>large</strong> <span class="math inline">\(F\)</span> means the full model explains substantially more — evidence against <span class="math inline">\(H_0\)</span>.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="running-the-f-test-in-r" class="level1">
+<h1>Running the <span class="math inline">\(F\)</span>-Test in R</h1>
+<p>Use <code>anova()</code> with the <strong>reduced</strong> model first, the <strong>full</strong> model second:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_reduced, lm_full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: Speed ~ 1
+Model 2: Speed ~ Year + Year2
+  Res.Df  RSS Df Sum of Sq   F Pr(&gt;F)
+1    115 93.0                        
+2    113 33.1  2      59.9 102 &lt;2e-16</code></pre>
+</div>
+</div>
+<section id="reading-the-output" class="level2">
+<h2 class="anchored" data-anchor-id="reading-the-output">Reading the Output</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Column</th>
+<th style="text-align: left;">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>Res.Df</code></td>
+<td style="text-align: left;">Residual degrees of freedom for each model</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>RSS</code></td>
+<td style="text-align: left;">Residual sum of squares for each model</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>Df</code></td>
+<td style="text-align: left;"><span class="math inline">\(df_{\text{extra}} = p_F - p_R\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>Sum of Sq</code></td>
+<td style="text-align: left;"><span class="math inline">\(ESS = RSS_R - RSS_F\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>F</code></td>
+<td style="text-align: left;"><span class="math inline">\(F\)</span>-statistic</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>Pr(&gt;F)</code></td>
+<td style="text-align: left;"><span class="math inline">\(p\)</span>-value</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Conclusion</strong>: We have overwhelming evidence that year is associated with winning speed (<span class="math inline">\(F = 104.6\)</span> on 2 and 119 df, <span class="math inline">\(p &lt; 0.001\)</span>).</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="another-example-do-starters-matter" class="level1">
+<h1>Another Example: Do Starters Matter?</h1>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<ul>
+<li><code>Starters</code>: number of horses that started the race.</li>
+<li>After accounting for a quadratic trend in year, does the number of starters add anything?</li>
+</ul>
+<p><span class="math display">\[H_0: \beta_3 = \beta_4 = 0 \text{ in:}\]</span> <span class="math display">\[\mu(\text{Speed} \mid \text{Year}, \text{Starters}) = \beta_0 + \beta_1\,\text{Year} + \beta_2\,\text{Year}^2
+  + \beta_3\,\text{Starters} + \beta_4\,\text{Starters}^2\]</span></p>
+<ul>
+<li><strong>Full</strong>: Year + Year² + Starters + Starters²</li>
+<li><strong>Reduced</strong>: Year + Year² (same as the full model above)</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ex0920 <span class="ot">&lt;-</span> ex0920 <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Starters2 =</span> Starters<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>lm_full2    <span class="ot">&lt;-</span> <span class="fu">lm</span>(Speed <span class="sc">~</span> Year <span class="sc">+</span> Year2 <span class="sc">+</span> Starters <span class="sc">+</span> Starters2, <span class="at">data =</span> ex0920)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>lm_reduced2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Speed <span class="sc">~</span> Year <span class="sc">+</span> Year2,                        <span class="at">data =</span> ex0920)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_reduced2, lm_full2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: Speed ~ Year + Year2
+Model 2: Speed ~ Year + Year2 + Starters + Starters2
+  Res.Df  RSS Df Sum of Sq    F Pr(&gt;F)
+1    113 33.1                         
+2    111 30.9  2      2.18 3.92  0.023</code></pre>
+</div>
+</div>
+<ul>
+<li><strong>Conclusion</strong>: We do have some evidence that the number of starters is associated with speed after adjusting for year (<span class="math inline">\(F = 3.92\)</span> on 2 and 111 df, <span class="math inline">\(p = 0.023\)</span>).</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="exercises" class="level1">
+<h1>Exercises</h1>
+<p><strong>1.</strong> The brain size dataset (<code>case0902</code>) has three potential explanatory variables for <code>Brain</code> weight (grams): <code>Body</code> (kg), <code>Gestation</code> (days), and <code>Litter</code> size.</p>
+<p>Load the data:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>case0902 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0902.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then consider: - <strong>Reduced model</strong>: <code>Brain ~ Body</code> - <strong>Full model</strong>: <code>Brain ~ Body + Gestation + Litter</code></p>
+<ol type="a">
+<li><p>Write out <span class="math inline">\(H_0\)</span> and <span class="math inline">\(H_A\)</span> in terms of the <span class="math inline">\(\beta\)</span> coefficients. In plain English, what does the null hypothesis claim?</p></li>
+<li><p>Run <code>anova(lm_reduced, lm_full)</code> in R. Report the <span class="math inline">\(F\)</span>-statistic, the two degrees of freedom, and the <span class="math inline">\(p\)</span>-value.</p></li>
+<li><p>State a conclusion in context.</p></li>
+</ol>
+<hr>
+<p><strong>2.</strong> Which of the following pairs of models are nested? For nested pairs, identify which is the reduced and which is the full model.</p>
+<ol type="a">
+<li><p>Model A: <span class="math inline">\(\mu(Y \mid X_1, X_2) = \beta_0 + \beta_1 X_1 + \beta_2 X_2\)</span> Model B: <span class="math inline">\(\mu(Y \mid X_1) = \beta_0 + \beta_1 X_1\)</span></p></li>
+<li><p>Model A: <span class="math inline">\(\mu(Y \mid X_1, X_2) = \beta_0 + \beta_1 X_1 + \beta_2 X_2\)</span> Model B: <span class="math inline">\(\mu(Y \mid X_1, X_3) = \beta_0 + \beta_1 X_1 + \beta_3 X_3\)</span></p></li>
+<li><p>Model A: <span class="math inline">\(\mu(Y \mid X_1) = \beta_0 + \beta_1 X_1 + \beta_2 X_1^2\)</span> Model B: <span class="math inline">\(\mu(Y \mid X_1) = \beta_0 + \beta_1 X_1\)</span></p></li>
+<li><p>Model A: <span class="math inline">\(\mu(Y \mid X_1, X_2, X_3) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3\)</span> Model B: <span class="math inline">\(\mu(Y \mid X_1, X_2) = \beta_0 + \beta_1 X_1 + \beta_2 X_2\)</span></p></li>
+</ol>
+<hr>
+<p><strong>3.</strong> Using the Kentucky Derby data, test whether the <strong>quadratic</strong> term <code>Year²</code> adds significantly on top of the <strong>linear</strong> term <code>Year</code> alone.</p>
+<ul>
+<li>Reduced model: <code>Speed ~ Year</code></li>
+<li>Full model: <code>Speed ~ Year + Year2</code></li>
+</ul>
+<ol type="a">
+<li><p>Write out <span class="math inline">\(H_0\)</span> and <span class="math inline">\(H_A\)</span>.</p></li>
+<li><p>Run the test and report the results.</p></li>
+<li><p>Compare the <span class="math inline">\(p\)</span>-value to the one from the bigger test (intercept-only reduced model) earlier in this lecture. Why are they different?</p></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

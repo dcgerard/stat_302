@@ -1,0 +1,166 @@
+---
+title: "Model Selection Worksheet"
+author: "David Gerard"
+date: today
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(broom)
+knitr::opts_chunk$set(echo       = TRUE,
+                      eval       = FALSE,
+                      fig.height = 3,
+                      fig.width  = 5,
+                      fig.align  = "center")
+ggplot2::theme_set(ggplot2::theme_bw())
+```
+
+# Pollution and Mortality
+
+Does air pollution kill people? Data from an early study were collected for 60 Standard
+Metropolitan Statistical Areas (cities) in the United States, covering the years 1959–1961.
+The goal is to determine whether the pollution variables are associated with mortality **after**
+accounting for climate and socioeconomic differences between cities.
+
+Variables:
+
+| Variable | Description |
+|:--|:--|
+| `CITY` | City name |
+| `Mortality` | Total age-adjusted mortality (deaths per 100,000) |
+| `Precip` | Mean annual precipitation (inches) |
+| `Humidity` | Percent relative humidity (annual average at 1 pm) |
+| `JanTemp` | Mean January temperature (°F) |
+| `JulyTemp` | Mean July temperature (°F) |
+| `Over65` | Percent of population aged 65 or older |
+| `House` | Population per household |
+| `Educ` | Median school years completed (age 25+) |
+| `Sound` | Percent of housing that is sound with all facilities |
+| `Density` | Population density (persons per square mile) |
+| `NonWhite` | Percent of population that is non-white |
+| `WhiteCol` | Percent employed in white-collar occupations |
+| `Poor` | Percent of households with income under \$3,000 (1960) |
+| `HC` | Relative pollution potential of hydrocarbons |
+| `NOX` | Relative pollution potential of nitrogen oxides |
+| `SO2` | Relative pollution potential of sulfur dioxide |
+
+Load the data with:
+
+```{r}
+#| label: load-data
+#| eval: true
+#| message: false
+library(tidyverse)
+library(broom)
+ex1217 <- read_csv("https://dcgerard.github.io/stat_302/data/ex1217.csv")
+glimpse(ex1217)
+```
+
+---
+
+**1.** What are the observational units? What is the response variable? Which variables are
+the primary explanatory variables of interest (the pollution variables)? Which are
+considered control variables?
+
+---
+
+**2.** Make scatterplots of each pollution variable (`HC`, `NOX`, `SO2`) against
+`Mortality`. Based on these plots, do any transformations seem appropriate?
+
+```{r}
+
+```
+
+---
+
+**3.** Create log-transformed versions of the three pollution variables. Then make new
+scatterplots using the log-transformed versions. Does the log transformation help?
+
+```{r}
+
+```
+
+---
+
+**4.** Fit a rich model that includes all non-pollution control variables (no interactions,
+no transformations of the controls needed):
+
+```r
+lm_rich <- lm(Mortality ~ Precip + Humidity + JanTemp + JulyTemp +
+                Over65 + House + Educ + Sound + Density +
+                NonWhite + WhiteCol + Poor,
+              data = ex1217)
+```
+
+Create a residual plot and a QQ-plot of the residuals. Do the model assumptions look
+reasonable?
+
+```{r}
+
+```
+
+---
+
+**5.** Compute leverage values, studentized residuals, and Cook's distances for the rich
+model from Question 4. Produce plots of each against observation number. Are there any
+cities you are particularly concerned about?
+
+```{r}
+
+```
+
+---
+
+**6.** Use `step()` on the rich model from Question 4 to select a subset of control
+variables. Do **not** include the pollution variables in this step — we will add them
+separately. What variables were retained?
+
+```{r}
+
+```
+
+---
+
+**7.** Write out the full regression model you will use to test for a pollution effect.
+The model should include the variables selected in Question 6 plus the three
+log-transformed pollution variables.
+
+---
+
+**8.** Fit the model from Question 7. Use `anova()` with the stepwise-selected model
+(no pollution variables) as the reduced model and the model with pollution as the full
+model.
+
+a. State $H_0$ and $H_A$ for this $F$-test.
+
+b. Report the $F$-statistic, degrees of freedom, and $p$-value.
+
+c. State a conclusion in the context of the study.
+
+```{r}
+
+```
+
+---
+
+**9.** Use `tidy(lm_final, conf.int = TRUE)` to examine the individual pollution
+coefficients. Are any of the pollution variables individually significant? Do the signs
+of the coefficients make intuitive sense? If not, what might explain a counterintuitive
+sign?
+
+```{r}
+
+```
+
+---
+
+**10.** Rerun the stepwise selection and $F$-test from Questions 6 and 8, but this time
+**exclude the high-leverage cities** you identified in Question 5. Does the conclusion
+about the pollution-mortality association change? What does this tell you about the
+robustness of the result?
+
+```{r}
+
+```

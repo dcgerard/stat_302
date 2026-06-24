@@ -1,0 +1,249 @@
+---
+title: "General Strategy for Model Building"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation:
+    slide_level: 2
+    theme: "metropolis"
+urlcolor: "blue"
+---
+
+```{r setup, include=FALSE}
+ggplot2::theme_set(
+  ggplot2::theme_bw()
+  )
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.height = 2.3, 
+                      fig.width = 3.7, 
+                      fig.align = "center")
+```
+
+
+```{r}
+set.seed(1)
+library(ggplot2)
+```
+
+## Learning Objective
+
+- Chapter 12
+
+- General Strategy for analysis in multiple linear regression.
+
+
+## Step 1: Identify Objectives and Questions of Interest
+
+- Example 1: Interested in association of  one explanatory variable and one response.
+
+- Goal is to determine that association *after adjusting for other variables*.
+
+- Then want to perform variable selection with everything *except* explanatory variable of interest, then include it to test for that association.
+
+## Step 1: Identify Objectives and Questions of Interest
+
+- Example 2: Just want to fish for associations
+
+- Then iterate through adding/removing variables, making transformations, checking residuals, until you develop a model with significant terms and no major issues.
+
+- $p$-values/confidence intervals don't have proper interpretation.
+
+    - Same problems with multiple comparisons --- ran many tests and looked at data a lot to come to final model.
+    
+- You generally build a model and tell stories with it.
+
+## Step 1: Identify Objectives and Questions of Interest
+
+- Example 3: Prediction
+
+- Include variables to maximize predictive power, don't worry about interpretation.
+
+## Step 2: Screen Available Variables
+
+- Choose a list of explanatory variables that are important to the objective.
+
+- Screen out redundant variables
+
+## Problems with Including Too Few Variables
+
+- You are only picking up **marginal** associations.
+
+- E.g., we already know that men make more money than women. We want to see if men **still** make more money than women when we control for other variables.
+
+- Predictions are less accurate.
+
+## Too few variables: Predictions are less accurate
+
+```{r, message=FALSE, warning=FALSE}
+x <- runif(100)
+y <- x + rnorm(100, sd = 0.1)
+lmtemp <- lm(y ~ x)
+pred <- as.data.frame(predict(lmtemp, interval = "prediction"))
+pred$x <- x
+pred$y <- y
+ggplot(pred, mapping = aes(x = x, y = y)) +
+  geom_point() +
+  geom_line(mapping = aes(x = x, y = fit), col = "blue", lwd = 1) +
+  geom_line(mapping = aes(x = x, y = lwr), col = "red", lwd = 1, lty = 2) +
+  geom_line(mapping = aes(x = x, y = upr), col = "red", lwd = 1, lty = 2) +
+  ggtitle("Prediction Intervals with X")
+```
+
+
+## Too few variables: Predictions are less accurate
+ 
+```{r, warning=FALSE}
+lmtemp <- lm(y ~ 1)
+pred <- as.data.frame(predict(lmtemp, interval = "prediction"))
+pred$x <- x
+pred$y <- y
+ggplot(pred, mapping = aes(x = x, y = y)) +
+  geom_point() +
+  geom_line(mapping = aes(x = x, y = fit), col = "blue", lwd = 1) +
+  geom_line(mapping = aes(x = x, y = lwr), col = "red", lwd = 1, lty = 2) +
+  geom_line(mapping = aes(x = x, y = upr), col = "red", lwd = 1, lty = 2) +
+  ggtitle("Prediction Intervals without X")
+```
+
+## Too few variables: Predictions are less accurate
+ 
+```{r, warning=FALSE}
+lmtemp <- lm(y ~ 1)
+pred <- as.data.frame(predict(lmtemp, interval = "prediction"))
+pred$x <- jitter(rep(0, 100))
+pred$y <- y
+ggplot(pred, mapping = aes(x = x, y = y)) +
+  geom_point() +
+  geom_line(mapping = aes(x = x, y = fit), col = "blue", lwd = 1) +
+  geom_line(mapping = aes(x = x, y = lwr), col = "red", lwd = 1, lty = 2) +
+  geom_line(mapping = aes(x = x, y = upr), col = "red", lwd = 1, lty = 2) +
+  ggtitle("Prediction Intervals without X") +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.ticks.x = element_blank()) +
+  xlim(-0.04, 0.04)
+```
+
+## Problems with too many variables
+
+- Harder to estimate more parameters.
+
+- Formally, the variances of the sampling distributions of the coefficients in the model will get much larger.
+
+- Including highly correlated explanatory variables will **really** increase the variance of the sampling distributions of the coefficient estimates.
+
+- Intuitively, we are less sure if the association of $Y$ and $X_1$ is due to that actual associate or is it mediated through $X_2$?
+
+- Predictions are less accurate.
+
+
+## Demonstration
+
+```{r, message=FALSE}
+library(tidyverse)
+n <- 50
+x1 <- runif(n)
+x2 <- x1 + rnorm(n, sd = 0.01)
+x2_q <- cut(x2, breaks = quantile(x2, c(0, 0.25, 0.5, 0.75, 1)) + c(-0.01, 0, 0, 0, 0.01))
+levels(x2_q) <- c("1st Quartile", 
+                  "2nd Quartile", 
+                  "3rd Quartile", 
+                  "4th Quartile")
+group_by(data.frame(x2 = x2, x2q = x2_q), x2q) %>%
+  summarise(mean = mean(x2)) ->
+  mean_df
+```
+
+
+- True model: $\mu(Y|X_1) = X_1$
+
+- Fit Model: $\mu(Y|X_1, X_2) = \beta_0 + \beta_1 X_1 + \beta_2X_2$
+
+- Correlation between $X_1$ and $X_2$ is `r cor(x1, x2)`.
+
+- We will simulate $Y$ and plot the resulting OLS estimates.
+
+## Demonstration: Black is truth
+
+```{r}
+plot_new <- function() {
+  y <- x1 + rnorm(n, sd = 0.1)
+lmout <- lm(y ~ x1 + x2)
+coef_vec <- coef(lmout)
+slope <- coef_vec[2]
+intercept_vec <- coef_vec[1] + mean_df$mean * coef_vec[3]
+red_df <- data.frame(x = c(0, 0.25, 0.5, 0.75),
+                     xend = c(0.25, 0.5, 0.75, 1))
+red_df$y <- slope * red_df$x + intercept_vec
+red_df$yend <- slope * red_df$xend + intercept_vec
+red_df$x2_q <- c("1st Quartile", 
+                  "2nd Quartile", 
+                  "3rd Quartile", 
+                  "4th Quartile")
+qplot(x1, y, color = x2_q) +
+  geom_abline(slope = 1, intercept = 0, color = "black", lwd = 1) +
+  geom_segment(data = red_df, mapping = aes(x = x, xend = xend, y = y, yend = yend), lwd = 1)
+}
+
+plot_new()
+```
+
+## Demonstration: Black is truth
+
+```{r}
+plot_new()
+```
+
+## Demonstration: Black is truth
+```{r}
+plot_new()
+```
+
+## Demonstration: Black is truth
+```{r}
+plot_new()
+```
+
+## Demonstration: Black is truth
+```{r}
+plot_new()
+```
+
+
+
+## Steps 3 through 5
+
+- Exploratory data analysis.
+
+    - Tons of scatterplots.
+    
+    - Look at correlation coefficients.
+    
+    - 12_multiple_regression_eda.pdf
+
+- Transformations based on EDA.
+
+    - 11_linear_model_assumptions.pdf, 11_interpreting_log_transformations.pdf
+
+- Fit a rich model and look at residuals. 
+
+    - Look for curvature, non-constant variance, and outliers.
+    
+    - 14_outlier.pdf, 11_linear_model_assumptions.pdf, 12_multiple_regression_eda.pdf
+
+- Iterate the above steps until you don't see any issues.
+
+## Step 6
+
+- If appropriate, use a computer aided technique to choose a suitable subset of explanatory variables.
+
+    - 13_f_test_of_nested_models.pdf
+    
+    - 13_non_nested_comparisons.pdf
+
+## Step 7
+
+- Proceed with analysis with chosen explanatory variables.
+
+- Tell stories with the data using $p$-values, coefficient estimates, confidence intervals, etc...
+

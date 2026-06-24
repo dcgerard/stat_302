@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="David Gerard">
+<meta name="dcterms.date" content="2026-06-24">
+
+<title>Model Selection – Stat 302: Intermediate Statistics</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-33269adcf1721b81efc5ea7fcfe7f0ee.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">dHJ1ZQ==</script>
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-0e01d36e12aedd38e6bb7bd9a7358603.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Stat 302: Intermediate Statistics</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../data.html"> 
+<span class="menu-text">Data</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#a-seven-step-workflow" id="toc-a-seven-step-workflow" class="nav-link" data-scroll-target="#a-seven-step-workflow">A Seven-Step Workflow</a></li>
+  <li><a href="#step-1-goals-of-analysis" id="toc-step-1-goals-of-analysis" class="nav-link" data-scroll-target="#step-1-goals-of-analysis">Step 1: Goals of Analysis</a>
+  <ul class="collapse">
+  <li><a href="#goal-1-inference-about-a-specific-variable" id="toc-goal-1-inference-about-a-specific-variable" class="nav-link" data-scroll-target="#goal-1-inference-about-a-specific-variable">Goal 1: Inference About a Specific Variable</a></li>
+  <li><a href="#goal-2-exploratory-fishing-for-associations" id="toc-goal-2-exploratory-fishing-for-associations" class="nav-link" data-scroll-target="#goal-2-exploratory-fishing-for-associations">Goal 2: Exploratory — Fishing for Associations</a></li>
+  <li><a href="#goal-3-prediction" id="toc-goal-3-prediction" class="nav-link" data-scroll-target="#goal-3-prediction">Goal 3: Prediction</a></li>
+  </ul></li>
+  <li><a href="#step-2-screen-available-variables" id="toc-step-2-screen-available-variables" class="nav-link" data-scroll-target="#step-2-screen-available-variables">Step 2: Screen Available Variables</a></li>
+  <li><a href="#steps-35" id="toc-steps-35" class="nav-link" data-scroll-target="#steps-35">Steps 3–5</a></li>
+  <li><a href="#step-6-variable-selection" id="toc-step-6-variable-selection" class="nav-link" data-scroll-target="#step-6-variable-selection">Step 6: Variable Selection</a>
+  <ul class="collapse">
+  <li><a href="#the-variable-selection-problem" id="toc-the-variable-selection-problem" class="nav-link" data-scroll-target="#the-variable-selection-problem">The Variable Selection Problem</a>
+  <ul class="collapse">
+  <li><a href="#too-few-variables-omitted-variable-bias" id="toc-too-few-variables-omitted-variable-bias" class="nav-link" data-scroll-target="#too-few-variables-omitted-variable-bias">Too Few Variables: Omitted Variable Bias</a></li>
+  <li><a href="#too-many-variables-multicollinearity" id="toc-too-many-variables-multicollinearity" class="nav-link" data-scroll-target="#too-many-variables-multicollinearity">Too Many Variables: Multicollinearity</a></li>
+  </ul></li>
+  <li><a href="#stepwise-regression" id="toc-stepwise-regression" class="nav-link" data-scroll-target="#stepwise-regression">Stepwise Regression</a>
+  <ul class="collapse">
+  <li><a href="#the-idea" id="toc-the-idea" class="nav-link" data-scroll-target="#the-idea">The Idea</a></li>
+  <li><a href="#the-step-function" id="toc-the-step-function" class="nav-link" data-scroll-target="#the-step-function">The <code>step()</code> Function</a></li>
+  <li><a href="#warning-p-values-after-stepwise" id="toc-warning-p-values-after-stepwise" class="nav-link" data-scroll-target="#warning-p-values-after-stepwise">Warning: <span class="math inline">\(p\)</span>-values After Stepwise</a></li>
+  </ul></li>
+  <li><a href="#aic-and-bic" id="toc-aic-and-bic" class="nav-link" data-scroll-target="#aic-and-bic">AIC and BIC</a>
+  <ul class="collapse">
+  <li><a href="#when-cant-we-use-the-f-test" id="toc-when-cant-we-use-the-f-test" class="nav-link" data-scroll-target="#when-cant-we-use-the-f-test">When Can’t We Use the <span class="math inline">\(F\)</span>-test?</a></li>
+  <li><a href="#formulas-and-intuition" id="toc-formulas-and-intuition" class="nav-link" data-scroll-target="#formulas-and-intuition">Formulas and Intuition</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#case-study-sex-discrimination-at-a-bank" id="toc-case-study-sex-discrimination-at-a-bank" class="nav-link" data-scroll-target="#case-study-sex-discrimination-at-a-bank">Case Study: Sex Discrimination at a Bank</a>
+  <ul class="collapse">
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">Background</a></li>
+  <li><a href="#steps-35-eda" id="toc-steps-35-eda" class="nav-link" data-scroll-target="#steps-35-eda">Steps 3–5: EDA</a></li>
+  <li><a href="#step-6-variable-selection-1" id="toc-step-6-variable-selection-1" class="nav-link" data-scroll-target="#step-6-variable-selection-1">Step 6: Variable Selection</a></li>
+  <li><a href="#step-7-final-inference-on-sex" id="toc-step-7-final-inference-on-sex" class="nav-link" data-scroll-target="#step-7-final-inference-on-sex">Step 7: Final Inference on Sex</a></li>
+  </ul></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Model Selection</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>David Gerard </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 24, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="learning-objectives" class="level1">
+<h1>Learning Objectives</h1>
+<ul>
+<li>Follow a seven-step workflow for building a multiple regression model.</li>
+<li>Know the three goals of a regression analysis and how they shape model building.</li>
+<li>Understand the costs of including too few or too many variables.</li>
+<li>Apply backward stepwise regression using <code>step()</code>.</li>
+<li>Compare non-nested models with AIC and BIC.</li>
+<li>Conduct a final <span class="math inline">\(F\)</span>-test to answer a primary research question after variable selection.</li>
+<li>Chapter 12 in the textbook.</li>
+</ul>
+<hr>
+</section>
+<section id="a-seven-step-workflow" class="level1">
+<h1>A Seven-Step Workflow</h1>
+<p>Building a multiple regression model is <strong>iterative</strong>, not a single pass. Below is a structured workflow; Steps 3–5 are often repeated several times.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 57%">
+<col style="width: 42%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Step</th>
+<th style="text-align: left;">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: left;">Identify your objective (inference, exploration, or prediction).</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: left;">Screen available explanatory variables — keep relevant ones, drop near duplicates.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>3</strong></td>
+<td style="text-align: left;">Exploratory data analysis: scatterplots of <span class="math inline">\(Y\)</span> vs each <span class="math inline">\(X\)</span>, and of <span class="math inline">\(X\)</span>’s vs each other.</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: left;">Transform variables based on EDA (log, polynomial, etc.).</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>5</strong></td>
+<td style="text-align: left;">Fit a rich model; check residuals and influential observations. If problems remain, return to Step 3.</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>6</strong></td>
+<td style="text-align: left;">Variable selection: <span class="math inline">\(F\)</span>-tests, stepwise regression, AIC/BIC.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>7</strong></td>
+<td style="text-align: left;">Proceed with the final model: report estimates, confidence intervals, and <span class="math inline">\(p\)</span>-values.</td>
+</tr>
+</tbody>
+</table>
+<p>The rest of this lecture covers Steps 1, 2, 6, and 7 in detail. Steps 3–5 are covered in the EDA and assumptions lectures.</p>
+<hr>
+</section>
+<section id="step-1-goals-of-analysis" class="level1">
+<h1>Step 1: Goals of Analysis</h1>
+<p>Knowing your goal shapes every model-building decision.</p>
+<section id="goal-1-inference-about-a-specific-variable" class="level2">
+<h2 class="anchored" data-anchor-id="goal-1-inference-about-a-specific-variable">Goal 1: Inference About a Specific Variable</h2>
+<ul>
+<li>You care about the association between <strong>one</strong> explanatory variable (<span class="math inline">\(X_1\)</span>) and <span class="math inline">\(Y\)</span>.</li>
+<li>Other variables are <strong>confounders</strong> you want to control for.</li>
+<li>Strategy: use variable selection (Step 6) to choose good controls; then add <span class="math inline">\(X_1\)</span> at the end and test it formally.</li>
+<li>Example: <em>“Is sex associated with salary, after adjusting for seniority, age, and education?”</em></li>
+</ul>
+</section>
+<section id="goal-2-exploratory-fishing-for-associations" class="level2">
+<h2 class="anchored" data-anchor-id="goal-2-exploratory-fishing-for-associations">Goal 2: Exploratory — Fishing for Associations</h2>
+<ul>
+<li>No single variable of primary interest; you want to discover what matters.</li>
+<li>Iterate through adding/removing variables, checking residuals, refining transformations.</li>
+<li><strong>Warning</strong>: <span class="math inline">\(p\)</span>-values no longer have their usual meaning after variable selection. You have run many implicit tests; treat the model as descriptive, not confirmatory.</li>
+</ul>
+</section>
+<section id="goal-3-prediction" class="level2">
+<h2 class="anchored" data-anchor-id="goal-3-prediction">Goal 3: Prediction</h2>
+<ul>
+<li>You want to minimize prediction error for new observations.</li>
+<li>Interpretation of individual coefficients is secondary.</li>
+<li>Choose variables by predictive criteria (AIC, cross-validation), not by <span class="math inline">\(p\)</span>-values.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="step-2-screen-available-variables" class="level1">
+<h1>Step 2: Screen Available Variables</h1>
+<ul>
+<li>List all explanatory variables relevant to your objective.</li>
+<li><strong>Drop</strong> variables that are exact or near-exact linear combinations of others — they create numerical instability.</li>
+<li><strong>Note</strong> pairs of variables you expect to be highly correlated. High correlation is not a reason to drop a variable on its own, but it will inflate standard errors (see below).</li>
+<li>Variables not included at this step will not be in the final model, so be inclusive rather than exclusive here.</li>
+</ul>
+<hr>
+</section>
+<section id="steps-35" class="level1">
+<h1>Steps 3–5</h1>
+<ul>
+<li>Exploratory data analysis.</li>
+<li>Tons of scatterplots / Look at correlation coeﬃcients.
+<ul>
+<li><a href="../11_ch9/11_multiple_regression_eda.html">MLR EDA</a></li>
+</ul></li>
+<li>Transformations based on EDA.
+<ul>
+<li><a href="../10_ch8/10_ch8.html">Linear Model Assumptions and Transformations</a></li>
+</ul></li>
+<li>Fit a rich model and look at residuals.
+<ul>
+<li>Look for curvature, non-constant variance, and outliers.</li>
+<li><a href="../12_modeling/12_outliers.html">Outliers</a></li>
+<li><a href="../10_ch8/10_ch8.html">Linear Model Assumptions and Transformations</a></li>
+<li><a href="../11_ch9/11_multiple_regression_eda.html">MLR EDA</a></li>
+</ul></li>
+<li>Iterate the above steps until you don’t see any issues.</li>
+</ul>
+<hr>
+</section>
+<section id="step-6-variable-selection" class="level1">
+<h1>Step 6: Variable Selection</h1>
+<section id="the-variable-selection-problem" class="level2">
+<h2 class="anchored" data-anchor-id="the-variable-selection-problem">The Variable Selection Problem</h2>
+<p>Including too few or too many variables both hurt your analysis.</p>
+<section id="too-few-variables-omitted-variable-bias" class="level3">
+<h3 class="anchored" data-anchor-id="too-few-variables-omitted-variable-bias">Too Few Variables: Omitted Variable Bias</h3>
+<ul>
+<li>When a confounder is omitted, the coefficient on <span class="math inline">\(X_1\)</span> absorbs its effect. This is called <strong>omitted variable bias</strong>.</li>
+<li>Example: men may appear to earn more than women, but the gap narrows once you control for job type, seniority, and experience.</li>
+<li>Omitting relevant variables also <strong>widens prediction intervals</strong>, because <span class="math inline">\(\hat\sigma^2\)</span> absorbs the unexplained variation.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="12_model_selection_files/figure-html/pred-interval-demo-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>The <strong>shaded bands</strong> are 95% prediction intervals.</li>
+<li>Omitting <span class="math inline">\(X\)</span> makes the prediction interval far wider because the model mistakes the variation explained by <span class="math inline">\(X\)</span> for unexplained noise.</li>
+</ul>
+</section>
+<section id="too-many-variables-multicollinearity" class="level3">
+<h3 class="anchored" data-anchor-id="too-many-variables-multicollinearity">Too Many Variables: Multicollinearity</h3>
+<ul>
+<li>When two explanatory variables are highly correlated, it is hard to separate their individual effects.</li>
+<li>The standard errors of both coefficient estimates inflate — estimates become unstable.</li>
+<li><strong>In any single dataset</strong>, the estimated slope can be wildly off from the truth, even though the estimator is still unbiased on average.</li>
+</ul>
+<section id="animation-collinearity-in-action" class="level4">
+<h4 class="anchored" data-anchor-id="animation-collinearity-in-action">Animation: Collinearity in Action</h4>
+<p>The true model is <span class="math inline">\(\mu(Y \mid X_1) = X_1\)</span> (slope = 1, no <span class="math inline">\(X_2\)</span> effect), but <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span> are nearly identical. Each frame below simulates a fresh dataset and fits the model <span class="math inline">\(Y \sim X_1 + X_2\)</span>:</p>
+<ul>
+<li><strong>Left</strong>: points colored by <span class="math inline">\(X_2\)</span> quartile; colored segments show the fitted <em>adjusted</em> slope within each <span class="math inline">\(X_2\)</span> group; the <strong>black line</strong> is the truth (slope = 1).</li>
+<li><strong>Right</strong>: the histogram of estimated <span class="math inline">\(\hat\beta_1\)</span> builds up across simulations.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="collinear_demo.gif" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><strong>Left panel</strong>: colored segments are the <span class="math inline">\(X_1\)</span>+<span class="math inline">\(X_2\)</span> adjusted slopes (one per <span class="math inline">\(X_2\)</span> quartile, all parallel — same <span class="math inline">\(\hat\beta_1\)</span>); the <strong>dashed pink line</strong> is the <span class="math inline">\(X_1\)</span>-only slope; the <strong>solid black line</strong> is the truth (slope = 1).</li>
+<li><strong>Right panel</strong>: the pink (<span class="math inline">\(X_1\)</span> only) histogram builds into a tight spike near 1; the blue (<span class="math inline">\(X_1\)</span>+<span class="math inline">\(X_2\)</span>) histogram spreads widely across the <span class="math inline">\(x\)</span>-axis.</li>
+<li>The SD values in the subtitle quantify the difference: including a near-duplicate <span class="math inline">\(X_2\)</span> inflates the standard deviation of <span class="math inline">\(\hat\beta_1\)</span> by roughly a factor of 20 or more.</li>
+<li>The histogram shows that <span class="math inline">\(\hat\beta_1\)</span> is unbiased on average, but the variance is enormous.</li>
+<li>In practice you only have <strong>one</strong> dataset: your estimate could be anywhere in that histogram.</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="stepwise-regression" class="level2">
+<h2 class="anchored" data-anchor-id="stepwise-regression">Stepwise Regression</h2>
+<section id="the-idea" class="level3">
+<h3 class="anchored" data-anchor-id="the-idea">The Idea</h3>
+<ul>
+<li><strong>Backward elimination</strong>: Start with the most complex model, remove the term whose removal most improves (or least worsens) a criterion, repeat.</li>
+<li><strong>Forward selection</strong>: Start with intercept only, add the term that most improves the criterion, repeat.</li>
+<li><strong>Both directions</strong>: Mix of adding and removing at each step.</li>
+</ul>
+</section>
+<section id="the-step-function" class="level3">
+<h3 class="anchored" data-anchor-id="the-step-function">The <code>step()</code> Function</h3>
+<ul>
+<li><code>step()</code> in R uses <strong>AIC</strong> as its criterion: it accepts a step if AIC decreases.</li>
+<li>Smaller AIC = better model.</li>
+<li><code>step()</code> returns an <code>lm</code> object — <code>tidy()</code>, <code>glance()</code>, <code>anova()</code> all work on it.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>case1202 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case1202.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">logBsal =</span> <span class="fu">log</span>(Bsal),</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">Age2    =</span> Age<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Exper2  =</span> Exper<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>lm_rich <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Age <span class="sc">+</span> Age2 <span class="sc">+</span> Educ <span class="sc">+</span> Exper <span class="sc">+</span> Exper2,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> case1202)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>lm_step <span class="ot">&lt;-</span> <span class="fu">step</span>(lm_rich, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_step)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  term           estimate  std.error statistic  p.value
+  &lt;chr&gt;             &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept)  8.63       0.132          65.2  1.21e-75
+2 Senior      -0.00323    0.00111        -2.90 4.69e- 3
+3 Age         -0.000338   0.000145       -2.33 2.20e- 2
+4 Educ         0.0207     0.00500         4.13 8.37e- 5
+5 Exper        0.00197    0.000505        3.90 1.89e- 4
+6 Exper2      -0.00000413 0.00000130     -3.18 2.07e- 3</code></pre>
+</div>
+</div>
+<ul>
+<li><code>Age2</code> was dropped; everything else was retained.</li>
+</ul>
+</section>
+<section id="warning-p-values-after-stepwise" class="level3">
+<h3 class="anchored" data-anchor-id="warning-p-values-after-stepwise">Warning: <span class="math inline">\(p\)</span>-values After Stepwise</h3>
+<ul>
+<li><span class="math inline">\(p\)</span>-values in the final model <strong>cannot be interpreted at face value</strong> after stepwise selection — you have implicitly run many tests.</li>
+<li>Use the selected model to describe the data or for prediction, not for formal inference about variables that were part of the selection process.</li>
+<li><strong>Exception</strong>: a variable pre-specified as the primary interest (Goal 1) can still be tested formally after variable selection — see §“Final Inference” below.</li>
+</ul>
+</section>
+</section>
+<section id="aic-and-bic" class="level2">
+<h2 class="anchored" data-anchor-id="aic-and-bic">AIC and BIC</h2>
+<section id="when-cant-we-use-the-f-test" class="level3">
+<h3 class="anchored" data-anchor-id="when-cant-we-use-the-f-test">When Can’t We Use the <span class="math inline">\(F\)</span>-test?</h3>
+<ul>
+<li>The <span class="math inline">\(F\)</span>-test requires the reduced model to be a <strong>special case</strong> of the full model (nested models).</li>
+<li><code>logBsal ~ Senior + Educ + Exper + Exper2</code> vs <code>logBsal ~ Senior + Educ + Age + Age2</code> are <strong>not</strong> nested — neither is a special case of the other.</li>
+<li>For non-nested models we need a different comparison criterion.</li>
+</ul>
+</section>
+<section id="formulas-and-intuition" class="level3">
+<h3 class="anchored" data-anchor-id="formulas-and-intuition">Formulas and Intuition</h3>
+<p>Both AIC and BIC penalize RSS for model complexity:</p>
+<p><span class="math display">\[\text{AIC} = n \log\!\left(\frac{RSS}{n}\right) + 2(p + 1)\]</span></p>
+<p><span class="math display">\[\text{BIC} = n \log\!\left(\frac{RSS}{n}\right) + \log(n)\,(p + 1)\]</span></p>
+<ul>
+<li><strong>Smaller is better</strong> for both.</li>
+<li><span class="math inline">\(p\)</span> = number of regression coefficients.</li>
+<li><strong>AIC</strong>: lighter penalty → picks slightly larger models → prefer when <strong>predicting</strong>.</li>
+<li><strong>BIC</strong>: heavier penalty (grows with <span class="math inline">\(n\)</span>) → picks sparser models → prefer for <strong>interpretation and inference</strong>.</li>
+<li>Differences of less than ~2 units are negligible.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>lm_exper <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Educ <span class="sc">+</span> Exper <span class="sc">+</span> Exper2, <span class="at">data =</span> case1202)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>lm_age   <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Educ <span class="sc">+</span> Age   <span class="sc">+</span> Age2,   <span class="at">data =</span> case1202)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance</span>(lm_exper) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Exper model"</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance</span>(lm_age)   <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Age model"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(model, AIC, BIC, r.squared, adj.r.squared)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  model         AIC   BIC r.squared adj.r.squared
+  &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;
+1 Exper model -146. -131.     0.355         0.325
+2 Age model   -139. -124.     0.299         0.268</code></pre>
+</div>
+</div>
+<ul>
+<li>The <strong>experience model</strong> has lower AIC and BIC — preferred on both counts.</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="case-study-sex-discrimination-at-a-bank" class="level1">
+<h1>Case Study: Sex Discrimination at a Bank</h1>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+<ul>
+<li>Harris Trust and Savings Bank was sued for sex discrimination in the 1970s.</li>
+<li>93 employees hired as clerical workers between 1969 and 1977.</li>
+<li>Response: <code>Bsal</code> — beginning salary (dollars).</li>
+<li><strong>Goal (Goal 1)</strong>: Is sex associated with starting salary, after controlling for other variables?</li>
+</ul>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>Bsal</code></td>
+<td style="text-align: left;">Beginning salary (dollars)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>Sex</code></td>
+<td style="text-align: left;">Male or Female</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>Senior</code></td>
+<td style="text-align: left;">Seniority (months since hired)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>Age</code></td>
+<td style="text-align: left;">Age (months)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>Educ</code></td>
+<td style="text-align: left;">Education (years)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>Exper</code></td>
+<td style="text-align: left;">Prior work experience (months)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="steps-35-eda" class="level2">
+<h2 class="anchored" data-anchor-id="steps-35-eda">Steps 3–5: EDA</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(case1202,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">"logBsal"</span>, <span class="st">"Sex"</span>, <span class="st">"Senior"</span>, <span class="st">"Age"</span>, <span class="st">"Educ"</span>, <span class="st">"Exper"</span>),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">color =</span> Sex, <span class="at">alpha =</span> <span class="fl">0.5</span>),</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">upper =</span> <span class="fu">list</span>(<span class="at">continuous =</span> <span class="fu">wrap</span>(<span class="st">"cor"</span>, <span class="at">size =</span> <span class="dv">3</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="12_model_selection_files/figure-html/bank-eda-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><code>logBsal</code> is more symmetric than raw <code>Bsal</code>.</li>
+<li>Males start at higher salaries.</li>
+<li><code>Age</code> and <code>Exper</code> are positively correlated (<span class="math inline">\(r \approx 0.8\)</span>) — collinearity to watch.</li>
+<li>Quadratic terms for <code>Age</code> and <code>Exper</code> may be warranted given the scatter.</li>
+</ul>
+</section>
+<section id="step-6-variable-selection-1" class="level2">
+<h2 class="anchored" data-anchor-id="step-6-variable-selection-1">Step 6: Variable Selection</h2>
+<p><code>Sex</code> is the primary question — <strong>exclude it from stepwise selection</strong> and add it back for the final test. Run stepwise on the control variables only:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>lm_rich_controls <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Age <span class="sc">+</span> Age2 <span class="sc">+</span> Educ <span class="sc">+</span> Exper <span class="sc">+</span> Exper2,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">data =</span> case1202)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>lm_step_controls <span class="ot">&lt;-</span> <span class="fu">step</span>(lm_rich_controls, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_step_controls)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  term           estimate  std.error statistic  p.value
+  &lt;chr&gt;             &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept)  8.63       0.132          65.2  1.21e-75
+2 Senior      -0.00323    0.00111        -2.90 4.69e- 3
+3 Age         -0.000338   0.000145       -2.33 2.20e- 2
+4 Educ         0.0207     0.00500         4.13 8.37e- 5
+5 Exper        0.00197    0.000505        3.90 1.89e- 4
+6 Exper2      -0.00000413 0.00000130     -3.18 2.07e- 3</code></pre>
+</div>
+</div>
+<ul>
+<li><code>Age2</code> was dropped; <code>Senior</code>, <code>Age</code>, <code>Educ</code>, <code>Exper</code>, <code>Exper2</code> were retained.</li>
+</ul>
+</section>
+<section id="step-7-final-inference-on-sex" class="level2">
+<h2 class="anchored" data-anchor-id="step-7-final-inference-on-sex">Step 7: Final Inference on Sex</h2>
+<p>Add <code>Sex</code> to the stepwise-selected model and test it:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>lm_final <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Sex <span class="sc">+</span> Senior <span class="sc">+</span> Age <span class="sc">+</span> Educ <span class="sc">+</span> Exper <span class="sc">+</span> Exper2,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> case1202)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_final, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 7
+  term           estimate  std.error statistic  p.value    conf.low   conf.high
+  &lt;chr&gt;             &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+1 (Intercept)  8.57       0.110         78.1   1.20e-81  8.35        8.79      
+2 SexMale      0.140      0.0217         6.48  5.40e- 9  0.0974      0.184     
+3 Senior      -0.00326    0.000919      -3.55  6.28e- 4 -0.00509    -0.00143   
+4 Age         -0.0000208  0.000129      -0.161 8.72e- 1 -0.000277    0.000236  
+5 Educ         0.0137     0.00426        3.22  1.79e- 3  0.00526     0.0222    
+6 Exper        0.00155    0.000422       3.68  4.12e- 4  0.000711    0.00239   
+7 Exper2      -0.00000413 0.00000107    -3.85  2.26e- 4 -0.00000626 -0.00000200</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_final, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"SexMale"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(estimate, conf.low, conf.high), exp))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 7
+  term    estimate std.error statistic       p.value conf.low conf.high
+  &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 SexMale     1.15    0.0217      6.48 0.00000000540     1.10      1.20</code></pre>
+</div>
+</div>
+<ul>
+<li>On the <strong>log scale</strong>: males start at <span class="math inline">\(\hat\beta_{\text{Sex}} \approx 0.13\)</span> log-dollars more.</li>
+<li>On the <strong>original scale</strong>: males start at <span class="math inline">\(e^{0.13} \approx 1.14\times\)</span> the salary of comparably qualified females — about <strong>14% higher</strong>.</li>
+<li>95% CI for the multiplicative effect: roughly 1.09 to 1.19.</li>
+<li><strong>Conclusion</strong>: We have very strong evidence that males received higher starting salaries than comparably qualified females (<span class="math inline">\(p &lt; 0.001\)</span>), even after adjusting for seniority, age, education, and experience.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="exercises" class="level1">
+<h1>Exercises</h1>
+<p><strong>1.</strong> Using the bank data, suppose we are only interested in whether <strong>education</strong> is associated with log salary, after adjusting for other variables.</p>
+<ol type="a">
+<li><p>Fit a rich model (without <code>Sex</code>) that includes <code>Senior</code>, <code>Educ</code>, <code>Age</code>, <code>Age2</code>, <code>Exper</code>, and <code>Exper2</code>. Use <code>tidy()</code> to examine the coefficients.</p></li>
+<li><p>Run <code>step()</code> on the rich model. Note whether <code>Educ</code> is kept or dropped.</p></li>
+<li><p>Regardless of whether <code>step()</code> kept <code>Educ</code>, add it to the stepwise-selected model and test it with a <span class="math inline">\(t\)</span>-test. State a conclusion in context. Why is this <span class="math inline">\(p\)</span>-value interpretable, even after running <code>step()</code>?</p></li>
+</ol>
+<hr>
+<p><strong>2.</strong> Consider these three models fit to the bank data:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>lm_a <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Educ <span class="sc">+</span> Exper <span class="sc">+</span> Exper2, <span class="at">data =</span> case1202)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>lm_b <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Age  <span class="sc">+</span> Age2,            <span class="at">data =</span> case1202)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>lm_c <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Educ <span class="sc">+</span> Age  <span class="sc">+</span> Exper,    <span class="at">data =</span> case1202)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ol type="a">
+<li><p>Which pairs of models are nested? For any nested pair, set up and run an <span class="math inline">\(F\)</span>-test.</p></li>
+<li><p>For the non-nested pairs, compare AIC and BIC using <code>glance()</code>. Which model do you prefer, and why?</p></li>
+<li><p>Do AIC and BIC agree? If they disagree, which criterion should you follow — and does the answer depend on the goal of the analysis?</p></li>
+</ol>
+<hr>
+<p><strong>3.</strong> A researcher fits a complex model and then runs <code>step()</code>, obtaining a simpler final model. She reports the smallest <span class="math inline">\(p\)</span>-value from <code>tidy()</code> on the final model as evidence of a significant effect.</p>
+<ol type="a">
+<li><p>What is wrong with this approach?</p></li>
+<li><p>Under what circumstances <em>can</em> a variable’s <span class="math inline">\(p\)</span>-value be interpreted normally, even after stepwise selection?</p></li>
+<li><p>If the goal were <strong>prediction</strong>, would the researcher’s approach be more or less problematic? Explain.</p></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
