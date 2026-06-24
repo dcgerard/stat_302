@@ -1,0 +1,256 @@
+---
+title: "Multi-Factor ANOVA"
+author: "David Gerard"
+date: today
+bibliography: "../bib.bib"
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(broom)
+knitr::opts_chunk$set(echo       = TRUE,
+                      fig.height = 3,
+                      fig.width  = 5,
+                      fig.align  = "center")
+ggplot2::theme_set(ggplot2::theme_bw())
+```
+
+# Learning Objectives
+
+- Write out the general multi-factor ANOVA model with main effects and interactions.
+- Distinguish two-way interactions from three-way interactions using interaction plots.
+- Fit a multi-factor ANOVA model in R and test for interactions top-down.
+- Chapter 13 of the textbook.
+
+---
+
+# The General Model
+
+With **three** categorical variables ($A$, $B$, $C$):
+
+$$Y_{ijk\ell} = \mu + \alpha_i + \beta_j + \gamma_k + (\alpha\beta)_{ij} + (\alpha\gamma)_{ik} + (\beta\gamma)_{jk} + (\alpha\beta\gamma)_{ijk} + \epsilon_{ijk\ell}$$
+
+| Term | Meaning |
+|:--|:--|
+| $\mu$ | baseline mean |
+| $\alpha_i, \beta_j, \gamma_k$ | main effects |
+| $(\alpha\beta)_{ij}, (\alpha\gamma)_{ik}, (\beta\gamma)_{jk}$ | two-way interactions |
+| $(\alpha\beta\gamma)_{ijk}$ | three-way interaction |
+
+- A **two-way interaction** means the effect of one variable depends on the level of another.
+- A **three-way interaction** means the two-way interaction between $A$ and $B$ itself
+  changes depending on the level of $C$.
+
+---
+
+# Interaction Plots for Three Factors
+
+With three factors, interaction plots use:
+
+- **x-axis**: one variable.
+- **Color/line**: a second variable.
+- **Facets**: the third variable.
+
+The key question for each arrangement: do the lines look parallel within each facet,
+and do the patterns look the same across facets?
+
+## No Interactions
+
+Parallel lines, same pattern in every facet:
+
+```{r}
+#| label: no-interaction
+#| echo: false
+x <- c(1, 1, 1, 1, 0, 0, 0, 0)
+y <- c(1, 1, 0, 0, 1, 1, 0, 0)
+z <- c(1, 0, 1, 0, 1, 0, 1, 0)
+w <- x + y + z
+tibble(x = factor(x), y = factor(y), z = factor(z, labels = c("z=0","z=1")), w) |>
+  ggplot(aes(x = x, y = w, color = y, group = y)) +
+  geom_point() + geom_line() +
+  facet_wrap(~z) +
+  labs(title = "No interactions: parallel lines in all facets",
+       x = "x", y = "Mean response", color = "y")
+```
+
+## Two-Way Interaction Between $x$ and $y$ Only
+
+Non-parallel lines within each facet, but the **same** non-parallel pattern in every facet:
+
+```{r}
+#| label: two-way-xy
+#| echo: false
+w2 <- x + y + z + x * y
+tibble(x = factor(x), y = factor(y), z = factor(z, labels = c("z=0","z=1")), w = w2) |>
+  ggplot(aes(x = x, y = w, color = y, group = y)) +
+  geom_point() + geom_line() +
+  facet_wrap(~z) +
+  labs(title = "x:y interaction only — same pattern across facets",
+       x = "x", y = "Mean response", color = "y")
+```
+
+- The interaction between $x$ and $y$ is the **same** regardless of the level of $z$.
+- No three-way interaction.
+
+## Three-Way Interaction
+
+Non-parallel lines, and the **interaction pattern changes** across facets:
+
+```{r}
+#| label: three-way
+#| echo: false
+w3 <- x + y + z + x * y + x * z + y * z + x * y * z
+tibble(x = factor(x), y = factor(y), z = factor(z, labels = c("z=0","z=1")), w = w3) |>
+  ggplot(aes(x = x, y = w, color = y, group = y)) +
+  geom_point() + geom_line() +
+  facet_wrap(~z) +
+  labs(title = "Three-way interaction — pattern differs across facets",
+       x = "x", y = "Mean response", color = "y")
+```
+
+- The relationship between $x$ and $y$ is **different** at different levels of $z$.
+- This is a three-way interaction.
+
+---
+
+# Case Study: Pea Yield
+
+- Data: `npk` (built into R), from a split-plot agricultural experiment.
+- Three binary fertilizers applied to peas: **N** (nitrogen), **P** (phosphate), **K** (potassium).
+- Response: `yield` in pounds per plot.
+- Question: Do N, P, K, and their interactions affect pea yield?
+
+```{r}
+#| label: npk-load
+data(npk)
+glimpse(npk)
+```
+
+```{r}
+#| label: npk-table
+table(npk$N, npk$P, npk$K)
+```
+
+- Balanced design: 3 observations per combination.
+
+## Interaction Plots
+
+```{r}
+#| label: npk-plot-np
+#| fig-width: 7
+ggplot(npk, aes(x = N, y = yield, color = P, group = P)) +
+  stat_summary(fun = mean, geom = "line") +
+  stat_summary(fun = mean, geom = "point") +
+  facet_wrap(~K, labeller = label_both) +
+  labs(x = "Nitrogen (0 = absent, 1 = present)",
+       y = "Mean yield (lbs)",
+       color = "Phosphate",
+       title = "Interaction plot: N × P, faceted by K")
+```
+
+- Lines are roughly parallel within facets — no obvious N×P interaction.
+- Yields are slightly higher when N is present (lines shifted up at N=1).
+- K does not appear to change the N×P pattern much — no strong three-way interaction.
+
+## Top-Down Testing Strategy
+
+- Start with the **full interaction model** (all main effects + all interactions).
+- Test the **three-way interaction** first. If not significant, drop it.
+- Then test **two-way interactions**. If none significant, use the additive model.
+- Then test **main effects**.
+
+```{r}
+#| label: npk-full
+aout_full <- aov(yield ~ N * P * K, data = npk)
+tidy(aout_full)
+```
+
+- The three-way interaction `N:P:K` has $p = 0.54$ — no evidence.
+- Drop it and refit with only two-way interactions.
+
+```{r}
+#| label: npk-twoway
+aout_2way <- aov(yield ~ N + P + K + N:P + N:K + P:K, data = npk)
+tidy(aout_2way)
+```
+
+- None of the two-way interactions are significant ($p > 0.05$).
+- Adopt the additive model.
+
+```{r}
+#| label: npk-additive
+aout_add <- aov(yield ~ N + P + K, data = npk)
+tidy(aout_add)
+```
+
+- **Nitrogen** ($p = 0.004$): strong evidence that nitrogen increases yield.
+- **Phosphate** ($p = 0.057$): marginal evidence.
+- **Potassium** ($p = 0.028$): moderate evidence that potassium **decreases** yield.
+
+## Coefficient Estimates
+
+```{r}
+#| label: npk-coef
+lm_add <- lm(yield ~ N + P + K, data = npk)
+tidy(lm_add, conf.int = TRUE) |>
+  select(term, estimate, conf.low, conf.high, p.value)
+```
+
+- Adding nitrogen is estimated to increase yield by about 5.6 lbs per plot
+  (95% CI: 2.0 to 9.3 lbs).
+- Adding potassium is estimated to decrease yield by about 3.9 lbs per plot
+  (95% CI: −7.6 to −0.3 lbs).
+
+---
+
+# R Formula Quick Reference
+
+| Formula | Interpretation |
+|:--|:--|
+| `A + B + C` | main effects only (additive) |
+| `A * B + C` | A, B, C, and A:B |
+| `A * B * C` | all main effects and all interactions |
+| `(A + B + C)^2` | all main effects and all two-way interactions |
+| `A:B` | A×B interaction term only (no main effects) |
+
+---
+
+# Exercises
+
+**1.** Using the `npk` data:
+
+a. Create an interaction plot of `yield` vs. `N`, colored by `K`, faceted by `P`.
+   Does the plot suggest any interaction between N and K?
+
+b. Formally test whether the three-way interaction `N:P:K` is significant using
+   `tidy(aov(yield ~ N * P * K, data = npk))`. Report $p$-value and conclusion.
+
+c. The additive model fitted in this lecture found significant effects of N and K.
+   Interpret both coefficients in plain language. Do the signs of the effects make
+   agricultural sense?
+
+---
+
+**2.** Explain in plain language the difference between a two-way and a three-way
+interaction. Give an example from everyday life (not from this lecture) of:
+
+a. A plausible two-way interaction.
+
+b. A plausible three-way interaction.
+
+---
+
+**3.** An experiment studies the effects of exercise type (Cardio vs. Strength),
+diet (Low-carb vs. High-carb), and sleep quality (Poor vs. Good) on weight loss.
+
+a. Write out the full interaction ANOVA model using the notation from this lecture.
+   Identify which terms are main effects, which are two-way interactions, and which
+   is the three-way interaction.
+
+b. If you were conducting this study, what testing strategy would you use?
+   Start with what model and what test?
+
+c. How many parameters does the full interaction model have (including the baseline)?
+   How many parameters does the additive model have?

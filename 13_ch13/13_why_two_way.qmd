@@ -1,0 +1,194 @@
+---
+title: "Why Use Two Categorical Explanatory Variables?"
+author: "David Gerard"
+date: today
+bibliography: "../bib.bib"
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(broom)
+knitr::opts_chunk$set(echo       = TRUE,
+                      fig.height = 3,
+                      fig.width  = 5,
+                      fig.align  = "center")
+ggplot2::theme_set(ggplot2::theme_bw())
+set.seed(3)
+```
+
+# Learning Objectives
+
+- Know the four main reasons for including a second categorical variable in an ANOVA model.
+- Understand how a grouping variable reduces residual variance and increases power.
+- Recognize Simpson's paradox and explain when it arises.
+- Chapter 13 of the textbook.
+
+---
+
+# Four Reasons
+
+Why would we use two categorical explanatory variables instead of one?
+
+## Reason 1: Interest in Both Variables
+
+- You are genuinely interested in the effects of **both** variables.
+- Example: Does both pressure **and** temperature affect espresso foam quality?
+- With no interactions, every observation contributes to estimating **both** effects.
+- More efficient than running two separate one-factor experiments.
+
+## Reason 2: Detecting and Describing Interactions
+
+- The effect of the primary variable may **depend on** the level of a second variable.
+- Example: a drug's effectiveness might differ between males and females.
+- Two-way ANOVA lets you test for and characterize interaction effects.
+- If no interaction is found, the result generalizes across all levels of the second variable.
+
+## Reason 3: Variance Reduction via Grouping
+
+- Including a second variable can **reduce residual variance**, making it easier to detect
+  an effect of the primary variable.
+- Analogous to using a paired design instead of a two-sample test.
+
+### Simulation
+
+```{r}
+#| label: var-reduction-setup
+#| echo: false
+n     <- 30
+cat1  <- c(rep("A", n / 2), rep("B", n / 2))
+cat2  <- factor(rep(c("Low", "High"), n / 2), levels = c("Low", "High"))
+y     <- 10 + 2.5 * (cat1 == "B") + 2.6 * (cat2 == "High") + rnorm(n)
+sim_df <- tibble(cat1, cat2, y)
+```
+
+When both variables are plotted, the groups separate clearly:
+
+```{r}
+#| label: var-reduction-grouped
+#| echo: false
+ggplot(sim_df, aes(x = cat1, y = y, color = cat2)) +
+  geom_jitter(width = 0.1) +
+  labs(x = "Primary variable", color = "Grouping var")
+```
+
+If `cat2` is ignored, the within-group spread looks much larger — harder to see the `cat1` effect:
+
+```{r}
+#| label: var-reduction-ungrouped
+#| echo: false
+ggplot(sim_df, aes(x = cat1, y = y)) +
+  geom_jitter(width = 0.1) +
+  labs(x = "Primary variable")
+```
+
+Residuals are smaller when `cat2` is included:
+
+```{r}
+#| label: var-reduction-residuals
+resid_with    <- resid(aov(y ~ cat1 + cat2, data = sim_df))
+resid_without <- resid(aov(y ~ cat1,        data = sim_df))
+
+tibble(
+  residual = c(resid_with, resid_without),
+  model    = rep(c("With cat2", "Without cat2"), each = n)
+) |>
+  ggplot(aes(x = model, y = residual)) +
+  geom_boxplot() +
+  labs(y = "Residuals", x = NULL)
+```
+
+- **Grouping variable**: included in the model solely to reduce variance, not because you
+  are directly interested in it.
+- Include a grouping variable **regardless** of whether it is statistically significant.
+
+## Reason 4: Controlling for Confounders — Simpson's Paradox
+
+- In observational studies, the direction or size of an effect can **reverse** after
+  adjusting for another variable.
+- This is **Simpson's Paradox**.
+- Arises when one group is over-represented at a "better" (or "worse") level of the
+  confounder.
+
+### Simulation
+
+```{r}
+#| label: simpsons-setup
+#| echo: false
+set.seed(4)
+n    <- 40
+cat2 <- c(1, 1, 1, 1, rep(0, n / 2 - 4), 0, 0, 0, 0, rep(1, n / 2 - 4))
+cat1 <- rep(c("Group B", "Group A"), each = n / 2)
+y2   <- 10 + 5 * (cat1 == "Group B") + 2 * cat2 + rnorm(n)
+simp_df <- tibble(cat1, cat2 = factor(cat2, labels = c("Low", "High")), y = y2)
+```
+
+Within each level of the confounder, Group High is clearly above Group Low:
+
+```{r}
+#| label: simpsons-grouped
+#| echo: false
+ggplot(simp_df, aes(x = cat2, y = y, color = cat1)) +
+  geom_boxplot(color = "black", coef = Inf) +
+  geom_jitter(width = 0.1) +
+  facet_wrap(~cat1) +
+  labs(x = "Primary variable", y = "Response", color = "Confounder") +
+  theme(legend.position = "none")
+```
+
+But aggregated (ignoring the confounder), Group Low looks higher — the effect **reverses**:
+
+```{r}
+#| label: simpsons-aggregate
+#| echo: false
+ggplot(simp_df, aes(x = cat2, y = y)) +
+  geom_boxplot(coef = Inf) +
+  geom_jitter(width = 0.1) +
+  labs(x = "Primary variable", y = "Response",
+       title = "Confounder ignored — Simpson's Paradox")
+```
+
+- Group "Low" happens to be over-represented in the "B" level of the confounder — a favorable condition — which inflates its overall mean.
+- **Real-world example**: United Airlines appeared to have worse on-time performance than competitors, but United has a hub at O'Hare, which has frequent weather delays. After controlling for airport, United was competitive.
+- Simpson's paradox is less likely in **randomized experiments**: randomization ensures no group is systematically over- or under-represented at any level of a confounder.
+
+---
+
+# Exercises
+
+**1.** A study compares crop yield under two fertilizer treatments (A and B) across 16
+fields. The researchers also recorded soil quality for each field (Poor vs. Good).
+
+a. Even if the researchers are not interested in the effect of soil quality on yield,
+   why might they include soil quality in the two-way ANOVA model?
+
+b. What would be the consequence of *not* including soil quality if it truly affects yield?
+
+---
+
+**2.** In the 1970s, it was observed that UC Berkeley's graduate school admitted female
+applicants at a lower rate than male applicants overall. But when individual departments
+were examined, female applicants had equal or higher admission rates in every
+department.
+
+a. What statistical phenomenon does this illustrate?
+
+b. Give one explanation for how this pattern could arise.
+
+c. What conclusion is more valid: the overall comparison or the department-by-department
+   comparison? Explain.
+
+---
+
+**3.** A researcher compares two diets (A vs. B) on weight loss and finds that Diet A
+produces greater average weight loss. However, when participants are split by age group
+(Young vs. Old), Diet B produces greater weight loss within both age groups.
+
+a. Name the statistical phenomenon this illustrates.
+
+b. Sketch a scenario in which this outcome is possible. What would the distribution of
+   age groups across diets have to look like?
+
+c. In a randomized controlled trial where participants are randomly assigned to Diet A
+   or Diet B, would this phenomenon be likely? Why or why not?

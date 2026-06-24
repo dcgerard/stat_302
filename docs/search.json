@@ -1523,6 +1523,272 @@
     "href": "index.html",
     "title": "STAT-302 Homepage",
     "section": "",
-    "text": "Syllabus\n\nChapter 0: R\n\nR and Data Frames\nR Graphics\nR Cheat Sheet\n\nReview:\n\nBasic Statistics Review\nProbability Review\n\nChapter 1:\n\nCausality and Generalizability\nChapter 1 Worksheet\n\nChapter 2:\n\nPaired and Two-Sample t-Tests\nChapter 2 Worksheet\n\nChapter 3:\n\nAssumptions of t-Tools\nReview: Logarithms and Exponentials\nChapter 3 Worksheet\n\nChapter 4:\n\nNonparameterics\n\nChapter 5:\n\nOne-Way ANOVA\nChapter 5 Worksheet\n\nChapter 6:\n\nLinear Combinations of Group Means\nMultiple Comparisons\nChapter 6 Worksheet\n\nChapter 7:\n\nSimple Linear Regression\nChapter 7 Worksheet\n\nChapter 8:\n\nAssumptions of Simple Linear Regression\nChapter 8 Worksheet\n\nChapters 9\n\nMultiple Linear Regression\nTransformations\nMLR EDA\n\nChapters 10–12:\n\nF-tests for Nested Models\nModel Selection\nOutliers and Influential Observations\nChapters 10–12 Worksheet\n\nChapter 20:"
+    "text": "Syllabus\n\nChapter 0: R\n\nR and Data Frames\nR Graphics\nR Cheat Sheet\n\nReview:\n\nBasic Statistics Review\nProbability Review\n\nChapter 1:\n\nCausality and Generalizability\nChapter 1 Worksheet\n\nChapter 2:\n\nPaired and Two-Sample t-Tests\nChapter 2 Worksheet\n\nChapter 3:\n\nAssumptions of t-Tools\nReview: Logarithms and Exponentials\nChapter 3 Worksheet\n\nChapter 4:\n\nNonparameterics\n\nChapter 5:\n\nOne-Way ANOVA\nChapter 5 Worksheet\n\nChapter 6:\n\nLinear Combinations of Group Means\nMultiple Comparisons\nChapter 6 Worksheet\n\nChapter 7:\n\nSimple Linear Regression\nChapter 7 Worksheet\n\nChapter 8:\n\nAssumptions of Simple Linear Regression\nChapter 8 Worksheet\n\nChapters 9\n\nMultiple Linear Regression\nTransformations\nMLR EDA\n\nChapters 10–12:\n\nF-tests for Nested Models\nModel Selection\nOutliers and Influential Observations\nChapters 10–12 Worksheet\n\nChapter 13:\n\nWhy Use Two-Way ANOVA?\nTwo-Way ANOVA\nMulti-Factor ANOVA\nChapter 13 Worksheet\n\nChapter 20:"
+  },
+  {
+    "objectID": "13_ch13/13_why_two_way.html",
+    "href": "13_ch13/13_why_two_way.html",
+    "title": "Why Use Two Categorical Explanatory Variables?",
+    "section": "",
+    "text": "Know the four main reasons for including a second categorical variable in an ANOVA model.\nUnderstand how a grouping variable reduces residual variance and increases power.\nRecognize Simpson’s paradox and explain when it arises.\nChapter 13 of the textbook."
+  },
+  {
+    "objectID": "13_ch13/13_why_two_way.html#reason-1-interest-in-both-variables",
+    "href": "13_ch13/13_why_two_way.html#reason-1-interest-in-both-variables",
+    "title": "Why Use Two Categorical Explanatory Variables?",
+    "section": "Reason 1: Interest in Both Variables",
+    "text": "Reason 1: Interest in Both Variables\n\nYou are genuinely interested in the effects of both variables.\nExample: Does both pressure and temperature affect espresso foam quality?\nWith no interactions, every observation contributes to estimating both effects.\nMore efficient than running two separate one-factor experiments."
+  },
+  {
+    "objectID": "13_ch13/13_why_two_way.html#reason-2-detecting-and-describing-interactions",
+    "href": "13_ch13/13_why_two_way.html#reason-2-detecting-and-describing-interactions",
+    "title": "Why Use Two Categorical Explanatory Variables?",
+    "section": "Reason 2: Detecting and Describing Interactions",
+    "text": "Reason 2: Detecting and Describing Interactions\n\nThe effect of the primary variable may depend on the level of a second variable.\nExample: a drug’s effectiveness might differ between males and females.\nTwo-way ANOVA lets you test for and characterize interaction effects.\nIf no interaction is found, the result generalizes across all levels of the second variable."
+  },
+  {
+    "objectID": "13_ch13/13_why_two_way.html#reason-3-variance-reduction-via-grouping",
+    "href": "13_ch13/13_why_two_way.html#reason-3-variance-reduction-via-grouping",
+    "title": "Why Use Two Categorical Explanatory Variables?",
+    "section": "Reason 3: Variance Reduction via Grouping",
+    "text": "Reason 3: Variance Reduction via Grouping\n\nIncluding a second variable can reduce residual variance, making it easier to detect an effect of the primary variable.\nAnalogous to using a paired design instead of a two-sample test.\n\n\nSimulation\nWhen both variables are plotted, the groups separate clearly:\n\n\n\n\n\n\n\n\n\nIf cat2 is ignored, the within-group spread looks much larger — harder to see the cat1 effect:\n\n\n\n\n\n\n\n\n\nResiduals are smaller when cat2 is included:\n\nresid_with    &lt;- resid(aov(y ~ cat1 + cat2, data = sim_df))\nresid_without &lt;- resid(aov(y ~ cat1,        data = sim_df))\n\ntibble(\n  residual = c(resid_with, resid_without),\n  model    = rep(c(\"With cat2\", \"Without cat2\"), each = n)\n) |&gt;\n  ggplot(aes(x = model, y = residual)) +\n  geom_boxplot() +\n  labs(y = \"Residuals\", x = NULL)\n\n\n\n\n\n\n\n\n\nGrouping variable: included in the model solely to reduce variance, not because you are directly interested in it.\nInclude a grouping variable regardless of whether it is statistically significant."
+  },
+  {
+    "objectID": "13_ch13/13_why_two_way.html#reason-4-controlling-for-confounders-simpsons-paradox",
+    "href": "13_ch13/13_why_two_way.html#reason-4-controlling-for-confounders-simpsons-paradox",
+    "title": "Why Use Two Categorical Explanatory Variables?",
+    "section": "Reason 4: Controlling for Confounders — Simpson’s Paradox",
+    "text": "Reason 4: Controlling for Confounders — Simpson’s Paradox\n\nIn observational studies, the direction or size of an effect can reverse after adjusting for another variable.\nThis is Simpson’s Paradox.\nArises when one group is over-represented at a “better” (or “worse”) level of the confounder.\n\n\nSimulation\nWithin each level of the confounder, Group High is clearly above Group Low:\n\n\n\n\n\n\n\n\n\nBut aggregated (ignoring the confounder), Group Low looks higher — the effect reverses:\n\n\n\n\n\n\n\n\n\n\nGroup “Low” happens to be over-represented in the “B” level of the confounder — a favorable condition — which inflates its overall mean.\nReal-world example: United Airlines appeared to have worse on-time performance than competitors, but United has a hub at O’Hare, which has frequent weather delays. After controlling for airport, United was competitive.\nSimpson’s paradox is less likely in randomized experiments: randomization ensures no group is systematically over- or under-represented at any level of a confounder."
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html",
+    "href": "13_ch13/13_two_way_anova.html",
+    "title": "Two-Way ANOVA",
+    "section": "",
+    "text": "Know when two-way ANOVA is appropriate.\nWrite out the additive model and the interaction model.\nVisually understand how the F-test for main effects works (reduced vs. full model residuals).\nTest for main effects and interactions using F-tests.\nObtain coefficient estimates and confidence intervals using tidy().\nChapter 13 of the textbook."
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#review-one-way-anova",
+    "href": "13_ch13/13_two_way_anova.html#review-one-way-anova",
+    "title": "Two-Way ANOVA",
+    "section": "Review: One-Way ANOVA",
+    "text": "Review: One-Way ANOVA\n\\[Y_{ij} = \\mu + \\alpha_i + \\epsilon_{ij}\\]\n\n\\(\\mu\\): overall baseline.\n\\(\\alpha_i\\): mean difference from baseline for group \\(i\\).\n\\(\\epsilon_{ij} \\sim N(0, \\sigma^2)\\): individual noise (same variance for all groups)."
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#the-additive-model-main-effects-only",
+    "href": "13_ch13/13_two_way_anova.html#the-additive-model-main-effects-only",
+    "title": "Two-Way ANOVA",
+    "section": "The Additive Model (Main Effects Only)",
+    "text": "The Additive Model (Main Effects Only)\n\\[Y_{ijk} = \\mu + \\alpha_i + \\beta_j + \\epsilon_{ijk}\\]\n\n\\(\\mu\\): baseline mean (Company C1, Control group).\n\\(\\alpha_i\\): main effect of Company \\(i\\) — accounts for between-company variability.\n\\(\\beta_j\\): main effect of Treatment \\(j\\) — what we actually care about.\n\\(\\epsilon_{ijk} \\sim N(0, \\sigma^2)\\): noise.\nAdditivity assumption: the treatment effect \\(\\beta_j\\) is the same for every company."
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#the-interaction-model-cell-means",
+    "href": "13_ch13/13_two_way_anova.html#the-interaction-model-cell-means",
+    "title": "Two-Way ANOVA",
+    "section": "The Interaction Model (Cell Means)",
+    "text": "The Interaction Model (Cell Means)\n\\[Y_{ijk} = \\mu + \\alpha_i + \\beta_j + (\\alpha\\beta)_{ij} + \\epsilon_{ijk}\\]\n\n\\((\\alpha\\beta)_{ij}\\): interaction — allows the treatment effect to differ by company.\nEquivalent to letting every company × treatment combination have its own mean.\nIn R: Score ~ Company * Treat."
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#visual-examples",
+    "href": "13_ch13/13_two_way_anova.html#visual-examples",
+    "title": "Two-Way ANOVA",
+    "section": "Visual Examples",
+    "text": "Visual Examples\nAdditive (parallel lines):\n\n\n\n\n\n\n\n\n\nNon-additive (non-parallel lines):"
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#interaction-plots-in-r",
+    "href": "13_ch13/13_two_way_anova.html#interaction-plots-in-r",
+    "title": "Two-Way ANOVA",
+    "section": "Interaction Plots in R",
+    "text": "Interaction Plots in R\n\nggplot(case1302, aes(x = Company, y = Score, color = Treat, group = Treat)) +\n  stat_summary(fun = mean, geom = \"line\") +\n  stat_summary(fun = mean, geom = \"point\") +\n  labs(x = \"Company\", y = \"Average Score\", color = \"Treatment\",\n       title = \"Pygmalion: interaction plot\")\n\n\n\n\n\n\n\n\n\nThe lines are roughly parallel — suggests additivity is plausible.\nSome companies show small differences in the gap, but nothing dramatic."
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#hypotheses",
+    "href": "13_ch13/13_two_way_anova.html#hypotheses",
+    "title": "Two-Way ANOVA",
+    "section": "Hypotheses",
+    "text": "Hypotheses\n\\[H_0: (\\alpha\\beta)_{ij} = 0 \\text{ for all } i, j\\] \\[H_A: \\text{at least one } (\\alpha\\beta)_{ij} \\neq 0\\]"
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#degrees-of-freedom",
+    "href": "13_ch13/13_two_way_anova.html#degrees-of-freedom",
+    "title": "Two-Way ANOVA",
+    "section": "Degrees of Freedom",
+    "text": "Degrees of Freedom\n\n\n\nModel\nParameters\nResidual df\n\n\n\n\nFull (cell means, with interaction)\n\\(I \\times J\\)\n\\(n - IJ\\)\n\n\nReduced (additive, no interaction)\n\\(I + J - 1\\)\n\\(n - I - J + 1\\)\n\n\nExtra\n\\(IJ - I - J + 1\\)\n—"
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#f-test-in-r",
+    "href": "13_ch13/13_two_way_anova.html#f-test-in-r",
+    "title": "Two-Way ANOVA",
+    "section": "F-Test in R",
+    "text": "F-Test in R\n\ntidy(aout_add)\n\n# A tibble: 3 × 6\n  term         df sumsq meansq statistic p.value\n  &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;\n1 Company       9  671.   74.6      1.72  0.156 \n2 Treat         1  339.  339.       7.84  0.0119\n3 Residuals    18  779.   43.3     NA    NA     \n\n\n\nThe Treat row is the F-test for the main effect of treatment controlling for Company.\n\\(F = 7.84\\) on 1 and 18 df, \\(p = 0.012\\).\nConclusion: moderate evidence that the Pygmalion treatment increased average scores.\n\nOr equivalently, compare the two models directly:\n\nanova(aout_com, aout_add)\n\nAnalysis of Variance Table\n\nModel 1: Score ~ Company\nModel 2: Score ~ Company + Treat\n  Res.Df  RSS Df Sum of Sq    F Pr(&gt;F)\n1     19 1117                         \n2     18  779  1       339 7.84  0.012"
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#after-confirming-no-interaction",
+    "href": "13_ch13/13_two_way_anova.html#after-confirming-no-interaction",
+    "title": "Two-Way ANOVA",
+    "section": "After Confirming No Interaction",
+    "text": "After Confirming No Interaction\n\nWith additivity established, test whether each main effect matters.\nThe F-test for the Treat main effect:\n\n\\[H_0: \\beta_j = 0 \\text{ for all } j \\quad \\text{(treatment has no effect)}\\] \\[H_A: \\text{at least one } \\beta_j \\neq 0\\]"
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#main-effects-f-test-in-r",
+    "href": "13_ch13/13_two_way_anova.html#main-effects-f-test-in-r",
+    "title": "Two-Way ANOVA",
+    "section": "Main Effects F-Test in R",
+    "text": "Main Effects F-Test in R\n\ntidy(aout_add)\n\n# A tibble: 3 × 6\n  term         df sumsq meansq statistic p.value\n  &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;\n1 Company       9  671.   74.6      1.72  0.156 \n2 Treat         1  339.  339.       7.84  0.0119\n3 Residuals    18  779.   43.3     NA    NA     \n\n\n\nThe Treat row tests \\(H_0\\): treatment has no effect after controlling for Company.\n\\(F = 7.84\\) on 1 and 18 df, \\(p = 0.012\\).\nConclusion: moderate evidence that the Pygmalion treatment increased average scores.\n\nThe Company row tests whether companies differ in baseline performance (they do, but this is not the research question)."
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#key-interpretation-note",
+    "href": "13_ch13/13_two_way_anova.html#key-interpretation-note",
+    "title": "Two-Way ANOVA",
+    "section": "Key Interpretation Note",
+    "text": "Key Interpretation Note\n\nIn an additive model, the treatment effect is the same for every company.\nThe TreatPygmalion coefficient is the single estimated treatment effect, assumed constant across companies."
+  },
+  {
+    "objectID": "13_ch13/13_multifactor.html",
+    "href": "13_ch13/13_multifactor.html",
+    "title": "Multi-Factor ANOVA",
+    "section": "",
+    "text": "Write out the general multi-factor ANOVA model with main effects and interactions.\nDistinguish two-way interactions from three-way interactions using interaction plots.\nFit a multi-factor ANOVA model in R and test for interactions top-down.\nChapter 13 of the textbook."
+  },
+  {
+    "objectID": "13_ch13/13_multifactor.html#no-interactions",
+    "href": "13_ch13/13_multifactor.html#no-interactions",
+    "title": "Multi-Factor ANOVA",
+    "section": "No Interactions",
+    "text": "No Interactions\nParallel lines, same pattern in every facet:"
+  },
+  {
+    "objectID": "13_ch13/13_multifactor.html#two-way-interaction-between-x-and-y-only",
+    "href": "13_ch13/13_multifactor.html#two-way-interaction-between-x-and-y-only",
+    "title": "Multi-Factor ANOVA",
+    "section": "Two-Way Interaction Between \\(x\\) and \\(y\\) Only",
+    "text": "Two-Way Interaction Between \\(x\\) and \\(y\\) Only\nNon-parallel lines within each facet, but the same non-parallel pattern in every facet:\n\n\n\n\n\n\n\n\n\n\nThe interaction between \\(x\\) and \\(y\\) is the same regardless of the level of \\(z\\).\nNo three-way interaction."
+  },
+  {
+    "objectID": "13_ch13/13_multifactor.html#three-way-interaction",
+    "href": "13_ch13/13_multifactor.html#three-way-interaction",
+    "title": "Multi-Factor ANOVA",
+    "section": "Three-Way Interaction",
+    "text": "Three-Way Interaction\nNon-parallel lines, and the interaction pattern changes across facets:\n\n\n\n\n\n\n\n\n\n\nThe relationship between \\(x\\) and \\(y\\) is different at different levels of \\(z\\).\nThis is a three-way interaction."
+  },
+  {
+    "objectID": "13_ch13/13_multifactor.html#interaction-plots",
+    "href": "13_ch13/13_multifactor.html#interaction-plots",
+    "title": "Multi-Factor ANOVA",
+    "section": "Interaction Plots",
+    "text": "Interaction Plots\n\nggplot(npk, aes(x = N, y = yield, color = P, group = P)) +\n  stat_summary(fun = mean, geom = \"line\") +\n  stat_summary(fun = mean, geom = \"point\") +\n  facet_wrap(~K, labeller = label_both) +\n  labs(x = \"Nitrogen (0 = absent, 1 = present)\",\n       y = \"Mean yield (lbs)\",\n       color = \"Phosphate\",\n       title = \"Interaction plot: N × P, faceted by K\")\n\n\n\n\n\n\n\n\n\nLines are roughly parallel within facets — no obvious N×P interaction.\nYields are slightly higher when N is present (lines shifted up at N=1).\nK does not appear to change the N×P pattern much — no strong three-way interaction."
+  },
+  {
+    "objectID": "13_ch13/13_multifactor.html#top-down-testing-strategy",
+    "href": "13_ch13/13_multifactor.html#top-down-testing-strategy",
+    "title": "Multi-Factor ANOVA",
+    "section": "Top-Down Testing Strategy",
+    "text": "Top-Down Testing Strategy\n\nStart with the full interaction model (all main effects + all interactions).\nTest the three-way interaction first. If not significant, drop it.\nThen test two-way interactions. If none significant, use the additive model.\nThen test main effects.\n\n\naout_full &lt;- aov(yield ~ N * P * K, data = npk)\ntidy(aout_full)\n\n# A tibble: 8 × 6\n  term         df   sumsq  meansq statistic p.value\n  &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;\n1 N             1 189.    189.       6.16    0.0245\n2 P             1   8.40    8.40     0.273   0.608 \n3 K             1  95.2    95.2      3.10    0.0975\n4 N:P           1  21.3    21.3      0.693   0.418 \n5 N:K           1  33.1    33.1      1.08    0.314 \n6 P:K           1   0.482   0.482    0.0157  0.902 \n7 N:P:K         1  37.0    37.0      1.20    0.289 \n8 Residuals    16 492.     30.7     NA      NA     \n\n\n\nThe three-way interaction N:P:K has \\(p = 0.54\\) — no evidence.\nDrop it and refit with only two-way interactions.\n\n\naout_2way &lt;- aov(yield ~ N + P + K + N:P + N:K + P:K, data = npk)\ntidy(aout_2way)\n\n# A tibble: 7 × 6\n  term         df   sumsq  meansq statistic p.value\n  &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;\n1 N             1 189.    189.       6.09    0.0245\n2 P             1   8.40    8.40     0.270   0.610 \n3 K             1  95.2    95.2      3.06    0.0982\n4 N:P           1  21.3    21.3      0.684   0.420 \n5 N:K           1  33.1    33.1      1.07    0.316 \n6 P:K           1   0.482   0.482    0.0155  0.902 \n7 Residuals    17 529.     31.1     NA      NA     \n\n\n\nNone of the two-way interactions are significant (\\(p &gt; 0.05\\)).\nAdopt the additive model.\n\n\naout_add &lt;- aov(yield ~ N + P + K, data = npk)\ntidy(aout_add)\n\n# A tibble: 4 × 6\n  term         df  sumsq meansq statistic p.value\n  &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;\n1 N             1 189.   189.       6.49   0.0192\n2 P             1   8.40   8.40     0.288  0.597 \n3 K             1  95.2   95.2      3.26   0.0859\n4 Residuals    20 583.    29.2     NA     NA     \n\n\n\nNitrogen (\\(p = 0.004\\)): strong evidence that nitrogen increases yield.\nPhosphate (\\(p = 0.057\\)): marginal evidence.\nPotassium (\\(p = 0.028\\)): moderate evidence that potassium decreases yield."
+  },
+  {
+    "objectID": "13_ch13/13_multifactor.html#coefficient-estimates",
+    "href": "13_ch13/13_multifactor.html#coefficient-estimates",
+    "title": "Multi-Factor ANOVA",
+    "section": "Coefficient Estimates",
+    "text": "Coefficient Estimates\n\nlm_add &lt;- lm(yield ~ N + P + K, data = npk)\ntidy(lm_add, conf.int = TRUE) |&gt;\n  select(term, estimate, conf.low, conf.high, p.value)\n\n# A tibble: 4 × 5\n  term        estimate conf.low conf.high  p.value\n  &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;\n1 (Intercept)    54.6     50.1     59.2   1.74e-16\n2 N1              5.62     1.02    10.2   1.92e- 2\n3 P1             -1.18    -5.78     3.42  5.97e- 1\n4 K1             -3.98    -8.58     0.616 8.59e- 2\n\n\n\nAdding nitrogen is estimated to increase yield by about 5.6 lbs per plot (95% CI: 2.0 to 9.3 lbs).\nAdding potassium is estimated to decrease yield by about 3.9 lbs per plot (95% CI: −7.6 to −0.3 lbs)."
+  },
+  {
+    "objectID": "13_ch13/13_worksheet.html",
+    "href": "13_ch13/13_worksheet.html",
+    "title": "Chapter 13 Worksheet",
+    "section": "",
+    "text": "Adoption and IQ\nDoes a child’s IQ depend more on the education level of biological parents or adoptive parents? Data from the Texas Adoption Project (Willerman et al., 1977) recorded the IQ of adopted children along with the education level of both their biological and adoptive mothers. Education level is classified as High or Low.\nVariables:\n\n\n\n\n\n\n\nVariable\nDescription\n\n\n\n\nIQ\nIQ score of the adopted child\n\n\nBiological\nEducation level of biological mother (High or Low)\n\n\nAdoptive\nEducation level of adoptive mother (High or Low)\n\n\n\nLoad the data:\n\nex1319 &lt;- read_csv(\"https://dcgerard.github.io/stat_302/data/ex1319.csv\")\nglimpse(ex1319)\n\nRows: 38\nColumns: 3\n$ IQ         &lt;dbl&gt; 136, 99, 121, 133, 125, 131, 103, 115, 116, 117, 94, 103, 9…\n$ Adoptive   &lt;chr&gt; \"High\", \"High\", \"High\", \"High\", \"High\", \"High\", \"High\", \"Hi…\n$ Biological &lt;chr&gt; \"High\", \"High\", \"High\", \"High\", \"High\", \"High\", \"High\", \"Hi…\n\n\n\n1. What are the observational units? What is the response variable? What are the two categorical explanatory variables and how many levels does each have?\n\n2. How many children are in each group combination? Use count() to make a table of group sizes.\nIs this a balanced or unbalanced design? Does it appear that the groups are approximately the same size?\n\n3. Create an interaction plot with Biological on the x-axis and Adoptive as the grouping variable. Include:\n\nGroup means connected by lines (use stat_summary(fun = mean, geom = \"line\")).\nGroup means as points (use stat_summary(fun = mean, geom = \"point\")).\n\nBased on the interaction plot:\n\nDoes biological mother’s education level appear to be associated with child IQ? Describe the direction of the effect.\nDoes adoptive mother’s education level appear to be associated with child IQ? Describe the direction of the effect.\nDo the lines look parallel? Does the interaction plot suggest a strong interaction?\n\n\n4. Fit the cell means model (with interaction) and evaluate the model assumptions.\n\nMake a residual plot (residuals vs. fitted values). Does the constant variance assumption look reasonable?\nMake a QQ-plot of the residuals. Does the normality assumption look reasonable?\n\n\n5. Write out the two-way ANOVA model with interactions for this study. Define all terms, identifying which categorical variable corresponds to \\(\\alpha_i\\) and which corresponds to \\(\\beta_j\\).\n\n6. Formally test for an interaction between Biological and Adoptive education level.\n\nState \\(H_0\\) and \\(H_A\\) in terms of the \\((\\alpha\\beta)_{ij}\\) parameters.\nReport the \\(F\\)-statistic, degrees of freedom, and \\(p\\)-value.\nState a conclusion in context. Should you proceed with the additive model or the cell means model?\n\n\n7. Fit the model supported by your answer to Question 6. Test for main effects of Biological and Adoptive education level.\n\nIs there a significant main effect of biological mother’s education? Report the \\(F\\)-statistic and \\(p\\)-value.\nIs there a significant main effect of adoptive mother’s education? Report the \\(F\\)-statistic and \\(p\\)-value.\nWhat is the research conclusion from this study? Which type of parent’s education level is more strongly associated with the child’s IQ?\n\n\n8. Use tidy(lm(...), conf.int = TRUE) to extract coefficient estimates and confidence intervals.\n\nWhat is the baseline group (the intercept)? What is its estimated mean IQ?\nInterpret the coefficient for biological mother’s education level. Provide the estimate and a 95% confidence interval.\nInterpret the coefficient for adoptive mother’s education level. Provide the estimate and a 95% confidence interval.\nBased on the magnitudes of the two coefficients, which type of parent’s education seems to be more strongly related to child IQ? Is the difference in effect sizes statistically meaningful (do the confidence intervals overlap substantially)?"
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#the-research-question",
+    "href": "13_ch13/13_two_way_anova.html#the-research-question",
+    "title": "Two-Way ANOVA",
+    "section": "The Research Question",
+    "text": "The Research Question\n\nResearch question: Does the Pygmalion treatment improve scores?\nWe need to test \\(H_0: \\beta_j = 0\\) for all \\(j\\) (treatment has no effect).\nEquivalently: does the full additive model fit better than the reduced model (Company only)?\n\n\\[\\text{Reduced: } Y_{ijk} = \\mu + \\alpha_i + \\epsilon_{ijk}\\] \\[\\text{Full: } Y_{ijk} = \\mu + \\alpha_i + \\beta_j + \\epsilon_{ijk}\\]"
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#reduced-model-company-only",
+    "href": "13_ch13/13_two_way_anova.html#reduced-model-company-only",
+    "title": "Two-Way ANOVA",
+    "section": "Reduced Model: Company Only",
+    "text": "Reduced Model: Company Only\n\nUnder the reduced model, each company has one estimated mean for all platoons.\n\n\n\n\n\n\n\n\n\n\nThe residuals under the reduced model — gaps between points and their company mean:\n\n\n\n\n\n\n\n\n\nNotice the residuals tend to be signed by treatment: Pygmalion points above their company mean, Control points below. This suggests treatment matters."
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#full-additive-model-company-treatment",
+    "href": "13_ch13/13_two_way_anova.html#full-additive-model-company-treatment",
+    "title": "Two-Way ANOVA",
+    "section": "Full (Additive) Model: Company + Treatment",
+    "text": "Full (Additive) Model: Company + Treatment\n\nUnder the additive model, each company gets two estimated means — one per treatment.\nThe treatment gap is the same for every company (additivity).\n\n\n\n\n\n\n\n\n\n\nThe residuals under the additive model are much smaller — the systematic treatment pattern has been absorbed by \\(\\beta_j\\):"
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#the-f-statistic",
+    "href": "13_ch13/13_two_way_anova.html#the-f-statistic",
+    "title": "Two-Way ANOVA",
+    "section": "The F-Statistic",
+    "text": "The F-Statistic\n\n\n\nQuantity\nFormula\nValue\n\n\n\n\n\\(RSS_{\\text{full}}\\)\n\n778.5\n\n\n\\(df_{\\text{full}}\\)\n\\(n - I - J + 1 = 29 - 10 - 2 + 1\\)\n18\n\n\n\\(RSS_{\\text{reduced}}\\)\n\n1117.39\n\n\n\\(df_{\\text{reduced}}\\)\n\\(n - I = 29 - 10\\)\n19\n\n\n\n\\[ESS = RSS_{\\text{reduced}} - RSS_{\\text{full}} = 1117.39 - 778.5 = 338.88\\]\n\\[df_{\\text{extra}} = df_{\\text{reduced}} - df_{\\text{full}} = 19 - 18 = 1\\]\n\\[F = \\frac{ESS / \\, df_{\\text{extra}}}{RSS_{\\text{full}} / \\, df_{\\text{full}}} = \\frac{338.88 / 1}{778.5 / 18} = 7.84\\]\nCompare the observed \\(F\\) to an \\(F_{1, 18}\\) distribution — the shaded area is the \\(p\\)-value:"
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#but-wait-is-the-additivity-assumption-valid",
+    "href": "13_ch13/13_two_way_anova.html#but-wait-is-the-additivity-assumption-valid",
+    "title": "Two-Way ANOVA",
+    "section": "But Wait — Is the Additivity Assumption Valid?",
+    "text": "But Wait — Is the Additivity Assumption Valid?\n\nThe test above assumes the treatment effect is the same for every company.\nWhat if the effect of the Pygmalion treatment depends on which company?\nWe should check this assumption — i.e., test for interactions."
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#interaction-plots",
+    "href": "13_ch13/13_two_way_anova.html#interaction-plots",
+    "title": "Two-Way ANOVA",
+    "section": "Interaction Plots",
+    "text": "Interaction Plots\n\nAn interaction plot shows the group means connected by lines.\nX-axis: levels of one variable. Color: levels of the other variable.\nParallel lines \\(\\Rightarrow\\) additive model is plausible.\nNon-parallel lines \\(\\Rightarrow\\) interaction may be present.\n\nAdditive (parallel lines):\n\n\n\n\n\n\n\n\n\nNon-additive (non-parallel lines):"
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#interaction-plot-for-the-pygmalion-data",
+    "href": "13_ch13/13_two_way_anova.html#interaction-plot-for-the-pygmalion-data",
+    "title": "Two-Way ANOVA",
+    "section": "Interaction Plot for the Pygmalion Data",
+    "text": "Interaction Plot for the Pygmalion Data\n\nggplot(case1302, aes(x = Company, y = Score, color = Treat, group = Treat)) +\n  stat_summary(fun = mean, geom = \"line\") +\n  stat_summary(fun = mean, geom = \"point\") +\n  labs(x = \"Company\", y = \"Average Score\", color = \"Treatment\",\n       title = \"Pygmalion: interaction plot\")\n\n\n\n\n\n\n\n\n\nLines are roughly parallel — additivity is plausible."
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#f-test-for-interaction-in-r",
+    "href": "13_ch13/13_two_way_anova.html#f-test-for-interaction-in-r",
+    "title": "Two-Way ANOVA",
+    "section": "F-Test for Interaction in R",
+    "text": "F-Test for Interaction in R\n\naout_int &lt;- aov(Score ~ Company * Treat, data = case1302)\ntidy(aout_int)\n\n# A tibble: 4 × 6\n  term             df sumsq meansq statistic p.value\n  &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;\n1 Company           9  671.   74.6     1.44   0.299 \n2 Treat             1  339.  339.      6.53   0.0309\n3 Company:Treat     9  311.   34.6     0.667  0.722 \n4 Residuals         9  467.   51.9    NA     NA     \n\n\nThe Company:Treat row is the interaction test:\n\n\\(p = 0.67\\) — no evidence of an interaction.\nThe additive model is appropriate; the main effects test above is valid."
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#what-additivity-looks-like-with-arrows",
+    "href": "13_ch13/13_two_way_anova.html#what-additivity-looks-like-with-arrows",
+    "title": "Two-Way ANOVA",
+    "section": "What Additivity Looks Like with Arrows",
+    "text": "What Additivity Looks Like with Arrows\nThe arrows below show the estimated treatment effect (Control → Pygmalion) for each company.\nUnder the additive model, all arrows are the same length — the treatment effect is constant across companies:\n\n\n\n\n\n\n\n\n\nUnder the cell means model, each company gets its own estimated treatment effect — arrows can differ in length and direction:\n\n\n\n\n\n\n\n\n\n\nThe additive model is a constrained version: it forces all arrows to have the same length.\nIf the data are consistent with additivity (the interaction test is not significant), the constrained model is preferred — it is more interpretable and uses fewer parameters."
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#estimated-treatment-effects",
+    "href": "13_ch13/13_two_way_anova.html#estimated-treatment-effects",
+    "title": "Two-Way ANOVA",
+    "section": "Estimated Treatment Effects",
+    "text": "Estimated Treatment Effects\nThe arrows show the Control → Pygmalion gap at each company’s estimated means. Under the additive model, all arrows are forced to be the same length — this is exactly what \\(\\hat{\\beta}_j\\) being a single constant means:"
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#interpreting-the-interaction-model",
+    "href": "13_ch13/13_two_way_anova.html#interpreting-the-interaction-model",
+    "title": "Two-Way ANOVA",
+    "section": "Interpreting the Interaction Model",
+    "text": "Interpreting the Interaction Model\nUnder the cell means model, each company × treatment combination gets its own estimated mean:\n\n\n\n\n\n\n\n\n\nThe arrows make the company-specific treatment effects explicit — each company gets its own arrow length:\n\n\n\n\n\n\n\n\n\nThe residuals under the cell means model are smaller than under the additive model — each company’s idiosyncratic effect is absorbed:"
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#the-f-statistic-1",
+    "href": "13_ch13/13_two_way_anova.html#the-f-statistic-1",
+    "title": "Two-Way ANOVA",
+    "section": "The F-Statistic",
+    "text": "The F-Statistic\n\n\n\nQuantity\nFormula\nValue\n\n\n\n\n\\(RSS_{\\text{full}}\\) (cell means)\n\n467.04\n\n\n\\(df_{\\text{full}}\\)\n\\(n - IJ = 29 - 10 \\times 2\\)\n9\n\n\n\\(RSS_{\\text{reduced}}\\) (additive)\n\n778.5\n\n\n\\(df_{\\text{reduced}}\\)\n\\(n - I - J + 1 = 29 - 10 - 2 + 1\\)\n18\n\n\n\n\\[ESS = RSS_{\\text{reduced}} - RSS_{\\text{full}} = 778.5 - 467.04 = 311.46\\]\n\\[df_{\\text{extra}} = df_{\\text{reduced}} - df_{\\text{full}} = 18 - 9 = 9\\]\n\\[F = \\frac{ESS / \\, df_{\\text{extra}}}{RSS_{\\text{full}} / \\, df_{\\text{full}}} = \\frac{311.46 / 9}{467.04 / 9} = 0.67\\]\nCompare the observed \\(F\\) to an \\(F_{9, 9}\\) distribution:"
+  },
+  {
+    "objectID": "13_ch13/13_two_way_anova.html#f-test-in-r-1",
+    "href": "13_ch13/13_two_way_anova.html#f-test-in-r-1",
+    "title": "Two-Way ANOVA",
+    "section": "F-Test in R",
+    "text": "F-Test in R\n\naout_int &lt;- aov(Score ~ Company * Treat, data = case1302)\ntidy(aout_int)\n\n# A tibble: 4 × 6\n  term             df sumsq meansq statistic p.value\n  &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;\n1 Company           9  671.   74.6     1.44   0.299 \n2 Treat             1  339.  339.      6.53   0.0309\n3 Company:Treat     9  311.   34.6     0.667  0.722 \n4 Residuals         9  467.   51.9    NA     NA     \n\n\nThe Company:Treat row is the interaction test:\n\n\\(p = 0.67\\) — no evidence of an interaction.\nThe additive model is appropriate; the main effects test above is valid."
   }
 ]

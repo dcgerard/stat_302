@@ -46,4 +46,9 @@ author: David Gerard
   - [Model Selection](./12_modeling/12_model_selection.qmd)
   - [Outliers and Influential Observations](./12_modeling/12_outliers.qmd)
   - [Chapters 10–12 Worksheet](./12_modeling/12_worksheet.qmd)
+- Chapter 13:
+  - [Why Use Two-Way ANOVA?](./13_ch13/13_why_two_way.qmd)
+  - [Two-Way ANOVA](./13_ch13/13_two_way_anova.qmd)
+  - [Multi-Factor ANOVA](./13_ch13/13_multifactor.qmd)
+  - [Chapter 13 Worksheet](./13_ch13/13_worksheet.qmd)
 - Chapter 20:

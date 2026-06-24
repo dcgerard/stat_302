@@ -1,0 +1,154 @@
+---
+title: "Chapter 13 Worksheet"
+author: "David Gerard"
+date: today
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+library(broom)
+knitr::opts_chunk$set(echo       = TRUE,
+                      eval       = FALSE,
+                      fig.height = 3,
+                      fig.width  = 5,
+                      fig.align  = "center")
+ggplot2::theme_set(ggplot2::theme_bw())
+```
+
+# Adoption and IQ
+
+Does a child's IQ depend more on the education level of biological parents or adoptive parents?
+Data from the Texas Adoption Project (Willerman et al., 1977) recorded the IQ of adopted children along with the education level of both their biological and adoptive mothers. Education level is classified as High or Low.
+
+Variables:
+
+| Variable | Description |
+|:--|:--|
+| `IQ` | IQ score of the adopted child |
+| `Biological` | Education level of biological mother (`High` or `Low`) |
+| `Adoptive` | Education level of adoptive mother (`High` or `Low`) |
+
+Load the data:
+
+```{r}
+#| label: load-data
+#| eval: true
+#| message: false
+ex1319 <- read_csv("https://dcgerard.github.io/stat_302/data/ex1319.csv")
+glimpse(ex1319)
+```
+
+---
+
+**1.** What are the observational units? What is the response variable? What are the two
+categorical explanatory variables and how many levels does each have?
+
+---
+
+**2.** How many children are in each group combination? Use `count()` to make a table of
+group sizes.
+
+```{r}
+
+```
+
+Is this a balanced or unbalanced design? Does it appear that the groups are
+approximately the same size?
+
+---
+
+**3.** Create an interaction plot with `Biological` on the x-axis and `Adoptive` as the
+grouping variable. Include:
+
+- Group means connected by lines (use `stat_summary(fun = mean, geom = "line")`).
+- Group means as points (use `stat_summary(fun = mean, geom = "point")`).
+
+```{r}
+
+```
+
+Based on the interaction plot:
+
+a. Does biological mother's education level appear to be associated with child IQ?
+   Describe the direction of the effect.
+
+b. Does adoptive mother's education level appear to be associated with child IQ?
+   Describe the direction of the effect.
+
+c. Do the lines look parallel? Does the interaction plot suggest a strong interaction?
+
+---
+
+**4.** Fit the cell means model (with interaction) and evaluate the model assumptions.
+
+```{r}
+
+```
+
+a. Make a residual plot (residuals vs. fitted values). Does the constant variance
+   assumption look reasonable?
+
+b. Make a QQ-plot of the residuals. Does the normality assumption look reasonable?
+
+---
+
+**5.** Write out the two-way ANOVA model with interactions for this study. Define all
+terms, identifying which categorical variable corresponds to $\alpha_i$ and which
+corresponds to $\beta_j$.
+
+---
+
+**6.** Formally test for an interaction between `Biological` and `Adoptive` education
+level.
+
+```{r}
+
+```
+
+a. State $H_0$ and $H_A$ in terms of the $(\alpha\beta)_{ij}$ parameters.
+
+b. Report the $F$-statistic, degrees of freedom, and $p$-value.
+
+c. State a conclusion in context. Should you proceed with the additive model or the
+   cell means model?
+
+---
+
+**7.** Fit the model supported by your answer to Question 6. Test for main effects of
+`Biological` and `Adoptive` education level.
+
+```{r}
+
+```
+
+a. Is there a significant main effect of biological mother's education? Report the
+   $F$-statistic and $p$-value.
+
+b. Is there a significant main effect of adoptive mother's education? Report the
+   $F$-statistic and $p$-value.
+
+c. What is the research conclusion from this study? Which type of parent's education
+   level is more strongly associated with the child's IQ?
+
+---
+
+**8.** Use `tidy(lm(...), conf.int = TRUE)` to extract coefficient estimates and
+confidence intervals.
+
+```{r}
+
+```
+
+a. What is the baseline group (the intercept)? What is its estimated mean IQ?
+
+b. Interpret the coefficient for biological mother's education level. Provide the
+   estimate and a 95% confidence interval.
+
+c. Interpret the coefficient for adoptive mother's education level. Provide the
+   estimate and a 95% confidence interval.
+
+d. Based on the magnitudes of the two coefficients, which type of parent's education
+   seems to be more strongly related to child IQ? Is the difference in effect sizes
+   statistically meaningful (do the confidence intervals overlap substantially)?

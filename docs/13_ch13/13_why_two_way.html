@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
+<meta name="dcterms.date" content="2026-06-24">
 
-<title>STAT-302 Homepage – Stat 302: Intermediate Statistics</title>
+<title>Why Use Two Categorical Explanatory Variables? – Stat 302: Intermediate Statistics</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -24,28 +25,63 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-33269adcf1721b81efc5ea7fcfe7f0ee.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-33269adcf1721b81efc5ea7fcfe7f0ee.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
 <script id="quarto-axe-checker-options" type="text/plain">dHJ1ZQ==</script>
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-0e01d36e12aedd38e6bb7bd9a7358603.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-0e01d36e12aedd38e6bb7bd9a7358603.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -75,7 +111,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -85,7 +121,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Stat 302: Intermediate Statistics</span>
     </a>
   </div>
@@ -96,11 +132,11 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./data.html"> 
+    <a class="nav-link" href="../data.html"> 
 <span class="menu-text">Data</span></a>
   </li>  
 </ul>
@@ -114,15 +150,35 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#four-reasons" id="toc-four-reasons" class="nav-link" data-scroll-target="#four-reasons">Four Reasons</a>
+  <ul class="collapse">
+  <li><a href="#reason-1-interest-in-both-variables" id="toc-reason-1-interest-in-both-variables" class="nav-link" data-scroll-target="#reason-1-interest-in-both-variables">Reason 1: Interest in Both Variables</a></li>
+  <li><a href="#reason-2-detecting-and-describing-interactions" id="toc-reason-2-detecting-and-describing-interactions" class="nav-link" data-scroll-target="#reason-2-detecting-and-describing-interactions">Reason 2: Detecting and Describing Interactions</a></li>
+  <li><a href="#reason-3-variance-reduction-via-grouping" id="toc-reason-3-variance-reduction-via-grouping" class="nav-link" data-scroll-target="#reason-3-variance-reduction-via-grouping">Reason 3: Variance Reduction via Grouping</a>
+  <ul class="collapse">
+  <li><a href="#simulation" id="toc-simulation" class="nav-link" data-scroll-target="#simulation">Simulation</a></li>
+  </ul></li>
+  <li><a href="#reason-4-controlling-for-confounders-simpsons-paradox" id="toc-reason-4-controlling-for-confounders-simpsons-paradox" class="nav-link" data-scroll-target="#reason-4-controlling-for-confounders-simpsons-paradox">Reason 4: Controlling for Confounders — Simpson’s Paradox</a>
+  <ul class="collapse">
+  <li><a href="#simulation-1" id="toc-simulation-1" class="nav-link" data-scroll-target="#simulation-1">Simulation</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">STAT-302 Homepage</h1>
+<h1 class="title">Why Use Two Categorical Explanatory Variables?</h1>
 </div>
 
 
@@ -136,6 +192,12 @@ ul.task-list li input[type="checkbox"] {
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 24, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -145,84 +207,153 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><a href="./syllabus.html">Syllabus</a></p>
+<section id="learning-objectives" class="level1">
+<h1>Learning Objectives</h1>
 <ul>
-<li>Chapter 0: R
-<ul>
-<li><a href="./01_r/01_r_intro.html">R and Data Frames</a></li>
-<li><a href="./01_r/01_ggplot.html">R Graphics</a></li>
-<li><a href="./01_r/01_r_cheatsheet.html">R Cheat Sheet</a></li>
-</ul></li>
-<li>Review:
-<ul>
-<li><a href="./02_review/02_stat_202_review.html">Basic Statistics Review</a></li>
-<li><a href="./02_review/02_prob_review.html">Probability Review</a></li>
-</ul></li>
-<li>Chapter 1:
-<ul>
-<li><a href="./03_ch1/03_ch1.html">Causality and Generalizability</a></li>
-<li><a href="./03_ch1/03_worksheet.html">Chapter 1 Worksheet</a></li>
-</ul></li>
-<li>Chapter 2:
-<ul>
-<li><a href="./04_ch2/04_ch2.html">Paired and Two-Sample t-Tests</a></li>
-<li><a href="./04_ch2/04_worksheet.html">Chapter 2 Worksheet</a></li>
-</ul></li>
-<li>Chapter 3:
-<ul>
-<li><a href="./05_ch3/05_ch3.html">Assumptions of t-Tools</a></li>
-<li><a href="./05_ch3/05_log_review.html">Review: Logarithms and Exponentials</a></li>
-<li><a href="./05_ch3/05_worksheet.html">Chapter 3 Worksheet</a></li>
-</ul></li>
-<li>Chapter 4:
-<ul>
-<li>Nonparameterics</li>
-</ul></li>
-<li>Chapter 5:
-<ul>
-<li><a href="./07_ch5/07_ch5.html">One-Way ANOVA</a></li>
-<li><a href="./07_ch5/07_worksheet.html">Chapter 5 Worksheet</a></li>
-</ul></li>
-<li>Chapter 6:
-<ul>
-<li><a href="./08_ch6/08_linear_combos.html">Linear Combinations of Group Means</a></li>
-<li><a href="./08_ch6/08_multiple_comparisons.html">Multiple Comparisons</a></li>
-<li><a href="./08_ch6/08_worksheet.html">Chapter 6 Worksheet</a></li>
-</ul></li>
-<li>Chapter 7:
-<ul>
-<li><a href="./09_ch7/09_ch7.html">Simple Linear Regression</a></li>
-<li><a href="./09_ch7/09_worksheet.html">Chapter 7 Worksheet</a></li>
-</ul></li>
-<li>Chapter 8:
-<ul>
-<li><a href="./10_ch8/10_ch8.html">Assumptions of Simple Linear Regression</a></li>
-<li><a href="./10_ch8/10_worksheet.html">Chapter 8 Worksheet</a></li>
-</ul></li>
-<li>Chapters 9
-<ul>
-<li><a href="./11_ch9/11_multiple_regression.html">Multiple Linear Regression</a></li>
-<li><a href="./11_ch9/11_limitless_possibilities.html">Transformations</a></li>
-<li><a href="./11_ch9/11_multiple_regression_eda.html">MLR EDA</a></li>
-</ul></li>
-<li>Chapters 10–12:
-<ul>
-<li><a href="./12_modeling/12_f_tests.html">F-tests for Nested Models</a></li>
-<li><a href="./12_modeling/12_model_selection.html">Model Selection</a></li>
-<li><a href="./12_modeling/12_outliers.html">Outliers and Influential Observations</a></li>
-<li><a href="./12_modeling/12_worksheet.html">Chapters 10–12 Worksheet</a></li>
-</ul></li>
-<li>Chapter 13:
-<ul>
-<li><a href="./13_ch13/13_why_two_way.html">Why Use Two-Way ANOVA?</a></li>
-<li><a href="./13_ch13/13_two_way_anova.html">Two-Way ANOVA</a></li>
-<li><a href="./13_ch13/13_multifactor.html">Multi-Factor ANOVA</a></li>
-<li><a href="./13_ch13/13_worksheet.html">Chapter 13 Worksheet</a></li>
-</ul></li>
-<li>Chapter 20:</li>
+<li>Know the four main reasons for including a second categorical variable in an ANOVA model.</li>
+<li>Understand how a grouping variable reduces residual variance and increases power.</li>
+<li>Recognize Simpson’s paradox and explain when it arises.</li>
+<li>Chapter 13 of the textbook.</li>
 </ul>
+<hr>
+</section>
+<section id="four-reasons" class="level1">
+<h1>Four Reasons</h1>
+<p>Why would we use two categorical explanatory variables instead of one?</p>
+<section id="reason-1-interest-in-both-variables" class="level2">
+<h2 class="anchored" data-anchor-id="reason-1-interest-in-both-variables">Reason 1: Interest in Both Variables</h2>
+<ul>
+<li>You are genuinely interested in the effects of <strong>both</strong> variables.</li>
+<li>Example: Does both pressure <strong>and</strong> temperature affect espresso foam quality?</li>
+<li>With no interactions, every observation contributes to estimating <strong>both</strong> effects.</li>
+<li>More efficient than running two separate one-factor experiments.</li>
+</ul>
+</section>
+<section id="reason-2-detecting-and-describing-interactions" class="level2">
+<h2 class="anchored" data-anchor-id="reason-2-detecting-and-describing-interactions">Reason 2: Detecting and Describing Interactions</h2>
+<ul>
+<li>The effect of the primary variable may <strong>depend on</strong> the level of a second variable.</li>
+<li>Example: a drug’s effectiveness might differ between males and females.</li>
+<li>Two-way ANOVA lets you test for and characterize interaction effects.</li>
+<li>If no interaction is found, the result generalizes across all levels of the second variable.</li>
+</ul>
+</section>
+<section id="reason-3-variance-reduction-via-grouping" class="level2">
+<h2 class="anchored" data-anchor-id="reason-3-variance-reduction-via-grouping">Reason 3: Variance Reduction via Grouping</h2>
+<ul>
+<li>Including a second variable can <strong>reduce residual variance</strong>, making it easier to detect an effect of the primary variable.</li>
+<li>Analogous to using a paired design instead of a two-sample test.</li>
+</ul>
+<section id="simulation" class="level3">
+<h3 class="anchored" data-anchor-id="simulation">Simulation</h3>
+<p>When both variables are plotted, the groups separate clearly:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_why_two_way_files/figure-html/var-reduction-grouped-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>If <code>cat2</code> is ignored, the within-group spread looks much larger — harder to see the <code>cat1</code> effect:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_why_two_way_files/figure-html/var-reduction-ungrouped-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Residuals are smaller when <code>cat2</code> is included:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>resid_with    <span class="ot">&lt;-</span> <span class="fu">resid</span>(<span class="fu">aov</span>(y <span class="sc">~</span> cat1 <span class="sc">+</span> cat2, <span class="at">data =</span> sim_df))</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>resid_without <span class="ot">&lt;-</span> <span class="fu">resid</span>(<span class="fu">aov</span>(y <span class="sc">~</span> cat1,        <span class="at">data =</span> sim_df))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">residual =</span> <span class="fu">c</span>(resid_with, resid_without),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">model    =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"With cat2"</span>, <span class="st">"Without cat2"</span>), <span class="at">each =</span> n)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> model, <span class="at">y =</span> residual)) <span class="sc">+</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Residuals"</span>, <span class="at">x =</span> <span class="cn">NULL</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_why_two_way_files/figure-html/var-reduction-residuals-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><strong>Grouping variable</strong>: included in the model solely to reduce variance, not because you are directly interested in it.</li>
+<li>Include a grouping variable <strong>regardless</strong> of whether it is statistically significant.</li>
+</ul>
+</section>
+</section>
+<section id="reason-4-controlling-for-confounders-simpsons-paradox" class="level2">
+<h2 class="anchored" data-anchor-id="reason-4-controlling-for-confounders-simpsons-paradox">Reason 4: Controlling for Confounders — Simpson’s Paradox</h2>
+<ul>
+<li>In observational studies, the direction or size of an effect can <strong>reverse</strong> after adjusting for another variable.</li>
+<li>This is <strong>Simpson’s Paradox</strong>.</li>
+<li>Arises when one group is over-represented at a “better” (or “worse”) level of the confounder.</li>
+</ul>
+<section id="simulation-1" class="level3">
+<h3 class="anchored" data-anchor-id="simulation-1">Simulation</h3>
+<p>Within each level of the confounder, Group High is clearly above Group Low:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_why_two_way_files/figure-html/simpsons-grouped-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>But aggregated (ignoring the confounder), Group Low looks higher — the effect <strong>reverses</strong>:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_why_two_way_files/figure-html/simpsons-aggregate-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Group “Low” happens to be over-represented in the “B” level of the confounder — a favorable condition — which inflates its overall mean.</li>
+<li><strong>Real-world example</strong>: United Airlines appeared to have worse on-time performance than competitors, but United has a hub at O’Hare, which has frequent weather delays. After controlling for airport, United was competitive.</li>
+<li>Simpson’s paradox is less likely in <strong>randomized experiments</strong>: randomization ensures no group is systematically over- or under-represented at any level of a confounder.</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="exercises" class="level1">
+<h1>Exercises</h1>
+<p><strong>1.</strong> A study compares crop yield under two fertilizer treatments (A and B) across 16 fields. The researchers also recorded soil quality for each field (Poor vs.&nbsp;Good).</p>
+<ol type="a">
+<li><p>Even if the researchers are not interested in the effect of soil quality on yield, why might they include soil quality in the two-way ANOVA model?</p></li>
+<li><p>What would be the consequence of <em>not</em> including soil quality if it truly affects yield?</p></li>
+</ol>
+<hr>
+<p><strong>2.</strong> In the 1970s, it was observed that UC Berkeley’s graduate school admitted female applicants at a lower rate than male applicants overall. But when individual departments were examined, female applicants had equal or higher admission rates in every department.</p>
+<ol type="a">
+<li><p>What statistical phenomenon does this illustrate?</p></li>
+<li><p>Give one explanation for how this pattern could arise.</p></li>
+<li><p>What conclusion is more valid: the overall comparison or the department-by-department comparison? Explain.</p></li>
+</ol>
+<hr>
+<p><strong>3.</strong> A researcher compares two diets (A vs.&nbsp;B) on weight loss and finds that Diet A produces greater average weight loss. However, when participants are split by age group (Young vs.&nbsp;Old), Diet B produces greater weight loss within both age groups.</p>
+<ol type="a">
+<li><p>Name the statistical phenomenon this illustrates.</p></li>
+<li><p>Sketch a scenario in which this outcome is possible. What would the distribution of age groups across diets have to look like?</p></li>
+<li><p>In a randomized controlled trial where participants are randomly assigned to Diet A or Diet B, would this phenomenon be likely? Why or why not?</p></li>
+</ol>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
