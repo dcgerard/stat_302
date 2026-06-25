@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-24">
+<meta name="dcterms.date" content="2026-06-25">
 
 <title>Linear Combinations of Group Means – Stat 302: Intermediate Statistics</title>
 <style>
@@ -230,7 +230,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 24, 2026</p>
+      <p class="date">June 25, 2026</p>
     </div>
   </div>
   
@@ -321,9 +321,9 @@ H_A: \mu_1 \neq \tfrac{1}{6}(\mu_2 + \mu_3 + \cdots + \mu_7)\]</span></p>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(aout_full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> (Intercept)       JudgeB       JudgeC       JudgeD       JudgeE       JudgeF 
-     34.1200      -0.5033      -5.0200      -7.1200      -7.1533      -7.3200 
+  34.1200000   -0.5033333   -5.0200000   -7.1200000   -7.1533333   -7.3200000 
 JudgeSpock's 
-    -19.4978 </code></pre>
+ -19.4977778 </code></pre>
 </div>
 </div>
 <p>The interpretation: <code>(Intercept)</code> = <span class="math inline">\(\hat{\mu}_A\)</span> (judge A’s mean); <code>JudgeB</code> = <span class="math inline">\(\hat{\mu}_B - \hat{\mu}_A\)</span>; and so on. The group means are <span class="math inline">\(\hat{\mu}_i = \hat{\mu} + \hat{\delta}_i\)</span>, but this parameterization makes setting up coefficient vectors awkward.</p>
@@ -336,9 +336,9 @@ JudgeSpock's
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(aout_lc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      JudgeA       JudgeB       JudgeC       JudgeD       JudgeE       JudgeF 
-       34.12        33.62        29.10        27.00        26.97        26.80 
+    34.12000     33.61667     29.10000     27.00000     26.96667     26.80000 
 JudgeSpock's 
-       14.62 </code></pre>
+    14.62222 </code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -392,9 +392,11 @@ Linear hypothesis test:
 Model 1: restricted model
 Model 2: Percent ~ Judge - 1
 
-  Res.Df  RSS Df Sum of Sq    F  Pr(&gt;F)
-1     40 3401                          
-2     39 1864  1      1537 32.1 1.5e-06</code></pre>
+  Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+1     40 3401.2                                  
+2     39 1864.4  1    1536.8 32.146 1.489e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
@@ -408,9 +410,11 @@ Linear hypothesis test:
 Model 1: restricted model
 Model 2: Percent ~ Judge - 1
 
-  Res.Df  RSS Df Sum of Sq   F Pr(&gt;F)
-1     40 2070                        
-2     39 1864  1       206 4.3  0.045</code></pre>
+  Res.Df    RSS Df Sum of Sq      F  Pr(&gt;F)  
+1     40 2070.1                              
+2     39 1864.5  1    205.68 4.3024 0.04471 *
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <p>Strong evidence that Spock’s judge’s mean differs from the pooled mean of the other six (<span class="math inline">\(p &lt; 0.001\)</span>). No evidence that the first three non-Spock judges (A–C) differ from the last three (D–F) (<span class="math inline">\(p = 0.26\)</span>).</p>
@@ -421,7 +425,7 @@ Model 2: Percent ~ Judge - 1
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(lhout1<span class="sc">$</span>F[<span class="dv">2</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 5.67</code></pre>
+<pre><code>[1] 5.669737</code></pre>
 </div>
 </div>
 <p>We can verify this manually. First, compute <span class="math inline">\(\hat\gamma\)</span> and <span class="math inline">\(SE(\hat\gamma)\)</span>:</p>
@@ -441,7 +445,7 @@ Model 2: Percent ~ Judge - 1
 <span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SE       ="</span>, <span class="fu">round</span>(se_gamma, <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>,</span>
 <span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"t*       ="</span>, <span class="fu">round</span>(tstat, <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>gamma_hat = -14.98 
+<pre><code>gamma_hat = -14.978 
  SE       = 2.642 
  t*       = -5.67 </code></pre>
 </div>
@@ -449,11 +453,11 @@ Model 2: Percent ~ Judge - 1
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(tstat), <span class="at">df =</span> <span class="fu">nrow</span>(case0502) <span class="sc">-</span> <span class="dv">7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.489e-06</code></pre>
+<pre><code>[1] 1.489078e-06</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>lhout1<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;F)</span><span class="st">`</span>[<span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.489e-06</code></pre>
+<pre><code>[1] 1.489078e-06</code></pre>
 </div>
 </div>
 <p>The <span class="math inline">\(p\)</span>-values are identical, confirming the equivalence.</p>

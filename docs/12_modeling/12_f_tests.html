@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-24">
+<meta name="dcterms.date" content="2026-06-25">
 
 <title>F-tests for Nested Models – Stat 302: Intermediate Statistics</title>
 <style>
@@ -236,7 +236,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 24, 2026</p>
+      <p class="date">June 25, 2026</p>
     </div>
   </div>
   
@@ -287,7 +287,7 @@ $ Year        &lt;dbl&gt; 1896, 1897, 1898, 1899, 1900, 1901, 1902, 1903, 1904, 
 $ Winner      &lt;chr&gt; "Ben Brush", "Typhoon II", "Plaudit", "Manuel", "Lieut. Gi…
 $ Starters    &lt;dbl&gt; 8, 6, 4, 5, 7, 5, 4, 6, 5, 3, 6, 6, 8, 10, 7, 7, 7, 8, 7, …
 $ NetToWinner &lt;dbl&gt; 4850, 4850, 4850, 4850, 4850, 4850, 4850, 4850, 4850, 4850…
-$ Time        &lt;dbl&gt; 127.8, 132.5, 129.0, 132.0, 126.2, 127.8, 128.8, 129.0, 12…
+$ Time        &lt;dbl&gt; 127.75, 132.50, 129.00, 132.00, 126.25, 127.75, 128.75, 12…
 $ Speed       &lt;dbl&gt; 35.23, 33.96, 34.88, 34.09, 35.64, 35.23, 34.95, 34.88, 35…
 $ Track       &lt;chr&gt; "Dusty", "Heavy", "Good", "Fast", "Fast", "Fast", "Fast", …
 $ Conditions  &lt;chr&gt; "Fast", "Slow", "Fast", "Fast", "Fast", "Fast", "Fast", "F…</code></pre>
@@ -465,9 +465,11 @@ $ Conditions  &lt;chr&gt; "Fast", "Slow", "Fast", "Fast", "Fast", "Fast", "Fast"
 
 Model 1: Speed ~ 1
 Model 2: Speed ~ Year + Year2
-  Res.Df  RSS Df Sum of Sq   F Pr(&gt;F)
-1    115 93.0                        
-2    113 33.1  2      59.9 102 &lt;2e-16</code></pre>
+  Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+1    115 92.971                                  
+2    113 33.083  2    59.888 102.28 &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <section id="reading-the-output" class="level2">
@@ -536,9 +538,11 @@ Model 2: Speed ~ Year + Year2
 
 Model 1: Speed ~ Year + Year2
 Model 2: Speed ~ Year + Year2 + Starters + Starters2
-  Res.Df  RSS Df Sum of Sq    F Pr(&gt;F)
-1    113 33.1                         
-2    111 30.9  2      2.18 3.92  0.023</code></pre>
+  Res.Df    RSS Df Sum of Sq      F  Pr(&gt;F)  
+1    113 33.083                              
+2    111 30.903  2    2.1803 3.9156 0.02274 *
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <ul>

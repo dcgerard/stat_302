@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-24">
+<meta name="dcterms.date" content="2026-06-25">
 
 <title>Multiple Comparisons – Stat 302: Intermediate Statistics</title>
 <style>
@@ -231,7 +231,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 24, 2026</p>
+      <p class="date">June 25, 2026</p>
     </div>
   </div>
   
@@ -296,11 +296,11 @@ window.Quarto = {
 
 data:  df_snoop$y and df_snoop$x 
 
-  1    2    3    4   
-2 0.41 -    -    -   
-3 0.03 0.14 -    -   
-4 0.73 0.62 0.05 -   
-5 0.31 0.84 0.19 0.49
+  1     2     3     4    
+2 0.409 -     -     -    
+3 0.026 0.136 -     -    
+4 0.733 0.624 0.054 -    
+5 0.310 0.845 0.190 0.494
 
 P value adjustment method: none </code></pre>
 </div>
@@ -339,11 +339,11 @@ P value adjustment method: none </code></pre>
 
 data:  case0601$Score and case0601$Handicap 
 
-           Amputee Crutches Hearing None 
-Crutches   0.018   -        -       -    
-Hearing    0.542   0.003    -       -    
-None       0.448   0.103    0.173   -    
-Wheelchair 0.143   0.352    0.040   0.476
+           Amputee Crutches Hearing None  
+Crutches   0.0184  -        -       -     
+Hearing    0.5418  0.0035   -       -     
+None       0.4477  0.1028   0.1732  -     
+Wheelchair 0.1433  0.3520   0.0401  0.4756
 
 P value adjustment method: none </code></pre>
 </div>
@@ -429,11 +429,11 @@ P value adjustment method: none </code></pre>
 
 data:  case0601$Score and case0601$Handicap 
 
-           Amputee Crutches Hearing None
-Crutches   0.18    -        -       -   
-Hearing    1.00    0.03     -       -   
-None       1.00    1.00     1.00    -   
-Wheelchair 1.00    1.00     0.40    1.00
+           Amputee Crutches Hearing None 
+Crutches   0.184   -        -       -    
+Hearing    1.000   0.035    -       -    
+None       1.000   1.000    1.000   -    
+Wheelchair 1.000   1.000    0.401   1.000
 
 P value adjustment method: bonferroni </code></pre>
 </div>
@@ -451,11 +451,11 @@ P value adjustment method: bonferroni </code></pre>
 
 data:  case0601$Score and case0601$Handicap 
 
-           Amputee Crutches Hearing None
-Crutches   0.17    -        -       -   
-Hearing    1.00    0.03     -       -   
-None       1.00    0.72     0.87    -   
-Wheelchair 0.86    1.00     0.32    1.00
+           Amputee Crutches Hearing None 
+Crutches   0.165   -        -       -    
+Hearing    1.000   0.035    -       -    
+None       1.000   0.719    0.866   -    
+Wheelchair 0.860   1.000    0.321   1.000
 
 P value adjustment method: holm </code></pre>
 </div>
@@ -474,17 +474,17 @@ P value adjustment method: holm </code></pre>
 Fit: aov(formula = Score ~ Handicap, data = case0601)
 
 $Handicap
-                       diff     lwr     upr  p adj
-Crutches-Amputee     1.4929 -0.2389  3.2246 0.1233
-Hearing-Amputee     -0.3786 -2.1103  1.3532 0.9725
-None-Amputee         0.4714 -1.2603  2.2032 0.9400
-Wheelchair-Amputee   0.9143 -0.8174  2.6460 0.5781
-Hearing-Crutches    -1.8714 -3.6032 -0.1397 0.0278
-None-Crutches       -1.0214 -2.7532  0.7103 0.4686
-Wheelchair-Crutches -0.5786 -2.3103  1.1532 0.8812
-None-Hearing         0.8500 -0.8817  2.5817 0.6443
-Wheelchair-Hearing   1.2929 -0.4389  3.0246 0.2348
-Wheelchair-None      0.4429 -1.2889  2.1746 0.9517</code></pre>
+                          diff        lwr        upr     p adj
+Crutches-Amputee     1.4928571 -0.2388756  3.2245899 0.1232819
+Hearing-Amputee     -0.3785714 -2.1103042  1.3531613 0.9724743
+None-Amputee         0.4714286 -1.2603042  2.2031613 0.9399911
+Wheelchair-Amputee   0.9142857 -0.8174470  2.6460185 0.5781165
+Hearing-Crutches    -1.8714286 -3.6031613 -0.1396958 0.0277842
+None-Crutches       -1.0214286 -2.7531613  0.7103042 0.4686233
+Wheelchair-Crutches -0.5785714 -2.3103042  1.1531613 0.8812293
+None-Hearing         0.8500000 -0.8817328  2.5817328 0.6442517
+Wheelchair-Hearing   1.2928571 -0.4388756  3.0245899 0.2348141
+Wheelchair-None      0.4428571 -1.2888756  2.1745899 0.9517374</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">

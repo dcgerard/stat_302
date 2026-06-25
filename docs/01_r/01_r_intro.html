@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-24">
+<meta name="dcterms.date" content="2026-06-25">
 
 <title>Introduction to R – Stat 302: Intermediate Statistics</title>
 <style>
@@ -243,7 +243,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 24, 2026</p>
+      <p class="date">June 25, 2026</p>
     </div>
   </div>
   
@@ -396,11 +396,11 @@ window.Quarto = {
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(<span class="at">x =</span> <span class="dv">4</span>, <span class="at">base =</span> <span class="fu">exp</span>(<span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.386</code></pre>
+<pre><code>[1] 1.386294</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(<span class="at">x =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.386</code></pre>
+<pre><code>[1] 1.386294</code></pre>
 </div>
 </div></li>
 <li><p>If an argument does not have a default, then it must be specified when calling a function.</p></li>
@@ -441,7 +441,7 @@ window.Quarto = {
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 22026</code></pre>
+<pre><code>[1] 22026.47</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(<span class="fu">exp</span>(<span class="dv">10</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -466,7 +466,7 @@ window.Quarto = {
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 2.702</code></pre>
+<pre><code>[1] 2.701851</code></pre>
 </div>
 </div></li>
 <li><p><code>sum()</code>: Sum the values of a vector.</p>
@@ -497,7 +497,7 @@ window.Quarto = {
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="sc">-</span><span class="fl">1.3</span><span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="dv">2</span> <span class="sc">*</span> pi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.07361</code></pre>
+<pre><code>[1] 0.07361264</code></pre>
 </div>
 </div>
 </div>
@@ -518,7 +518,7 @@ window.Quarto = {
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.825</code></pre>
+<pre><code>[1] 1.824829</code></pre>
 </div>
 </div>
 </div>
@@ -534,7 +534,7 @@ window.Quarto = {
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">sqrt</span>(<span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">1000</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 21097</code></pre>
+<pre><code>[1] 21097.46</code></pre>
 </div>
 </div>
 </div>
@@ -710,7 +710,7 @@ $ Time     &lt;dbl&gt; 3.03, 5.46, 4.10, 1.68, 8.85, 1.49, 7.69, 3.85, 16.67, 4.
 $ Pairs    &lt;dbl&gt; 1.00, 2.00, 1.21, 1.13, 5.17, 1.00, 2.75, 5.63, 3.00, 4.67, 4…
 $ Size     &lt;chr&gt; "L", "L", "L", "L", "L", "L", "L", "L", "L", "L", "L", "L", "…
 $ Status   &lt;chr&gt; "R", "R", "R", "R", "R", "M", "R", "R", "R", "M", "R", "R", "…
-$ log_time &lt;dbl&gt; 1.1086, 1.6974, 1.4110, 0.5188, 2.1804, 0.3988, 2.0399, 1.348…</code></pre>
+$ log_time &lt;dbl&gt; 1.1085626, 1.6974488, 1.4109870, 0.5187938, 2.1804175, 0.3987…</code></pre>
 </div>
 </div></li>
 <li><p>Use <code>view()</code> to see a spreadsheet of the data frame (<strong>never</strong> put this in a Quarto file).</p>
@@ -808,7 +808,7 @@ $ Fatalities1995 &lt;dbl&gt; 1114, 87, 1035, 631, 4192, 645, 317, 121, 58, 2805,
 $ Fatalities1996 &lt;dbl&gt; 1146, 81, 994, 615, 3989, 617, 310, 116, 62, 2753, 1573…
 $ PctChange      &lt;dbl&gt; 2.87, -6.90, -3.96, -2.54, -4.84, -4.34, -2.21, -4.13, …
 $ SpeedLimit     &lt;chr&gt; "Inc", "Ret", "Inc", "Inc", "Inc", "Inc", "Ret", "Inc",…
-$ ratio          &lt;dbl&gt; 1.0287, 0.9310, 0.9604, 0.9746, 0.9516, 0.9566, 0.9779,…</code></pre>
+$ ratio          &lt;dbl&gt; 1.0287253, 0.9310345, 0.9603865, 0.9746434, 0.9515744, …</code></pre>
 </div>
 </div>
 </div>
@@ -832,8 +832,8 @@ $ Fatalities1995 &lt;dbl&gt; 1114, 87, 1035, 631, 4192, 645, 317, 121, 58, 2805,
 $ Fatalities1996 &lt;dbl&gt; 1146, 81, 994, 615, 3989, 617, 310, 116, 62, 2753, 1573…
 $ PctChange      &lt;dbl&gt; 2.87, -6.90, -3.96, -2.54, -4.84, -4.34, -2.21, -4.13, …
 $ SpeedLimit     &lt;chr&gt; "Inc", "Ret", "Inc", "Inc", "Inc", "Inc", "Ret", "Inc",…
-$ ratio          &lt;dbl&gt; 1.0287, 0.9310, 0.9604, 0.9746, 0.9516, 0.9566, 0.9779,…
-$ PctChange_2    &lt;dbl&gt; 2.8725, -6.8966, -3.9614, -2.5357, -4.8426, -4.3411, -2…</code></pre>
+$ ratio          &lt;dbl&gt; 1.0287253, 0.9310345, 0.9603865, 0.9746434, 0.9515744, …
+$ PctChange_2    &lt;dbl&gt; 2.8725314, -6.8965517, -3.9613527, -2.5356577, -4.84255…</code></pre>
 </div>
 </div>
 <p>They are the same up to rounding.</p>

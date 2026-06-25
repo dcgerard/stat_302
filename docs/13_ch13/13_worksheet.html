@@ -305,6 +305,10 @@ $ prssBar  &lt;fct&gt; 15, 15, 15, 15, 15, 15, 15, 15, 15, 20, 20, 20, 20, 20, 2
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(espresso, <span class="fu">aes</span>(<span class="at">x =</span> tempC, <span class="at">y =</span> foamIndx, <span class="at">color =</span> prssBar, <span class="at">group =</span> prssBar)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"line"</span>) <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Temperature (°C)"</span>, <span class="at">y =</span> <span class="st">"Foam index (%)"</span>, <span class="at">color =</span> <span class="st">"Pressure (bar)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -315,6 +319,17 @@ $ prssBar  &lt;fct&gt; 15, 15, 15, 15, 15, 15, 15, 15, 15, 20, 20, 20, 20, 20, 2
 </div>
 <p>With pointwise 95% confidence intervals:</p>
 <div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>espresso <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(tempC, prssBar) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean  =</span> <span class="fu">mean</span>(foamIndx),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">se    =</span> <span class="fu">sd</span>(foamIndx) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">n</span>()),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lower =</span> mean <span class="sc">-</span> <span class="dv">2</span> <span class="sc">*</span> se,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">upper =</span> mean <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> se) <span class="sc">|&gt;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> tempC, <span class="at">y =</span> mean, <span class="at">color =</span> prssBar, <span class="at">group =</span> prssBar)) <span class="sc">+</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Temperature (°C)"</span>, <span class="at">y =</span> <span class="st">"Mean foam index (%)"</span>, <span class="at">color =</span> <span class="st">"Pressure (bar)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -342,6 +357,12 @@ $ prssBar  &lt;fct&gt; 15, 15, 15, 15, 15, 15, 15, 15, 15, 20, 20, 20, 20, 20, 2
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>aout_cell <span class="ot">&lt;-</span> <span class="fu">aov</span>(foamIndx <span class="sc">~</span> prssBar <span class="sc">*</span> tempC, <span class="at">data =</span> espresso)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(aout_cell) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Fitted values"</span>, <span class="at">y =</span> <span class="st">"Residuals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -416,6 +437,8 @@ $ prssBar  &lt;fct&gt; 15, 15, 15, 15, 15, 15, 15, 15, 15, 20, 20, 20, 20, 20, 2
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>aout_cell <span class="ot">&lt;-</span> <span class="fu">aov</span>(foamIndx <span class="sc">~</span> prssBar <span class="sc">*</span> tempC, <span class="at">data =</span> espresso)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(aout_cell)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 6
   term             df  sumsq meansq statistic   p.value
@@ -445,6 +468,8 @@ $ prssBar  &lt;fct&gt; 15, 15, 15, 15, 15, 15, 15, 15, 15, 20, 20, 20, 20, 20, 2
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>aout_add <span class="ot">&lt;-</span> <span class="fu">aov</span>(foamIndx <span class="sc">~</span> prssBar <span class="sc">+</span> tempC, <span class="at">data =</span> espresso)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(aout_add)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 6
   term         df  sumsq meansq statistic   p.value
@@ -474,6 +499,9 @@ $ prssBar  &lt;fct&gt; 15, 15, 15, 15, 15, 15, 15, 15, 15, 20, 20, 20, 20, 20, 2
 <div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lm_add <span class="ot">&lt;-</span> <span class="fu">lm</span>(foamIndx <span class="sc">~</span> prssBar <span class="sc">+</span> tempC, <span class="at">data =</span> espresso)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_add, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, estimate, conf.low, conf.high)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 4
   term        estimate conf.low conf.high
@@ -485,6 +513,10 @@ $ prssBar  &lt;fct&gt; 15, 15, 15, 15, 15, 15, 15, 15, 15, 20, 20, 20, 20, 20, 2
 </div>
 </div>
 <div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>espresso2 <span class="ot">&lt;-</span> espresso <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">tempC =</span> <span class="fu">relevel</span>(tempC, <span class="at">ref =</span> <span class="st">"85"</span>))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>lm_add2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(foamIndx <span class="sc">~</span> prssBar <span class="sc">+</span> tempC, <span class="at">data =</span> espresso2)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_add2, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, estimate, conf.low, conf.high)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 4
   term        estimate conf.low conf.high
@@ -518,44 +550,51 @@ $ prssBar  &lt;fct&gt; 15, 15, 15, 15, 15, 15, 15, 15, 15, 20, 20, 20, 20, 20, 2
 <div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>dat75 <span class="ot">&lt;-</span> espresso <span class="sc">|&gt;</span> <span class="fu">filter</span>(tempC <span class="sc">==</span> <span class="st">"75"</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>dat85 <span class="ot">&lt;-</span> espresso <span class="sc">|&gt;</span> <span class="fu">filter</span>(tempC <span class="sc">==</span> <span class="st">"85"</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>dat95 <span class="ot">&lt;-</span> espresso <span class="sc">|&gt;</span> <span class="fu">filter</span>(tempC <span class="sc">==</span> <span class="st">"95"</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(foamIndx <span class="sc">~</span> prssBar, <span class="at">data =</span> dat75)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
 
 data:  foamIndx by prssBar
-t = -2.1, df = 12, p-value = 0.06
+t = -2.0687, df = 12.374, p-value = 0.06014
 alternative hypothesis: true difference in means between group 15 and group 20 is not equal to 0
 95 percent confidence interval:
- -44.276   1.074
+ -44.275957   1.073735
 sample estimates:
 mean in group 15 mean in group 20 
-           113.4            135.0 </code></pre>
+        113.4000         135.0011 </code></pre>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(foamIndx <span class="sc">~</span> prssBar, <span class="at">data =</span> dat85)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
 
 data:  foamIndx by prssBar
-t = -1.4, df = 13, p-value = 0.2
+t = -1.4336, df = 13.036, p-value = 0.1752
 alternative hypothesis: true difference in means between group 15 and group 20 is not equal to 0
 95 percent confidence interval:
- -28.574   5.774
+ -28.573933   5.773933
 sample estimates:
 mean in group 15 mean in group 20 
            102.4            113.8 </code></pre>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(foamIndx <span class="sc">~</span> prssBar, <span class="at">data =</span> dat95)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
 
 data:  foamIndx by prssBar
-t = -3.1, df = 13, p-value = 0.008
+t = -3.149, df = 13.026, p-value = 0.00767
 alternative hypothesis: true difference in means between group 15 and group 20 is not equal to 0
 95 percent confidence interval:
- -44.675  -8.323
+ -44.674609  -8.323169
 sample estimates:
 mean in group 15 mean in group 20 
-            91.1            117.6 </code></pre>
+        91.10111        117.60000 </code></pre>
 </div>
 </div>
 <p>None of the individual <span class="math inline">\(t\)</span>-tests is significant at the 0.05 level when run separately. This contrasts with the additive ANOVA, which found a significant pressure effect (<span class="math inline">\(p \approx 0.0035\)</span>). The ANOVA is more powerful because it pools the residual variance estimate across all temperature groups, giving a much more precise estimate of <span class="math inline">\(\sigma^2\)</span> and therefore more power to detect the pressure effect.</p>

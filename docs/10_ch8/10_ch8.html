@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-24">
+<meta name="dcterms.date" content="2026-06-25">
 
 <title>Linear Model Assumptions and Transformations – Stat 302: Intermediate Statistics</title>
 <style>
@@ -255,7 +255,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 24, 2026</p>
+      <p class="date">June 25, 2026</p>
     </div>
   </div>
   
@@ -853,9 +853,9 @@ window.Quarto = {
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coefci</span>(lmout, <span class="at">vcov =</span> sandwich)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>             2.5 % 97.5 %
-(Intercept) -9.512  2.600
-x            0.424  2.904</code></pre>
+<pre><code>                 2.5 %   97.5 %
+(Intercept) -9.5123008 2.600455
+x            0.4239793 2.903630</code></pre>
 </div>
 </div>
 </section>
@@ -1197,13 +1197,13 @@ $ Group   &lt;chr&gt; "Group1", "Group1", "Group1", "Group2", "Group2", "Group2"
 <span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a>df_extra    <span class="ot">&lt;-</span> df_reduced <span class="sc">-</span> df_full</span>
 <span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a>fstat       <span class="ot">&lt;-</span> (ESS <span class="sc">/</span> df_extra) <span class="sc">/</span> (rss_full <span class="sc">/</span> df_full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
-<li><p><span class="math inline">\(RSS_{full}\)</span> = 173.7489</p></li>
+<li><p><span class="math inline">\(RSS_{full}\)</span> = 173.7489206</p></li>
 <li><p><span class="math inline">\(df_{full} = n - I\)</span> = 76 - 7 = 69</p></li>
-<li><p><span class="math inline">\(RSS_{reduced}\)</span> = 180.0748</p></li>
+<li><p><span class="math inline">\(RSS_{reduced}\)</span> = 180.0748361</p></li>
 <li><p><span class="math inline">\(df_{reduced} = n - 2\)</span> = 76 - 2 = 74</p></li>
-<li><p><span class="math inline">\(ESS = RSS_{reduced} - RSS_{full}\)</span> = 6.3259</p></li>
+<li><p><span class="math inline">\(ESS = RSS_{reduced} - RSS_{full}\)</span> = 6.3259155</p></li>
 <li><p><span class="math inline">\(df_{extra} = df_{reduced} - df_{full}\)</span> = 74 - 69 = 5</p></li>
-<li><p><span class="math inline">\(F\)</span>-statistic <span class="math inline">\(= \frac{ESS / df_{extra}}{RSS_{full} / df_{full}}\)</span> = 0.5024</p></li>
+<li><p><span class="math inline">\(F\)</span>-statistic <span class="math inline">\(= \frac{ESS / df_{extra}}{RSS_{full} / df_{full}}\)</span> = 0.5024356</p></li>
 <li><p>Compare to <span class="math inline">\(F_{5,69}\)</span></p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -1218,7 +1218,7 @@ $ Group   &lt;chr&gt; "Group1", "Group1", "Group1", "Group2", "Group2", "Group2"
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pf</span>(<span class="fl">0.5024</span>, <span class="at">df1 =</span> <span class="dv">5</span>, <span class="at">df2 =</span> <span class="dv">69</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.7734</code></pre>
+<pre><code>[1] 0.7734214</code></pre>
 </div>
 </div></li>
 </ul>
@@ -1243,9 +1243,9 @@ $ Group   &lt;chr&gt; "Group1", "Group1", "Group1", "Group2", "Group2", "Group2"
 
 Model 1: logTime ~ Voltage
 Model 2: logTime ~ VoltageFac
-  Res.Df RSS Df Sum of Sq   F Pr(&gt;F)
-1     74 180                        
-2     69 174  5      6.33 0.5   0.77</code></pre>
+  Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
+1     74 180.07                           
+2     69 173.75  5    6.3259 0.5024 0.7734</code></pre>
 </div>
 </div>
 

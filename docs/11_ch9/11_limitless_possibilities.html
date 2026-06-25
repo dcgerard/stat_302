@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-24">
+<meta name="dcterms.date" content="2026-06-25">
 
 <title>Creating New Explanatory Variables – Stat 302: Intermediate Statistics</title>
 <style>
@@ -224,7 +224,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 24, 2026</p>
+      <p class="date">June 25, 2026</p>
     </div>
   </div>
   
@@ -285,7 +285,7 @@ lm(formula = Yield ~ Rainfall + Rainfall2, data = ex0915)
 
 Coefficients:
 (Intercept)     Rainfall    Rainfall2  
-     -5.015        6.004       -0.229  </code></pre>
+    -5.0147       6.0043      -0.2294  </code></pre>
 </div>
 </div>
 <table class="caption-top table">
@@ -320,20 +320,20 @@ lm(formula = Yield ~ Rainfall + I(Rainfall^2), data = ex0915)
 
 Coefficients:
   (Intercept)       Rainfall  I(Rainfall^2)  
-       -5.015          6.004         -0.229  </code></pre>
+      -5.0147         6.0043        -0.2294  </code></pre>
 </div>
 </div></li>
 <li><p>Look at how we encode <code>predict()</code>:</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(<span class="at">object =</span> lmout_quad, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">Rainfall =</span> <span class="dv">10</span>, <span class="at">Rainfall2 =</span> <span class="dv">100</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    1 
-32.09 </code></pre>
+<pre><code>       1 
+32.09177 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(<span class="at">object =</span> lmout_quad_2, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">Rainfall =</span> <span class="dv">10</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    1 
-32.09 </code></pre>
+<pre><code>       1 
+32.09177 </code></pre>
 </div>
 </div></li>
 </ul>
@@ -449,7 +449,7 @@ Coefficients:
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept)       Time2   Intensity 
-   71.30583    12.15833    -0.04047 </code></pre>
+71.30583333 12.15833333 -0.04047143 </code></pre>
 </div>
 </div>
 <p>Model: <span class="math inline">\(\mu(Y_i \mid \text{Time},\,\text{Intensity}) = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i}\)</span>, where <span class="math inline">\(X_{1i} = 1\)</span> if <code>Time</code> is <code>Late</code> and 0 otherwise, and <span class="math inline">\(X_{2i}\)</span> is light intensity:</p>
@@ -525,7 +525,7 @@ Coefficients:
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(lmint)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    (Intercept)           Time2       Intensity Time2:Intensity 
-       71.62333        11.52333        -0.04108         0.00121 </code></pre>
+   71.623333333    11.523333333    -0.041076190     0.001209524 </code></pre>
 </div>
 </div>
 <table class="caption-top table">

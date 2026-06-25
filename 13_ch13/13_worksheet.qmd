@@ -60,7 +60,6 @@ interaction?
 ```{r}
 #| label: q1-sol
 #| eval: true
-#| echo: false
 ggplot(espresso, aes(x = tempC, y = foamIndx, color = prssBar, group = prssBar)) +
   stat_summary(fun = mean, geom = "line") +
   stat_summary(fun = mean, geom = "point") +
@@ -72,7 +71,6 @@ With pointwise 95% confidence intervals:
 ```{r}
 #| label: q1-sol-ci
 #| eval: true
-#| echo: false
 espresso |>
   group_by(tempC, prssBar) |>
   summarize(mean  = mean(foamIndx),
@@ -108,7 +106,6 @@ fitted values).
 ```{r}
 #| label: q2-sol
 #| eval: true
-#| echo: false
 #| warning: false
 aout_cell <- aov(foamIndx ~ prssBar * tempC, data = espresso)
 augment(aout_cell) |>
@@ -169,7 +166,6 @@ Report the $F$-statistic, degrees of freedom, and $p$-value, and state a conclus
 ```{r}
 #| label: q5-sol
 #| eval: true
-#| echo: false
 aout_cell <- aov(foamIndx ~ prssBar * tempC, data = espresso)
 tidy(aout_cell)
 ```
@@ -195,7 +191,6 @@ each main effect.
 ```{r}
 #| label: q6-sol
 #| eval: true
-#| echo: false
 aout_add <- aov(foamIndx ~ prssBar + tempC, data = espresso)
 tidy(aout_add)
 ```
@@ -224,7 +219,6 @@ between 85°C and 95°C, refit with 85°C as the reference level using
 ```{r}
 #| label: q7-sol
 #| eval: true
-#| echo: false
 lm_add <- lm(foamIndx ~ prssBar + tempC, data = espresso)
 tidy(lm_add, conf.int = TRUE) |>
   select(term, estimate, conf.low, conf.high)
@@ -233,7 +227,6 @@ tidy(lm_add, conf.int = TRUE) |>
 ```{r}
 #| label: q7-sol2
 #| eval: true
-#| echo: false
 espresso2 <- espresso |> mutate(tempC = relevel(tempC, ref = "85"))
 lm_add2 <- lm(foamIndx ~ prssBar + tempC, data = espresso2)
 tidy(lm_add2, conf.int = TRUE) |>
@@ -267,7 +260,6 @@ compare to the conclusion from the additive ANOVA in Question 6?
 ```{r}
 #| label: q8-sol
 #| eval: true
-#| echo: false
 dat75 <- espresso |> filter(tempC == "75")
 dat85 <- espresso |> filter(tempC == "85")
 dat95 <- espresso |> filter(tempC == "95")

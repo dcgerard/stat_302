@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-24">
+<meta name="dcterms.date" content="2026-06-25">
 
 <title>Causality and Generalizability – Stat 302: Intermediate Statistics</title>
 <style>
@@ -226,7 +226,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 24, 2026</p>
+      <p class="date">June 25, 2026</p>
     </div>
   </div>
   
@@ -445,7 +445,7 @@ window.Quarto = {
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>obs_diff <span class="ot">&lt;-</span> <span class="fu">mean</span>(int_scores) <span class="sc">-</span> <span class="fu">mean</span>(ext_scores)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>obs_diff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 4.144</code></pre>
+<pre><code>[1] 4.144203</code></pre>
 </div>
 </div>
 <p>The intrinsic group scored 4.144 points higher on average. Is this a big difference or a small one? Two possibilities:</p>
@@ -471,7 +471,7 @@ window.Quarto = {
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(case0101<span class="sc">$</span>Score[new_assign <span class="sc">==</span> <span class="st">"Intrinsic"</span>]) <span class="sc">-</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(case0101<span class="sc">$</span>Score[new_assign <span class="sc">==</span> <span class="st">"Extrinsic"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.309</code></pre>
+<pre><code>[1] 1.308877</code></pre>
 </div>
 </div>
 <p>Each permutation gives a different simulated difference. Most are near zero — the null hypothesis says there is no real effect.</p>
@@ -558,7 +558,7 @@ window.Quarto = {
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(case0102<span class="sc">$</span>Salary[case0102<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"Female"</span>])</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>obs_diff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 818</code></pre>
+<pre><code>[1] 818.0225</code></pre>
 </div>
 </div></li>
 <li><p>Build up permutation distribution:</p>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-24">
+<meta name="dcterms.date" content="2026-06-25">
 
 <title>Simple Linear Regression – Stat 302: Intermediate Statistics</title>
 <style>
@@ -249,7 +249,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 24, 2026</p>
+      <p class="date">June 25, 2026</p>
     </div>
   </div>
   
@@ -392,11 +392,11 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept)    Velocity 
-   0.399170    0.001372 </code></pre>
+0.399170440 0.001372408 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sigma</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.4056</code></pre>
+<pre><code>[1] 0.4056302</code></pre>
 </div>
 </div>
 <p>Plot the fitted line with <code>geom_smooth(method = "lm")</code>:</p>
@@ -513,8 +513,8 @@ SE\!\left(\hat\beta_0 + \hat\beta_1 X_0\right),\]</span></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(lmout, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">Velocity =</span> <span class="dv">100</span>),</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval =</span> <span class="st">"confidence"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     fit    lwr    upr
-1 0.5364 0.3216 0.7512</code></pre>
+<pre><code>        fit       lwr       upr
+1 0.5364112 0.3216131 0.7512093</code></pre>
 </div>
 </div>
 <p><code>geom_smooth(method = "lm")</code> draws these pointwise intervals as a shaded band:</p>
@@ -575,8 +575,8 @@ Note
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(lmout, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">Velocity =</span> <span class="dv">100</span>),</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval =</span> <span class="st">"prediction"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     fit     lwr   upr
-1 0.5364 -0.3318 1.405</code></pre>
+<pre><code>        fit        lwr      upr
+1 0.5364112 -0.3318046 1.404627</code></pre>
 </div>
 </div>
 </section>
@@ -651,7 +651,7 @@ Note
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(case0701<span class="sc">$</span>Velocity, case0701<span class="sc">$</span>Distance)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.789</code></pre>
+<pre><code>[1] 0.789032</code></pre>
 </div>
 </div>
 <ul>
