@@ -275,9 +275,9 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-<p>Load the data (you may need to adjust the path):</p>
+<p>Load the data:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>espresso <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../data/espresso.csv"</span>) <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>espresso <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/espresso.csv"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">tempC   =</span> <span class="fu">factor</span>(tempC),</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">prssBar =</span> <span class="fu">factor</span>(prssBar))</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(espresso)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -323,7 +323,7 @@ $ prssBar  &lt;fct&gt; 15, 15, 15, 15, 15, 15, 15, 15, 15, 20, 20, 20, 20, 20, 2
 </div>
 </div>
 </div>
-<p>Temperature appears to decrease the foam index and higher pressure appears to increase it. There might be a weak interaction: the foam index seems to level off at higher temperatures for higher pressures but not for lower pressures, though the confidence intervals overlap substantially.</p>
+<p>Temperature appears to decrease the foam index and higher pressure appears to increase it. There might be a weak interaction: the foam index seems to level off at higher temperatures for higher pressures but not for lower pressures.</p>
 </div>
 </div>
 </div>
@@ -342,11 +342,6 @@ $ prssBar  &lt;fct&gt; 15, 15, 15, 15, 15, 15, 15, 15, 15, 20, 20, 20, 20, 20, 2
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: The `augment()` method for objects of class `aov` is not maintained by the broom team, and is only supported through the `lm` tidier method. Please be cautious in interpreting and reporting broom output.
-
-This warning is displayed once per session.</code></pre>
-</div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">

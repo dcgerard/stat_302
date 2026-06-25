@@ -191,7 +191,7 @@ tibble(x = factor(x), y = factor(y), z = factor(z, labels = c("z=0","z=1")), w =
 ```{r}
 #| label: poker-load
 #| message: false
-poker <- read_csv("../data/poker.csv") |>
+poker <- read_csv("https://dcgerard.github.io/stat_302/data/poker.csv") |>
   mutate(Hand = factor(Hand, levels = c("Bad", "Neutral", "Good")))
 glimpse(poker)
 ```

@@ -29,13 +29,13 @@ ggplot2::theme_set(ggplot2::theme_bw())
 | `tempC` | Water temperature (°C): 75, 85, or 95 |
 | `prssBar` | Brewing pressure (bar): 15 or 20 |
 
-Load the data (you may need to adjust the path):
+Load the data:
 
 ```{r}
 #| label: load-data
 #| eval: true
 #| message: false
-espresso <- read_csv("../data/espresso.csv") |>
+espresso <- read_csv("https://dcgerard.github.io/stat_302/data/espresso.csv") |>
   mutate(tempC   = factor(tempC),
          prssBar = factor(prssBar))
 glimpse(espresso)
@@ -88,8 +88,7 @@ espresso |>
 
 Temperature appears to decrease the foam index and higher pressure appears to increase
 it. There might be a weak interaction: the foam index seems to level off at higher
-temperatures for higher pressures but not for lower pressures, though the confidence
-intervals overlap substantially.
+temperatures for higher pressures but not for lower pressures.
 :::
 
 ---
@@ -110,6 +109,7 @@ fitted values).
 #| label: q2-sol
 #| eval: true
 #| echo: false
+#| warning: false
 aout_cell <- aov(foamIndx ~ prssBar * tempC, data = espresso)
 augment(aout_cell) |>
   ggplot(aes(x = .fitted, y = .resid)) +
