@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-24">
+<meta name="dcterms.date" content="2026-06-25">
 
 <title>Two-Way ANOVA – Stat 302: Intermediate Statistics</title>
 <style>
@@ -190,7 +190,6 @@ window.Quarto = {
   <li><a href="#the-models" id="toc-the-models" class="nav-link" data-scroll-target="#the-models">The Models</a>
   <ul class="collapse">
   <li><a href="#the-additive-model-main-effects-only" id="toc-the-additive-model-main-effects-only" class="nav-link" data-scroll-target="#the-additive-model-main-effects-only">The Additive Model (Main Effects Only)</a></li>
-  <li><a href="#the-interaction-model-cell-means" id="toc-the-interaction-model-cell-means" class="nav-link" data-scroll-target="#the-interaction-model-cell-means">The Interaction Model (Cell Means)</a></li>
   </ul></li>
   <li><a href="#testing-for-main-effects" id="toc-testing-for-main-effects" class="nav-link" data-scroll-target="#testing-for-main-effects">Testing for Main Effects</a>
   <ul class="collapse">
@@ -204,6 +203,7 @@ window.Quarto = {
   <li><a href="#testing-for-interactions" id="toc-testing-for-interactions" class="nav-link" data-scroll-target="#testing-for-interactions">Testing for Interactions</a>
   <ul class="collapse">
   <li><a href="#but-wait-is-the-additivity-assumption-valid" id="toc-but-wait-is-the-additivity-assumption-valid" class="nav-link" data-scroll-target="#but-wait-is-the-additivity-assumption-valid">But Wait — Is the Additivity Assumption Valid?</a></li>
+  <li><a href="#the-interaction-model-cell-means" id="toc-the-interaction-model-cell-means" class="nav-link" data-scroll-target="#the-interaction-model-cell-means">The Interaction Model (Cell Means)</a></li>
   <li><a href="#interaction-plots" id="toc-interaction-plots" class="nav-link" data-scroll-target="#interaction-plots">Interaction Plots</a></li>
   <li><a href="#interaction-plot-for-the-pygmalion-data" id="toc-interaction-plot-for-the-pygmalion-data" class="nav-link" data-scroll-target="#interaction-plot-for-the-pygmalion-data">Interaction Plot for the Pygmalion Data</a></li>
   <li><a href="#interpreting-the-interaction-model" id="toc-interpreting-the-interaction-model" class="nav-link" data-scroll-target="#interpreting-the-interaction-model">Interpreting the Interaction Model</a></li>
@@ -241,7 +241,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 24, 2026</p>
+      <p class="date">June 25, 2026</p>
     </div>
   </div>
   
@@ -301,35 +301,7 @@ $ upper   &lt;dbl&gt; 1.2, 1.2, 1.2, 3.2, 3.2, 3.2, 4.2, 4.2, 5.2, 5.2, 5.2, 6.2
 <ol type="1">
 <li><strong>Quantitative</strong> response variable.</li>
 <li><strong>Two categorical</strong> explanatory variables.</li>
-<li>It is called <em>two-way</em> because each observational unit can be placed into a two-way table according to its group in both categorical variables.</li>
 </ol>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th></th>
-<th>C1</th>
-<th>C2</th>
-<th><span class="math inline">\(\cdots\)</span></th>
-<th>C10</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Pygmalion</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Control</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
 <hr>
 </section>
 <section id="the-models" class="level1">
@@ -344,16 +316,47 @@ $ upper   &lt;dbl&gt; 1.2, 1.2, 1.2, 3.2, 3.2, 3.2, 4.2, 4.2, 5.2, 5.2, 5.2, 6.2
 <li><span class="math inline">\(\epsilon_{ijk} \sim N(0, \sigma^2)\)</span>: noise.</li>
 <li><strong>Additivity assumption</strong>: the treatment effect <span class="math inline">\(\beta_j\)</span> is the <strong>same</strong> for every company.</li>
 </ul>
-</section>
-<section id="the-interaction-model-cell-means" class="level2">
-<h2 class="anchored" data-anchor-id="the-interaction-model-cell-means">The Interaction Model (Cell Means)</h2>
-<p><span class="math display">\[Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \epsilon_{ijk}\]</span></p>
+<p>It is called <em>two-way</em> because each observational unit can be placed into a two-way table according to its group in both categorical variables.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 27%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;">C1</th>
+<th style="text-align: center;">C2</th>
+<th style="text-align: center;"><span class="math inline">\(\cdots\)</span></th>
+<th style="text-align: center;">C10</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Pygmalion</td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_1 + \beta_1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_2 + \beta_1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\cdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_{10} + \beta_1\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Control</td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_1 + \beta_2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_2 + \beta_2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\cdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_{10} + \beta_2\)</span></td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li><span class="math inline">\((\alpha\beta)_{ij}\)</span>: <strong>interaction</strong> — allows the treatment effect to differ by company.</li>
-<li>Equivalent to letting every company × treatment combination have its own mean.</li>
-<li>In R: <code>Score ~ Company * Treat</code>.</li>
+<li>In the Pygmalion case, we are not actually interested in the <span class="math inline">\(\alpha_i\)</span>’s (company effects).
+<ul>
+<li>The researchers were using this as a <strong>grouping variable</strong> to decrease variance.</li>
+</ul></li>
 </ul>
-<hr>
 </section>
 </section>
 <section id="testing-for-main-effects" class="level1">
@@ -391,7 +394,6 @@ $ upper   &lt;dbl&gt; 1.2, 1.2, 1.2, 3.2, 3.2, 3.2, 4.2, 4.2, 5.2, 5.2, 5.2, 6.2
 </div>
 </div>
 </div>
-<p>Notice the residuals tend to be <strong>signed by treatment</strong>: Pygmalion points above their company mean, Control points below. This suggests treatment matters.</p>
 </section>
 <section id="full-additive-model-company-treatment" class="level2">
 <h2 class="anchored" data-anchor-id="full-additive-model-company-treatment">Full (Additive) Model: Company + Treatment</h2>
@@ -482,7 +484,8 @@ $ upper   &lt;dbl&gt; 1.2, 1.2, 1.2, 3.2, 3.2, 3.2, 4.2, 4.2, 5.2, 5.2, 5.2, 6.2
 <section id="f-test-in-r" class="level2">
 <h2 class="anchored" data-anchor-id="f-test-in-r">F-Test in R</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(aout_add)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>aout_add <span class="ot">&lt;-</span> <span class="fu">aov</span>(Score <span class="sc">~</span> Company <span class="sc">+</span> Treat, <span class="at">data =</span> case1302)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(aout_add)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 6
   term         df sumsq meansq statistic p.value
@@ -499,7 +502,8 @@ $ upper   &lt;dbl&gt; 1.2, 1.2, 1.2, 3.2, 3.2, 3.2, 4.2, 4.2, 5.2, 5.2, 5.2, 6.2
 </ul>
 <p>Or equivalently, compare the two models directly:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(aout_com, aout_add)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>aout_com <span class="ot">&lt;-</span> <span class="fu">aov</span>(Score <span class="sc">~</span> Company, <span class="at">data =</span> case1302)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(aout_com, aout_add)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -522,6 +526,93 @@ Model 2: Score ~ Company + Treat
 <li>What if the effect of the Pygmalion treatment depends on which company?</li>
 <li>We should check this assumption — i.e., test for <strong>interactions</strong>.</li>
 </ul>
+</section>
+<section id="the-interaction-model-cell-means" class="level2">
+<h2 class="anchored" data-anchor-id="the-interaction-model-cell-means">The Interaction Model (Cell Means)</h2>
+<p><span class="math display">\[Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \epsilon_{ijk}\]</span></p>
+<ul>
+<li><span class="math inline">\((\alpha\beta)_{ij}\)</span>: <strong>interaction</strong> — allows the treatment effect to differ by company.
+<ul>
+<li>This is <strong>not</strong> multipliciation. <span class="math inline">\((\alpha\beta)_{ij}\)</span> is a single number, not the product of two numbers.</li>
+</ul></li>
+<li>Equivalent to letting every company × treatment combination have its own mean.</li>
+<li>In R: <code>Score ~ Company * Treat</code>.</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 27%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;">C1</th>
+<th style="text-align: center;">C2</th>
+<th style="text-align: center;"><span class="math inline">\(\cdots\)</span></th>
+<th style="text-align: center;">C10</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Pygmalion</td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_1 + \beta_1 + (\alpha\beta)_{11}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_2 + \beta_1 + (\alpha\beta)_{21}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\cdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_{10} + \beta_1 + (\alpha\beta)_{10,1}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Control</td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_1 + \beta_2 + (\alpha\beta)_{12}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_2 + \beta_2 + (\alpha\beta)_{22}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\cdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_{10} + \beta_2 + (\alpha\beta)_{10,2}\)</span></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>The cell means model is the exact same as a one-way ANOVA model with each cell having its own mean:</li>
+</ul>
+<p><span class="math display">\[
+Y_{\ell k} = \mu + \alpha_{\ell} + \epsilon_{\ell k}
+\]</span></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 27%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;">C1</th>
+<th style="text-align: center;">C2</th>
+<th style="text-align: center;"><span class="math inline">\(\cdots\)</span></th>
+<th style="text-align: center;">C10</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Pygmalion</td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_{1}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_{2}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\cdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_{10}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Control</td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_{11}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_{12}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\cdots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mu + \alpha_{20}\)</span></td>
+</tr>
+</tbody>
+</table>
+<hr>
 </section>
 <section id="interaction-plots" class="level2">
 <h2 class="anchored" data-anchor-id="interaction-plots">Interaction Plots</h2>
@@ -569,8 +660,22 @@ Model 2: Score ~ Company + Treat
 </div>
 </div>
 <ul>
-<li>Lines are roughly parallel — additivity is plausible.</li>
+<li><p>Lines are roughly parallel — additivity is plausible.</p></li>
+<li><p>A quick interaction plot can be made with <code>interaction.plot()</code></p></li>
 </ul>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">interaction.plot</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x.factor =</span> case1302<span class="sc">$</span>Company, </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace.factor =</span> case1302<span class="sc">$</span>Treat,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">response =</span> case1302<span class="sc">$</span>Score)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_two_way_anova_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="interpreting-the-interaction-model" class="level2">
 <h2 class="anchored" data-anchor-id="interpreting-the-interaction-model">Interpreting the Interaction Model</h2>
@@ -594,7 +699,12 @@ Model 2: Score ~ Company + Treat
 </div>
 </div>
 </div>
-<p>The residuals under the cell means model are smaller than under the additive model — each company’s idiosyncratic effect is absorbed:</p>
+<ul>
+<li><p>The residuals under the cell means model are smaller than under the additive model — each company’s idiosyncratic effect is absorbed:</p>
+<ul>
+<li>Recall that the full model will <strong>always</strong> have smaller residuals on average. We need to test if these are smaller than what would be expected by chance alone.</li>
+</ul></li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -688,8 +798,8 @@ Model 2: Score ~ Company + Treat
 <section id="f-test-in-r-1" class="level2">
 <h2 class="anchored" data-anchor-id="f-test-in-r-1">F-Test in R</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>aout_int <span class="ot">&lt;-</span> <span class="fu">aov</span>(Score <span class="sc">~</span> Company <span class="sc">*</span> Treat, <span class="at">data =</span> case1302)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(aout_int)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>aout_int <span class="ot">&lt;-</span> <span class="fu">aov</span>(Score <span class="sc">~</span> Company <span class="sc">*</span> Treat, <span class="at">data =</span> case1302)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(aout_int)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 6
   term             df sumsq meansq statistic p.value
@@ -712,9 +822,9 @@ Model 2: Score ~ Company + Treat
 <h1>Coefficient Estimates</h1>
 <p>Use <code>lm()</code> with <code>tidy(conf.int = TRUE)</code> to get estimates and confidence intervals:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lm_add <span class="ot">&lt;-</span> <span class="fu">lm</span>(Score <span class="sc">~</span> Company <span class="sc">+</span> Treat, <span class="at">data =</span> case1302)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_add, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, estimate, conf.low, conf.high, p.value)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>lm_add <span class="ot">&lt;-</span> <span class="fu">lm</span>(Score <span class="sc">~</span> Company <span class="sc">+</span> Treat, <span class="at">data =</span> case1302)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_add, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, estimate, conf.low, conf.high, p.value)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 11 × 5
    term           estimate conf.low conf.high  p.value
@@ -810,7 +920,7 @@ Model 2: Score ~ Company + Treat
 <hr>
 <p><strong>3.</strong> The data file <code>case1301.csv</code> contains results from a randomized experiment on plant cover. <code>Treat</code> is the treatment and <code>Block</code> is the experimental block (a grouping variable included to reduce residual variance).</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>case1301 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case1301.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>case1301 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case1301.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ol type="a">
 <li>Make an interaction plot of <code>Cover</code> vs.&nbsp;<code>Treat</code>, grouped by <code>Block</code>.</li>

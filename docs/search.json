@@ -1579,14 +1579,14 @@
     "href": "13_ch13/13_two_way_anova.html#the-additive-model-main-effects-only",
     "title": "Two-Way ANOVA",
     "section": "The Additive Model (Main Effects Only)",
-    "text": "The Additive Model (Main Effects Only)\n\\[Y_{ijk} = \\mu + \\alpha_i + \\beta_j + \\epsilon_{ijk}\\]\n\n\\(\\mu\\): baseline mean (Company C1, Control group).\n\\(\\alpha_i\\): main effect of Company \\(i\\) — accounts for between-company variability.\n\\(\\beta_j\\): main effect of Treatment \\(j\\) — what we actually care about.\n\\(\\epsilon_{ijk} \\sim N(0, \\sigma^2)\\): noise.\nAdditivity assumption: the treatment effect \\(\\beta_j\\) is the same for every company."
+    "text": "The Additive Model (Main Effects Only)\n\\[Y_{ijk} = \\mu + \\alpha_i + \\beta_j + \\epsilon_{ijk}\\]\n\n\\(\\mu\\): baseline mean (Company C1, Control group).\n\\(\\alpha_i\\): main effect of Company \\(i\\) — accounts for between-company variability.\n\\(\\beta_j\\): main effect of Treatment \\(j\\) — what we actually care about.\n\\(\\epsilon_{ijk} \\sim N(0, \\sigma^2)\\): noise.\nAdditivity assumption: the treatment effect \\(\\beta_j\\) is the same for every company.\n\nIt is called two-way because each observational unit can be placed into a two-way table according to its group in both categorical variables.\n\n\n\n\n\n\n\n\n\n\n\nC1\nC2\n\\(\\cdots\\)\nC10\n\n\n\n\nPygmalion\n\\(\\mu + \\alpha_1 + \\beta_1\\)\n\\(\\mu + \\alpha_2 + \\beta_1\\)\n\\(\\cdots\\)\n\\(\\mu + \\alpha_{10} + \\beta_1\\)\n\n\nControl\n\\(\\mu + \\alpha_1 + \\beta_2\\)\n\\(\\mu + \\alpha_2 + \\beta_2\\)\n\\(\\cdots\\)\n\\(\\mu + \\alpha_{10} + \\beta_2\\)\n\n\n\n\nIn the Pygmalion case, we are not actually interested in the \\(\\alpha_i\\)’s (company effects).\n\nThe researchers were using this as a grouping variable to decrease variance."
   },
   {
     "objectID": "13_ch13/13_two_way_anova.html#the-interaction-model-cell-means",
     "href": "13_ch13/13_two_way_anova.html#the-interaction-model-cell-means",
     "title": "Two-Way ANOVA",
     "section": "The Interaction Model (Cell Means)",
-    "text": "The Interaction Model (Cell Means)\n\\[Y_{ijk} = \\mu + \\alpha_i + \\beta_j + (\\alpha\\beta)_{ij} + \\epsilon_{ijk}\\]\n\n\\((\\alpha\\beta)_{ij}\\): interaction — allows the treatment effect to differ by company.\nEquivalent to letting every company × treatment combination have its own mean.\nIn R: Score ~ Company * Treat."
+    "text": "The Interaction Model (Cell Means)\n\\[Y_{ijk} = \\mu + \\alpha_i + \\beta_j + (\\alpha\\beta)_{ij} + \\epsilon_{ijk}\\]\n\n\\((\\alpha\\beta)_{ij}\\): interaction — allows the treatment effect to differ by company.\n\nThis is not multipliciation. \\((\\alpha\\beta)_{ij}\\) is a single number, not the product of two numbers.\n\nEquivalent to letting every company × treatment combination have its own mean.\nIn R: Score ~ Company * Treat.\n\n\n\n\n\n\n\n\n\n\n\n\nC1\nC2\n\\(\\cdots\\)\nC10\n\n\n\n\nPygmalion\n\\(\\mu + \\alpha_1 + \\beta_1 + (\\alpha\\beta)_{11}\\)\n\\(\\mu + \\alpha_2 + \\beta_1 + (\\alpha\\beta)_{21}\\)\n\\(\\cdots\\)\n\\(\\mu + \\alpha_{10} + \\beta_1 + (\\alpha\\beta)_{10,1}\\)\n\n\nControl\n\\(\\mu + \\alpha_1 + \\beta_2 + (\\alpha\\beta)_{12}\\)\n\\(\\mu + \\alpha_2 + \\beta_2 + (\\alpha\\beta)_{22}\\)\n\\(\\cdots\\)\n\\(\\mu + \\alpha_{10} + \\beta_2 + (\\alpha\\beta)_{10,2}\\)\n\n\n\n\nThe cell means model is the exact same as a one-way ANOVA model with each cell having its own mean:\n\n\\[\nY_{\\ell k} = \\mu + \\alpha_{\\ell} + \\epsilon_{\\ell k}\n\\]\n\n\n\n\n\n\n\n\n\n\n\nC1\nC2\n\\(\\cdots\\)\nC10\n\n\n\n\nPygmalion\n\\(\\mu + \\alpha_{1}\\)\n\\(\\mu + \\alpha_{2}\\)\n\\(\\cdots\\)\n\\(\\mu + \\alpha_{10}\\)\n\n\nControl\n\\(\\mu + \\alpha_{11}\\)\n\\(\\mu + \\alpha_{12}\\)\n\\(\\cdots\\)\n\\(\\mu + \\alpha_{20}\\)"
   },
   {
     "objectID": "13_ch13/13_two_way_anova.html#visual-examples",
@@ -1621,7 +1621,7 @@
     "href": "13_ch13/13_two_way_anova.html#f-test-in-r",
     "title": "Two-Way ANOVA",
     "section": "F-Test in R",
-    "text": "F-Test in R\n\ntidy(aout_add)\n\n# A tibble: 3 × 6\n  term         df sumsq meansq statistic p.value\n  &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;\n1 Company       9  671.   74.6      1.72  0.156 \n2 Treat         1  339.  339.       7.84  0.0119\n3 Residuals    18  779.   43.3     NA    NA     \n\n\n\nThe Treat row is the F-test for the main effect of treatment controlling for Company.\n\\(F = 7.84\\) on 1 and 18 df, \\(p = 0.012\\).\nConclusion: moderate evidence that the Pygmalion treatment increased average scores.\n\nOr equivalently, compare the two models directly:\n\nanova(aout_com, aout_add)\n\nAnalysis of Variance Table\n\nModel 1: Score ~ Company\nModel 2: Score ~ Company + Treat\n  Res.Df  RSS Df Sum of Sq    F Pr(&gt;F)\n1     19 1117                         \n2     18  779  1       339 7.84  0.012"
+    "text": "F-Test in R\n\naout_add &lt;- aov(Score ~ Company + Treat, data = case1302)\ntidy(aout_add)\n\n# A tibble: 3 × 6\n  term         df sumsq meansq statistic p.value\n  &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;\n1 Company       9  671.   74.6      1.72  0.156 \n2 Treat         1  339.  339.       7.84  0.0119\n3 Residuals    18  779.   43.3     NA    NA     \n\n\n\nThe Treat row is the F-test for the main effect of treatment controlling for Company.\n\\(F = 7.84\\) on 1 and 18 df, \\(p = 0.012\\).\nConclusion: moderate evidence that the Pygmalion treatment increased average scores.\n\nOr equivalently, compare the two models directly:\n\naout_com &lt;- aov(Score ~ Company, data = case1302)\nanova(aout_com, aout_add)\n\nAnalysis of Variance Table\n\nModel 1: Score ~ Company\nModel 2: Score ~ Company + Treat\n  Res.Df  RSS Df Sum of Sq    F Pr(&gt;F)\n1     19 1117                         \n2     18  779  1       339 7.84  0.012"
   },
   {
     "objectID": "13_ch13/13_two_way_anova.html#after-confirming-no-interaction",
@@ -1712,7 +1712,7 @@
     "href": "13_ch13/13_two_way_anova.html#reduced-model-company-only",
     "title": "Two-Way ANOVA",
     "section": "Reduced Model: Company Only",
-    "text": "Reduced Model: Company Only\n\nUnder the reduced model, each company has one estimated mean for all platoons.\n\n\n\n\n\n\n\n\n\n\nThe residuals under the reduced model — gaps between points and their company mean:\n\n\n\n\n\n\n\n\n\nNotice the residuals tend to be signed by treatment: Pygmalion points above their company mean, Control points below. This suggests treatment matters."
+    "text": "Reduced Model: Company Only\n\nUnder the reduced model, each company has one estimated mean for all platoons.\n\n\n\n\n\n\n\n\n\n\nThe residuals under the reduced model — gaps between points and their company mean:"
   },
   {
     "objectID": "13_ch13/13_two_way_anova.html#full-additive-model-company-treatment",
@@ -1747,7 +1747,7 @@
     "href": "13_ch13/13_two_way_anova.html#interaction-plot-for-the-pygmalion-data",
     "title": "Two-Way ANOVA",
     "section": "Interaction Plot for the Pygmalion Data",
-    "text": "Interaction Plot for the Pygmalion Data\n\nggplot(case1302, aes(x = Company, y = Score, color = Treat, group = Treat)) +\n  stat_summary(fun = mean, geom = \"line\") +\n  stat_summary(fun = mean, geom = \"point\") +\n  labs(x = \"Company\", y = \"Average Score\", color = \"Treatment\",\n       title = \"Pygmalion: interaction plot\")\n\n\n\n\n\n\n\n\n\nLines are roughly parallel — additivity is plausible."
+    "text": "Interaction Plot for the Pygmalion Data\n\nggplot(case1302, aes(x = Company, y = Score, color = Treat, group = Treat)) +\n  stat_summary(fun = mean, geom = \"line\") +\n  stat_summary(fun = mean, geom = \"point\") +\n  labs(x = \"Company\", y = \"Average Score\", color = \"Treatment\",\n       title = \"Pygmalion: interaction plot\")\n\n\n\n\n\n\n\n\n\nLines are roughly parallel — additivity is plausible.\nA quick interaction plot can be made with interaction.plot()\n\n\ninteraction.plot(\n  x.factor = case1302$Company, \n  trace.factor = case1302$Treat,\n  response = case1302$Score)"
   },
   {
     "objectID": "13_ch13/13_two_way_anova.html#f-test-for-interaction-in-r",
@@ -1775,7 +1775,7 @@
     "href": "13_ch13/13_two_way_anova.html#interpreting-the-interaction-model",
     "title": "Two-Way ANOVA",
     "section": "Interpreting the Interaction Model",
-    "text": "Interpreting the Interaction Model\nUnder the cell means model, each company × treatment combination gets its own estimated mean:\n\n\n\n\n\n\n\n\n\nThe arrows make the company-specific treatment effects explicit — each company gets its own arrow length:\n\n\n\n\n\n\n\n\n\nThe residuals under the cell means model are smaller than under the additive model — each company’s idiosyncratic effect is absorbed:"
+    "text": "Interpreting the Interaction Model\nUnder the cell means model, each company × treatment combination gets its own estimated mean:\n\n\n\n\n\n\n\n\n\nThe arrows make the company-specific treatment effects explicit — each company gets its own arrow length:\n\n\n\n\n\n\n\n\n\n\nThe residuals under the cell means model are smaller than under the additive model — each company’s idiosyncratic effect is absorbed:\n\nRecall that the full model will always have smaller residuals on average. We need to test if these are smaller than what would be expected by chance alone."
   },
   {
     "objectID": "13_ch13/13_two_way_anova.html#the-f-statistic-1",

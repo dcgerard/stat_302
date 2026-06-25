@@ -57,13 +57,6 @@ glimpse(case1302)
 
 1. **Quantitative** response variable.
 2. **Two categorical** explanatory variables.
-3. It is called *two-way* because each observational unit can be placed into a
-   two-way table according to its group in both categorical variables.
-
-|           | C1 | C2 | $\cdots$ | C10 |
-|-----------|----|----|----------|-----|
-| Pygmalion |    |    |          |     |
-| Control   |    |    |          |     |
 
 ---
 
@@ -79,15 +72,15 @@ $$Y_{ijk} = \mu + \alpha_i + \beta_j + \epsilon_{ijk}$$
 - $\epsilon_{ijk} \sim N(0, \sigma^2)$: noise.
 - **Additivity assumption**: the treatment effect $\beta_j$ is the **same** for every company.
 
-## The Interaction Model (Cell Means)
+It is called *two-way* because each observational unit can be placed into a two-way table according to its group in both categorical variables.
 
-$$Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \epsilon_{ijk}$$
+|           | C1 | C2 | $\cdots$ | C10 |
+|:-----------:|:----:|:----:|:----------:|:-----:|
+| Pygmalion | $\mu + \alpha_1 + \beta_1$   |  $\mu + \alpha_2 + \beta_1$  |  $\cdots$        |  $\mu + \alpha_{10} + \beta_1$   |
+| Control   | $\mu + \alpha_1 + \beta_2$   | $\mu + \alpha_2 + \beta_2$   | $\cdots$         |  $\mu + \alpha_{10} + \beta_2$   |
 
-- $(\alpha\beta)_{ij}$: **interaction** — allows the treatment effect to differ by company.
-- Equivalent to letting every company × treatment combination have its own mean.
-- In R: `Score ~ Company * Treat`.
-
----
+- In the Pygmalion case, we are not actually interested in the $\alpha_i$'s (company effects). 
+  - The researchers were using this as a **grouping variable** to decrease variance.
 
 # Testing for Main Effects
 
@@ -136,8 +129,6 @@ ggplot(case1302, aes(x = com_num, y = Score, color = Treat)) +
        title = "Reduced model: residuals (blue)")
 ```
 
-Notice the residuals tend to be **signed by treatment**: Pygmalion points above their
-company mean, Control points below. This suggests treatment matters.
 
 ## Full (Additive) Model: Company + Treatment
 
@@ -265,6 +256,7 @@ ggplot(tibble(x = f_seq, y = f_dens), aes(x, y)) +
 
 ```{r}
 #| label: main-effects-test
+aout_add <- aov(Score ~ Company + Treat, data = case1302)
 tidy(aout_add)
 ```
 
@@ -276,6 +268,7 @@ Or equivalently, compare the two models directly:
 
 ```{r}
 #| label: main-effects-anova
+aout_com <- aov(Score ~ Company, data = case1302)
 anova(aout_com, aout_add)
 ```
 
@@ -288,6 +281,33 @@ anova(aout_com, aout_add)
 - The test above assumes the treatment effect is the **same for every company**.
 - What if the effect of the Pygmalion treatment depends on which company?
 - We should check this assumption — i.e., test for **interactions**.
+
+## The Interaction Model (Cell Means)
+
+$$Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \epsilon_{ijk}$$
+
+- $(\alpha\beta)_{ij}$: **interaction** — allows the treatment effect to differ by company.
+  - This is **not** multipliciation. $(\alpha\beta)_{ij}$ is a single number, not the product of two numbers.
+- Equivalent to letting every company × treatment combination have its own mean.
+- In R: `Score ~ Company * Treat`.
+
+|           | C1 | C2 | $\cdots$ | C10 |
+|:-----------:|:----:|:----:|:----------:|:-----:|
+| Pygmalion | $\mu + \alpha_1 + \beta_1 + (\alpha\beta)_{11}$   |  $\mu + \alpha_2 + \beta_1 + (\alpha\beta)_{21}$  |  $\cdots$        |  $\mu + \alpha_{10} + \beta_1 + (\alpha\beta)_{10,1}$   |
+| Control   | $\mu + \alpha_1 + \beta_2 + (\alpha\beta)_{12}$   | $\mu + \alpha_2 + \beta_2 + (\alpha\beta)_{22}$   | $\cdots$         |  $\mu + \alpha_{10} + \beta_2 + (\alpha\beta)_{10,2}$   |
+
+- The cell means model is the exact same as a one-way ANOVA model with each cell having its own mean:
+
+$$
+Y_{\ell k} = \mu + \alpha_{\ell} + \epsilon_{\ell k}
+$$
+
+|           | C1 | C2 | $\cdots$ | C10 |
+|:-----------:|:----:|:----:|:----------:|:-----:|
+| Pygmalion | $\mu + \alpha_{1}$   |  $\mu + \alpha_{2}$  |  $\cdots$        |  $\mu + \alpha_{10}$   |
+| Control   | $\mu + \alpha_{11}$   | $\mu + \alpha_{12}$   | $\cdots$         |  $\mu + \alpha_{20}$   |
+
+---
 
 ## Interaction Plots
 
@@ -345,6 +365,17 @@ ggplot(case1302, aes(x = Company, y = Score, color = Treat, group = Treat)) +
 
 - Lines are roughly parallel — additivity is plausible.
 
+- A quick interaction plot can be made with `interaction.plot()`
+```{r}
+#| fig-height: 5
+#| fig-width: 8
+interaction.plot(
+  x.factor = case1302$Company, 
+  trace.factor = case1302$Treat,
+  response = case1302$Score)
+```
+
+
 ## Interpreting the Interaction Model
 
 Under the **cell means model**, each company × treatment combination gets its own
@@ -390,8 +421,10 @@ ggplot(case1302, aes(x = com_num, y = Score, color = Treat)) +
        title = "Cell means model: treatment effect varies by company")
 ```
 
-The residuals under the cell means model are smaller than under the additive model —
-each company's idiosyncratic effect is absorbed:
+- The residuals under the cell means model are smaller than under the additive model — each company's idiosyncratic effect is absorbed:
+  
+  - Recall that the full model will **always** have smaller residuals on average. We need to test if these are smaller than what would be expected by chance alone.
+
 
 ```{r}
 #| label: cellmeans-resid
