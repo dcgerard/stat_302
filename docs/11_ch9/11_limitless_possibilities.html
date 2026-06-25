@@ -236,6 +236,9 @@ window.Quarto = {
 </header>
 
 
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <section id="learning-objectives" class="level1">
 <h1>Learning Objectives</h1>
 <ul>
@@ -247,9 +250,9 @@ window.Quarto = {
 <section id="adding-curvature" class="level1">
 <h1>Adding Curvature</h1>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ex0915 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/ex0915.csv"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ex0915, <span class="fu">aes</span>(<span class="at">x =</span> Rainfall, <span class="at">y =</span> Yield)) <span class="sc">+</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ex0915 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/ex0915.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ex0915, <span class="fu">aes</span>(<span class="at">x =</span> Rainfall, <span class="at">y =</span> Yield)) <span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -275,9 +278,9 @@ window.Quarto = {
 </ul>
 <p>To fit a polynomial, create new variables that are powers of existing variables, then include those in the multiple regression model.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ex0915<span class="sc">$</span>Rainfall2 <span class="ot">&lt;-</span> ex0915<span class="sc">$</span>Rainfall <span class="sc">^</span> <span class="dv">2</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>lmout_quad <span class="ot">&lt;-</span> <span class="fu">lm</span>(Yield <span class="sc">~</span> Rainfall <span class="sc">+</span> Rainfall2, <span class="at">data =</span> ex0915)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>lmout_quad</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ex0915<span class="sc">$</span>Rainfall2 <span class="ot">&lt;-</span> ex0915<span class="sc">$</span>Rainfall <span class="sc">^</span> <span class="dv">2</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>lmout_quad <span class="ot">&lt;-</span> <span class="fu">lm</span>(Yield <span class="sc">~</span> Rainfall <span class="sc">+</span> Rainfall2, <span class="at">data =</span> ex0915)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>lmout_quad</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -311,8 +314,8 @@ Coefficients:
 <li>This allows <code>predict()</code> to work with just <code>Rainfall</code></li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>lmout_quad_2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Yield <span class="sc">~</span> Rainfall <span class="sc">+</span> <span class="fu">I</span>(Rainfall<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> ex0915)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>lmout_quad_2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>lmout_quad_2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Yield <span class="sc">~</span> Rainfall <span class="sc">+</span> <span class="fu">I</span>(Rainfall<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> ex0915)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>lmout_quad_2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -325,12 +328,12 @@ Coefficients:
 </div></li>
 <li><p>Look at how we encode <code>predict()</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(<span class="at">object =</span> lmout_quad, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">Rainfall =</span> <span class="dv">10</span>, <span class="at">Rainfall2 =</span> <span class="dv">100</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(<span class="at">object =</span> lmout_quad, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">Rainfall =</span> <span class="dv">10</span>, <span class="at">Rainfall2 =</span> <span class="dv">100</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       1 
 32.09177 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(<span class="at">object =</span> lmout_quad_2, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">Rainfall =</span> <span class="dv">10</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(<span class="at">object =</span> lmout_quad_2, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">Rainfall =</span> <span class="dv">10</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       1 
 32.09177 </code></pre>
@@ -353,18 +356,14 @@ Coefficients:
 <li>Explanatory variables: Timing of light (early/late, binary), intensity of light (quantitative).</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>case0901 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0901.csv"</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(case0901)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>case0901 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0901.csv"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(case0901)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 3
-  Flowers  Time Intensity
-    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-1    62.3     1       150
-2    77.4     1       150
-3    55.3     1       300
-4    54.2     1       300
-5    49.6     1       450
-6    61.9     1       450</code></pre>
+<pre><code>Rows: 24
+Columns: 3
+$ Flowers   &lt;dbl&gt; 62.3, 77.4, 55.3, 54.2, 49.6, 61.9, 39.4, 45.7, 31.3, 44.9, …
+$ Time      &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, …
+$ Intensity &lt;dbl&gt; 150, 150, 300, 300, 450, 450, 600, 600, 750, 750, 900, 900, …</code></pre>
 </div>
 </div>
 <p>Model: <span class="math inline">\(\mu(\text{Flowers} \mid \text{Time},\,\text{Intensity}) = \beta_0 + \beta_1\,\text{Time} + \beta_2\,\text{Intensity}\)</span></p>
@@ -375,10 +374,10 @@ Coefficients:
 <li>Slope is <span class="math inline">\(\beta_2\)</span> both times, but the lines have different intercepts (parallel lines).</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>case0901<span class="sc">$</span>Time <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(case0901<span class="sc">$</span>Time)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0901, <span class="fu">aes</span>(<span class="at">x =</span> Intensity, <span class="at">y =</span> Flowers, <span class="at">color =</span> Time)) <span class="sc">+</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>case0901<span class="sc">$</span>Time <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(case0901<span class="sc">$</span>Time)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0901, <span class="fu">aes</span>(<span class="at">x =</span> Intensity, <span class="at">y =</span> Flowers, <span class="at">color =</span> Time)) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
@@ -433,7 +432,7 @@ Coefficients:
 <li>Check with <code>class()</code>:</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(case0901<span class="sc">$</span>Time)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(case0901<span class="sc">$</span>Time)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "factor"</code></pre>
 </div>
@@ -442,11 +441,11 @@ Coefficients:
 <li>If it is not a <code>factor</code>, convert it with <code>as.factor()</code>:</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>case0901<span class="sc">$</span>Time <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(case0901<span class="sc">$</span>Time)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>case0901<span class="sc">$</span>Time <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(case0901<span class="sc">$</span>Time)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(Flowers <span class="sc">~</span> Time <span class="sc">+</span> Intensity, <span class="at">data =</span> case0901)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(Flowers <span class="sc">~</span> Time <span class="sc">+</span> Intensity, <span class="at">data =</span> case0901)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept)       Time2   Intensity 
 71.30583333 12.15833333 -0.04047143 </code></pre>
@@ -491,10 +490,10 @@ Coefficients:
 </ul>
 <p><strong>No interaction</strong> — parallel lines, same slope:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>lmadd <span class="ot">&lt;-</span> <span class="fu">lm</span>(Flowers <span class="sc">~</span> Time <span class="sc">+</span> Intensity, <span class="at">data =</span> case0901)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>case0901<span class="sc">$</span>fit <span class="ot">&lt;-</span> <span class="fu">fitted</span>(lmadd)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0901, <span class="fu">aes</span>(<span class="at">x =</span> Intensity, <span class="at">y =</span> Flowers, <span class="at">color =</span> Time)) <span class="sc">+</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> fit), <span class="at">linewidth =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>lmadd <span class="ot">&lt;-</span> <span class="fu">lm</span>(Flowers <span class="sc">~</span> Time <span class="sc">+</span> Intensity, <span class="at">data =</span> case0901)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>case0901<span class="sc">$</span>fit <span class="ot">&lt;-</span> <span class="fu">fitted</span>(lmadd)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0901, <span class="fu">aes</span>(<span class="at">x =</span> Intensity, <span class="at">y =</span> Flowers, <span class="at">color =</span> Time)) <span class="sc">+</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> fit), <span class="at">linewidth =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -505,10 +504,10 @@ Coefficients:
 </div>
 <p><strong>Interaction</strong> — non-parallel lines, slopes differ by group:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>case0901<span class="sc">$</span>fit1 <span class="ot">&lt;-</span> case0901<span class="sc">$</span>fit <span class="sc">+</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  case0901<span class="sc">$</span>Intensity <span class="sc">*</span> (case0901<span class="sc">$</span>Time <span class="sc">==</span> <span class="dv">2</span>) <span class="sc">*</span> <span class="fl">0.02</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0901, <span class="fu">aes</span>(<span class="at">x =</span> Intensity, <span class="at">y =</span> Flowers, <span class="at">color =</span> Time)) <span class="sc">+</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> fit1), <span class="at">linewidth =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>case0901<span class="sc">$</span>fit1 <span class="ot">&lt;-</span> case0901<span class="sc">$</span>fit <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  case0901<span class="sc">$</span>Intensity <span class="sc">*</span> (case0901<span class="sc">$</span>Time <span class="sc">==</span> <span class="dv">2</span>) <span class="sc">*</span> <span class="fl">0.02</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0901, <span class="fu">aes</span>(<span class="at">x =</span> Intensity, <span class="at">y =</span> Flowers, <span class="at">color =</span> Time)) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> fit1), <span class="at">linewidth =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -521,8 +520,8 @@ Coefficients:
 <h2 class="anchored" data-anchor-id="fitting-interactions-in-r">Fitting Interactions in R</h2>
 <p><span class="math inline">\(\mu(Y_i \mid \text{Time},\,\text{Intensity}) = \beta_0 + \beta_1\,\text{Time} + \beta_2\,\text{Intensity} + \beta_3\,\text{Time} \times \text{Intensity}\)</span></p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>lmint <span class="ot">&lt;-</span> <span class="fu">lm</span>(Flowers <span class="sc">~</span> Time <span class="sc">*</span> Intensity, <span class="at">data =</span> case0901)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(lmint)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>lmint <span class="ot">&lt;-</span> <span class="fu">lm</span>(Flowers <span class="sc">~</span> Time <span class="sc">*</span> Intensity, <span class="at">data =</span> case0901)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(lmint)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    (Intercept)           Time2       Intensity Time2:Intensity 
    71.623333333    11.523333333    -0.041076190     0.001209524 </code></pre>

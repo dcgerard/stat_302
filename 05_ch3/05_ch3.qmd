@@ -7,12 +7,19 @@ bibliography: "../bib.bib"
 
 ```{r setup}
 #| include: false
-set.seed(1)
+set.seed(6)
 knitr::opts_chunk$set(echo       = TRUE,
                       fig.height = 3,
                       fig.width  = 6,
                       fig.align  = "center")
 ggplot2::theme_set(ggplot2::theme_bw())
+```
+
+```{r}
+#| label: load-packages
+#| message: false
+library(tidyverse)
+library(broom)
 library(patchwork)
 ```
 
@@ -97,8 +104,7 @@ library(patchwork)
     ```{r unequal-var-example}
     #| echo: false
     #| message: false
-    library(tidyverse)
-    set.seed(42)
+    set.seed(24)
     tibble(
       group = rep(c("Group 1", "Group 2"), each = 50),
       y     = c(rnorm(50, mean = 5, sd = 1), rnorm(50, mean = 5, sd = 4))
@@ -534,7 +540,6 @@ experiment.
 ```{r}
 #| label: rainfall-load
 #| message: false
-library(patchwork)
 case0301 <- read_csv("https://dcgerard.github.io/stat_302/data/case0301.csv")
 ```
 
@@ -615,8 +620,6 @@ $$H_0: \delta = 0 \qquad H_a: \delta \neq 0$$
 ```{r}
 #| label: rainfall-log-ttest
 #| message: false
-library(broom)
-
 case0301 |>
   t.test(logRainfall ~ Treatment, data = _) |>
   tidy() ->

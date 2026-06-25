@@ -8,9 +8,7 @@ bibliography: "../bib.bib"
 ```{r}
 #| label: setup
 #| include: false
-library(tidyverse)
-library(broom)
-library(GGally)
+set.seed(16)
 library(patchwork)
 knitr::opts_chunk$set(echo       = TRUE,
                       fig.height = 3,
@@ -18,6 +16,14 @@ knitr::opts_chunk$set(echo       = TRUE,
                       fig.align  = "center")
 ggplot2::theme_set(ggplot2::theme_bw())
 set.seed(1)
+```
+
+```{r}
+#| label: load-packages
+#| message: false
+library(tidyverse)
+library(broom)
+library(GGally)
 ```
 
 # Learning Objectives
@@ -128,7 +134,7 @@ Including too few or too many variables both hurt your analysis.
 #| fig-width: 7
 #| fig-height: 3
 #| echo: false
-set.seed(42)
+set.seed(23)
 n  <- 100
 px <- runif(n)
 py <- px + rnorm(n, sd = 0.1)

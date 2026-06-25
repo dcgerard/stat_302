@@ -8,6 +8,7 @@ bibliography: "../bib.bib"
 
 ```{r setup}
 #| include: false
+set.seed(2)
 knitr::opts_chunk$set(echo = TRUE,
             fig.width = 4, 
             fig.height = 3, 
@@ -394,7 +395,7 @@ seq(1, 10, by = 2)
     ```{r}
     #| message: false
     birds <- read_csv("https://dcgerard.github.io/stat_302/data/ex1027.csv")
-    head(birds)
+    glimpse(birds)
     ```
   
 ::: {.panel-tabset}
@@ -406,7 +407,7 @@ Load in the "ex0223.csv" data from the [course website](https://dcgerard.github.
 ```{r}
 #| eval: true
 highway <- read_csv("https://dcgerard.github.io/stat_302/data/ex0223.csv")
-head(highway)
+glimpse(highway)
 ```
 
 :::
@@ -421,7 +422,7 @@ head(highway)
 
     ```{r}
     birds <- mutate(birds, log_time = log(Time))
-    head(birds)
+    glimpse(birds)
     ```
 
 -   Use `glimpse()` to get a brief look at the data frame.
@@ -441,7 +442,7 @@ head(highway)
 
     ```{r}
     birds <- rename(birds, l_time = log_time)
-    head(birds)
+    glimpse(birds)
     ```
 
 -   Use `filter()` to remove rows.

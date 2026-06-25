@@ -7,12 +7,19 @@ bibliography: "../bib.bib"
 
 ```{r setup}
 #| include: false
-set.seed(1)
+set.seed(5)
 knitr::opts_chunk$set(echo       = TRUE,
                       fig.height = 3,
                       fig.width  = 6,
                       fig.align  = "center")
 ggplot2::theme_set(ggplot2::theme_bw())
+```
+
+```{r}
+#| label: load-packages
+#| message: false
+library(tidyverse)
+library(broom)
 ```
 
 # Learning Objectives
@@ -145,9 +152,6 @@ ggplot2::theme_set(ggplot2::theme_bw())
 
 ```{r case0101-eda}
 #| message: false
-library(tidyverse)
-library(broom)
-
 case0101 <- read_csv("https://dcgerard.github.io/stat_302/data/case0101.csv")
 ggplot(case0101, aes(x = Treatment, y = Score)) +
   geom_boxplot(coef = Inf) +

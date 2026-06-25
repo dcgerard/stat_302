@@ -628,17 +628,15 @@ window.Quarto = {
 <li><p>For this lecture, let’s consider the data <a href="https://dcgerard.github.io/stat_302/data.html#chapter-10">ex1027.csv</a>, from <span class="citation" data-cites="pimm1988risk">Pimm et al. (<a href="#ref-pimm1988risk" role="doc-biblioref">1988</a>)</span>. They were interested in if nesting pair size was related to rate of extinction. They measured the average nesting pair size and time to extinction across 16 islands for 62 bird species. They also measued the size of the species (large/small) and the migratory status of the species (migratory/resident).</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>birds <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/ex1027.csv"</span>)</span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(birds)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(birds)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 5
-  Species         Time Pairs Size  Status
-  &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
-1 Sparrowhawk     3.03  1    L     R     
-2 Buzzard         5.46  2    L     R     
-3 Kestrel         4.1   1.21 L     R     
-4 Peregrine       1.68  1.13 L     R     
-5 Grey_partridge  8.85  5.17 L     R     
-6 Quail           1.49  1    L     M     </code></pre>
+<pre><code>Rows: 62
+Columns: 5
+$ Species &lt;chr&gt; "Sparrowhawk", "Buzzard", "Kestrel", "Peregrine", "Grey_partri…
+$ Time    &lt;dbl&gt; 3.03, 5.46, 4.10, 1.68, 8.85, 1.49, 7.69, 3.85, 16.67, 4.22, 8…
+$ Pairs   &lt;dbl&gt; 1.00, 2.00, 1.21, 1.13, 5.17, 1.00, 2.75, 5.63, 3.00, 4.67, 4.…
+$ Size    &lt;chr&gt; "L", "L", "L", "L", "L", "L", "L", "L", "L", "L", "L", "L", "L…
+$ Status  &lt;chr&gt; "R", "R", "R", "R", "R", "M", "R", "R", "R", "M", "R", "R", "M…</code></pre>
 </div>
 </div></li>
 </ul>
@@ -661,17 +659,15 @@ dbl (3): Fatalities1995, Fatalities1996, PctChange
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(highway)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(highway)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 5
-  State      Fatalities1995 Fatalities1996 PctChange SpeedLimit
-  &lt;chr&gt;               &lt;dbl&gt;          &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;     
-1 Alabama              1114           1146      2.87 Inc       
-2 Alaska                 87             81     -6.9  Ret       
-3 Arizona              1035            994     -3.96 Inc       
-4 Arkansas              631            615     -2.54 Inc       
-5 California           4192           3989     -4.84 Inc       
-6 Colorado              645            617     -4.34 Inc       </code></pre>
+<pre><code>Rows: 51
+Columns: 5
+$ State          &lt;chr&gt; "Alabama", "Alaska", "Arizona", "Arkansas", "California…
+$ Fatalities1995 &lt;dbl&gt; 1114, 87, 1035, 631, 4192, 645, 317, 121, 58, 2805, 148…
+$ Fatalities1996 &lt;dbl&gt; 1146, 81, 994, 615, 3989, 617, 310, 116, 62, 2753, 1573…
+$ PctChange      &lt;dbl&gt; 2.87, -6.90, -3.96, -2.54, -4.84, -4.34, -2.21, -4.13, …
+$ SpeedLimit     &lt;chr&gt; "Inc", "Ret", "Inc", "Inc", "Inc", "Inc", "Ret", "Inc",…</code></pre>
 </div>
 </div>
 </div>
@@ -686,17 +682,16 @@ dbl (3): Fatalities1995, Fatalities1996, PctChange
 <li><p>Use the <code>mutate()</code> function from the <code>{dplyr}</code> package to make variable transformations.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>birds <span class="ot">&lt;-</span> <span class="fu">mutate</span>(birds, <span class="at">log_time =</span> <span class="fu">log</span>(Time))</span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(birds)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(birds)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 6
-  Species         Time Pairs Size  Status log_time
-  &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;
-1 Sparrowhawk     3.03  1    L     R         1.11 
-2 Buzzard         5.46  2    L     R         1.70 
-3 Kestrel         4.1   1.21 L     R         1.41 
-4 Peregrine       1.68  1.13 L     R         0.519
-5 Grey_partridge  8.85  5.17 L     R         2.18 
-6 Quail           1.49  1    L     M         0.399</code></pre>
+<pre><code>Rows: 62
+Columns: 6
+$ Species  &lt;chr&gt; "Sparrowhawk", "Buzzard", "Kestrel", "Peregrine", "Grey_partr…
+$ Time     &lt;dbl&gt; 3.03, 5.46, 4.10, 1.68, 8.85, 1.49, 7.69, 3.85, 16.67, 4.22, …
+$ Pairs    &lt;dbl&gt; 1.00, 2.00, 1.21, 1.13, 5.17, 1.00, 2.75, 5.63, 3.00, 4.67, 4…
+$ Size     &lt;chr&gt; "L", "L", "L", "L", "L", "L", "L", "L", "L", "L", "L", "L", "…
+$ Status   &lt;chr&gt; "R", "R", "R", "R", "R", "M", "R", "R", "R", "M", "R", "R", "…
+$ log_time &lt;dbl&gt; 1.1085626, 1.6974488, 1.4109870, 0.5187938, 2.1804175, 0.3987…</code></pre>
 </div>
 </div></li>
 <li><p>Use <code>glimpse()</code> to get a brief look at the data frame.</p>
@@ -721,17 +716,16 @@ $ log_time &lt;dbl&gt; 1.1085626, 1.6974488, 1.4109870, 0.5187938, 2.1804175, 0.
 <li><p>Use <code>rename()</code> to rename variables.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>birds <span class="ot">&lt;-</span> <span class="fu">rename</span>(birds, <span class="at">l_time =</span> log_time)</span>
-<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(birds)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(birds)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 6
-  Species         Time Pairs Size  Status l_time
-  &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;dbl&gt;
-1 Sparrowhawk     3.03  1    L     R       1.11 
-2 Buzzard         5.46  2    L     R       1.70 
-3 Kestrel         4.1   1.21 L     R       1.41 
-4 Peregrine       1.68  1.13 L     R       0.519
-5 Grey_partridge  8.85  5.17 L     R       2.18 
-6 Quail           1.49  1    L     M       0.399</code></pre>
+<pre><code>Rows: 62
+Columns: 6
+$ Species &lt;chr&gt; "Sparrowhawk", "Buzzard", "Kestrel", "Peregrine", "Grey_partri…
+$ Time    &lt;dbl&gt; 3.03, 5.46, 4.10, 1.68, 8.85, 1.49, 7.69, 3.85, 16.67, 4.22, 8…
+$ Pairs   &lt;dbl&gt; 1.00, 2.00, 1.21, 1.13, 5.17, 1.00, 2.75, 5.63, 3.00, 4.67, 4.…
+$ Size    &lt;chr&gt; "L", "L", "L", "L", "L", "L", "L", "L", "L", "L", "L", "L", "L…
+$ Status  &lt;chr&gt; "R", "R", "R", "R", "R", "M", "R", "R", "R", "M", "R", "R", "M…
+$ l_time  &lt;dbl&gt; 1.1085626, 1.6974488, 1.4109870, 0.5187938, 2.1804175, 0.39877…</code></pre>
 </div>
 </div></li>
 <li><p>Use <code>filter()</code> to remove rows.</p>

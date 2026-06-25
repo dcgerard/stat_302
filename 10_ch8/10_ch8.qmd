@@ -8,14 +8,24 @@ bibliography: "../bib.bib"
 ```{r}
 #| label: setup
 #| include: false
-library(tidyverse)
-library(broom)
+set.seed(11)
 knitr::opts_chunk$set(echo       = TRUE,
                       fig.height = 3,
                       fig.width  = 5,
                       fig.align  = "center")
 ggplot2::theme_set(ggplot2::theme_bw())
 set.seed(1)
+```
+
+```{r}
+#| label: load-packages
+#| message: false
+library(tidyverse)
+library(broom)
+library(lm.br)
+library(quantreg)
+library(sandwich)
+library(lmtest)
 ```
 
 # Learning Objectives
@@ -253,7 +263,6 @@ $$Y_i = \begin{cases} \beta_0 + \beta_1 X_i & \text{if } X_i < C \\ \beta_0^* + 
 ```{r}
 #| label: d3-lmbr
 #| message: false
-library(lm.br)
 lmbr_out <- lm.br(y ~ x, data = df)
 df |>
   mutate(fitted = fitted(lmbr_out)) ->
@@ -440,7 +449,6 @@ augment(lmout) |>
 ```{r}
 #| label: d5-quantreg
 #| message: false
-library(quantreg)
 qr_out <- rq(y ~ x, tau = 0.5, data = df)
 
 fit_df <- data.frame(x = x, qr_fitted = fitted(qr_out)) |> arrange(x)
@@ -494,8 +502,6 @@ augment(lmout) |>
 ```{r}
 #| label: d6-sandwich
 #| message: false
-library(sandwich)
-library(lmtest)
 coeftest(lmout, vcov = sandwich) |> tidy()
 ```
 

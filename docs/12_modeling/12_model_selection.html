@@ -258,6 +258,11 @@ window.Quarto = {
 </header>
 
 
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <section id="learning-objectives" class="level1">
 <h1>Learning Objectives</h1>
 <ul>
@@ -459,16 +464,16 @@ window.Quarto = {
 <li><code>step()</code> returns an <code>lm</code> object — <code>tidy()</code>, <code>glance()</code>, <code>anova()</code> all work on it.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>case1202 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case1202.csv"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">logBsal =</span> <span class="fu">log</span>(Bsal),</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">Age2    =</span> Age<span class="sc">^</span><span class="dv">2</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Exper2  =</span> Exper<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>case1202 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case1202.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">logBsal =</span> <span class="fu">log</span>(Bsal),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">Age2    =</span> Age<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Exper2  =</span> Exper<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>lm_rich <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Age <span class="sc">+</span> Age2 <span class="sc">+</span> Educ <span class="sc">+</span> Exper <span class="sc">+</span> Exper2,</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> case1202)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>lm_step <span class="ot">&lt;-</span> <span class="fu">step</span>(lm_rich, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_step)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>lm_rich <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Age <span class="sc">+</span> Age2 <span class="sc">+</span> Educ <span class="sc">+</span> Exper <span class="sc">+</span> Exper2,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> case1202)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>lm_step <span class="ot">&lt;-</span> <span class="fu">step</span>(lm_rich, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_step)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 5
   term           estimate  std.error statistic  p.value
@@ -517,14 +522,14 @@ window.Quarto = {
 <li>Differences of less than ~2 units are negligible.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>lm_exper <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Educ <span class="sc">+</span> Exper <span class="sc">+</span> Exper2, <span class="at">data =</span> case1202)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>lm_age   <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Educ <span class="sc">+</span> Age   <span class="sc">+</span> Age2,   <span class="at">data =</span> case1202)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance</span>(lm_exper) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Exper model"</span>),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance</span>(lm_age)   <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Age model"</span>)</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(model, AIC, BIC, r.squared, adj.r.squared)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>lm_exper <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Educ <span class="sc">+</span> Exper <span class="sc">+</span> Exper2, <span class="at">data =</span> case1202)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>lm_age   <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Educ <span class="sc">+</span> Age   <span class="sc">+</span> Age2,   <span class="at">data =</span> case1202)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance</span>(lm_exper) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Exper model"</span>),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance</span>(lm_age)   <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Age model"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(model, AIC, BIC, r.squared, adj.r.squared)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 5
   model         AIC   BIC r.squared adj.r.squared
@@ -588,10 +593,10 @@ window.Quarto = {
 <section id="steps-35-eda" class="level2">
 <h2 class="anchored" data-anchor-id="steps-35-eda">Steps 3–5: EDA</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(case1202,</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">"logBsal"</span>, <span class="st">"Sex"</span>, <span class="st">"Senior"</span>, <span class="st">"Age"</span>, <span class="st">"Educ"</span>, <span class="st">"Exper"</span>),</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">color =</span> Sex, <span class="at">alpha =</span> <span class="fl">0.5</span>),</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">upper =</span> <span class="fu">list</span>(<span class="at">continuous =</span> <span class="fu">wrap</span>(<span class="st">"cor"</span>, <span class="at">size =</span> <span class="dv">3</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(case1202,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">"logBsal"</span>, <span class="st">"Sex"</span>, <span class="st">"Senior"</span>, <span class="st">"Age"</span>, <span class="st">"Educ"</span>, <span class="st">"Exper"</span>),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">color =</span> Sex, <span class="at">alpha =</span> <span class="fl">0.5</span>),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">upper =</span> <span class="fu">list</span>(<span class="at">continuous =</span> <span class="fu">wrap</span>(<span class="st">"cor"</span>, <span class="at">size =</span> <span class="dv">3</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -611,10 +616,10 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="step-6-variable-selection-1">Step 6: Variable Selection</h2>
 <p><code>Sex</code> is the primary question — <strong>exclude it from stepwise selection</strong> and add it back for the final test. Run stepwise on the control variables only:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>lm_rich_controls <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Age <span class="sc">+</span> Age2 <span class="sc">+</span> Educ <span class="sc">+</span> Exper <span class="sc">+</span> Exper2,</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">data =</span> case1202)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>lm_step_controls <span class="ot">&lt;-</span> <span class="fu">step</span>(lm_rich_controls, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_step_controls)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lm_rich_controls <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Age <span class="sc">+</span> Age2 <span class="sc">+</span> Educ <span class="sc">+</span> Exper <span class="sc">+</span> Exper2,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">data =</span> case1202)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>lm_step_controls <span class="ot">&lt;-</span> <span class="fu">step</span>(lm_rich_controls, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_step_controls)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 5
   term           estimate  std.error statistic  p.value
@@ -635,9 +640,9 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="step-7-final-inference-on-sex">Step 7: Final Inference on Sex</h2>
 <p>Add <code>Sex</code> to the stepwise-selected model and test it:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>lm_final <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Sex <span class="sc">+</span> Senior <span class="sc">+</span> Age <span class="sc">+</span> Educ <span class="sc">+</span> Exper <span class="sc">+</span> Exper2,</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> case1202)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_final, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lm_final <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Sex <span class="sc">+</span> Senior <span class="sc">+</span> Age <span class="sc">+</span> Educ <span class="sc">+</span> Exper <span class="sc">+</span> Exper2,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> case1202)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_final, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 7 × 7
   term           estimate  std.error statistic  p.value    conf.low   conf.high
@@ -652,9 +657,9 @@ window.Quarto = {
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_final, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"SexMale"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(estimate, conf.low, conf.high), exp))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_final, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"SexMale"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(estimate, conf.low, conf.high), exp))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 7
   term    estimate std.error statistic       p.value conf.low conf.high
@@ -681,9 +686,9 @@ window.Quarto = {
 </ol>
 <hr>
 <p><strong>2.</strong> Consider these three models fit to the bank data:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>lm_a <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Educ <span class="sc">+</span> Exper <span class="sc">+</span> Exper2, <span class="at">data =</span> case1202)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>lm_b <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Age  <span class="sc">+</span> Age2,            <span class="at">data =</span> case1202)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>lm_c <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Educ <span class="sc">+</span> Age  <span class="sc">+</span> Exper,    <span class="at">data =</span> case1202)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>lm_a <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Educ <span class="sc">+</span> Exper <span class="sc">+</span> Exper2, <span class="at">data =</span> case1202)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>lm_b <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Age  <span class="sc">+</span> Age2,            <span class="at">data =</span> case1202)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>lm_c <span class="ot">&lt;-</span> <span class="fu">lm</span>(logBsal <span class="sc">~</span> Senior <span class="sc">+</span> Educ <span class="sc">+</span> Age  <span class="sc">+</span> Exper,    <span class="at">data =</span> case1202)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ol type="a">
 <li><p>Which pairs of models are nested? For any nested pair, set up and run an <span class="math inline">\(F\)</span>-test.</p></li>
 <li><p>For the non-nested pairs, compare AIC and BIC using <code>glance()</code>. Which model do you prefer, and why?</p></li>

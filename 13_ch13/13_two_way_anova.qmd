@@ -8,13 +8,20 @@ bibliography: "../bib.bib"
 ```{r}
 #| label: setup
 #| include: false
-library(tidyverse)
-library(broom)
+set.seed(19)
+library(patchwork)
 knitr::opts_chunk$set(echo       = TRUE,
                       fig.height = 3,
                       fig.width  = 5,
                       fig.align  = "center")
 ggplot2::theme_set(ggplot2::theme_bw())
+```
+
+```{r}
+#| label: load-packages
+#| message: false
+library(tidyverse)
+library(broom)
 ```
 
 # Learning Objectives
@@ -582,7 +589,6 @@ b. If an interaction is present, describe what it means in words.
 #| label: exercise-plots
 #| echo: false
 #| fig-width: 7
-library(patchwork)
 p1_df <- tibble(
   x      = rep(c("A", "B", "C"), 2),
   mean_y = c(5, 8, 11, 9, 12, 15),

@@ -103,7 +103,7 @@ larger, harder seeds).
 #| eval: true
 case0201 <- read.csv("https://dcgerard.github.io/stat_302/data/case0201.csv")
 case0201$Year <- factor(case0201$Year)
-head(case0201)
+glimpse(case0201)
 ```
 
 **1.** Let $\mu_1$ = population mean beak depth in 1976 and

@@ -256,15 +256,12 @@ $ Affected   &lt;dbl&gt; 1.27, 1.63, 1.47, 1.39, 1.93, 1.26, 1.71, 1.67, 1.28, 1
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>case0201 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0201.csv"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>case0201<span class="sc">$</span>Year <span class="ot">&lt;-</span> <span class="fu">factor</span>(case0201<span class="sc">$</span>Year)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(case0201)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(case0201)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  Year Depth
-1 1976   6.2
-2 1976   6.8
-3 1976   7.1
-4 1976   7.1
-5 1976   7.4
-6 1976   7.8</code></pre>
+<pre><code>Rows: 178
+Columns: 2
+$ Year  &lt;fct&gt; 1976, 1976, 1976, 1976, 1976, 1976, 1976, 1976, 1976, 1976, 1976…
+$ Depth &lt;dbl&gt; 6.2, 6.8, 7.1, 7.1, 7.4, 7.8, 7.9, 8.0, 8.2, 8.4, 8.4, 8.4, 8.5,…</code></pre>
 </div>
 </div>
 <p><strong>1.</strong> Let <span class="math inline">\(\mu_1\)</span> = population mean beak depth in 1976 and <span class="math inline">\(\mu_2\)</span> = population mean beak depth in 1978. State the null and alternative hypotheses in words and in mathematical notation.</p>

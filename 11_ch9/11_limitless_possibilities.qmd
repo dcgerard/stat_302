@@ -8,13 +8,19 @@ bibliography: "../bib.bib"
 ```{r}
 #| label: setup
 #| include: false
-library(tidyverse)
+set.seed(12)
 knitr::opts_chunk$set(echo       = TRUE,
                       fig.height = 3,
                       fig.width  = 5,
                       fig.align  = "center")
 ggplot2::theme_set(ggplot2::theme_bw())
 set.seed(1)
+```
+
+```{r}
+#| label: load-packages
+#| message: false
+library(tidyverse)
 ```
 
 # Learning Objectives
@@ -98,7 +104,7 @@ Researchers studied the effect of timing and light intensity on flower yield:
 #| label: flowers-head
 #| message: false
 case0901 <- read_csv("https://dcgerard.github.io/stat_302/data/case0901.csv")
-head(case0901)
+glimpse(case0901)
 ```
 
 Model: $\mu(\text{Flowers} \mid \text{Time},\,\text{Intensity}) = \beta_0 + \beta_1\,\text{Time} + \beta_2\,\text{Intensity}$

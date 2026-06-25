@@ -8,12 +8,19 @@ bibliography: "../bib.bib"
 
 ```{r setup}
 #| include: false
-set.seed(1)
+set.seed(4)
 knitr::opts_chunk$set(echo       = TRUE,
-                      fig.height = 3, 
+                      fig.height = 3,
                       fig.width  = 6,
                       fig.align  = "center")
 ggplot2::theme_set(ggplot2::theme_bw())
+```
+
+```{r}
+#| label: load-packages
+#| message: false
+library(tidyverse)
+library(broom)
 ```
 
 # Learning Objectives
@@ -296,7 +303,6 @@ ggplot2::theme_set(ggplot2::theme_bw())
     ```{r}
     #| echo: false
     #| message: false
-    library(tidyverse)
     tibble(df = seq_len(50)) %>%
       mutate(quant75 = qt(p = 0.75, df = df)) %>%
       ggplot(aes(x = df, y = quant75)) +
@@ -376,12 +382,6 @@ ggplot2::theme_set(ggplot2::theme_bw())
 -   For the examples below, we will use datasets available on the
     [course data page](https://dcgerard.github.io/stat_302/data.html),
     loaded with `read_csv()`.
-
-    ```{r}
-    #| message: false
-    library(tidyverse)
-    library(broom)
-    ```
 
 -   **Exercise**: Read the help page of the `ex0126` data frame from the Sleuth3
   package. What are the observational units? What are the variables? Which

@@ -248,6 +248,9 @@ window.Quarto = {
 </header>
 
 
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <section id="learning-objectives" class="level1">
 <h1>Learning Objectives</h1>
 <ul>
@@ -278,8 +281,8 @@ window.Quarto = {
 <li>Does year explain speed? (Speed has increased over time as breeding and track conditions improved.)</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ex0920 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/ex0920.csv"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(ex0920)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ex0920 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/ex0920.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(ex0920)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 116
 Columns: 8
@@ -294,10 +297,10 @@ $ Conditions  &lt;chr&gt; "Fast", "Slow", "Fast", "Fast", "Fast", "Fast", "Fast"
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ex0920, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Speed)) <span class="sc">+</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Winning Speed (mph)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ex0920, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Speed)) <span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Winning Speed (mph)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -370,13 +373,13 @@ $ Conditions  &lt;chr&gt; "Fast", "Slow", "Fast", "Fast", "Fast", "Fast", "Fast"
 <li>We compare the <strong>residual sum of squares</strong> (RSS) under each model.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ex0920 <span class="ot">&lt;-</span> ex0920 <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Year2 =</span> Year<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>lm_full    <span class="ot">&lt;-</span> <span class="fu">lm</span>(Speed <span class="sc">~</span> Year <span class="sc">+</span> Year2, <span class="at">data =</span> ex0920)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>lm_reduced <span class="ot">&lt;-</span> <span class="fu">lm</span>(Speed <span class="sc">~</span> <span class="dv">1</span>,            <span class="at">data =</span> ex0920)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>ex0920 <span class="ot">&lt;-</span> ex0920 <span class="sc">|&gt;</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fit_full =</span> <span class="fu">fitted</span>(lm_full),</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">fit_red  =</span> <span class="fu">fitted</span>(lm_reduced))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ex0920 <span class="ot">&lt;-</span> ex0920 <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Year2 =</span> Year<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>lm_full    <span class="ot">&lt;-</span> <span class="fu">lm</span>(Speed <span class="sc">~</span> Year <span class="sc">+</span> Year2, <span class="at">data =</span> ex0920)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>lm_reduced <span class="ot">&lt;-</span> <span class="fu">lm</span>(Speed <span class="sc">~</span> <span class="dv">1</span>,            <span class="at">data =</span> ex0920)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>ex0920 <span class="ot">&lt;-</span> ex0920 <span class="sc">|&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fit_full =</span> <span class="fu">fitted</span>(lm_full),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">fit_red  =</span> <span class="fu">fitted</span>(lm_reduced))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -459,7 +462,7 @@ $ Conditions  &lt;chr&gt; "Fast", "Slow", "Fast", "Fast", "Fast", "Fast", "Fast"
 <h1>Running the <span class="math inline">\(F\)</span>-Test in R</h1>
 <p>Use <code>anova()</code> with the <strong>reduced</strong> model first, the <strong>full</strong> model second:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_reduced, lm_full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_reduced, lm_full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -529,10 +532,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <li><strong>Reduced</strong>: Year + Year² (same as the full model above)</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ex0920 <span class="ot">&lt;-</span> ex0920 <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Starters2 =</span> Starters<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>lm_full2    <span class="ot">&lt;-</span> <span class="fu">lm</span>(Speed <span class="sc">~</span> Year <span class="sc">+</span> Year2 <span class="sc">+</span> Starters <span class="sc">+</span> Starters2, <span class="at">data =</span> ex0920)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>lm_reduced2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Speed <span class="sc">~</span> Year <span class="sc">+</span> Year2,                        <span class="at">data =</span> ex0920)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_reduced2, lm_full2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ex0920 <span class="ot">&lt;-</span> ex0920 <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Starters2 =</span> Starters<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>lm_full2    <span class="ot">&lt;-</span> <span class="fu">lm</span>(Speed <span class="sc">~</span> Year <span class="sc">+</span> Year2 <span class="sc">+</span> Starters <span class="sc">+</span> Starters2, <span class="at">data =</span> ex0920)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>lm_reduced2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Speed <span class="sc">~</span> Year <span class="sc">+</span> Year2,                        <span class="at">data =</span> ex0920)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_reduced2, lm_full2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -555,7 +558,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <h1>Exercises</h1>
 <p><strong>1.</strong> The brain size dataset (<code>case0902</code>) has three potential explanatory variables for <code>Brain</code> weight (grams): <code>Body</code> (kg), <code>Gestation</code> (days), and <code>Litter</code> size.</p>
 <p>Load the data:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>case0902 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0902.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>case0902 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0902.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Then consider: - <strong>Reduced model</strong>: <code>Brain ~ Body</code> - <strong>Full model</strong>: <code>Brain ~ Body + Gestation + Litter</code></p>
 <ol type="a">
 <li><p>Write out <span class="math inline">\(H_0\)</span> and <span class="math inline">\(H_A\)</span> in terms of the <span class="math inline">\(\beta\)</span> coefficients. In plain English, what does the null hypothesis claim?</p></li>

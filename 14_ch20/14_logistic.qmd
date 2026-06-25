@@ -9,9 +9,8 @@ bibliography: "../bib.bib"
 #| label: setup
 #| include: false
 #| message: false
-set.seed(1)
+set.seed(21)
 library(latex2exp)
-library(tidyverse)
 library(ggthemes)
 knitr::opts_chunk$set(echo       = TRUE,
                       fig.align  = "center",
@@ -19,18 +18,20 @@ knitr::opts_chunk$set(echo       = TRUE,
 ggplot2::theme_set(ggplot2::theme_bw() + ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white")))
 ```
 
-# Learning Objectives
-
-- Logistic Regression for Binary Response Variables
-- Chapter 20 of the *Statistical Sleuth*
-
 ```{r}
+#| label: load-packages
 #| message: false
 library(tidyverse)
 library(broom)
 library(sandwich)
 library(lmtest)
+library(brglm2)
 ```
+
+# Learning Objectives
+
+- Logistic Regression for Binary Response Variables
+- Chapter 20 of the *Statistical Sleuth*
 
 # Motivation
 
@@ -293,7 +294,6 @@ library(lmtest)
 
     ```{r}
     #| warning: false
-    library(brglm2)
     glm_out2 <- glm(Survived ~ Age + Sex,
                     data = donner,
                     family = binomial,

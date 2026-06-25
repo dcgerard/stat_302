@@ -7,8 +7,8 @@ bibliography: "../bib.bib"
 
 ```{r setup}
 #| include: false
-set.seed(1)
-library(ggplot2)
+set.seed(6)
+library(patchwork)
 knitr::opts_chunk$set(echo       = TRUE,
                       fig.height = 3,
                       fig.width  = 6,
@@ -39,6 +39,13 @@ plt_t <- function(mu = 0, sig = 1, lb = -Inf, ub = Inf, df = Inf, rng = c(-3, 3)
   }
   pl
 }
+```
+
+```{r}
+#| label: load-packages
+#| message: false
+library(tidyverse)
+library(broom)
 ```
 
 # Learning Objectives
@@ -211,8 +218,6 @@ if (!file.exists("02_fig/fig_sampling_dist.gif")) {
 ```{r t-vs-normal-plot}
 #| echo: false
 #| message: false
-library(tidyverse)
-library(broom)
 xseq <- seq(-4, 4, length.out = 300)
 data.frame(
   x    = c(xseq, xseq, xseq),
@@ -255,8 +260,6 @@ data.frame(x = xseq, y = dt(xseq, df = nu)) |>
 
 ```{r case0202-ttest}
 #| message: false
-library(tidyverse)
-library(broom)
 twins <- read_csv("https://dcgerard.github.io/stat_302/data/case0202.csv")
 
 twins |>
@@ -471,7 +474,6 @@ tidy(tout) |>
 #| echo: false
 #| fig-width: 7
 #| fig-height: 3
-library(patchwork)
 xseq <- seq(-4, 4, length.out = 400)
 yseq <- dt(xseq, df = 14)
 df_t <- data.frame(x = xseq, y = yseq)
