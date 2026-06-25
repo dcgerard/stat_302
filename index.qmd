@@ -52,3 +52,4 @@ author: David Gerard
   - [Multi-Factor ANOVA](./13_ch13/13_multifactor.qmd)
   - [Chapter 13 Worksheet](./13_ch13/13_worksheet.qmd)
 - Chapter 20:
+  - [Logistic Regression](./14_ch20/14_logistic.qmd)
