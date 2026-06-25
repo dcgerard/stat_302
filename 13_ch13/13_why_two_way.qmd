@@ -93,14 +93,12 @@ Residuals are smaller when `cat2` is included:
 
 ```{r}
 #| label: var-reduction-residuals
-resid_with    <- resid(aov(y ~ cat1 + cat2, data = sim_df))
-resid_without <- resid(aov(y ~ cat1,        data = sim_df))
-
-tibble(
-  residual = c(resid_with, resid_without),
-  model    = rep(c("With cat2", "Without cat2"), each = n)
+#| echo: false
+bind_rows(
+  augment(aov(y ~ cat1 + cat2, data = sim_df)) |> mutate(model = "With cat2"),
+  augment(aov(y ~ cat1,        data = sim_df)) |> mutate(model = "Without cat2")
 ) |>
-  ggplot(aes(x = model, y = residual)) +
+  ggplot(aes(x = model, y = .resid)) +
   geom_boxplot() +
   labs(y = "Residuals", x = NULL)
 ```

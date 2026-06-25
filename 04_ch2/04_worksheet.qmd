@@ -101,8 +101,8 @@ larger, harder seeds).
 
 ```{r}
 #| eval: true
-case0201 <- read.csv("https://dcgerard.github.io/stat_302/data/case0201.csv")
-case0201$Year <- factor(case0201$Year)
+case0201 <- read.csv("https://dcgerard.github.io/stat_302/data/case0201.csv") |>
+  mutate(Year = factor(Year))
 glimpse(case0201)
 ```
 

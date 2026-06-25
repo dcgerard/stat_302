@@ -423,7 +423,8 @@ pred_out <- predict(lmout, newdata = newdf, interval = "prediction",
                     se.fit = TRUE)
 fmult    <- sqrt(2 * qf(0.95, df1 = 2, df2 = nrow(case0701) - 2))
 
-newdf$Fit <- ci_out$fit[, 1]
+newdf <- newdf |>
+  mutate(Fit = ci_out$fit[, 1])
 
 banddf <- bind_rows(
   data.frame(Velocity = newdf$Velocity, Lower = ci_out$fit[, 2],
@@ -569,17 +570,17 @@ The three components are shown below:
 #| echo: false
 #| fig-width: 9
 #| fig-height: 3
-orange <- "#E69F00"
-ybar   <- mean(case0701$Distance)
-fitvec <- fitted(lmout)
+orange  <- "#E69F00"
+aug701  <- augment(lmout)
+ybar    <- mean(aug701$Distance)
 
-seg_total <- data.frame(x = case0701$Velocity, xend = case0701$Velocity,
-                        y = case0701$Distance, yend = ybar)
-seg_resid <- data.frame(x = case0701$Velocity, xend = case0701$Velocity,
-                        y = case0701$Distance, yend = fitvec)
-seg_reg   <- data.frame(x = case0701$Velocity, xend = case0701$Velocity,
-                        y = ybar, yend = fitvec)
-line_df   <- data.frame(x = case0701$Velocity, y = fitvec)
+seg_total <- data.frame(x = aug701$Velocity, xend = aug701$Velocity,
+                        y = aug701$Distance, yend = ybar)
+seg_resid <- data.frame(x = aug701$Velocity, xend = aug701$Velocity,
+                        y = aug701$Distance, yend = aug701$.fitted)
+seg_reg   <- data.frame(x = aug701$Velocity, xend = aug701$Velocity,
+                        y = ybar, yend = aug701$.fitted)
+line_df   <- data.frame(x = aug701$Velocity, y = aug701$.fitted)
 
 make_r2_plot <- function(segs, title) {
   ggplot(case0701, aes(x = Velocity, y = Distance)) +

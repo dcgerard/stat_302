@@ -61,7 +61,8 @@ To fit a polynomial, create new variables that are powers of existing variables,
 
 ```{r}
 #| label: quad-fit
-ex0915$Rainfall2 <- ex0915$Rainfall ^ 2
+ex0915 <- ex0915 |>
+  mutate(Rainfall2 = Rainfall ^ 2)
 lmout_quad <- lm(Yield ~ Rainfall + Rainfall2, data = ex0915)
 lmout_quad
 ```
@@ -116,7 +117,8 @@ Model: $\mu(\text{Flowers} \mid \text{Time},\,\text{Intensity}) = \beta_0 + \bet
 
 ```{r}
 #| label: flowers-scatter
-case0901$Time <- as.factor(case0901$Time)
+case0901 <- case0901 |>
+  mutate(Time = as.factor(Time))
 ggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE)
@@ -172,7 +174,8 @@ class(case0901$Time)
 
 ```{r}
 #| label: as-factor
-case0901$Time <- as.factor(case0901$Time)
+case0901 <- case0901 |>
+  mutate(Time = as.factor(Time))
 ```
 
 ```{r}
@@ -213,7 +216,8 @@ $$\mu(Y_i \mid \text{Time} = 1,\,\text{Intensity}) = (\beta_0 + \beta_1) + (\bet
 ```{r}
 #| label: no-interaction
 lmadd <- lm(Flowers ~ Time + Intensity, data = case0901)
-case0901$fit <- fitted(lmadd)
+case0901 <- case0901 |>
+  mutate(fit = fitted(lmadd))
 ggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +
   geom_line(aes(y = fit), linewidth = 1)
 ```
@@ -222,8 +226,8 @@ ggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +
 
 ```{r}
 #| label: interaction-plot
-case0901$fit1 <- case0901$fit +
-  case0901$Intensity * (case0901$Time == 2) * 0.02
+case0901 <- case0901 |>
+  mutate(fit1 = fit + Intensity * (Time == 2) * 0.02)
 ggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +
   geom_line(aes(y = fit1), linewidth = 1)
 ```

@@ -244,7 +244,8 @@ for (i in seq_len(n_sim)) {
                y  = int_q + b_full["x1"] * c(x_lo, x_hi),
                x2_q = q)
   }))
-  seg_df$x2_q <- factor(seg_df$x2_q, levels = q_levels)
+  seg_df <- seg_df |>
+    mutate(x2_q = factor(x2_q, levels = q_levels))
 
   # X1 only: single line across full range
   simple_df <- data.frame(x1 = c(0, 1),

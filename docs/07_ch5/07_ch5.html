@@ -215,7 +215,7 @@ window.Quarto = {
   <li><a href="#one-way-anova-in-r" id="toc-one-way-anova-in-r" class="nav-link" data-scroll-target="#one-way-anova-in-r">One-Way ANOVA in R</a>
   <ul class="collapse">
   <li><a href="#checking-the-grouping-variable" id="toc-checking-the-grouping-variable" class="nav-link" data-scroll-target="#checking-the-grouping-variable">Checking the Grouping Variable</a></li>
-  <li><a href="#omnibus-f-test-with-aov-and-summary" id="toc-omnibus-f-test-with-aov-and-summary" class="nav-link" data-scroll-target="#omnibus-f-test-with-aov-and-summary">Omnibus <span class="math inline">\(F\)</span>-Test with <code>aov()</code> and <code>summary()</code></a></li>
+  <li><a href="#omnibus-f-test-with-aov-and-tidy" id="toc-omnibus-f-test-with-aov-and-tidy" class="nav-link" data-scroll-target="#omnibus-f-test-with-aov-and-tidy">Omnibus <span class="math inline">\(F\)</span>-Test with <code>aov()</code> and <code>tidy()</code></a></li>
   <li><a href="#pairwise-comparisons" id="toc-pairwise-comparisons" class="nav-link" data-scroll-target="#pairwise-comparisons">Pairwise Comparisons</a></li>
   <li><a href="#nested-model-comparisons-with-anova" id="toc-nested-model-comparisons-with-anova" class="nav-link" data-scroll-target="#nested-model-comparisons-with-anova">Nested Model Comparisons with <code>anova()</code></a></li>
   <li><a href="#full-sequential-anova-table" id="toc-full-sequential-anova-table" class="nav-link" data-scroll-target="#full-sequential-anova-table">Full Sequential ANOVA Table</a></li>
@@ -1020,17 +1020,17 @@ n = \sum_{i=1}^{I}n_i
 </div>
 <p>If it were numeric, <code>aov()</code> would treat it as a continuous predictor, not a grouping variable. Use <code>as.factor()</code> or <code>mutate(Judge = factor(Judge))</code> to fix this.</p>
 </section>
-<section id="omnibus-f-test-with-aov-and-summary" class="level2">
-<h2 class="anchored" data-anchor-id="omnibus-f-test-with-aov-and-summary">Omnibus <span class="math inline">\(F\)</span>-Test with <code>aov()</code> and <code>summary()</code></h2>
+<section id="omnibus-f-test-with-aov-and-tidy" class="level2">
+<h2 class="anchored" data-anchor-id="omnibus-f-test-with-aov-and-tidy">Omnibus <span class="math inline">\(F\)</span>-Test with <code>aov()</code> and <code>tidy()</code></h2>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>aout_full <span class="ot">&lt;-</span> <span class="fu">aov</span>(Percent <span class="sc">~</span> Judge, <span class="at">data =</span> case0502)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(aout_full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(aout_full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>            Df Sum Sq Mean Sq F value  Pr(&gt;F)    
-Judge        6   1927   321.2   6.718 6.1e-05 ***
-Residuals   39   1864    47.8                    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<pre><code># A tibble: 2 × 6
+  term         df sumsq meansq statistic    p.value
+  &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+1 Judge         6 1927.  321.       6.72  0.0000610
+2 Residuals    39 1864.   47.8     NA    NA        </code></pre>
 </div>
 </div>
 <p>The table has two rows:</p>
@@ -1224,24 +1224,21 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <section id="manual-ggplot2-residual-plots" class="level2">
 <h2 class="anchored" data-anchor-id="manual-ggplot2-residual-plots">Manual <code>ggplot2</code> Residual Plots</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>resid_vec  <span class="ot">&lt;-</span> <span class="fu">residuals</span>(aout_full)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>fitted_vec <span class="ot">&lt;-</span> <span class="fu">fitted</span>(aout_full)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>resid_df   <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">resid =</span> resid_vec, <span class="at">fitted =</span> fitted_vec,</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Judge =</span> case0502<span class="sc">$</span>Judge)</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>p_rv_fit <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(resid_df, <span class="fu">aes</span>(<span class="at">x =</span> fitted, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Fitted values (group means)"</span>,</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Residuals"</span>,</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Residuals vs. fitted"</span>)</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>p_rv_grp <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(resid_df, <span class="fu">aes</span>(<span class="at">x =</span> Judge, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Residuals"</span>, <span class="at">title =</span> <span class="st">"Residuals by group"</span>)</span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>p_rv_fit <span class="sc">+</span> p_rv_grp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>aug_full <span class="ot">&lt;-</span> <span class="fu">augment</span>(aout_full)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>p_rv_fit <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(aug_full, <span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Fitted values (group means)"</span>,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Residuals"</span>,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Residuals vs. fitted"</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>p_rv_grp <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(aug_full, <span class="fu">aes</span>(<span class="at">x =</span> Judge, <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Residuals"</span>, <span class="at">title =</span> <span class="st">"Residuals by group"</span>)</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>p_rv_fit <span class="sc">+</span> p_rv_grp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1251,7 +1248,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(resid_df, <span class="fu">aes</span>(<span class="at">sample =</span> resid)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(aug_full, <span class="fu">aes</span>(<span class="at">sample =</span> .resid)) <span class="sc">+</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span></span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Normal Q-Q plot of residuals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>

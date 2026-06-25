@@ -109,7 +109,8 @@ $$\text{Full: } Y_{ijk} = \mu + \alpha_i + \beta_j + \epsilon_{ijk}$$
 #| label: reduced-fit
 #| echo: false
 aout_com <- aov(Score ~ Company, data = case1302)
-case1302$est_com <- fitted(aout_com)
+case1302 <- case1302 |>
+  mutate(est_com = fitted(aout_com))
 
 ggplot(case1302, aes(x = com_num, y = Score, color = Treat)) +
   geom_point() +
@@ -146,7 +147,8 @@ ggplot(case1302, aes(x = com_num, y = Score, color = Treat)) +
 #| label: full-fit
 #| echo: false
 aout_add <- aov(Score ~ Company + Treat, data = case1302)
-case1302$est_add <- fitted(aout_add)
+case1302 <- case1302 |>
+  mutate(est_add = fitted(aout_add))
 
 ggplot(case1302, aes(x = com_num, y = Score, color = Treat)) +
   geom_point() +
@@ -392,7 +394,8 @@ estimated mean:
 #| label: cellmeans-fit
 #| echo: false
 aout_int <- aov(Score ~ Company * Treat, data = case1302)
-case1302$est_int <- fitted(aout_int)
+case1302 <- case1302 |>
+  mutate(est_int = fitted(aout_int))
 
 ggplot(case1302, aes(x = com_num, y = Score, color = Treat)) +
   geom_point() +

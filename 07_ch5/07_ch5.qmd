@@ -693,12 +693,12 @@ If it were numeric, `aov()` would treat it as a continuous predictor, not
 a grouping variable. Use `as.factor()` or `mutate(Judge = factor(Judge))`
 to fix this.
 
-## Omnibus $F$-Test with `aov()` and `summary()`
+## Omnibus $F$-Test with `aov()` and `tidy()`
 
 ```{r}
 #| label: aov-full
 aout_full <- aov(Percent ~ Judge, data = case0502)
-summary(aout_full)
+tidy(aout_full)
 ```
 
 The table has two rows:
@@ -806,19 +806,17 @@ The two most important panels:
 
 ```{r}
 #| label: ggplot-resids
-resid_vec  <- residuals(aout_full)
-fitted_vec <- fitted(aout_full)
-resid_df   <- data.frame(resid = resid_vec, fitted = fitted_vec,
-                         Judge = case0502$Judge)
+#| warning: false
+aug_full <- augment(aout_full)
 
-p_rv_fit <- ggplot(resid_df, aes(x = fitted, y = resid)) +
+p_rv_fit <- ggplot(aug_full, aes(x = .fitted, y = .resid)) +
   geom_point() +
   geom_hline(yintercept = 0, linetype = "dashed") +
   labs(x = "Fitted values (group means)",
        y = "Residuals",
        title = "Residuals vs. fitted")
 
-p_rv_grp <- ggplot(resid_df, aes(x = Judge, y = resid)) +
+p_rv_grp <- ggplot(aug_full, aes(x = Judge, y = .resid)) +
   geom_boxplot() +
   geom_hline(yintercept = 0, linetype = "dashed") +
   labs(y = "Residuals", title = "Residuals by group")
@@ -828,7 +826,7 @@ p_rv_fit + p_rv_grp
 
 ```{r}
 #| label: qq-resid
-ggplot(resid_df, aes(sample = resid)) +
+ggplot(aug_full, aes(sample = .resid)) +
   geom_qq() +
   geom_qq_line() +
   labs(title = "Normal Q-Q plot of residuals")
@@ -845,9 +843,9 @@ Fitted plot — larger spread for larger fitted values (or vice versa):
 set.seed(2)
 resid_bad_var <- rnorm(n = nrow(case0502),
                        mean = 0,
-                       sd   = fitted_vec^3 / 3e6)
-ggplot(data.frame(resid = resid_bad_var, fitted = fitted_vec),
-       aes(x = fitted, y = resid)) +
+                       sd   = aug_full$.fitted^3 / 3e6)
+tibble(resid = resid_bad_var, fitted = aug_full$.fitted) |>
+  ggplot(aes(x = fitted, y = resid)) +
   geom_point() +
   geom_hline(yintercept = 0, linetype = "dashed") +
   labs(x = "Fitted values", y = "Residuals",
@@ -859,10 +857,10 @@ ggplot(data.frame(resid = resid_bad_var, fitted = fitted_vec),
 ```{r}
 #| label: bad-outlier
 #| echo: false
-resid_out <- resid_vec
+resid_out <- aug_full$.resid
 resid_out[1] <- 35
-ggplot(data.frame(resid = resid_out, fitted = fitted_vec),
-       aes(x = fitted, y = resid)) +
+tibble(resid = resid_out, fitted = aug_full$.fitted) |>
+  ggplot(aes(x = fitted, y = resid)) +
   geom_point() +
   geom_hline(yintercept = 0, linetype = "dashed") +
   labs(x = "Fitted values", y = "Residuals",

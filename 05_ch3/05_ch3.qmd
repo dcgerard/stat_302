@@ -242,7 +242,8 @@ for (index in 1:5) {
   df_temp <- data.frame(x = sort(xsim, decreasing = FALSE), sim = index)
   dftot <- rbind(dftot, df_temp)
 }
-dftot$sim <- as.factor(dftot$sim)
+dftot <- dftot |>
+  mutate(sim = as.factor(sim))
 ggplot(data = dftot, mapping = aes(sample = x)) +
   geom_qq() +
   geom_qq_line() +

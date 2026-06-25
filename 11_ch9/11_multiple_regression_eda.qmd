@@ -21,6 +21,7 @@ set.seed(1)
 #| label: load-packages
 #| message: false
 library(tidyverse)
+library(broom)
 library(GGally)
 ```
 
@@ -77,7 +78,8 @@ Curvature and different spreads at each explanatory variable suggest a log trans
 
 ```{r}
 #| label: log-brain
-case0902$logBrain <- log(case0902$Brain)
+case0902 <- case0902 |>
+  mutate(logBrain = log(Brain))
 ```
 
 ```{r}
@@ -102,9 +104,12 @@ Still a lot of curvature, so it looks like logging each variable might help.
 
 ```{r}
 #| label: log-all-vars
-case0902$logBody      <- log(case0902$Body)
-case0902$logGestation <- log(case0902$Gestation)
-case0902$logLitter    <- log(case0902$Litter)
+case0902 <- case0902 |>
+  mutate(
+    logBody      = log(Body),
+    logGestation = log(Gestation),
+    logLitter    = log(Litter)
+  )
 ```
 
 ```{r}
@@ -180,13 +185,12 @@ ggpairs(case0902, columns = 6:9)
 #| label: complex-model
 lm_comp <- lm(logBrain ~ logBody * logLitter * logGestation,
               data = case0902)
-res_vec <- resid(lm_comp)
-fit_vec <- fitted(lm_comp)
+aug_comp <- augment(lm_comp)
 ```
 
 ```{r}
 #| label: resid-plot
-ggplot(data.frame(fit_vec, res_vec), aes(x = fit_vec, y = res_vec)) +
+ggplot(aug_comp, aes(x = .fitted, y = .resid)) +
   geom_point() +
   geom_hline(yintercept = 0) +
   labs(x = "Fitted values", y = "Residuals")
@@ -194,7 +198,7 @@ ggplot(data.frame(fit_vec, res_vec), aes(x = fit_vec, y = res_vec)) +
 
 ```{r}
 #| label: qq-plot
-ggplot(data.frame(res_vec), aes(sample = res_vec)) +
+ggplot(aug_comp, aes(sample = .resid)) +
   geom_qq() +
   geom_qq_line()
 ```
@@ -226,8 +230,8 @@ ggplot(case0902, aes(x = logBody, y = logBrain, size = logGestation)) +
 ```{r}
 #| label: coded-color
 #| message: false
-case0901 <- read_csv("https://dcgerard.github.io/stat_302/data/case0901.csv")
-case0901$Time <- as.factor(case0901$Time)
+case0901 <- read_csv("https://dcgerard.github.io/stat_302/data/case0901.csv") |>
+  mutate(Time = as.factor(Time))
 ggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +
   geom_point()
 ```

@@ -163,12 +163,12 @@ ggplot(aug_rich, aes(x = .fitted, y = .resid)) +
 
 ```{r}
 #| label: leverage-plot
-n <- nrow(case1102)
+n <- nrow(aug_rich)
 p <- length(coef(lm_rich))
-lev <- hatvalues(lm_rich)
 
-tibble(obs = seq_along(lev), leverage = lev) |>
-  ggplot(aes(x = obs, y = leverage)) +
+aug_rich |>
+  mutate(obs = row_number()) |>
+  ggplot(aes(x = obs, y = .hat)) +
   geom_point() +
   geom_hline(yintercept = 2 * p / n, linetype = "dashed", color = "tomato") +
   labs(x = "Observation number", y = "Leverage",
@@ -195,11 +195,9 @@ tibble(obs = seq_along(lev), leverage = lev) |>
 
 ```{r}
 #| label: stud-resid-plot
-stud_res <- rstudent(lm_rich)
-fitted_vals <- fitted(lm_rich)
-
-tibble(fitted = fitted_vals, stud_res = stud_res) |>
-  ggplot(aes(x = fitted, y = stud_res)) +
+aug_rich |>
+  mutate(stud_res = rstudent(lm_rich)) |>
+  ggplot(aes(x = .fitted, y = stud_res)) +
   geom_point() +
   geom_hline(yintercept = 0) +
   geom_hline(yintercept = c(-2, 2), linetype = "dashed", color = "tomato") +
@@ -225,10 +223,9 @@ tibble(fitted = fitted_vals, stud_res = stud_res) |>
 
 ```{r}
 #| label: cooks-plot
-cook <- cooks.distance(lm_rich)
-
-tibble(obs = seq_along(cook), cook = cook) |>
-  ggplot(aes(x = obs, y = cook)) +
+aug_rich |>
+  mutate(obs = row_number()) |>
+  ggplot(aes(x = obs, y = .cooksd)) +
   geom_point() +
   geom_hline(yintercept = 1, linetype = "dashed", color = "tomato") +
   labs(x = "Observation number", y = "Cook's distance",

@@ -451,7 +451,6 @@ augment(lmout) |>
 #| message: false
 qr_out <- rq(y ~ x, tau = 0.5, data = df)
 
-fit_df <- data.frame(x = x, qr_fitted = fitted(qr_out)) |> arrange(x)
 df |>
   mutate(qr_fitted = fitted(qr_out)) ->
   df

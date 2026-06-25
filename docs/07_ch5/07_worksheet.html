@@ -257,7 +257,7 @@ $ logprop   &lt;dbl&gt; -2.534569, -2.034382, -2.832219, -1.037126, -1.788390, -
 <hr>
 <p><strong>1.</strong> Make a plot to informally explore questions of interest 1 through 3. Which characters appear to speak the most? Does it look like Picard stands out from the rest?</p>
 <p><strong>2.</strong> State the one-way ANOVA model and the omnibus null and alternative hypotheses for exploring question 1. Define all symbols.</p>
-<p><strong>3.</strong> Test the omnibus hypothesis from Question 2 using <code>aov()</code> and <code>summary()</code>. Report the <span class="math inline">\(F\)</span>-statistic, degrees of freedom, and <span class="math inline">\(p\)</span>-value.</p>
+<p><strong>3.</strong> Test the omnibus hypothesis from Question 2 using <code>aov()</code> and <code>tidy()</code>. Report the <span class="math inline">\(F\)</span>-statistic, degrees of freedom, and <span class="math inline">\(p\)</span>-value.</p>
 <p><strong>4.</strong> Interpret the result from Question 3 in plain language. What does the <span class="math inline">\(p\)</span>-value tell you? Does a significant omnibus result tell you <em>which</em> characters differ? Explain.</p>
 <p><strong>5.</strong> Create a new variable <code>isPicard</code> that is <code>TRUE</code> when <code>character == "picard"</code> and <code>FALSE</code> otherwise.</p>
 <p><strong>6.</strong> Use <code>aov()</code> to fit the <em>intermediate</em> model in which only Picard has his own mean and all other characters share a common mean.</p>

@@ -61,7 +61,7 @@ out from the rest?
 hypotheses for exploring question 1. Define all symbols.
 
 **3.** Test the omnibus hypothesis from Question 2 using `aov()` and
-`summary()`. Report the $F$-statistic, degrees of freedom, and $p$-value.
+`tidy()`. Report the $F$-statistic, degrees of freedom, and $p$-value.
 
 ```{r}
 
