@@ -2,6 +2,7 @@
 title: "Chapter 13 Worksheet"
 author: "David Gerard"
 date: today
+bibliography: "../bib.bib"
 ---
 
 ```{r}
@@ -17,138 +18,270 @@ knitr::opts_chunk$set(echo       = TRUE,
 ggplot2::theme_set(ggplot2::theme_bw())
 ```
 
-# Adoption and IQ
+# Quality Espresso
 
-Does a child's IQ depend more on the education level of biological parents or adoptive parents?
-Data from the Texas Adoption Project (Willerman et al., 1977) recorded the IQ of adopted children along with the education level of both their biological and adoptive mothers. Education level is classified as High or Low.
-
-Variables:
+@masella2015new developed a new method of brewing espresso. Traditional methods use steam from hot water to create pressure that drives water through coffee grounds. In this new method, pressure differentials between the interior and exterior of the brewing chamber control the flow. This allows finer control of both pressure and temperature. The authors investigated the effects of pressure and temperature on foam index.
 
 | Variable | Description |
 |:--|:--|
-| `IQ` | IQ score of the adopted child |
-| `Biological` | Education level of biological mother (`High` or `Low`) |
-| `Adoptive` | Education level of adoptive mother (`High` or `Low`) |
+| `foamIndx` | Ratio of foam to liquid volume (%) measured 30 s after extraction |
+| `trt_id` | Label for each treatment group (temperature × pressure combination) |
+| `tempC` | Water temperature (°C): 75, 85, or 95 |
+| `prssBar` | Brewing pressure (bar): 15 or 20 |
 
-Load the data:
+Load the data (you may need to adjust the path):
 
 ```{r}
 #| label: load-data
 #| eval: true
 #| message: false
-ex1319 <- read_csv("https://dcgerard.github.io/stat_302/data/ex1319.csv")
-glimpse(ex1319)
+espresso <- read_csv("../data/espresso.csv") |>
+  mutate(tempC   = factor(tempC),
+         prssBar = factor(prssBar))
+glimpse(espresso)
 ```
 
 ---
 
-**1.** What are the observational units? What is the response variable? What are the two
-categorical explanatory variables and how many levels does each have?
-
----
-
-**2.** How many children are in each group combination? Use `count()` to make a table of
-group sizes.
+**1.** Informally explore the effects of pressure and temperature on foam index by
+creating an interaction plot with `tempC` on the x-axis and `prssBar` as the grouping
+variable (color and line). Does pressure appear to increase or decrease the foam index?
+Does temperature appear to increase or decrease it? Does the plot suggest a strong
+interaction?
 
 ```{r}
+#| label: q1-plot
 
 ```
 
-Is this a balanced or unbalanced design? Does it appear that the groups are
-approximately the same size?
-
----
-
-**3.** Create an interaction plot with `Biological` on the x-axis and `Adoptive` as the
-grouping variable. Include:
-
-- Group means connected by lines (use `stat_summary(fun = mean, geom = "line")`).
-- Group means as points (use `stat_summary(fun = mean, geom = "point")`).
+::: {.callout-note collapse="true"}
+## Solution
 
 ```{r}
-
+#| label: q1-sol
+#| eval: true
+#| echo: false
+ggplot(espresso, aes(x = tempC, y = foamIndx, color = prssBar, group = prssBar)) +
+  stat_summary(fun = mean, geom = "line") +
+  stat_summary(fun = mean, geom = "point") +
+  labs(x = "Temperature (°C)", y = "Foam index (%)", color = "Pressure (bar)")
 ```
 
-Based on the interaction plot:
-
-a. Does biological mother's education level appear to be associated with child IQ?
-   Describe the direction of the effect.
-
-b. Does adoptive mother's education level appear to be associated with child IQ?
-   Describe the direction of the effect.
-
-c. Do the lines look parallel? Does the interaction plot suggest a strong interaction?
-
----
-
-**4.** Fit the cell means model (with interaction) and evaluate the model assumptions.
+With pointwise 95% confidence intervals:
 
 ```{r}
-
+#| label: q1-sol-ci
+#| eval: true
+#| echo: false
+espresso |>
+  group_by(tempC, prssBar) |>
+  summarize(mean  = mean(foamIndx),
+            se    = sd(foamIndx) / sqrt(n()),
+            .groups = "drop") |>
+  mutate(lower = mean - 2 * se,
+         upper = mean + 2 * se) |>
+  ggplot(aes(x = tempC, y = mean, color = prssBar, group = prssBar)) +
+  geom_line() +
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2) +
+  labs(x = "Temperature (°C)", y = "Mean foam index (%)", color = "Pressure (bar)")
 ```
 
-a. Make a residual plot (residuals vs. fitted values). Does the constant variance
-   assumption look reasonable?
-
-b. Make a QQ-plot of the residuals. Does the normality assumption look reasonable?
-
----
-
-**5.** Write out the two-way ANOVA model with interactions for this study. Define all
-terms, identifying which categorical variable corresponds to $\alpha_i$ and which
-corresponds to $\beta_j$.
+Temperature appears to decrease the foam index and higher pressure appears to increase
+it. There might be a weak interaction: the foam index seems to level off at higher
+temperatures for higher pressures but not for lower pressures, though the confidence
+intervals overlap substantially.
+:::
 
 ---
 
-**6.** Formally test for an interaction between `Biological` and `Adoptive` education
-level.
+**2.** Fit the cell means model (full interaction model) and evaluate whether the
+assumptions of the ANOVA model seem appropriate. Make a residual plot (residuals vs.
+fitted values).
 
 ```{r}
+#| label: q2-fit
 
 ```
 
-a. State $H_0$ and $H_A$ in terms of the $(\alpha\beta)_{ij}$ parameters.
+::: {.callout-note collapse="true"}
+## Solution
 
-b. Report the $F$-statistic, degrees of freedom, and $p$-value.
+```{r}
+#| label: q2-sol
+#| eval: true
+#| echo: false
+aout_cell <- aov(foamIndx ~ prssBar * tempC, data = espresso)
+augment(aout_cell) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, lty = 2) +
+  labs(x = "Fitted values", y = "Residuals")
+```
 
-c. State a conclusion in context. Should you proceed with the additive model or the
-   cell means model?
+The residual plot looks good: no obvious fan shape and residuals are scattered randomly
+around zero. The constant variance assumption appears reasonable.
+:::
 
 ---
 
-**7.** Fit the model supported by your answer to Question 6. Test for main effects of
-`Biological` and `Adoptive` education level.
+**3.** Write out the two-way ANOVA model with interactions for this study. Use the
+notation $Y_{ijk} = \ldots$ and define all terms.
 
-```{r}
+::: {.callout-note collapse="true"}
+## Solution
 
-```
+$$Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \epsilon_{ijk}$$
 
-a. Is there a significant main effect of biological mother's education? Report the
-   $F$-statistic and $p$-value.
-
-b. Is there a significant main effect of adoptive mother's education? Report the
-   $F$-statistic and $p$-value.
-
-c. What is the research conclusion from this study? Which type of parent's education
-   level is more strongly associated with the child's IQ?
+- $Y_{ijk}$: foam index of the $k$th observation at pressure $i$ and temperature $j$
+- $\mu$: baseline mean
+- $\alpha_i$: main effect of pressure level $i$
+- $\beta_j$: main effect of temperature level $j$
+- $(\alpha\beta)_{ij}$: interaction effect of pressure $i$ and temperature $j$
+- $\epsilon_{ijk}$: random error (assumed $\sim N(0, \sigma^2)$, independent)
+:::
 
 ---
 
-**8.** Use `tidy(lm(...), conf.int = TRUE)` to extract coefficient estimates and
-confidence intervals.
+**4.** Write out the null and alternative hypotheses in terms of the
+$(\alpha\beta)_{ij}$ parameters to test whether there is an interaction between
+pressure and temperature.
+
+::: {.callout-note collapse="true"}
+## Solution
+
+- $H_0: (\alpha\beta)_{ij} = 0$ for all $i$ and all $j$
+- $H_A:$ At least one $(\alpha\beta)_{ij} \neq 0$
+:::
+
+---
+
+**5.** Formally test whether there is an interaction between pressure and temperature.
+Report the $F$-statistic, degrees of freedom, and $p$-value, and state a conclusion.
 
 ```{r}
+#| label: q5-test
 
 ```
 
-a. What is the baseline group (the intercept)? What is its estimated mean IQ?
+::: {.callout-note collapse="true"}
+## Solution
 
-b. Interpret the coefficient for biological mother's education level. Provide the
-   estimate and a 95% confidence interval.
+```{r}
+#| label: q5-sol
+#| eval: true
+#| echo: false
+aout_cell <- aov(foamIndx ~ prssBar * tempC, data = espresso)
+tidy(aout_cell)
+```
 
-c. Interpret the coefficient for adoptive mother's education level. Provide the
-   estimate and a 95% confidence interval.
+The $p$-value for `prssBar:tempC` is large (approximately 0.48), providing no evidence
+of an interaction between pressure and temperature. We proceed with the additive model.
+:::
 
-d. Based on the magnitudes of the two coefficients, which type of parent's education
-   seems to be more strongly related to child IQ? Is the difference in effect sizes
-   statistically meaningful (do the confidence intervals overlap substantially)?
+---
+
+**6.** Fit the additive model (main effects only). Is there a significant effect of
+pressure or temperature on the foam index? Report the $F$-statistics and $p$-values for
+each main effect.
+
+```{r}
+#| label: q6-add
+
+```
+
+::: {.callout-note collapse="true"}
+## Solution
+
+```{r}
+#| label: q6-sol
+#| eval: true
+#| echo: false
+aout_add <- aov(foamIndx ~ prssBar + tempC, data = espresso)
+tidy(aout_add)
+```
+
+Yes — both pressure ($p \approx 0.0035$) and temperature ($p \approx 0.0066$) have
+significant effects on foam index.
+:::
+
+---
+
+**7.** Extract the coefficient estimates and confidence intervals from the additive model
+using `tidy(lm(...), conf.int = TRUE)`. Interpret each coefficient in context.
+
+*Hint:* The default reference level for `tempC` is 75°C. To also obtain the contrast
+between 85°C and 95°C, refit with 85°C as the reference level using
+`mutate(tempC = relevel(tempC, ref = "85"))` and extract that model's coefficients too.
+
+```{r}
+#| label: q7-coef
+
+```
+
+::: {.callout-note collapse="true"}
+## Solution
+
+```{r}
+#| label: q7-sol
+#| eval: true
+#| echo: false
+lm_add <- lm(foamIndx ~ prssBar + tempC, data = espresso)
+tidy(lm_add, conf.int = TRUE) |>
+  select(term, estimate, conf.low, conf.high)
+```
+
+```{r}
+#| label: q7-sol2
+#| eval: true
+#| echo: false
+espresso2 <- espresso |> mutate(tempC = relevel(tempC, ref = "85"))
+lm_add2 <- lm(foamIndx ~ prssBar + tempC, data = espresso2)
+tidy(lm_add2, conf.int = TRUE) |>
+  select(term, estimate, conf.low, conf.high)
+```
+
+- **Pressure:** Increasing pressure from 15 bar to 20 bar is estimated to increase the
+  foam index by about 19.8% (95% CI: 9.5% to 30.2%).
+- **Temperature 75→85°C:** Increasing temperature from 75°C to 85°C is estimated to
+  decrease the foam index by about 16.1% (95% CI: 3.4% to 28.8% decrease).
+- **Temperature 85→95°C:** A further increase from 85°C to 95°C is estimated to
+  decrease the foam index by about 3.6% additional (95% CI: 9.0% increase to
+  16.5% decrease) — not significant on its own.
+:::
+
+---
+
+**8.** Now run three separate two-sample $t$-tests comparing foam index at the two
+pressure levels (15 bar vs. 20 bar), one test for each temperature level (75°C, 85°C,
+and 95°C). Do any of these individual tests produce a significant result? How does this
+compare to the conclusion from the additive ANOVA in Question 6?
+
+```{r}
+#| label: q8-ttests
+
+```
+
+::: {.callout-note collapse="true"}
+## Solution
+
+```{r}
+#| label: q8-sol
+#| eval: true
+#| echo: false
+dat75 <- espresso |> filter(tempC == "75")
+dat85 <- espresso |> filter(tempC == "85")
+dat95 <- espresso |> filter(tempC == "95")
+
+t.test(foamIndx ~ prssBar, data = dat75)
+t.test(foamIndx ~ prssBar, data = dat85)
+t.test(foamIndx ~ prssBar, data = dat95)
+```
+
+None of the individual $t$-tests is significant at the 0.05 level when run separately.
+This contrasts with the additive ANOVA, which found a significant pressure effect
+($p \approx 0.0035$). The ANOVA is more powerful because it pools the residual variance
+estimate across all temperature groups, giving a much more precise estimate of $\sigma^2$
+and therefore more power to detect the pressure effect.
+:::
+
+# References

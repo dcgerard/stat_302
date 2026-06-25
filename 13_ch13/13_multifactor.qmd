@@ -53,12 +53,11 @@ With three factors, interaction plots use:
 - **Color/line**: a second variable.
 - **Facets**: the third variable.
 
-The key question for each arrangement: do the lines look parallel within each facet,
-and do the patterns look the same across facets?
+The key question: do the lines look parallel within each facet, and do the patterns look the same across facets?
 
 ## No Interactions
 
-Parallel lines, same pattern in every facet:
+Parallel lines, same pattern in every facet — no interactions at all:
 
 ```{r}
 #| label: no-interaction
@@ -77,26 +76,89 @@ tibble(x = factor(x), y = factor(y), z = factor(z, labels = c("z=0","z=1")), w) 
 
 ## Two-Way Interaction Between $x$ and $y$ Only
 
-Non-parallel lines within each facet, but the **same** non-parallel pattern in every facet:
+When only $x$ and $y$ interact (but $z$ has no interaction with either), we can check
+different arrangements of the three variables across the axes and facets.
+
+**Facets = $z$, color = $y$:** Non-parallel lines within each facet, but the **same** non-parallel
+pattern in every facet. The $x$:$y$ interaction is the same regardless of $z$.
 
 ```{r}
-#| label: two-way-xy
+#| label: two-way-xy-1
 #| echo: false
 w2 <- x + y + z + x * y
 tibble(x = factor(x), y = factor(y), z = factor(z, labels = c("z=0","z=1")), w = w2) |>
   ggplot(aes(x = x, y = w, color = y, group = y)) +
   geom_point() + geom_line() +
   facet_wrap(~z) +
-  labs(title = "x:y interaction only — same pattern across facets",
+  labs(title = "x:y interaction only — same non-parallel pattern across z facets",
        x = "x", y = "Mean response", color = "y")
 ```
 
-- The interaction between $x$ and $y$ is the **same** regardless of the level of $z$.
-- No three-way interaction.
+**Facets = $y$, color = $z$:** Parallel lines within each facet ($x$ and $z$ do not interact),
+but the gap between lines shifts across facets of $y$ (because $x$:$y$ interact, so the effect
+of $x$ depends on $y$).
+
+```{r}
+#| label: two-way-xy-2
+#| echo: false
+tibble(x = factor(x), y = factor(y, labels = c("y=0","y=1")), z = factor(z), w = w2) |>
+  ggplot(aes(x = x, y = w, color = z, group = z)) +
+  geom_point() + geom_line() +
+  facet_wrap(~y) +
+  labs(title = "x:y interaction only — parallel lines (no x:z), but gap varies by y facet",
+       x = "x", y = "Mean response", color = "z")
+```
+
+**Facets = $y$, x-axis = $z$, color = $x$:** $x$ and $z$ do not interact, so lines are parallel
+within each facet and the pattern is the same across facets of $y$.
+
+```{r}
+#| label: two-way-xy-3
+#| echo: false
+tibble(x = factor(x), y = factor(y, labels = c("y=0","y=1")), z = factor(z), w = w2) |>
+  ggplot(aes(x = z, y = w, color = x, group = x)) +
+  geom_point() + geom_line() +
+  facet_wrap(~y) +
+  labs(title = "x:y interaction only — no x:z interaction visible here",
+       x = "z", y = "Mean response", color = "x")
+```
+
+**Facets = $x$, x-axis = $z$, color = $y$:** $y$ and $z$ do not interact, so lines are parallel.
+But the gap between $y$ lines differs across facets of $x$ — again reflecting the $x$:$y$ interaction.
+
+```{r}
+#| label: two-way-xy-4
+#| echo: false
+tibble(x = factor(x, labels = c("x=0","x=1")), y = factor(y), z = factor(z), w = w2) |>
+  ggplot(aes(x = z, y = w, color = y, group = y)) +
+  geom_point() + geom_line() +
+  facet_wrap(~x) +
+  labs(title = "x:y interaction only — parallel lines (no y:z), gap changes across x facets",
+       x = "z", y = "Mean response", color = "y")
+```
+
+## Two-Way Interactions Between All Pairs (No Three-Way)
+
+When all three pairs interact but there is no three-way interaction, non-parallel lines appear
+within each facet, **and** the non-parallel pattern changes somewhat across facets — but
+the change itself is consistent (not dependent on the third variable in a deeper sense).
+
+```{r}
+#| label: two-way-all
+#| echo: false
+w_all2 <- x + y + z + x * y + x * z + y * z
+tibble(x = factor(x), y = factor(y), z = factor(z, labels = c("z=0","z=1")), w = w_all2) |>
+  ggplot(aes(x = x, y = w, color = y, group = y)) +
+  geom_point() + geom_line() +
+  facet_wrap(~z) +
+  scale_y_continuous(breaks = 1:6) +
+  labs(title = "All two-way interactions, no three-way",
+       x = "x", y = "Mean response", color = "y")
+```
 
 ## Three-Way Interaction
 
-Non-parallel lines, and the **interaction pattern changes** across facets:
+Non-parallel lines **and** the interaction pattern itself changes across facets:
 
 ```{r}
 #| label: three-way
@@ -106,102 +168,225 @@ tibble(x = factor(x), y = factor(y), z = factor(z, labels = c("z=0","z=1")), w =
   ggplot(aes(x = x, y = w, color = y, group = y)) +
   geom_point() + geom_line() +
   facet_wrap(~z) +
-  labs(title = "Three-way interaction — pattern differs across facets",
+  scale_y_continuous(breaks = 1:7) +
+  labs(title = "Three-way interaction — interaction pattern differs across facets",
        x = "x", y = "Mean response", color = "y")
 ```
 
 - The relationship between $x$ and $y$ is **different** at different levels of $z$.
-- This is a three-way interaction.
 
 ---
 
-# Case Study: Pea Yield
+# Case Study: Poker Winnings
 
-- Data: `npk` (built into R), from a split-plot agricultural experiment.
-- Three binary fertilizers applied to peas: **N** (nitrogen), **P** (phosphate), **K** (potassium).
-- Response: `yield` in pounds per plot.
-- Question: Do N, P, K, and their interactions affect pea yield?
+**Research question:** Does skill level or hand quality affect poker winnings? Does the type of game (fixed vs. no limit) interact with skill? These data come from @meyer2013poker.
+
+**Variables:**
+
+- `Skill`: `"Expert"` or `"Average"` — skill level of the player.
+- `Hand`: `"Bad"`, `"Neutral"`, or `"Good"` — quality of the cards dealt.
+- `Limit`: `"Fixed"` or `"None"` — whether the game has a fixed betting limit.
+- `Cash`: final cash balance (in dollars) after a session of play.
 
 ```{r}
-#| label: npk-load
-data(npk)
-glimpse(npk)
+#| label: poker-load
+#| message: false
+poker <- read_csv("../data/poker.csv") |>
+  mutate(Hand = factor(Hand, levels = c("Bad", "Neutral", "Good")))
+glimpse(poker)
 ```
 
 ```{r}
-#| label: npk-table
-table(npk$N, npk$P, npk$K)
+#| label: poker-table
+table(poker$Skill, poker$Hand, poker$Limit)
 ```
 
-- Balanced design: 3 observations per combination.
+The design is balanced: equal sample sizes across all 12 combinations of the three factors.
 
 ## Interaction Plots
 
+With three factors we have $3 \times 2 = 6$ ways to assign variables to axes and facets.
+Looking at all of them gives a fuller picture of which interactions may be present.
+
 ```{r}
-#| label: npk-plot-np
+#| label: poker-plot-1
 #| fig-width: 7
-ggplot(npk, aes(x = N, y = yield, color = P, group = P)) +
+ggplot(poker, aes(x = Skill, y = Cash, color = Hand, group = Hand)) +
   stat_summary(fun = mean, geom = "line") +
   stat_summary(fun = mean, geom = "point") +
-  facet_wrap(~K, labeller = label_both) +
-  labs(x = "Nitrogen (0 = absent, 1 = present)",
-       y = "Mean yield (lbs)",
-       color = "Phosphate",
-       title = "Interaction plot: N × P, faceted by K")
+  facet_wrap(~Limit, labeller = label_both) +
+  labs(x = "Skill", y = "Mean cash ($)", color = "Hand",
+       title = "x = Skill, color = Hand, facets = Limit")
 ```
 
-- Lines are roughly parallel within facets — no obvious N×P interaction.
-- Yields are slightly higher when N is present (lines shifted up at N=1).
-- K does not appear to change the N×P pattern much — no strong three-way interaction.
+```{r}
+#| label: poker-plot-2
+#| fig-width: 7
+ggplot(poker, aes(x = Hand, y = Cash, color = Skill, group = Skill)) +
+  stat_summary(fun = mean, geom = "line") +
+  stat_summary(fun = mean, geom = "point") +
+  facet_wrap(~Limit, labeller = label_both) +
+  labs(x = "Hand", y = "Mean cash ($)", color = "Skill",
+       title = "x = Hand, color = Skill, facets = Limit")
+```
+
+```{r}
+#| label: poker-plot-3
+#| fig-width: 7
+ggplot(poker, aes(x = Limit, y = Cash, color = Skill, group = Skill)) +
+  stat_summary(fun = mean, geom = "line") +
+  stat_summary(fun = mean, geom = "point") +
+  facet_wrap(~Hand, labeller = label_both) +
+  labs(x = "Limit", y = "Mean cash ($)", color = "Skill",
+       title = "x = Limit, color = Skill, facets = Hand")
+```
+
+```{r}
+#| label: poker-plot-4
+#| fig-width: 7
+ggplot(poker, aes(x = Skill, y = Cash, color = Limit, group = Limit)) +
+  stat_summary(fun = mean, geom = "line") +
+  stat_summary(fun = mean, geom = "point") +
+  facet_wrap(~Hand, labeller = label_both) +
+  labs(x = "Skill", y = "Mean cash ($)", color = "Limit",
+       title = "x = Skill, color = Limit, facets = Hand")
+```
+
+```{r}
+#| label: poker-plot-5
+#| fig-width: 7
+ggplot(poker, aes(x = Hand, y = Cash, color = Limit, group = Limit)) +
+  stat_summary(fun = mean, geom = "line") +
+  stat_summary(fun = mean, geom = "point") +
+  facet_wrap(~Skill, labeller = label_both) +
+  labs(x = "Hand", y = "Mean cash ($)", color = "Limit",
+       title = "x = Hand, color = Limit, facets = Skill")
+```
+
+```{r}
+#| label: poker-plot-6
+#| fig-width: 7
+ggplot(poker, aes(x = Limit, y = Cash, color = Hand, group = Hand)) +
+  stat_summary(fun = mean, geom = "line") +
+  stat_summary(fun = mean, geom = "point") +
+  facet_wrap(~Skill, labeller = label_both) +
+  labs(x = "Limit", y = "Mean cash ($)", color = "Hand",
+       title = "x = Limit, color = Hand, facets = Skill")
+```
+
+**Observations from the plots:**
+
+- The effect of `Hand` on `Cash` appears to differ between experts and average players
+  (non-parallel lines when Skill is on the facet or color), suggesting a Skill × Hand interaction.
+- The effect of `Limit` also appears to differ between skill levels, suggesting a
+  Skill × Limit interaction.
+- The Hand × Limit interaction looks less clear.
 
 ## Top-Down Testing Strategy
 
-- Start with the **full interaction model** (all main effects + all interactions).
-- Test the **three-way interaction** first. If not significant, drop it.
-- Then test **two-way interactions**. If none significant, use the additive model.
-- Then test **main effects**.
+Start with the **full interaction model** (all main effects + all interactions). Test
+the **three-way interaction** first; if not significant, drop it and test the two-way
+interactions.
 
 ```{r}
-#| label: npk-full
-aout_full <- aov(yield ~ N * P * K, data = npk)
+#| label: poker-full
+aout_full <- aov(Cash ~ Skill * Hand * Limit, data = poker)
 tidy(aout_full)
 ```
 
-- The three-way interaction `N:P:K` has $p = 0.54$ — no evidence.
-- Drop it and refit with only two-way interactions.
+- The three-way interaction `Skill:Hand:Limit` is not significant — drop it.
 
 ```{r}
-#| label: npk-twoway
-aout_2way <- aov(yield ~ N + P + K + N:P + N:K + P:K, data = npk)
+#| label: poker-twoway
+aout_2way <- aov(Cash ~ Skill + Hand + Limit +
+                   Skill:Hand + Skill:Limit + Hand:Limit,
+                 data = poker)
 tidy(aout_2way)
 ```
 
-- None of the two-way interactions are significant ($p > 0.05$).
-- Adopt the additive model.
+- `Skill:Hand` and `Skill:Limit` are significant; `Hand:Limit` is not.
+- Drop `Hand:Limit` and adopt the model with only those two interactions.
 
 ```{r}
-#| label: npk-additive
-aout_add <- aov(yield ~ N + P + K, data = npk)
-tidy(aout_add)
+#| label: poker-sub
+aout_sub <- aov(Cash ~ Skill + Hand + Limit + Skill:Hand + Skill:Limit,
+                data = poker)
+tidy(aout_sub)
 ```
 
-- **Nitrogen** ($p = 0.004$): strong evidence that nitrogen increases yield.
-- **Phosphate** ($p = 0.057$): marginal evidence.
-- **Potassium** ($p = 0.028$): moderate evidence that potassium **decreases** yield.
+## Residual Plot
+
+```{r}
+#| label: poker-resid
+#| warning: false
+augment(aout_sub) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point(alpha = 0.4) +
+  geom_hline(yintercept = 0, lty = 2, color = "red") +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+No obvious patterns — the equal-variance assumption looks reasonable.
 
 ## Coefficient Estimates
 
 ```{r}
-#| label: npk-coef
-lm_add <- lm(yield ~ N + P + K, data = npk)
-tidy(lm_add, conf.int = TRUE) |>
-  select(term, estimate, conf.low, conf.high, p.value)
+#| label: poker-coef
+lm_sub <- lm(Cash ~ Skill + Hand + Limit + Skill:Hand + Skill:Limit,
+             data = poker)
+tidy(lm_sub)
 ```
 
-- Adding nitrogen is estimated to increase yield by about 5.6 lbs per plot
-  (95% CI: 2.0 to 9.3 lbs).
-- Adding potassium is estimated to decrease yield by about 3.9 lbs per plot
-  (95% CI: −7.6 to −0.3 lbs).
+Using the notation $\alpha$ for Skill, $\beta$ for Hand, $\gamma$ for Limit (reference levels:
+Average, Bad, Fixed):
+
+| Parameter | Level | Estimate |
+|:--|:--|--:|
+| $\mu$ | — | 5.400 |
+| $\alpha_1$ | Average | 0 (reference) |
+| $\alpha_2$ | Expert | 1.404 |
+| $\beta_1$ | Bad | 0 (reference) |
+| $\beta_2$ | Neutral | 5.180 |
+| $\beta_3$ | Good | 9.270 |
+| $\gamma_1$ | Fixed | 0 (reference) |
+| $\gamma_2$ | None | −1.910 |
+| $(\alpha\beta)_{11}$ | Average × Bad | 0 (reference) |
+| $(\alpha\beta)_{12}$ | Average × Neutral | 0 (reference) |
+| $(\alpha\beta)_{13}$ | Average × Good | 0 (reference) |
+| $(\alpha\beta)_{21}$ | Expert × Bad | 0 (reference) |
+| $(\alpha\beta)_{22}$ | Expert × Neutral | −1.440 |
+| $(\alpha\beta)_{23}$ | Expert × Good | −4.124 |
+| $(\alpha\gamma)_{11}$ | Average × Fixed | 0 (reference) |
+| $(\alpha\gamma)_{12}$ | Average × None | 0 (reference) |
+| $(\alpha\gamma)_{21}$ | Expert × Fixed | 0 (reference) |
+| $(\alpha\gamma)_{22}$ | Expert × None | 2.520 |
+
+## Interpretations
+
+**Skill × Hand interaction:** How much does hand quality matter?
+
+The mean difference between players with **good hands** and players with **bad hands** depends
+on skill level. For **expert** players:
+
+$$\mu_{\text{Expert, Good}} - \mu_{\text{Expert, Bad}} = \beta_3 + (\alpha\beta)_{23} = 9.270 - 4.124 = 5.146$$
+
+For **average** players (where $(\alpha\beta)_{13} = 0$ by definition):
+
+$$\mu_{\text{Average, Good}} - \mu_{\text{Average, Bad}} = \beta_3 + (\alpha\beta)_{13} = 9.270 + 0 = 9.270$$
+
+Average players gain **more** from receiving a good hand than experts do. Experts can partially
+compensate for a bad hand through skill, so hand quality matters less to them.
+
+**Skill × Limit interaction:** Who benefits from a no-limit game?
+
+The mean difference between no-limit and fixed-limit games by skill level:
+
+$$\mu_{\text{Average, None}} - \mu_{\text{Average, Fixed}} = \gamma_2 = -1.910$$
+
+$$\mu_{\text{Expert, None}} - \mu_{\text{Expert, Fixed}} = \gamma_2 + (\alpha\gamma)_{22} = -1.910 + 2.520 = 0.610$$
+
+On average, removing the betting limit **hurts** average players (−\$1.91) but **helps** experts
+(+\$0.61). The no-limit format rewards skill: experts can leverage their advantage with larger bets.
 
 ---
 
@@ -219,17 +404,19 @@ tidy(lm_add, conf.int = TRUE) |>
 
 # Exercises
 
-**1.** Using the `npk` data:
+**1.** Using the `npk` data (built into R — run `data(npk)` to load):
 
-a. Create an interaction plot of `yield` vs. `N`, colored by `K`, faceted by `P`.
-   Does the plot suggest any interaction between N and K?
+a. Create an interaction plot of `yield` vs. `N`, colored by `P`, faceted by `K`.
+   Does the plot suggest any N × P interaction?
 
-b. Formally test whether the three-way interaction `N:P:K` is significant using
-   `tidy(aov(yield ~ N * P * K, data = npk))`. Report $p$-value and conclusion.
+b. Create an interaction plot of `yield` vs. `N`, colored by `K`, faceted by `P`.
+   Does this plot suggest any N × K interaction?
 
-c. The additive model fitted in this lecture found significant effects of N and K.
-   Interpret both coefficients in plain language. Do the signs of the effects make
-   agricultural sense?
+c. Formally test whether the three-way interaction `N:P:K` is significant using
+   `tidy(aov(yield ~ N * P * K, data = npk))`. Report the $p$-value and conclusion.
+
+d. Drop non-significant two-way interactions and interpret the significant main effects
+   in plain language.
 
 ---
 
@@ -254,3 +441,19 @@ b. If you were conducting this study, what testing strategy would you use?
 
 c. How many parameters does the full interaction model have (including the baseline)?
    How many parameters does the additive model have?
+
+---
+
+**4.** In the poker case study, the fitted model included `Skill:Hand` and `Skill:Limit`
+interactions.
+
+a. Using the coefficient table above, compute the estimated mean cash for an expert
+   player with a good hand in a no-limit game.
+
+b. Compute the estimated mean cash for an average player with a neutral hand in a
+   fixed-limit game.
+
+c. Based on the coefficients, does having no limit help or hurt average players?
+   By how much?
+   
+# References

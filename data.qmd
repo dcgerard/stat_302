@@ -692,6 +692,18 @@ These data were almost all taken from the [companion website](https://www.cengag
 
 # Chapter 13
 
+- [espresso.csv](./data/espresso.csv): Data from @masella2015new, a study of a new espresso brewing method in which pressure differentials (rather than steam) control water flow, allowing finer control of temperature and pressure. 
+  - `foamIndx`: ratio of foam to liquid volume (expressed as a percentage) measured 30 seconds after extraction
+  - `trt_id`: integer label for each treatment group (temperature × pressure combination)
+  - `tempC`: water temperature in degrees Celsius, with levels `75`, `85`, and `95`
+  - `prssBar`: brewing pressure in bar, with levels `15` and `20`
+
+- [poker.csv](./data/poker.csv): Results from @meyer2013poker, a quasi-experimental study of poker skill. Players were classified by skill level and randomly dealt one of three hand qualities. The study investigated whether poker outcomes depend on skill, hand quality, and betting structure, or primarily on chance.
+  - `Skill`: skill level of the player, with levels `"Expert"` and `"Average"`
+  - `Hand`: quality of the cards dealt, with levels `"Bad"`, `"Neutral"`, and `"Good"`
+  - `Limit`: betting structure, with levels `"Fixed"` (fixed-limit) and `"None"` (no-limit)
+  - `Cash`: final cash balance (in dollars) at the end of the session
+
 - [case1301.csv](./data/case1301.csv): To study the influence of ocean grazers on regeneration rates of seaweed in the intertidal zone, a researcher scraped rock plots free of seaweed and observed the degree of regeneration when certain types of seaweed-grazing animals were denied access. The grazers were limpets (L), small fishes (f) and large fishes (F). Each plot received one of six treatments named by which grazers were allowed access. In addition, the researcher applied the treatments in eight blocks of 12 plots each. Within each block she randomly assigned treatments to plots. The blocks covered a wide range of tidal conditions. [@olson1992evolutionary]
   - `Cover`: percent of regenerated seaweed cover
   - `Block`: a factor with levels `"B1"`, `"B2"`, `"B3"`, `"B4"`, `"B5"`, `"B6"`, `"B7"`, and `"B8"`.

@@ -60,7 +60,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -190,16 +209,20 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#no-interactions" id="toc-no-interactions" class="nav-link" data-scroll-target="#no-interactions">No Interactions</a></li>
   <li><a href="#two-way-interaction-between-x-and-y-only" id="toc-two-way-interaction-between-x-and-y-only" class="nav-link" data-scroll-target="#two-way-interaction-between-x-and-y-only">Two-Way Interaction Between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> Only</a></li>
+  <li><a href="#two-way-interactions-between-all-pairs-no-three-way" id="toc-two-way-interactions-between-all-pairs-no-three-way" class="nav-link" data-scroll-target="#two-way-interactions-between-all-pairs-no-three-way">Two-Way Interactions Between All Pairs (No Three-Way)</a></li>
   <li><a href="#three-way-interaction" id="toc-three-way-interaction" class="nav-link" data-scroll-target="#three-way-interaction">Three-Way Interaction</a></li>
   </ul></li>
-  <li><a href="#case-study-pea-yield" id="toc-case-study-pea-yield" class="nav-link" data-scroll-target="#case-study-pea-yield">Case Study: Pea Yield</a>
+  <li><a href="#case-study-poker-winnings" id="toc-case-study-poker-winnings" class="nav-link" data-scroll-target="#case-study-poker-winnings">Case Study: Poker Winnings</a>
   <ul class="collapse">
   <li><a href="#interaction-plots" id="toc-interaction-plots" class="nav-link" data-scroll-target="#interaction-plots">Interaction Plots</a></li>
   <li><a href="#top-down-testing-strategy" id="toc-top-down-testing-strategy" class="nav-link" data-scroll-target="#top-down-testing-strategy">Top-Down Testing Strategy</a></li>
+  <li><a href="#residual-plot" id="toc-residual-plot" class="nav-link" data-scroll-target="#residual-plot">Residual Plot</a></li>
   <li><a href="#coefficient-estimates" id="toc-coefficient-estimates" class="nav-link" data-scroll-target="#coefficient-estimates">Coefficient Estimates</a></li>
+  <li><a href="#interpretations" id="toc-interpretations" class="nav-link" data-scroll-target="#interpretations">Interpretations</a></li>
   </ul></li>
   <li><a href="#r-formula-quick-reference" id="toc-r-formula-quick-reference" class="nav-link" data-scroll-target="#r-formula-quick-reference">R Formula Quick Reference</a></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
     </div>
@@ -295,10 +318,10 @@ window.Quarto = {
 <li><strong>Color/line</strong>: a second variable.</li>
 <li><strong>Facets</strong>: the third variable.</li>
 </ul>
-<p>The key question for each arrangement: do the lines look parallel within each facet, and do the patterns look the same across facets?</p>
+<p>The key question: do the lines look parallel within each facet, and do the patterns look the same across facets?</p>
 <section id="no-interactions" class="level2">
 <h2 class="anchored" data-anchor-id="no-interactions">No Interactions</h2>
-<p>Parallel lines, same pattern in every facet:</p>
+<p>Parallel lines, same pattern in every facet — no interactions at all:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -311,24 +334,64 @@ window.Quarto = {
 </section>
 <section id="two-way-interaction-between-x-and-y-only" class="level2">
 <h2 class="anchored" data-anchor-id="two-way-interaction-between-x-and-y-only">Two-Way Interaction Between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> Only</h2>
-<p>Non-parallel lines within each facet, but the <strong>same</strong> non-parallel pattern in every facet:</p>
+<p>When only <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> interact (but <span class="math inline">\(z\)</span> has no interaction with either), we can check different arrangements of the three variables across the axes and facets.</p>
+<p><strong>Facets = <span class="math inline">\(z\)</span>, color = <span class="math inline">\(y\)</span>:</strong> Non-parallel lines within each facet, but the <strong>same</strong> non-parallel pattern in every facet. The <span class="math inline">\(x\)</span>:<span class="math inline">\(y\)</span> interaction is the same regardless of <span class="math inline">\(z\)</span>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="13_multifactor_files/figure-html/two-way-xy-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+<p><img src="13_multifactor_files/figure-html/two-way-xy-1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
 </figure>
 </div>
 </div>
 </div>
-<ul>
-<li>The interaction between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> is the <strong>same</strong> regardless of the level of <span class="math inline">\(z\)</span>.</li>
-<li>No three-way interaction.</li>
-</ul>
+<p><strong>Facets = <span class="math inline">\(y\)</span>, color = <span class="math inline">\(z\)</span>:</strong> Parallel lines within each facet (<span class="math inline">\(x\)</span> and <span class="math inline">\(z\)</span> do not interact), but the gap between lines shifts across facets of <span class="math inline">\(y\)</span> (because <span class="math inline">\(x\)</span>:<span class="math inline">\(y\)</span> interact, so the effect of <span class="math inline">\(x\)</span> depends on <span class="math inline">\(y\)</span>).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_multifactor_files/figure-html/two-way-xy-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Facets = <span class="math inline">\(y\)</span>, x-axis = <span class="math inline">\(z\)</span>, color = <span class="math inline">\(x\)</span>:</strong> <span class="math inline">\(x\)</span> and <span class="math inline">\(z\)</span> do not interact, so lines are parallel within each facet and the pattern is the same across facets of <span class="math inline">\(y\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_multifactor_files/figure-html/two-way-xy-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Facets = <span class="math inline">\(x\)</span>, x-axis = <span class="math inline">\(z\)</span>, color = <span class="math inline">\(y\)</span>:</strong> <span class="math inline">\(y\)</span> and <span class="math inline">\(z\)</span> do not interact, so lines are parallel. But the gap between <span class="math inline">\(y\)</span> lines differs across facets of <span class="math inline">\(x\)</span> — again reflecting the <span class="math inline">\(x\)</span>:<span class="math inline">\(y\)</span> interaction.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_multifactor_files/figure-html/two-way-xy-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="two-way-interactions-between-all-pairs-no-three-way" class="level2">
+<h2 class="anchored" data-anchor-id="two-way-interactions-between-all-pairs-no-three-way">Two-Way Interactions Between All Pairs (No Three-Way)</h2>
+<p>When all three pairs interact but there is no three-way interaction, non-parallel lines appear within each facet, <strong>and</strong> the non-parallel pattern changes somewhat across facets — but the change itself is consistent (not dependent on the third variable in a deeper sense).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_multifactor_files/figure-html/two-way-all-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="three-way-interaction" class="level2">
 <h2 class="anchored" data-anchor-id="three-way-interaction">Three-Way Interaction</h2>
-<p>Non-parallel lines, and the <strong>interaction pattern changes</strong> across facets:</p>
+<p>Non-parallel lines <strong>and</strong> the interaction pattern itself changes across facets:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -340,166 +403,368 @@ window.Quarto = {
 </div>
 <ul>
 <li>The relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> is <strong>different</strong> at different levels of <span class="math inline">\(z\)</span>.</li>
-<li>This is a three-way interaction.</li>
 </ul>
 <hr>
 </section>
 </section>
-<section id="case-study-pea-yield" class="level1">
-<h1>Case Study: Pea Yield</h1>
+<section id="case-study-poker-winnings" class="level1">
+<h1>Case Study: Poker Winnings</h1>
+<p><strong>Research question:</strong> Does skill level or hand quality affect poker winnings? Does the type of game (fixed vs.&nbsp;no limit) interact with skill? These data come from <span class="citation" data-cites="meyer2013poker">Meyer et al. (<a href="#ref-meyer2013poker" role="doc-biblioref">2013</a>)</span>.</p>
+<p><strong>Variables:</strong></p>
 <ul>
-<li>Data: <code>npk</code> (built into R), from a split-plot agricultural experiment.</li>
-<li>Three binary fertilizers applied to peas: <strong>N</strong> (nitrogen), <strong>P</strong> (phosphate), <strong>K</strong> (potassium).</li>
-<li>Response: <code>yield</code> in pounds per plot.</li>
-<li>Question: Do N, P, K, and their interactions affect pea yield?</li>
+<li><code>Skill</code>: <code>"Expert"</code> or <code>"Average"</code> — skill level of the player.</li>
+<li><code>Hand</code>: <code>"Bad"</code>, <code>"Neutral"</code>, or <code>"Good"</code> — quality of the cards dealt.</li>
+<li><code>Limit</code>: <code>"Fixed"</code> or <code>"None"</code> — whether the game has a fixed betting limit.</li>
+<li><code>Cash</code>: final cash balance (in dollars) after a session of play.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(npk)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(npk)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>poker <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../data/poker.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Hand =</span> <span class="fu">factor</span>(Hand, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Bad"</span>, <span class="st">"Neutral"</span>, <span class="st">"Good"</span>)))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(poker)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Rows: 24
-Columns: 5
-$ block &lt;fct&gt; 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6…
-$ N     &lt;fct&gt; 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1…
-$ P     &lt;fct&gt; 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1…
-$ K     &lt;fct&gt; 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0…
-$ yield &lt;dbl&gt; 49.5, 62.8, 46.8, 57.0, 59.8, 58.5, 55.5, 56.0, 62.8, 55.8, 69.5…</code></pre>
+<pre><code>Rows: 300
+Columns: 4
+$ Skill &lt;chr&gt; "Expert", "Expert", "Expert", "Expert", "Expert", "Expert", "Exp…
+$ Hand  &lt;fct&gt; Bad, Bad, Bad, Bad, Bad, Bad, Bad, Bad, Bad, Bad, Bad, Bad, Bad,…
+$ Limit &lt;chr&gt; "Fixed", "Fixed", "Fixed", "Fixed", "Fixed", "Fixed", "Fixed", "…
+$ Cash  &lt;dbl&gt; 4.00, 5.55, 9.45, 7.19, 5.71, 5.32, 8.52, 4.06, 4.97, 6.18, 6.55…</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(npk<span class="sc">$</span>N, npk<span class="sc">$</span>P, npk<span class="sc">$</span>K)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(poker<span class="sc">$</span>Skill, poker<span class="sc">$</span>Hand, poker<span class="sc">$</span>Limit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>, ,  = 0
+<pre><code>, ,  = Fixed
 
-   
-    0 1
-  0 3 3
-  1 3 3
+         
+          Bad Neutral Good
+  Average  25      25   25
+  Expert   25      25   25
 
-, ,  = 1
+, ,  = None
 
-   
-    0 1
-  0 3 3
-  1 3 3</code></pre>
+         
+          Bad Neutral Good
+  Average  25      25   25
+  Expert   25      25   25</code></pre>
 </div>
 </div>
-<ul>
-<li>Balanced design: 3 observations per combination.</li>
-</ul>
+<p>The design is balanced: equal sample sizes across all 12 combinations of the three factors.</p>
 <section id="interaction-plots" class="level2">
 <h2 class="anchored" data-anchor-id="interaction-plots">Interaction Plots</h2>
+<p>With three factors we have <span class="math inline">\(3 \times 2 = 6\)</span> ways to assign variables to axes and facets. Looking at all of them gives a fuller picture of which interactions may be present.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(npk, <span class="fu">aes</span>(<span class="at">x =</span> N, <span class="at">y =</span> yield, <span class="at">color =</span> P, <span class="at">group =</span> P)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(poker, <span class="fu">aes</span>(<span class="at">x =</span> Skill, <span class="at">y =</span> Cash, <span class="at">color =</span> Hand, <span class="at">group =</span> Hand)) <span class="sc">+</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"line"</span>) <span class="sc">+</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>) <span class="sc">+</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>K, <span class="at">labeller =</span> label_both) <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Nitrogen (0 = absent, 1 = present)"</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Mean yield (lbs)"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Phosphate"</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Interaction plot: N × P, faceted by K"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Limit, <span class="at">labeller =</span> label_both) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Skill"</span>, <span class="at">y =</span> <span class="st">"Mean cash ($)"</span>, <span class="at">color =</span> <span class="st">"Hand"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"x = Skill, color = Hand, facets = Limit"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="13_multifactor_files/figure-html/npk-plot-np-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="13_multifactor_files/figure-html/poker-plot-1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(poker, <span class="fu">aes</span>(<span class="at">x =</span> Hand, <span class="at">y =</span> Cash, <span class="at">color =</span> Skill, <span class="at">group =</span> Skill)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"line"</span>) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Limit, <span class="at">labeller =</span> label_both) <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Hand"</span>, <span class="at">y =</span> <span class="st">"Mean cash ($)"</span>, <span class="at">color =</span> <span class="st">"Skill"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"x = Hand, color = Skill, facets = Limit"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_multifactor_files/figure-html/poker-plot-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(poker, <span class="fu">aes</span>(<span class="at">x =</span> Limit, <span class="at">y =</span> Cash, <span class="at">color =</span> Skill, <span class="at">group =</span> Skill)) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"line"</span>) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Hand, <span class="at">labeller =</span> label_both) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Limit"</span>, <span class="at">y =</span> <span class="st">"Mean cash ($)"</span>, <span class="at">color =</span> <span class="st">"Skill"</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"x = Limit, color = Skill, facets = Hand"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_multifactor_files/figure-html/poker-plot-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(poker, <span class="fu">aes</span>(<span class="at">x =</span> Skill, <span class="at">y =</span> Cash, <span class="at">color =</span> Limit, <span class="at">group =</span> Limit)) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"line"</span>) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Hand, <span class="at">labeller =</span> label_both) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Skill"</span>, <span class="at">y =</span> <span class="st">"Mean cash ($)"</span>, <span class="at">color =</span> <span class="st">"Limit"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"x = Skill, color = Limit, facets = Hand"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_multifactor_files/figure-html/poker-plot-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(poker, <span class="fu">aes</span>(<span class="at">x =</span> Hand, <span class="at">y =</span> Cash, <span class="at">color =</span> Limit, <span class="at">group =</span> Limit)) <span class="sc">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"line"</span>) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Skill, <span class="at">labeller =</span> label_both) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Hand"</span>, <span class="at">y =</span> <span class="st">"Mean cash ($)"</span>, <span class="at">color =</span> <span class="st">"Limit"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"x = Hand, color = Limit, facets = Skill"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_multifactor_files/figure-html/poker-plot-5-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(poker, <span class="fu">aes</span>(<span class="at">x =</span> Limit, <span class="at">y =</span> Cash, <span class="at">color =</span> Hand, <span class="at">group =</span> Hand)) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"line"</span>) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Skill, <span class="at">labeller =</span> label_both) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Limit"</span>, <span class="at">y =</span> <span class="st">"Mean cash ($)"</span>, <span class="at">color =</span> <span class="st">"Hand"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"x = Limit, color = Hand, facets = Skill"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_multifactor_files/figure-html/poker-plot-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Observations from the plots:</strong></p>
 <ul>
-<li>Lines are roughly parallel within facets — no obvious N×P interaction.</li>
-<li>Yields are slightly higher when N is present (lines shifted up at N=1).</li>
-<li>K does not appear to change the N×P pattern much — no strong three-way interaction.</li>
+<li>The effect of <code>Hand</code> on <code>Cash</code> appears to differ between experts and average players (non-parallel lines when Skill is on the facet or color), suggesting a Skill × Hand interaction.</li>
+<li>The effect of <code>Limit</code> also appears to differ between skill levels, suggesting a Skill × Limit interaction.</li>
+<li>The Hand × Limit interaction looks less clear.</li>
 </ul>
 </section>
 <section id="top-down-testing-strategy" class="level2">
 <h2 class="anchored" data-anchor-id="top-down-testing-strategy">Top-Down Testing Strategy</h2>
-<ul>
-<li>Start with the <strong>full interaction model</strong> (all main effects + all interactions).</li>
-<li>Test the <strong>three-way interaction</strong> first. If not significant, drop it.</li>
-<li>Then test <strong>two-way interactions</strong>. If none significant, use the additive model.</li>
-<li>Then test <strong>main effects</strong>.</li>
-</ul>
+<p>Start with the <strong>full interaction model</strong> (all main effects + all interactions). Test the <strong>three-way interaction</strong> first; if not significant, drop it and test the two-way interactions.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>aout_full <span class="ot">&lt;-</span> <span class="fu">aov</span>(yield <span class="sc">~</span> N <span class="sc">*</span> P <span class="sc">*</span> K, <span class="at">data =</span> npk)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(aout_full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>aout_full <span class="ot">&lt;-</span> <span class="fu">aov</span>(Cash <span class="sc">~</span> Skill <span class="sc">*</span> Hand <span class="sc">*</span> Limit, <span class="at">data =</span> poker)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(aout_full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 8 × 6
-  term         df   sumsq  meansq statistic p.value
-  &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-1 N             1 189.    189.       6.16    0.0245
-2 P             1   8.40    8.40     0.273   0.608 
-3 K             1  95.2    95.2      3.10    0.0975
-4 N:P           1  21.3    21.3      0.693   0.418 
-5 N:K           1  33.1    33.1      1.08    0.314 
-6 P:K           1   0.482   0.482    0.0157  0.902 
-7 N:P:K         1  37.0    37.0      1.20    0.289 
-8 Residuals    16 492.     30.7     NA      NA     </code></pre>
+  term                df  sumsq meansq statistic   p.value
+  &lt;chr&gt;            &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 Skill                1   49.2   49.2      2.84  9.31e- 2
+2 Hand                 2 2647.  1323.      76.4   2.39e-27
+3 Limit                1   31.7   31.7      1.83  1.77e- 1
+4 Skill:Hand           2  219.   110.       6.32  2.05e- 3
+5 Skill:Limit          1  119.   119.       6.88  9.19e- 3
+6 Hand:Limit           2   97.3   48.6      2.81  6.19e- 2
+7 Skill:Hand:Limit     2   42.4   21.2      1.22  2.96e- 1
+8 Residuals          288 4987.    17.3     NA    NA       </code></pre>
 </div>
 </div>
 <ul>
-<li>The three-way interaction <code>N:P:K</code> has <span class="math inline">\(p = 0.54\)</span> — no evidence.</li>
-<li>Drop it and refit with only two-way interactions.</li>
+<li>The three-way interaction <code>Skill:Hand:Limit</code> is not significant — drop it.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>aout_2way <span class="ot">&lt;-</span> <span class="fu">aov</span>(yield <span class="sc">~</span> N <span class="sc">+</span> P <span class="sc">+</span> K <span class="sc">+</span> N<span class="sc">:</span>P <span class="sc">+</span> N<span class="sc">:</span>K <span class="sc">+</span> P<span class="sc">:</span>K, <span class="at">data =</span> npk)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(aout_2way)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>aout_2way <span class="ot">&lt;-</span> <span class="fu">aov</span>(Cash <span class="sc">~</span> Skill <span class="sc">+</span> Hand <span class="sc">+</span> Limit <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                   Skill<span class="sc">:</span>Hand <span class="sc">+</span> Skill<span class="sc">:</span>Limit <span class="sc">+</span> Hand<span class="sc">:</span>Limit,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> poker)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(aout_2way)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 7 × 6
-  term         df   sumsq  meansq statistic p.value
-  &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-1 N             1 189.    189.       6.09    0.0245
-2 P             1   8.40    8.40     0.270   0.610 
-3 K             1  95.2    95.2      3.06    0.0982
-4 N:P           1  21.3    21.3      0.684   0.420 
-5 N:K           1  33.1    33.1      1.07    0.316 
-6 P:K           1   0.482   0.482    0.0155  0.902 
-7 Residuals    17 529.     31.1     NA      NA     </code></pre>
+  term           df  sumsq meansq statistic   p.value
+  &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 Skill           1   49.2   49.2      2.83  9.33e- 2
+2 Hand            2 2647.  1323.      76.3   2.39e-27
+3 Limit           1   31.7   31.7      1.83  1.78e- 1
+4 Skill:Hand      2  219.   110.       6.31  2.07e- 3
+5 Skill:Limit     1  119.   119.       6.87  9.24e- 3
+6 Hand:Limit      2   97.3   48.6      2.80  6.22e- 2
+7 Residuals     290 5030.    17.3     NA    NA       </code></pre>
 </div>
 </div>
 <ul>
-<li>None of the two-way interactions are significant (<span class="math inline">\(p &gt; 0.05\)</span>).</li>
-<li>Adopt the additive model.</li>
+<li><code>Skill:Hand</code> and <code>Skill:Limit</code> are significant; <code>Hand:Limit</code> is not.</li>
+<li>Drop <code>Hand:Limit</code> and adopt the model with only those two interactions.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>aout_add <span class="ot">&lt;-</span> <span class="fu">aov</span>(yield <span class="sc">~</span> N <span class="sc">+</span> P <span class="sc">+</span> K, <span class="at">data =</span> npk)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(aout_add)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>aout_sub <span class="ot">&lt;-</span> <span class="fu">aov</span>(Cash <span class="sc">~</span> Skill <span class="sc">+</span> Hand <span class="sc">+</span> Limit <span class="sc">+</span> Skill<span class="sc">:</span>Hand <span class="sc">+</span> Skill<span class="sc">:</span>Limit,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> poker)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(aout_sub)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 6
-  term         df  sumsq meansq statistic p.value
-  &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-1 N             1 189.   189.       6.49   0.0192
-2 P             1   8.40   8.40     0.288  0.597 
-3 K             1  95.2   95.2      3.26   0.0859
-4 Residuals    20 583.    29.2     NA     NA     </code></pre>
+<pre><code># A tibble: 6 × 6
+  term           df  sumsq meansq statistic   p.value
+  &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 Skill           1   49.2   49.2      2.80  9.53e- 2
+2 Hand            2 2647.  1323.      75.4   4.07e-27
+3 Limit           1   31.7   31.7      1.80  1.80e- 1
+4 Skill:Hand      2  219.   110.       6.24  2.23e- 3
+5 Skill:Limit     1  119.   119.       6.78  9.67e- 3
+6 Residuals     292 5127.    17.6     NA    NA       </code></pre>
 </div>
 </div>
-<ul>
-<li><strong>Nitrogen</strong> (<span class="math inline">\(p = 0.004\)</span>): strong evidence that nitrogen increases yield.</li>
-<li><strong>Phosphate</strong> (<span class="math inline">\(p = 0.057\)</span>): marginal evidence.</li>
-<li><strong>Potassium</strong> (<span class="math inline">\(p = 0.028\)</span>): moderate evidence that potassium <strong>decreases</strong> yield.</li>
-</ul>
+</section>
+<section id="residual-plot" class="level2">
+<h2 class="anchored" data-anchor-id="residual-plot">Residual Plot</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(aout_sub) <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Fitted values"</span>, <span class="at">y =</span> <span class="st">"Residuals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_multifactor_files/figure-html/poker-resid-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>No obvious patterns — the equal-variance assumption looks reasonable.</p>
 </section>
 <section id="coefficient-estimates" class="level2">
 <h2 class="anchored" data-anchor-id="coefficient-estimates">Coefficient Estimates</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lm_add <span class="ot">&lt;-</span> <span class="fu">lm</span>(yield <span class="sc">~</span> N <span class="sc">+</span> P <span class="sc">+</span> K, <span class="at">data =</span> npk)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_add, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, estimate, conf.low, conf.high, p.value)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>lm_sub <span class="ot">&lt;-</span> <span class="fu">lm</span>(Cash <span class="sc">~</span> Skill <span class="sc">+</span> Hand <span class="sc">+</span> Limit <span class="sc">+</span> Skill<span class="sc">:</span>Hand <span class="sc">+</span> Skill<span class="sc">:</span>Limit,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> poker)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_sub)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 5
-  term        estimate conf.low conf.high  p.value
-  &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-1 (Intercept)    54.6     50.1     59.2   1.74e-16
-2 N1              5.62     1.02    10.2   1.92e- 2
-3 P1             -1.18    -5.78     3.42  5.97e- 1
-4 K1             -3.98    -8.58     0.616 8.59e- 2</code></pre>
+<pre><code># A tibble: 8 × 5
+  term                    estimate std.error statistic  p.value
+  &lt;chr&gt;                      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept)                 5.40     0.684      7.89 6.04e-14
+2 SkillExpert                 1.40     0.968      1.45 1.48e- 1
+3 HandNeutral                 5.18     0.838      6.18 2.14e- 9
+4 HandGood                    9.27     0.838     11.1  5.51e-24
+5 LimitNone                  -1.91     0.684     -2.79 5.59e- 3
+6 SkillExpert:HandNeutral    -1.44     1.19      -1.21 2.25e- 1
+7 SkillExpert:HandGood       -4.12     1.19      -3.48 5.79e- 4
+8 SkillExpert:LimitNone       2.52     0.968      2.60 9.67e- 3</code></pre>
 </div>
 </div>
-<ul>
-<li>Adding nitrogen is estimated to increase yield by about 5.6 lbs per plot (95% CI: 2.0 to 9.3 lbs).</li>
-<li>Adding potassium is estimated to decrease yield by about 3.9 lbs per plot (95% CI: −7.6 to −0.3 lbs).</li>
-</ul>
+<p>Using the notation <span class="math inline">\(\alpha\)</span> for Skill, <span class="math inline">\(\beta\)</span> for Hand, <span class="math inline">\(\gamma\)</span> for Limit (reference levels: Average, Bad, Fixed):</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Level</th>
+<th style="text-align: right;">Estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(\mu\)</span></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: right;">5.400</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(\alpha_1\)</span></td>
+<td style="text-align: left;">Average</td>
+<td style="text-align: right;">0 (reference)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(\alpha_2\)</span></td>
+<td style="text-align: left;">Expert</td>
+<td style="text-align: right;">1.404</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(\beta_1\)</span></td>
+<td style="text-align: left;">Bad</td>
+<td style="text-align: right;">0 (reference)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(\beta_2\)</span></td>
+<td style="text-align: left;">Neutral</td>
+<td style="text-align: right;">5.180</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(\beta_3\)</span></td>
+<td style="text-align: left;">Good</td>
+<td style="text-align: right;">9.270</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(\gamma_1\)</span></td>
+<td style="text-align: left;">Fixed</td>
+<td style="text-align: right;">0 (reference)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(\gamma_2\)</span></td>
+<td style="text-align: left;">None</td>
+<td style="text-align: right;">−1.910</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\((\alpha\beta)_{11}\)</span></td>
+<td style="text-align: left;">Average × Bad</td>
+<td style="text-align: right;">0 (reference)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\((\alpha\beta)_{12}\)</span></td>
+<td style="text-align: left;">Average × Neutral</td>
+<td style="text-align: right;">0 (reference)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\((\alpha\beta)_{13}\)</span></td>
+<td style="text-align: left;">Average × Good</td>
+<td style="text-align: right;">0 (reference)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\((\alpha\beta)_{21}\)</span></td>
+<td style="text-align: left;">Expert × Bad</td>
+<td style="text-align: right;">0 (reference)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\((\alpha\beta)_{22}\)</span></td>
+<td style="text-align: left;">Expert × Neutral</td>
+<td style="text-align: right;">−1.440</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\((\alpha\beta)_{23}\)</span></td>
+<td style="text-align: left;">Expert × Good</td>
+<td style="text-align: right;">−4.124</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\((\alpha\gamma)_{11}\)</span></td>
+<td style="text-align: left;">Average × Fixed</td>
+<td style="text-align: right;">0 (reference)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\((\alpha\gamma)_{12}\)</span></td>
+<td style="text-align: left;">Average × None</td>
+<td style="text-align: right;">0 (reference)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\((\alpha\gamma)_{21}\)</span></td>
+<td style="text-align: left;">Expert × Fixed</td>
+<td style="text-align: right;">0 (reference)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\((\alpha\gamma)_{22}\)</span></td>
+<td style="text-align: left;">Expert × None</td>
+<td style="text-align: right;">2.520</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="interpretations" class="level2">
+<h2 class="anchored" data-anchor-id="interpretations">Interpretations</h2>
+<p><strong>Skill × Hand interaction:</strong> How much does hand quality matter?</p>
+<p>The mean difference between players with <strong>good hands</strong> and players with <strong>bad hands</strong> depends on skill level. For <strong>expert</strong> players:</p>
+<p><span class="math display">\[\mu_{\text{Expert, Good}} - \mu_{\text{Expert, Bad}} = \beta_3 + (\alpha\beta)_{23} = 9.270 - 4.124 = 5.146\]</span></p>
+<p>For <strong>average</strong> players (where <span class="math inline">\((\alpha\beta)_{13} = 0\)</span> by definition):</p>
+<p><span class="math display">\[\mu_{\text{Average, Good}} - \mu_{\text{Average, Bad}} = \beta_3 + (\alpha\beta)_{13} = 9.270 + 0 = 9.270\]</span></p>
+<p>Average players gain <strong>more</strong> from receiving a good hand than experts do. Experts can partially compensate for a bad hand through skill, so hand quality matters less to them.</p>
+<p><strong>Skill × Limit interaction:</strong> Who benefits from a no-limit game?</p>
+<p>The mean difference between no-limit and fixed-limit games by skill level:</p>
+<p><span class="math display">\[\mu_{\text{Average, None}} - \mu_{\text{Average, Fixed}} = \gamma_2 = -1.910\]</span></p>
+<p><span class="math display">\[\mu_{\text{Expert, None}} - \mu_{\text{Expert, Fixed}} = \gamma_2 + (\alpha\gamma)_{22} = -1.910 + 2.520 = 0.610\]</span></p>
+<p>On average, removing the betting limit <strong>hurts</strong> average players (−$1.91) but <strong>helps</strong> experts (+$0.61). The no-limit format rewards skill: experts can leverage their advantage with larger bets.</p>
 <hr>
 </section>
 </section>
@@ -539,11 +804,12 @@ $ yield &lt;dbl&gt; 49.5, 62.8, 46.8, 57.0, 59.8, 58.5, 55.5, 56.0, 62.8, 55.8, 
 </section>
 <section id="exercises" class="level1">
 <h1>Exercises</h1>
-<p><strong>1.</strong> Using the <code>npk</code> data:</p>
+<p><strong>1.</strong> Using the <code>npk</code> data (built into R — run <code>data(npk)</code> to load):</p>
 <ol type="a">
-<li><p>Create an interaction plot of <code>yield</code> vs.&nbsp;<code>N</code>, colored by <code>K</code>, faceted by <code>P</code>. Does the plot suggest any interaction between N and K?</p></li>
-<li><p>Formally test whether the three-way interaction <code>N:P:K</code> is significant using <code>tidy(aov(yield ~ N * P * K, data = npk))</code>. Report <span class="math inline">\(p\)</span>-value and conclusion.</p></li>
-<li><p>The additive model fitted in this lecture found significant effects of N and K. Interpret both coefficients in plain language. Do the signs of the effects make agricultural sense?</p></li>
+<li><p>Create an interaction plot of <code>yield</code> vs.&nbsp;<code>N</code>, colored by <code>P</code>, faceted by <code>K</code>. Does the plot suggest any N × P interaction?</p></li>
+<li><p>Create an interaction plot of <code>yield</code> vs.&nbsp;<code>N</code>, colored by <code>K</code>, faceted by <code>P</code>. Does this plot suggest any N × K interaction?</p></li>
+<li><p>Formally test whether the three-way interaction <code>N:P:K</code> is significant using <code>tidy(aov(yield ~ N * P * K, data = npk))</code>. Report the <span class="math inline">\(p\)</span>-value and conclusion.</p></li>
+<li><p>Drop non-significant two-way interactions and interpret the significant main effects in plain language.</p></li>
 </ol>
 <hr>
 <p><strong>2.</strong> Explain in plain language the difference between a two-way and a three-way interaction. Give an example from everyday life (not from this lecture) of:</p>
@@ -558,11 +824,26 @@ $ yield &lt;dbl&gt; 49.5, 62.8, 46.8, 57.0, 59.8, 58.5, 55.5, 56.0, 62.8, 55.8, 
 <li><p>If you were conducting this study, what testing strategy would you use? Start with what model and what test?</p></li>
 <li><p>How many parameters does the full interaction model have (including the baseline)? How many parameters does the additive model have?</p></li>
 </ol>
+<hr>
+<p><strong>4.</strong> In the poker case study, the fitted model included <code>Skill:Hand</code> and <code>Skill:Limit</code> interactions.</p>
+<ol type="a">
+<li><p>Using the coefficient table above, compute the estimated mean cash for an expert player with a good hand in a no-limit game.</p></li>
+<li><p>Compute the estimated mean cash for an average player with a neutral hand in a fixed-limit game.</p></li>
+<li><p>Based on the coefficients, does having no limit help or hurt average players? By how much?</p></li>
+</ol>
+</section>
+<section id="references" class="level1">
+
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-meyer2013poker" class="csl-entry" role="listitem">
+Meyer, Gerhard, Marc von Meduna, Tim Brosowski, and Tobias Hayer. 2013. <span>“Is Poker a Game of Skill or Chance? A Quasi-Experimental Study.”</span> <em>Journal of Gambling Studies</em> 29 (3): 535–50. <a href="https://doi.org/10.1007/s10899-012-9327-8">https://doi.org/10.1007/s10899-012-9327-8</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

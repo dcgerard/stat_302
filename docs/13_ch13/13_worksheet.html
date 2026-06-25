@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-24">
+<meta name="dcterms.date" content="2026-06-25">
 
 <title>Chapter 13 Worksheet – Stat 302: Intermediate Statistics</title>
 <style>
@@ -60,7 +60,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -184,7 +203,8 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#adoption-and-iq" id="toc-adoption-and-iq" class="nav-link active" data-scroll-target="#adoption-and-iq">Adoption and IQ</a></li>
+  <li><a href="#quality-espresso" id="toc-quality-espresso" class="nav-link active" data-scroll-target="#quality-espresso">Quality Espresso</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
     </div>
@@ -210,7 +230,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 24, 2026</p>
+      <p class="date">June 25, 2026</p>
     </div>
   </div>
   
@@ -222,10 +242,9 @@ window.Quarto = {
 </header>
 
 
-<section id="adoption-and-iq" class="level1">
-<h1>Adoption and IQ</h1>
-<p>Does a child’s IQ depend more on the education level of biological parents or adoptive parents? Data from the Texas Adoption Project (Willerman et al., 1977) recorded the IQ of adopted children along with the education level of both their biological and adoptive mothers. Education level is classified as High or Low.</p>
-<p>Variables:</p>
+<section id="quality-espresso" class="level1">
+<h1>Quality Espresso</h1>
+<p><span class="citation" data-cites="masella2015new">Masella et al. (<a href="#ref-masella2015new" role="doc-biblioref">2015</a>)</span> developed a new method of brewing espresso. Traditional methods use steam from hot water to create pressure that drives water through coffee grounds. In this new method, pressure differentials between the interior and exterior of the brewing chamber control the flow. This allows finer control of both pressure and temperature. The authors investigated the effects of pressure and temperature on foam index.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 50%">
@@ -239,83 +258,328 @@ window.Quarto = {
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;"><code>IQ</code></td>
-<td style="text-align: left;">IQ score of the adopted child</td>
+<td style="text-align: left;"><code>foamIndx</code></td>
+<td style="text-align: left;">Ratio of foam to liquid volume (%) measured 30 s after extraction</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><code>Biological</code></td>
-<td style="text-align: left;">Education level of biological mother (<code>High</code> or <code>Low</code>)</td>
+<td style="text-align: left;"><code>trt_id</code></td>
+<td style="text-align: left;">Label for each treatment group (temperature × pressure combination)</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><code>Adoptive</code></td>
-<td style="text-align: left;">Education level of adoptive mother (<code>High</code> or <code>Low</code>)</td>
+<td style="text-align: left;"><code>tempC</code></td>
+<td style="text-align: left;">Water temperature (°C): 75, 85, or 95</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>prssBar</code></td>
+<td style="text-align: left;">Brewing pressure (bar): 15 or 20</td>
 </tr>
 </tbody>
 </table>
-<p>Load the data:</p>
+<p>Load the data (you may need to adjust the path):</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ex1319 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/ex1319.csv"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(ex1319)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>espresso <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../data/espresso.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">tempC   =</span> <span class="fu">factor</span>(tempC),</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">prssBar =</span> <span class="fu">factor</span>(prssBar))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(espresso)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Rows: 38
-Columns: 3
-$ IQ         &lt;dbl&gt; 136, 99, 121, 133, 125, 131, 103, 115, 116, 117, 94, 103, 9…
-$ Adoptive   &lt;chr&gt; "High", "High", "High", "High", "High", "High", "High", "Hi…
-$ Biological &lt;chr&gt; "High", "High", "High", "High", "High", "High", "High", "Hi…</code></pre>
+<pre><code>Rows: 54
+Columns: 4
+$ foamIndx &lt;dbl&gt; 94.21, 120.39, 119.72, 120.45, 132.68, 121.32, 88.85, 100.33,…
+$ trt_id   &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3…
+$ tempC    &lt;fct&gt; 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 7…
+$ prssBar  &lt;fct&gt; 15, 15, 15, 15, 15, 15, 15, 15, 15, 20, 20, 20, 20, 20, 20, 2…</code></pre>
 </div>
 </div>
 <hr>
-<p><strong>1.</strong> What are the observational units? What is the response variable? What are the two categorical explanatory variables and how many levels does each have?</p>
+<p><strong>1.</strong> Informally explore the effects of pressure and temperature on foam index by creating an interaction plot with <code>tempC</code> on the x-axis and <code>prssBar</code> as the grouping variable (color and line). Does pressure appear to increase or decrease the foam index? Does temperature appear to increase or decrease it? Does the plot suggest a strong interaction?</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_worksheet_files/figure-html/q1-sol-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>With pointwise 95% confidence intervals:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_worksheet_files/figure-html/q1-sol-ci-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Temperature appears to decrease the foam index and higher pressure appears to increase it. There might be a weak interaction: the foam index seems to level off at higher temperatures for higher pressures but not for lower pressures, though the confidence intervals overlap substantially.</p>
+</div>
+</div>
+</div>
 <hr>
-<p><strong>2.</strong> How many children are in each group combination? Use <code>count()</code> to make a table of group sizes.</p>
-<p>Is this a balanced or unbalanced design? Does it appear that the groups are approximately the same size?</p>
+<p><strong>2.</strong> Fit the cell means model (full interaction model) and evaluate whether the assumptions of the ANOVA model seem appropriate. Make a residual plot (residuals vs. fitted values).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The `augment()` method for objects of class `aov` is not maintained by the broom team, and is only supported through the `lm` tidier method. Please be cautious in interpreting and reporting broom output.
+
+This warning is displayed once per session.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13_worksheet_files/figure-html/q2-sol-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The residual plot looks good: no obvious fan shape and residuals are scattered randomly around zero. The constant variance assumption appears reasonable.</p>
+</div>
+</div>
+</div>
 <hr>
-<p><strong>3.</strong> Create an interaction plot with <code>Biological</code> on the x-axis and <code>Adoptive</code> as the grouping variable. Include:</p>
+<p><strong>3.</strong> Write out the two-way ANOVA model with interactions for this study. Use the notation <span class="math inline">\(Y_{ijk} = \ldots\)</span> and define all terms.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \epsilon_{ijk}\]</span></p>
 <ul>
-<li>Group means connected by lines (use <code>stat_summary(fun = mean, geom = "line")</code>).</li>
-<li>Group means as points (use <code>stat_summary(fun = mean, geom = "point")</code>).</li>
+<li><span class="math inline">\(Y_{ijk}\)</span>: foam index of the <span class="math inline">\(k\)</span>th observation at pressure <span class="math inline">\(i\)</span> and temperature <span class="math inline">\(j\)</span></li>
+<li><span class="math inline">\(\mu\)</span>: baseline mean</li>
+<li><span class="math inline">\(\alpha_i\)</span>: main effect of pressure level <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(\beta_j\)</span>: main effect of temperature level <span class="math inline">\(j\)</span></li>
+<li><span class="math inline">\((\alpha\beta)_{ij}\)</span>: interaction effect of pressure <span class="math inline">\(i\)</span> and temperature <span class="math inline">\(j\)</span></li>
+<li><span class="math inline">\(\epsilon_{ijk}\)</span>: random error (assumed <span class="math inline">\(\sim N(0, \sigma^2)\)</span>, independent)</li>
 </ul>
-<p>Based on the interaction plot:</p>
-<ol type="a">
-<li><p>Does biological mother’s education level appear to be associated with child IQ? Describe the direction of the effect.</p></li>
-<li><p>Does adoptive mother’s education level appear to be associated with child IQ? Describe the direction of the effect.</p></li>
-<li><p>Do the lines look parallel? Does the interaction plot suggest a strong interaction?</p></li>
-</ol>
+</div>
+</div>
+</div>
 <hr>
-<p><strong>4.</strong> Fit the cell means model (with interaction) and evaluate the model assumptions.</p>
-<ol type="a">
-<li><p>Make a residual plot (residuals vs.&nbsp;fitted values). Does the constant variance assumption look reasonable?</p></li>
-<li><p>Make a QQ-plot of the residuals. Does the normality assumption look reasonable?</p></li>
-</ol>
+<p><strong>4.</strong> Write out the null and alternative hypotheses in terms of the <span class="math inline">\((\alpha\beta)_{ij}\)</span> parameters to test whether there is an interaction between pressure and temperature.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li><span class="math inline">\(H_0: (\alpha\beta)_{ij} = 0\)</span> for all <span class="math inline">\(i\)</span> and all <span class="math inline">\(j\)</span></li>
+<li><span class="math inline">\(H_A:\)</span> At least one <span class="math inline">\((\alpha\beta)_{ij} \neq 0\)</span></li>
+</ul>
+</div>
+</div>
+</div>
 <hr>
-<p><strong>5.</strong> Write out the two-way ANOVA model with interactions for this study. Define all terms, identifying which categorical variable corresponds to <span class="math inline">\(\alpha_i\)</span> and which corresponds to <span class="math inline">\(\beta_j\)</span>.</p>
+<p><strong>5.</strong> Formally test whether there is an interaction between pressure and temperature. Report the <span class="math inline">\(F\)</span>-statistic, degrees of freedom, and <span class="math inline">\(p\)</span>-value, and state a conclusion.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 6
+  term             df  sumsq meansq statistic   p.value
+  &lt;chr&gt;         &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 prssBar           1  5310.  5310.    14.6    0.000388
+2 tempC             2  4004.  2002.     5.49   0.00712 
+3 prssBar:tempC     2   534.   267.     0.732  0.486   
+4 Residuals        48 17501.   365.    NA     NA       </code></pre>
+</div>
+</div>
+<p>The <span class="math inline">\(p\)</span>-value for <code>prssBar:tempC</code> is large (approximately 0.48), providing no evidence of an interaction between pressure and temperature. We proceed with the additive model.</p>
+</div>
+</div>
+</div>
 <hr>
-<p><strong>6.</strong> Formally test for an interaction between <code>Biological</code> and <code>Adoptive</code> education level.</p>
-<ol type="a">
-<li><p>State <span class="math inline">\(H_0\)</span> and <span class="math inline">\(H_A\)</span> in terms of the <span class="math inline">\((\alpha\beta)_{ij}\)</span> parameters.</p></li>
-<li><p>Report the <span class="math inline">\(F\)</span>-statistic, degrees of freedom, and <span class="math inline">\(p\)</span>-value.</p></li>
-<li><p>State a conclusion in context. Should you proceed with the additive model or the cell means model?</p></li>
-</ol>
+<p><strong>6.</strong> Fit the additive model (main effects only). Is there a significant effect of pressure or temperature on the foam index? Report the <span class="math inline">\(F\)</span>-statistics and <span class="math inline">\(p\)</span>-values for each main effect.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 6
+  term         df  sumsq meansq statistic   p.value
+  &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 prssBar       1  5310.  5310.     14.7   0.000351
+2 tempC         2  4004.  2002.      5.55  0.00666 
+3 Residuals    50 18035.   361.     NA    NA       </code></pre>
+</div>
+</div>
+<p>Yes — both pressure (<span class="math inline">\(p \approx 0.0035\)</span>) and temperature (<span class="math inline">\(p \approx 0.0066\)</span>) have significant effects on foam index.</p>
+</div>
+</div>
+</div>
 <hr>
-<p><strong>7.</strong> Fit the model supported by your answer to Question 6. Test for main effects of <code>Biological</code> and <code>Adoptive</code> education level.</p>
-<ol type="a">
-<li><p>Is there a significant main effect of biological mother’s education? Report the <span class="math inline">\(F\)</span>-statistic and <span class="math inline">\(p\)</span>-value.</p></li>
-<li><p>Is there a significant main effect of adoptive mother’s education? Report the <span class="math inline">\(F\)</span>-statistic and <span class="math inline">\(p\)</span>-value.</p></li>
-<li><p>What is the research conclusion from this study? Which type of parent’s education level is more strongly associated with the child’s IQ?</p></li>
-</ol>
+<p><strong>7.</strong> Extract the coefficient estimates and confidence intervals from the additive model using <code>tidy(lm(...), conf.int = TRUE)</code>. Interpret each coefficient in context.</p>
+<p><em>Hint:</em> The default reference level for <code>tempC</code> is 75°C. To also obtain the contrast between 85°C and 95°C, refit with 85°C as the reference level using <code>mutate(tempC = relevel(tempC, ref = "85"))</code> and extract that model’s coefficients too.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+  term        estimate conf.low conf.high
+  &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)    114.    104.      125.  
+2 prssBar20       19.8     9.45     30.2 
+3 tempC85        -16.1   -28.8      -3.38
+4 tempC95        -19.8   -32.6      -7.13</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+  term        estimate conf.low conf.high
+  &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)    98.2     87.8     109.  
+2 prssBar20      19.8      9.45     30.2 
+3 tempC75        16.1      3.38     28.8 
+4 tempC95        -3.75   -16.5       8.97</code></pre>
+</div>
+</div>
+<ul>
+<li><strong>Pressure:</strong> Increasing pressure from 15 bar to 20 bar is estimated to increase the foam index by about 19.8% (95% CI: 9.5% to 30.2%).</li>
+<li><strong>Temperature 75→85°C:</strong> Increasing temperature from 75°C to 85°C is estimated to decrease the foam index by about 16.1% (95% CI: 3.4% to 28.8% decrease).</li>
+<li><strong>Temperature 85→95°C:</strong> A further increase from 85°C to 95°C is estimated to decrease the foam index by about 3.6% additional (95% CI: 9.0% increase to 16.5% decrease) — not significant on its own.</li>
+</ul>
+</div>
+</div>
+</div>
 <hr>
-<p><strong>8.</strong> Use <code>tidy(lm(...), conf.int = TRUE)</code> to extract coefficient estimates and confidence intervals.</p>
-<ol type="a">
-<li><p>What is the baseline group (the intercept)? What is its estimated mean IQ?</p></li>
-<li><p>Interpret the coefficient for biological mother’s education level. Provide the estimate and a 95% confidence interval.</p></li>
-<li><p>Interpret the coefficient for adoptive mother’s education level. Provide the estimate and a 95% confidence interval.</p></li>
-<li><p>Based on the magnitudes of the two coefficients, which type of parent’s education seems to be more strongly related to child IQ? Is the difference in effect sizes statistically meaningful (do the confidence intervals overlap substantially)?</p></li>
-</ol>
+<p><strong>8.</strong> Now run three separate two-sample <span class="math inline">\(t\)</span>-tests comparing foam index at the two pressure levels (15 bar vs.&nbsp;20 bar), one test for each temperature level (75°C, 85°C, and 95°C). Do any of these individual tests produce a significant result? How does this compare to the conclusion from the additive ANOVA in Question 6?</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  foamIndx by prssBar
+t = -2.1, df = 12, p-value = 0.06
+alternative hypothesis: true difference in means between group 15 and group 20 is not equal to 0
+95 percent confidence interval:
+ -44.276   1.074
+sample estimates:
+mean in group 15 mean in group 20 
+           113.4            135.0 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  foamIndx by prssBar
+t = -1.4, df = 13, p-value = 0.2
+alternative hypothesis: true difference in means between group 15 and group 20 is not equal to 0
+95 percent confidence interval:
+ -28.574   5.774
+sample estimates:
+mean in group 15 mean in group 20 
+           102.4            113.8 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  foamIndx by prssBar
+t = -3.1, df = 13, p-value = 0.008
+alternative hypothesis: true difference in means between group 15 and group 20 is not equal to 0
+95 percent confidence interval:
+ -44.675  -8.323
+sample estimates:
+mean in group 15 mean in group 20 
+            91.1            117.6 </code></pre>
+</div>
+</div>
+<p>None of the individual <span class="math inline">\(t\)</span>-tests is significant at the 0.05 level when run separately. This contrasts with the additive ANOVA, which found a significant pressure effect (<span class="math inline">\(p \approx 0.0035\)</span>). The ANOVA is more powerful because it pools the residual variance estimate across all temperature groups, giving a much more precise estimate of <span class="math inline">\(\sigma^2\)</span> and therefore more power to detect the pressure effect.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="references" class="level1">
+
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-masella2015new" class="csl-entry" role="listitem">
+Masella, Piernicola, Lorenzo Guerrini, Silvia Spinelli, et al. 2015. <span>“A New Espresso Brewing Method.”</span> <em>Journal of Food Engineering</em> 146: 204–8. <a href="https://doi.org/10.1016/j.jfoodeng.2014.09.001">https://doi.org/10.1016/j.jfoodeng.2014.09.001</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
