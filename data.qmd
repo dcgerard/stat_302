@@ -15,6 +15,38 @@ These data were almost all taken from the [companion website](https://www.cengag
 - [case0102.csv](./data/case0102.csv): The data are the beginning salaries for all 32 male and all 61 female skilled, entry–level clerical employees hired by a bank between 1969 and 1977. [@roberts1979harris]
   - `Salary`: starting salaries (in USD)
   - `Sex`: sex of the clerical employee, with levels `"Female"` and `"Male"`
+  
+- [boneden.csv](./data/boneden.csv): A study in Australia examined the relationship between bone density and cigarette smoking in middle-aged female twins with different smoking histories. Forty-one pairs of twins visited a hospital in Victoria, Australia, where their bone density was measured. Participants also completed questionnaires providing information on their tobacco use, alcohol, coffee, and tea consumption, calcium intake from dairy products, menopausal and reproductive history, fracture history, use of oral contraceptives or estrogen replacement therapy, and physical activity levels. Tobacco consumption was measured in pack-years, with one pack-year defined as smoking one pack of cigarettes per day for one year.
+  - `ID`: ID
+  - `Age`:  Age (yrs)
+  - `zyg`: Twin type.
+    - Possible values: `mz`, `dz`
+  - Twin 1  Lighter Smoking Twin
+    - `ht1`: Height (cm)
+    - `wt1`: Weight (kg)
+    - `tea1`: Tea  (cups/week)
+    - `cof1`: Coffee  (cups/week)
+    - `alc1`: Alcohol  (drinks/week)
+    - `cur1`: Current Smoking (cigarettes/day)
+    - `men1`: Menopause Status.
+      - Possible values: `pre`, `post`, `unknown`
+    - `pyr1`: Pack-years smoking
+    - `ls1`: Lumbar spine (g/cm$^2$)
+    - `fn1`: Femoral neck (g/cm$^2$)
+    - `fs1`: Femoral shaft (g/cm$^2$)
+  - Twin 2  Heavier Smoking Twin
+    - `ht2`: Height (cm)
+    - `wt2`: Weight (kg)
+    - `tea2`: Tea  (cups/week)
+    - `cof2`: Coffee  (cups/week)
+    - `alc2`: Alcohol  (drinks/week)
+    - `cur2`: Current Smoking (cigarettes/day)
+    - `men2`: Menopause Status.
+      - Possible values: `pre`, `post`, `unknown`
+    - `pyr2`: Pack-years smoking
+    - `ls2`: Lumbar spine (g/cm$^2$)
+    - `fn2`: Femoral neck (g/cm$^2$)
+    - `fs2`: Femoral shaft (g/cm$^2$)
 
 - [ex0112.csv](./data/ex0112.csv): Researchers used 7 red and 7 black playing cards to randomly assign 14 volunteer males with high blood pressure to one of two diets for four weeks: a fish oil diet and a standard oil diet. These data are the reductions in diastolic blood pressure. [@knapp1989antihypertensive]
   - `BP`: reduction in diastolic blood pressure (in mm of mercury)
