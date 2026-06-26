@@ -1,0 +1,143 @@
+---
+title: "Stat 302 Group Project"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    theme: cosmo
+---
+
+*Original project description by Laura Bernhofen. Adapted by David Gerard.*
+
+## Objective
+
+As a group you will engage in the entire statistical analysis investigative cycle: stating an investigative question, identifying an appropriate data set, exploring the data, building a model, revising your model, and presenting the final results. You will use the statistical modeling techniques we are developing to investigate a question in a field of interest that the group will define. The project is intended to give you the opportunity to experience firsthand the entire statistical process and to synthesize the concepts and techniques that we have been developing throughout the semester.
+
+The project will entail:
+
+- Identifying a problem of interest
+- Collecting or finding a data set that can be used to address the problem
+- Analyzing the data using appropriate statistical methods
+- Critically evaluating the results and methodology
+- Presenting the results in a clear and coherent manner
+
+## Due Dates
+
+| Deliverable                       | Due Date          |
+|-----------------------------------|-------------------|
+| Project Proposal                  | Friday, Nov 6     |
+| Group Meetings                    | Week of Nov 9--13 |
+| Initial Exploratory Data Analysis | Tuesday, Nov 17   |
+| Initial Statistical Model         | Tuesday, Nov 24   |
+| Revised Model                     | Friday, Dec 11    |
+| Final Poster Presentation         | Friday, Dec 18    |
+
+## Project Phases
+
+### Project Proposal
+
+Involves defining the problem of interest and formulating an investigative question that you want to answer, identifying a relevant data set or establishing an appropriate method for data collection.
+
+### Initial Exploratory Data Analysis
+
+Examining the data to identify issues with the data, examining the distributions of the associated variables, assessing outliers or other extreme values, and proposing potential remedies for issues encountered.
+
+### Developing an Initial Statistical Model
+
+Using an appropriate statistical model that we discuss during the course, you will build a provisional model that could be used to address your proposed problem of interest. You will also analyze the validity of the assumptions of the model for the data set you have chosen.
+
+### Revising the Model
+
+Addressing any issues you discover with the initial statistical model and incorporating feedback, you will develop a final model which provides insight into answering your proposed question that satisfies the necessary assumptions.
+
+### Log
+
+Log your individual contribution to the group as well as group interactions.
+
+### Project Presentation
+
+The group will make a 15-minute poster presentation to the class describing your project and your results. Project presentations will be in person and all members of the group must participate.
+
+## Requirements
+
+### Log
+
+Each individual in the group needs to keep a log of the time spent on the project. Indicate what task was undertaken, the amount of time spent on the task, and who was involved in the task. You should divide the tasks amongst the group members to use time efficiently and take advantage of group members' strengths. Maintain the log for the entirety of the project.
+
+### Project Proposal
+
+A 1–2 page well-written proposal.
+
+The project proposal must include:
+
+**1. Problem Statement**
+
+The proposal should begin with a clear statement of the investigative question that you want to answer in the data analysis that you will undertake. Include specific claims you'd like to address and why the problem is of interest to you. The problem can come from any discipline but must be well defined in terms of the question you intend to investigate. You want to make it an interesting question that uses the statistical techniques we are covering this semester — it should not be an exercise in descriptive statistics. The project may not be one you've already completed for another class, unless you can justify that this project extends that project in some statistically meaningful way. I would recommend that you consider a project that involves building a linear regression model with multiple variables that can be used to describe the relationship between a quantitative response variable and multiple potential explanatory variables.
+
+**2. Identify a Data Set Relevant to Your Question**
+
+You should identify an available data set from a reliable source that you would like to analyze. I have on the course website links to our library's resources for numerical data. We also have a [data librarian](https://subjectguides.library.american.edu/prf.php?id=61bbe661-7cdb-11ed-9922-0ad758b798c3) that you can try to ask for help. My experience is that our librarians **love it** when you reach out to them for help.
+
+You may also get ideas for good data sources from professors or others with experience in your discipline. I would really like it if the data and project were related to your major or field-of-study, but this is not required.
+
+I will say no to any Kaggle data set (too picked over). 
+
+I generally discourage sports and stock data projects. Most of those projects from students have been really boring (again, too picked over). But I have had one or two really strong ones, so this is not a hard no. Those projects covered less-popular sports, like professional ultimate Frisbee and college swimming.
+
+If a data set comes from a published journal article, I'll only accept it if you can show me that you can show something new that the authors did not explore (like incorporating it with multiple journal article data sets), but this is a high bar.
+
+**3. Description of the Data Set**
+
+- What is the source of the data? Try to establish who originally collected the data and for what purpose.
+- How was the data collected? From whom? Over what time period?
+- How many variables are in the data set?
+- Which variables are categorical and which are quantitative?
+- What variable would you use as your response variable?
+- What variables do you initially think could serve as explanatory variables (may be both quantitative and categorical)?
+
+### Project Proposal Meeting
+
+As a group you will meet with me to discuss your project proposal. At that meeting we will discuss any adjustments to the project and finalize your proposal. You should provide me with a copy of the data set you intend to use with your project proposal.
+
+### Initial Exploratory Data Analysis
+
+Examine the data graphically and numerically to identify issues, examine the distributions of the associated variables, assess outliers or other extreme values, and propose potential remedies for issues encountered.
+
+### Initial Statistical Model
+
+Build a preliminary model using your proposed response variable and at least one quantitative explanatory variable. Explore whether the assumptions of the model have been satisfied. Indicate any deficiencies in the model that you have discovered.
+
+### Revised Model
+
+Extend your preliminary model incorporating any remedies necessary to address the deficiencies discovered in your initial model. If you built only a simple linear model initially, extend your model to include other potential explanatory variables. Check your assumptions and modify the model if needed.
+
+### Final Presentation
+
+Poster session, in class. Each group will create a single one-page PowerPoint slide poster to summarize the project. The posters will be presented in class like a presentation at a professional meeting.
+
+The PowerPoint slide your group prepares should include:
+
+1. **Statement of the problem**: Describe the question you investigated and any key issues surrounding it.
+2. **Data description**: Describe the source of your data, how the data was originally collected, who collected it, and any issues you encountered.
+3. **Analyses**: Describe the analyses you did. Be ready to explain why you believe these methods are justified.
+4. **Results**: Present relevant descriptive statistics. Include tables or graphs that support your analyses (be judicious — too many tables and graphs hurt the clarity of your message).
+5. **Conclusions**: Answer your question of interest.
+6. **Discussion**: What implications do your results have? Does your conclusion hold for a wider population or just the data set you analyzed? What could be done to improve the study? What types of biases might exist?
+
+::: {.callout-tip}
+## Tips for Preparing the Slide
+
+Strive to make the slide clear. Avoid unnecessary clutter, and don't put too much information in any section.
+:::
+
+## Evaluation
+
+Your project will be evaluated on the following:
+
+- **Project Proposal** — well-defined, clear problem statement, interesting
+- **Data collection** — appropriate to the problem
+- **Data analysis** — appropriate to the problem, conclusions substantiated by the data
+- **Presentation** — clear, relevant — did you answer the question of interest?
+- **Participation** — effort you invested in the group
+
+The final evaluation will be a combination of my assessments on each of the reports your group submits and on your poster presentation, your classmates' assessments at the poster presentation, your individual evaluation of the project, your participation, and the other group members' evaluation of your participation.
