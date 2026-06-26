@@ -1,0 +1,56 @@
+---
+title: "The Three Plots of Observational Regression Analysis"
+author: "David Gerard"
+bibliography: "../bib.bib"
+---
+
+There is a literary theory that there are only a finite number of plots, and all stories belong to one of those archetypal plots. For example, @booker2004seven proposes seven: overcoming the monster, rags to riches, the quest, voyage and return, comedy, tragedy, and rebirth.
+
+I propose that in observational regression analysis, there are only three stories you can tell.
+
+# X is associated with Y
+
+- This examines the marginal relationship between X and Y and states whether an association exists.
+
+- **Example 1:**
+  - X: Gender
+  - Y: Salary
+  - Story: Men earn more than women on average.
+  - @blau2017gender
+
+- **Example 2:**
+  - X: Smoking status
+  - Y: Lung cancer incidence
+  - Story: Smokers develop lung cancer at substantially higher rates than non-smokers.
+  - @doll1950smoking
+
+# X is associated with Y after adjusting for Z
+
+- This adjusts for potential confounders to examine whether the association between X and Y persists conditionally.
+
+- **Example:**
+  - X: Gender
+  - Y: Salary
+  - Z: Education level, years of experience, job seniority
+  - Story: Men earn more than women even after adjusting for education level, years of experience, and job seniority, though the effect size is smaller than the unadjusted estimate.
+  - @blau2017gender
+
+# X is associated with Y, but not after adjusting for Z
+
+- This suggests that the association between X and Y is explained by or mediated through Z.
+
+- **Example 1 (spurious association):**
+  - X: Applicant sex
+  - Y: Probability of admission
+  - Z: Academic department applied to
+  - Story: Female applicants appeared less likely to be admitted than male applicants overall, but this association was absent after adjusting for academic department. Women disproportionately applied to more selective departments, creating a spurious aggregate association.
+  - @bickel1975sex
+  
+- **Example 2 (mediation):**
+  - X: Regular exercise
+  - Y: Risk of cardiovascular disease
+  - Z: Metabolic biomarkers (e.g., BMI, blood pressure, lipid levels)
+  - Story: Regular exercise is associated with lower risk of cardiovascular disease, but this association is largely explained after adjusting for metabolic biomarkers, suggesting that exercise reduces disease risk by improving metabolic health.
+  - @park2021network
+
+# References

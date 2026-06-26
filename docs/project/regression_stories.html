@@ -8,7 +8,7 @@
 
 <meta name="author" content="David Gerard">
 
-<title>STAT-302 Homepage – Stat 302: Intermediate Statistics</title>
+<title>The Three Plots of Observational Regression Analysis – Stat 302: Intermediate Statistics</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -24,28 +24,47 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-33269adcf1721b81efc5ea7fcfe7f0ee.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-33269adcf1721b81efc5ea7fcfe7f0ee.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
 <script id="quarto-axe-checker-options" type="text/plain">dHJ1ZQ==</script>
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-0e01d36e12aedd38e6bb7bd9a7358603.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-0e01d36e12aedd38e6bb7bd9a7358603.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -75,7 +94,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -85,7 +104,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Stat 302: Intermediate Statistics</span>
     </a>
   </div>
@@ -96,11 +115,11 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./data.html"> 
+    <a class="nav-link" href="../data.html"> 
 <span class="menu-text">Data</span></a>
   </li>  
 </ul>
@@ -114,15 +133,24 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#x-is-associated-with-y" id="toc-x-is-associated-with-y" class="nav-link active" data-scroll-target="#x-is-associated-with-y">X is associated with Y</a></li>
+  <li><a href="#x-is-associated-with-y-after-adjusting-for-z" id="toc-x-is-associated-with-y-after-adjusting-for-z" class="nav-link" data-scroll-target="#x-is-associated-with-y-after-adjusting-for-z">X is associated with Y after adjusting for Z</a></li>
+  <li><a href="#x-is-associated-with-y-but-not-after-adjusting-for-z" id="toc-x-is-associated-with-y-but-not-after-adjusting-for-z" class="nav-link" data-scroll-target="#x-is-associated-with-y-but-not-after-adjusting-for-z">X is associated with Y, but not after adjusting for Z</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">STAT-302 Homepage</h1>
+<h1 class="title">The Three Plots of Observational Regression Analysis</h1>
 </div>
 
 
@@ -145,97 +173,88 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><a href="./syllabus.html">Syllabus</a></p>
+<p>There is a literary theory that there are only a finite number of plots, and all stories belong to one of those archetypal plots. For example, <span class="citation" data-cites="booker2004seven">Booker (<a href="#ref-booker2004seven" role="doc-biblioref">2004</a>)</span> proposes seven: overcoming the monster, rags to riches, the quest, voyage and return, comedy, tragedy, and rebirth.</p>
+<p>I propose that in observational regression analysis, there are only three stories you can tell.</p>
+<section id="x-is-associated-with-y" class="level1">
+<h1>X is associated with Y</h1>
 <ul>
-<li>Final project
+<li><p>This examines the marginal relationship between X and Y and states whether an association exists.</p></li>
+<li><p><strong>Example 1:</strong></p>
 <ul>
-<li><a href="./project/group_project.html">Final Project Description</a></li>
-<li><a href="./project/regression_stories.html">Three Stories of Regression</a></li>
-<li><a href="https://subjectguides.library.american.edu/az/databases?t=7411">AU Data Subscriptions</a></li>
-<li><a href="https://subjectguides.library.american.edu/c.php?g=1329947&amp;p=9793262">AU Data Librarian Resources</a></li>
-<li><a href="https://subjectguides.library.american.edu/c.php?g=1329947&amp;p=9988298">AU List of Government Data</a></li>
+<li>X: Gender</li>
+<li>Y: Salary</li>
+<li>Story: Men earn more than women on average.</li>
+<li><span class="citation" data-cites="blau2017gender">Blau and Kahn (<a href="#ref-blau2017gender" role="doc-biblioref">2017</a>)</span></li>
 </ul></li>
-<li>Chapter 0: R
+<li><p><strong>Example 2:</strong></p>
 <ul>
-<li><a href="./01_r/01_r_intro.html">R and Data Frames</a></li>
-<li><a href="./01_r/01_ggplot.html">R Graphics</a></li>
-<li><a href="./01_r/01_r_cheatsheet.html">R Cheat Sheet</a></li>
-</ul></li>
-<li>Review:
-<ul>
-<li><a href="./02_review/02_stat_202_review.html">Basic Statistics Review</a></li>
-<li><a href="./02_review/02_prob_review.html">Probability Review</a></li>
-</ul></li>
-<li>Chapter 1:
-<ul>
-<li><a href="./03_ch1/03_ch1.html">Causality and Generalizability</a></li>
-<li><a href="./03_ch1/03_worksheet.html">Chapter 1 Worksheet</a></li>
-</ul></li>
-<li>Chapter 2:
-<ul>
-<li><a href="./04_ch2/04_ch2.html">Paired and Two-Sample t-Tests</a></li>
-<li><a href="./04_ch2/04_worksheet.html">Chapter 2 Worksheet</a></li>
-</ul></li>
-<li>Chapter 3:
-<ul>
-<li><a href="./05_ch3/05_ch3.html">Assumptions of t-Tools</a></li>
-<li><a href="./05_ch3/05_log_review.html">Review: Logarithms and Exponentials</a></li>
-<li><a href="./05_ch3/05_worksheet.html">Chapter 3 Worksheet</a></li>
-</ul></li>
-<li>Chapter 4:
-<ul>
-<li>Nonparameterics</li>
-</ul></li>
-<li>Chapter 5:
-<ul>
-<li><a href="./07_ch5/07_ch5.html">One-Way ANOVA</a></li>
-<li><a href="./07_ch5/07_worksheet.html">Chapter 5 Worksheet</a></li>
-</ul></li>
-<li>Chapter 6:
-<ul>
-<li><a href="./08_ch6/08_linear_combos.html">Linear Combinations of Group Means</a></li>
-<li><a href="./08_ch6/08_multiple_comparisons.html">Multiple Comparisons</a></li>
-<li><a href="./08_ch6/08_worksheet.html">Chapter 6 Worksheet</a></li>
-</ul></li>
-<li>Chapter 7:
-<ul>
-<li><a href="./09_ch7/09_ch7.html">Simple Linear Regression</a></li>
-<li><a href="./09_ch7/09_worksheet.html">Chapter 7 Worksheet</a></li>
-</ul></li>
-<li>Chapter 8:
-<ul>
-<li><a href="./10_ch8/10_ch8.html">Assumptions of Simple Linear Regression</a></li>
-<li><a href="./10_ch8/10_worksheet.html">Chapter 8 Worksheet</a></li>
-</ul></li>
-<li>Chapters 9
-<ul>
-<li><a href="./11_ch9/11_multiple_regression.html">Multiple Linear Regression</a></li>
-<li><a href="./11_ch9/11_limitless_possibilities.html">Transformations</a></li>
-<li><a href="./11_ch9/11_multiple_regression_eda.html">MLR EDA</a></li>
-</ul></li>
-<li>Chapters 10–12:
-<ul>
-<li><a href="./12_modeling/12_f_tests.html">F-tests for Nested Models</a></li>
-<li><a href="./12_modeling/12_model_selection.html">Model Selection</a></li>
-<li><a href="./12_modeling/12_outliers.html">Outliers and Influential Observations</a></li>
-<li><a href="./12_modeling/12_worksheet.html">Chapters 10–12 Worksheet</a></li>
-</ul></li>
-<li>Chapter 13:
-<ul>
-<li><a href="./13_ch13/13_why_two_way.html">Why Use Two-Way ANOVA?</a></li>
-<li><a href="./13_ch13/13_two_way_anova.html">Two-Way ANOVA</a></li>
-<li><a href="./13_ch13/13_multifactor.html">Multi-Factor ANOVA</a></li>
-<li><a href="./13_ch13/13_worksheet.html">Chapter 13 Worksheet</a></li>
-</ul></li>
-<li>Chapter 20:
-<ul>
-<li><a href="./14_ch20/14_logistic.html">Logistic Regression</a></li>
+<li>X: Smoking status</li>
+<li>Y: Lung cancer incidence</li>
+<li>Story: Smokers develop lung cancer at substantially higher rates than non-smokers.</li>
+<li><span class="citation" data-cites="doll1950smoking">Doll and Hill (<a href="#ref-doll1950smoking" role="doc-biblioref">1950</a>)</span></li>
 </ul></li>
 </ul>
+</section>
+<section id="x-is-associated-with-y-after-adjusting-for-z" class="level1">
+<h1>X is associated with Y after adjusting for Z</h1>
+<ul>
+<li><p>This adjusts for potential confounders to examine whether the association between X and Y persists conditionally.</p></li>
+<li><p><strong>Example:</strong></p>
+<ul>
+<li>X: Gender</li>
+<li>Y: Salary</li>
+<li>Z: Education level, years of experience, job seniority</li>
+<li>Story: Men earn more than women even after adjusting for education level, years of experience, and job seniority, though the effect size is smaller than the unadjusted estimate.</li>
+<li><span class="citation" data-cites="blau2017gender">Blau and Kahn (<a href="#ref-blau2017gender" role="doc-biblioref">2017</a>)</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="x-is-associated-with-y-but-not-after-adjusting-for-z" class="level1">
+<h1>X is associated with Y, but not after adjusting for Z</h1>
+<ul>
+<li><p>This suggests that the association between X and Y is explained by or mediated through Z.</p></li>
+<li><p><strong>Example 1 (spurious association):</strong></p>
+<ul>
+<li>X: Applicant sex</li>
+<li>Y: Probability of admission</li>
+<li>Z: Academic department applied to</li>
+<li>Story: Female applicants appeared less likely to be admitted than male applicants overall, but this association was absent after adjusting for academic department. Women disproportionately applied to more selective departments, creating a spurious aggregate association.</li>
+<li><span class="citation" data-cites="bickel1975sex">Bickel et al. (<a href="#ref-bickel1975sex" role="doc-biblioref">1975</a>)</span></li>
+</ul></li>
+<li><p><strong>Example 2 (mediation):</strong></p>
+<ul>
+<li>X: Regular exercise</li>
+<li>Y: Risk of cardiovascular disease</li>
+<li>Z: Metabolic biomarkers (e.g., BMI, blood pressure, lipid levels)</li>
+<li>Story: Regular exercise is associated with lower risk of cardiovascular disease, but this association is largely explained after adjusting for metabolic biomarkers, suggesting that exercise reduces disease risk by improving metabolic health.</li>
+<li><span class="citation" data-cites="park2021network">Park et al. (<a href="#ref-park2021network" role="doc-biblioref">2021</a>)</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="references" class="level1">
 
 
 
-</main> <!-- /main -->
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-bickel1975sex" class="csl-entry" role="listitem">
+Bickel, Peter J, Eugene A Hammel, and J William O’Connell. 1975. <span>“Sex Bias in Graduate Admissions: Data from <span>B</span>erkeley.”</span> <em>Science</em> 187 (4175): 398–404. <a href="https://doi.org/10.1126/science.187.4175.398">https://doi.org/10.1126/science.187.4175.398</a>.
+</div>
+<div id="ref-blau2017gender" class="csl-entry" role="listitem">
+Blau, Francine D, and Lawrence M Kahn. 2017. <span>“The Gender Wage Gap: Extent, Trends, and Explanations.”</span> <em>Journal of Economic Literature</em> 55 (3): 789–865. <a href="https://doi.org/10.1257/jel.20160995">https://doi.org/10.1257/jel.20160995</a>.
+</div>
+<div id="ref-booker2004seven" class="csl-entry" role="listitem">
+Booker, Christopher. 2004. <em>The Seven Basic Plots: Why We Tell Stories</em>. A&amp;C Black.
+</div>
+<div id="ref-doll1950smoking" class="csl-entry" role="listitem">
+Doll, Richard, and Austin Bradford Hill. 1950. <span>“Smoking and Carcinoma of the Lung: Preliminary Report.”</span> <em>British Medical Journal</em> 2 (4682): 739–48. <a href="https://doi.org/10.1136/bmj.2.4682.739">https://doi.org/10.1136/bmj.2.4682.739</a>.
+</div>
+<div id="ref-park2021network" class="csl-entry" role="listitem">
+Park, JooYong, Jaesung Choi, Ji-Eun Kim, et al. 2021. <span>“Network of Biomarkers and Their Mediation Effects on the Associations Between Regular Exercise and the Incidence of Cardiovascular &amp; Metabolic Diseases.”</span> <em>Scientific Reports</em> 11. <a href="https://doi.org/10.1038/s41598-021-92312-x">https://doi.org/10.1038/s41598-021-92312-x</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
