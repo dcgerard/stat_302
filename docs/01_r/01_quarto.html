@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
+<meta name="dcterms.date" content="2026-06-26">
 
-<title>STAT-302 Homepage – Stat 302: Intermediate Statistics</title>
+<title>Introduction to Quarto  – Stat 302: Intermediate Statistics</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -24,28 +25,63 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-33269adcf1721b81efc5ea7fcfe7f0ee.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-33269adcf1721b81efc5ea7fcfe7f0ee.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
 <script id="quarto-axe-checker-options" type="text/plain">dHJ1ZQ==</script>
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-0e01d36e12aedd38e6bb7bd9a7358603.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-0e01d36e12aedd38e6bb7bd9a7358603.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -74,8 +110,37 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="styles.css">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -85,7 +150,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Stat 302: Intermediate Statistics</span>
     </a>
   </div>
@@ -96,11 +161,11 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./data.html"> 
+    <a class="nav-link" href="../data.html"> 
 <span class="menu-text">Data</span></a>
   </li>  
 </ul>
@@ -114,15 +179,31 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <ul class="collapse">
+  <li><a href="#getting-statrted" id="toc-getting-statrted" class="nav-link" data-scroll-target="#getting-statrted">Getting Statrted</a></li>
+  <li><a href="#playing-with-quarto" id="toc-playing-with-quarto" class="nav-link" data-scroll-target="#playing-with-quarto">Playing with Quarto <img src="./01_figures/kuato_small.png" width="5%" alt="Kuato cartoon"></a>
+  <ul class="collapse">
+  <li><a href="#formatting-markdown" id="toc-formatting-markdown" class="nav-link" data-scroll-target="#formatting-markdown">Formatting markdown</a></li>
+  <li><a href="#code-chunks" id="toc-code-chunks" class="nav-link" data-scroll-target="#code-chunks">Code Chunks</a></li>
+  <li><a href="#yaml-header" id="toc-yaml-header" class="nav-link" data-scroll-target="#yaml-header">YAML Header</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#writing-math" id="toc-writing-math" class="nav-link" data-scroll-target="#writing-math">Writing Math</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">STAT-302 Homepage</h1>
+<h1 class="title">Introduction to Quarto <img src="./01_figures/kuato_small.png" width="7%" alt="Kuato cartoon"></h1>
 </div>
 
 
@@ -136,6 +217,12 @@ ul.task-list li input[type="checkbox"] {
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 26, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -145,96 +232,250 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><a href="./syllabus.html">Syllabus</a></p>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
 <ul>
-<li>Final project
+<li><p>Quarto <img src="./01_figures/kuato_small.png" width="3%" alt="Kuato cartoon"> is a file format that is a combination of plain text and R code.</p></li>
+<li><p>Lots of great educational material is available at <a href="https://quarto.org/" class="uri">https://quarto.org/</a></p></li>
+<li><p>You write code and commentary of code in one file. You may then compile (RStudio calls this “rendering”) the Quarto <img src="./01_figures/kuato_small.png" width="3%" alt="Kuato cartoon"> file to many different kinds of output: pdf (including beamer presentations), html (including various presentation formats), Word, PowerPoint, etc.</p></li>
+<li><p>Quarto <img src="./01_figures/kuato_small.png" width="3%" alt="Kuato cartoon"> is useful for:</p>
+<ol type="1">
+<li>Communication of statistical results.</li>
+<li>Collaborating with other data scientists.</li>
+<li>Using it as a modern lab notebook to <em>do</em> data science.</li>
+</ol></li>
+<li><p>Quarto <img src="./01_figures/kuato_small.png" width="3%" alt="Kuato cartoon"> can also make “literate programming” documents for python, Julia, JavaScript, etc…</p></li>
+</ul>
+<section id="getting-statrted" class="level2">
+<h2 class="anchored" data-anchor-id="getting-statrted">Getting Statrted</h2>
 <ul>
-<li><a href="./project/group_project.html">Final Project Description</a></li>
-<li><a href="./project/regression_stories.html">Three Stories of Regression</a></li>
-<li><a href="https://subjectguides.library.american.edu/az/databases?t=7411">AU Data Subscriptions</a></li>
-<li><a href="https://subjectguides.library.american.edu/c.php?g=1329947&amp;p=9793262">AU Data Librarian Resources</a></li>
-<li><a href="https://subjectguides.library.american.edu/c.php?g=1329947&amp;p=9988298">AU List of Government Data</a></li>
-</ul></li>
-<li>Chapter 0: R
+<li><p>Install Quarto <img src="./01_figures/kuato_small.png" width="3%" alt="Kuato cartoon"> via: <a href="https://quarto.org/docs/get-started/" class="uri">https://quarto.org/docs/get-started/</a></p></li>
+<li><p>To make PDF files, you will need to install <span class="math inline">\(\LaTeX\)</span> if you don’t have it already. To install it, type in R:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tinytex"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>tinytex<span class="sc">::</span><span class="fu">install_tinytex</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></li>
+<li><p>If you get an error while trying to install tinytex, try manually installing &nbsp;instead:</p>
 <ul>
-<li><a href="./01_r/01_quarto.html">Quarto</a></li>
-<li><a href="./01_r/01_r_intro.html">R and Data Frames</a></li>
-<li><a href="./01_r/01_ggplot.html">R Graphics</a></li>
-<li><a href="./01_r/01_r_cheatsheet.html">R Cheat Sheet</a></li>
-</ul></li>
-<li>Review:
-<ul>
-<li><a href="./02_review/02_stat_202_review.html">Basic Statistics Review</a></li>
-<li><a href="./02_review/02_prob_review.html">Probability Review</a></li>
-</ul></li>
-<li>Chapter 1:
-<ul>
-<li><a href="./03_ch1/03_ch1.html">Causality and Generalizability</a></li>
-<li><a href="./03_ch1/03_worksheet.html">Chapter 1 Worksheet</a></li>
-</ul></li>
-<li>Chapter 2:
-<ul>
-<li><a href="./04_ch2/04_ch2.html">Paired and Two-Sample t-Tests</a></li>
-<li><a href="./04_ch2/04_worksheet.html">Chapter 2 Worksheet</a></li>
-</ul></li>
-<li>Chapter 3:
-<ul>
-<li><a href="./05_ch3/05_ch3.html">Assumptions of t-Tools</a></li>
-<li><a href="./05_ch3/05_log_review.html">Review: Logarithms and Exponentials</a></li>
-<li><a href="./05_ch3/05_worksheet.html">Chapter 3 Worksheet</a></li>
-</ul></li>
-<li>Chapter 4:
-<ul>
-<li>Nonparameterics</li>
-</ul></li>
-<li>Chapter 5:
-<ul>
-<li><a href="./07_ch5/07_ch5.html">One-Way ANOVA</a></li>
-<li><a href="./07_ch5/07_worksheet.html">Chapter 5 Worksheet</a></li>
-</ul></li>
-<li>Chapter 6:
-<ul>
-<li><a href="./08_ch6/08_linear_combos.html">Linear Combinations of Group Means</a></li>
-<li><a href="./08_ch6/08_multiple_comparisons.html">Multiple Comparisons</a></li>
-<li><a href="./08_ch6/08_worksheet.html">Chapter 6 Worksheet</a></li>
-</ul></li>
-<li>Chapter 7:
-<ul>
-<li><a href="./09_ch7/09_ch7.html">Simple Linear Regression</a></li>
-<li><a href="./09_ch7/09_worksheet.html">Chapter 7 Worksheet</a></li>
-</ul></li>
-<li>Chapter 8:
-<ul>
-<li><a href="./10_ch8/10_ch8.html">Assumptions of Simple Linear Regression</a></li>
-<li><a href="./10_ch8/10_worksheet.html">Chapter 8 Worksheet</a></li>
-</ul></li>
-<li>Chapters 9
-<ul>
-<li><a href="./11_ch9/11_multiple_regression.html">Multiple Linear Regression</a></li>
-<li><a href="./11_ch9/11_limitless_possibilities.html">Transformations</a></li>
-<li><a href="./11_ch9/11_multiple_regression_eda.html">MLR EDA</a></li>
-</ul></li>
-<li>Chapters 10–12:
-<ul>
-<li><a href="./12_modeling/12_f_tests.html">F-tests for Nested Models</a></li>
-<li><a href="./12_modeling/12_model_selection.html">Model Selection</a></li>
-<li><a href="./12_modeling/12_outliers.html">Outliers and Influential Observations</a></li>
-<li><a href="./12_modeling/12_worksheet.html">Chapters 10–12 Worksheet</a></li>
-</ul></li>
-<li>Chapter 13:
-<ul>
-<li><a href="./13_ch13/13_why_two_way.html">Why Use Two-Way ANOVA?</a></li>
-<li><a href="./13_ch13/13_two_way_anova.html">Two-Way ANOVA</a></li>
-<li><a href="./13_ch13/13_multifactor.html">Multi-Factor ANOVA</a></li>
-<li><a href="./13_ch13/13_worksheet.html">Chapter 13 Worksheet</a></li>
-</ul></li>
-<li>Chapter 20:
-<ul>
-<li><a href="./14_ch20/14_logistic.html">Logistic Regression</a></li>
+<li>For Windows users, go to <a href="http://miktex.org/download" class="uri">http://miktex.org/download</a></li>
+<li>For OS users, go to <a href="https://tug.org/mactex/" class="uri">https://tug.org/mactex/</a></li>
+<li>For Linux users, go to <a href="https://www.tug.org/texlive/" class="uri">https://www.tug.org/texlive/</a></li>
 </ul></li>
 </ul>
+</section>
+<section id="playing-with-quarto" class="level2">
+<h2 class="anchored" data-anchor-id="playing-with-quarto">Playing with Quarto <img src="./01_figures/kuato_small.png" width="5%" alt="Kuato cartoon"></h2>
+<ul>
+<li>Open up a new Quarto <img src="./01_figures/kuato_small.png" width="3%" alt="Kuato cartoon"> file:</li>
+</ul>
+<p><img src="./01_figures/quarto_start.png" class="img-fluid" alt="R studio screenshot of a new Quarto file.">&nbsp;</p>
+<ul>
+<li>Choose the options for the type of output you want</li>
+</ul>
+<p><img src="./01_figures/quarto_options.png" class="img-fluid" alt="Options for new Quarto file.">&nbsp;</p>
+<ul>
+<li><p>You should now have a rudimentary Quarto <img src="./01_figures/kuato_small.png" width="3%" alt="Kuato cartoon"> file.</p></li>
+<li><p>Save a copy of this file in your “analysis” folder in the “week1” project.</p></li>
+<li><p>Quarto <img src="./01_figures/kuato_small.png" width="3%" alt="Kuato cartoon"> contains three things</p>
+<ol type="1">
+<li>A YAML (Yet Another Markup Language) header that controls options for the Quarto <img src="./01_figures/kuato_small.png" width="3%" alt="Kuato cartoon"> document. These are surrounded by <code>---</code>.</li>
+<li>Code <strong>chunks</strong> — bits of R code that that are surrounded by <code>```{r}</code> and <code>```</code>. Only valid R code should go in here.</li>
+<li>Plain text that contains simple formatting options.</li>
+</ol></li>
+<li><p>All of these are are displayed in the default Quarto <img src="./01_figures/kuato_small.png" width="3%" alt="Kuato cartoon"> file. You can compile this file by clicking the “Render” button at the top of the screen or by typing CONTROL + SHIFT + K. Do this now.</p></li>
+</ul>
+<section id="formatting-markdown" class="level3">
+<h3 class="anchored" data-anchor-id="formatting-markdown">Formatting markdown</h3>
+<ul>
+<li><p>Here is Hadley’s brief intro to formatting text in Quarto <img src="./01_figures/kuato_small.png" width="3%" alt="Kuato cartoon">:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>## Text formatting
+
+*italic* **bold** ~~strikeout~~ `code`
+
+superscript^2^ subscript~2~
+
+[underline]{.underline} [small caps]{.smallcaps}
+
+## Headings
+
+# 1st Level Header
+
+## 2nd Level Header
+
+### 3rd Level Header
+
+## Lists
+
+-   Bulleted list item 1
+
+-   Item 2
+
+    -   Item 2a
+
+    -   Item 2b
+
+1.  Numbered list item 1
+
+2.  Item 2.
+    The numbers are incremented automatically in the output.
+
+## Links and images
+
+&lt;http://example.com&gt;
+
+[linked phrase](http://example.com)
+
+![optional caption text](img.png){fig-alt="accessibility text"}
+
+## Tables
+
+| First Header | Second Header |
+|--------------|---------------|
+| Content Cell | Content Cell  |
+| Content Cell | Content Cell  |</code></pre>
+</div>
+</div></li>
+</ul>
+</section>
+<section id="code-chunks" class="level3">
+<h3 class="anchored" data-anchor-id="code-chunks">Code Chunks</h3>
+<ul>
+<li><p>You can insert new code-chunks using CONTROL + ALT + I (or using the “Insert” button at the top of RStudio).</p></li>
+<li><p>You write all R code in chunks. You can send the current line of R code (the line where the cursor is) using CONTROL + ENTER (or the “Run” button at the top of RStudio).</p></li>
+<li><p>You can run all of the code in a chunk using CONTROL + ALT + C (or using the “Run” button at the top of RStudio).</p></li>
+<li><p>You can run all of the code in the next chunk using CONTROL + ALT + N (or using the “Run” button at the top of RStudio).</p></li>
+</ul>
+</section>
+<section id="yaml-header" class="level3">
+<h3 class="anchored" data-anchor-id="yaml-header">YAML Header</h3>
+<ul>
+<li><p>My typical YAML header will looks like this</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>---
+title: "Week 1 Worksheet: Installing R, Rmarkdown, Rbasics"
+author: "David Gerard"
+date: today
+format: pdf
+urlcolor: "blue"
+---</code></pre>
+</div>
+</div></li>
+<li><p>All of those settings are fairly self-explanatory.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="writing-math" class="level1">
+<h1>Writing Math</h1>
+<ul>
+<li><p>Skip if uninterested.</p></li>
+<li><p>You can use the <span class="math inline">\(\LaTeX\)</span> language to write math in Quarto <img src="./01_figures/kuato_small.png" width="3%" alt="Kuato cartoon"> documents.</p></li>
+<li><p>You put inline math between single dollar signs <code>$math code here$</code>.</p></li>
+<li><p>You put display math (equations on a separate line) between two dollar signs</p>
+<pre><code>$$
+math code here
+$$</code></pre></li>
+<li><p>Subscripts are written with an underscore <code>_</code> with braces <code>{}</code> surrounding the subscript.</p>
+<ul>
+<li><span class="math inline">\(x_{ik}\)</span> is <code>$x_{ik}$</code></li>
+</ul></li>
+<li><p>Superscripts are written with a caret <code>^</code> with braces <code>{}</code> surrounding the subscript.</p>
+<ul>
+<li><span class="math inline">\(x^{2p}\)</span> is <code>$x^{2p}$</code></li>
+</ul></li>
+<li><p>Big sigma notation is <code>\sum</code></p>
+<ul>
+<li><span class="math inline">\(\sum_{i=1}^{n}\)</span> is <code>$\sum_{i=1}^{n}$</code></li>
+</ul></li>
+<li><p>Square root: <code>\sqrt{}</code></p>
+<ul>
+<li><span class="math inline">\(\sqrt{x^2 + 1}\)</span> is <code>$\sqrt{x^2 + 1}$</code></li>
+</ul></li>
+<li><p>log and exponentiation: <code>\log()</code> and <code>\exp()</code> (note the parentheses, not braces)</p>
+<ul>
+<li><span class="math inline">\(\log(x^2 + 1)\)</span> is <code>$\log(x^2 + 1)$</code></li>
+<li><span class="math inline">\(\exp(x^2 + 1)\)</span> is <code>$\exp(x^2 + 1)$</code></li>
+</ul></li>
+<li><p>Greek letters are typically just their spelling beginning with a backslash <code>\</code></p>
+<ul>
+<li><span class="math inline">\(\sigma\)</span> is <code>$\sigma$</code></li>
+<li><span class="math inline">\(\mu\)</span> is <code>$\mu$</code></li>
+<li><span class="math inline">\(\alpha\)</span> is <code>$\alpha$</code></li>
+<li><span class="math inline">\(\beta\)</span> is <code>$\beta$</code></li>
+<li><span class="math inline">\(\pi\)</span> is <code>$\pi$</code></li>
+<li><span class="math inline">\(\tau\)</span> is <code>$\tau$</code></li>
+<li>etc</li>
+</ul></li>
+<li><p>The tilde, denoting “is distributed as” is <code>\sim</code></p>
+<ul>
+<li><span class="math inline">\(X \sim N(\mu, \sigma^2)\)</span> is <code>$X \sim N(\mu, \sigma^2)$</code></li>
+</ul></li>
+<li><p>These are the inequality operations</p>
+<ul>
+<li><span class="math inline">\(&lt;\)</span> is <code>$&lt;$</code></li>
+<li><span class="math inline">\(\leq\)</span> is <code>$\leq$</code></li>
+<li><span class="math inline">\(&gt;\)</span> is <code>$&gt;$</code></li>
+<li><span class="math inline">\(\geq\)</span> is <code>$\geq$</code></li>
+</ul></li>
+<li><p>You use a vertical pipe <code>|</code> for conditional statements.</p>
+<ul>
+<li><span class="math inline">\(Pr(X|Y)\)</span> is <code>$Pr(X|Y)$</code></li>
+</ul></li>
+<li><p>Here are some “and” and “or” statements</p>
+<ul>
+<li><span class="math inline">\(\cup\)</span> is <code>$\cup$</code></li>
+<li><span class="math inline">\(\cap\)</span> is <code>$\cap$</code></li>
+</ul></li>
+<li><p>Fractions are written with <code>\frac{}{}</code></p>
+<ul>
+<li><span class="math inline">\(\frac{x^2 + 1}{\sqrt{2}}\)</span> is <code>$\frac{x^2 + 1}{\sqrt{2}}$</code></li>
+</ul></li>
+<li><p>Binomial coefficients are <code>\binom{}{}</code></p>
+<ul>
+<li><span class="math inline">\(\binom{n}{2}\)</span> is <code>$\binom{n}{2}$</code></li>
+</ul></li>
+<li><p>Let’s do a more complicated example:</p>
+<p><span class="math display">\[
+\frac{1}{\sqrt{2\pi\sigma^2}}\exp(-\frac{1}{2\sigma^2}(x - \mu)^2)
+\]</span></p>
+<pre><code>$$
+\frac{1}{\sqrt{2\pi\sigma^2}}\exp(-\frac{1}{2\sigma^2}(x - \mu)^2)
+$$</code></pre></li>
+</ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>Write this equation using <span class="math inline">\(\LaTeX\)</span></p>
+<p><span class="math display">\[
+\binom{n}{k}p^k(1-p)^{n-k}
+\]</span></p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<pre><code>\binom{n}{k}p^k(1-p)^{n-k}</code></pre>
+</div>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>Write this equation using <span class="math inline">\(\LaTeX\)</span></p>
+<p><span class="math display">\[
+-\frac{n}{2}\log(2\pi\sigma^2) - \frac{1}{2\sigma^2}\sum_{i=1}^{n}(x_i-\mu)^2
+\]</span></p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<pre><code>-\frac{n}{2}\log(2\pi\sigma^2) - \frac{1}{2\sigma^2}\sum_{i=1}^{n}(x_i-\mu)^2</code></pre>
+</div>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

@@ -12,6 +12,7 @@ author: David Gerard
   - [AU Data Librarian Resources](https://subjectguides.library.american.edu/c.php?g=1329947&p=9793262)
   - [AU List of Government Data](https://subjectguides.library.american.edu/c.php?g=1329947&p=9988298)
 - Chapter 0: R
+  - [Quarto](./01_r/01_quarto.qmd)
   - [R and Data Frames](./01_r/01_r_intro.qmd)
   - [R Graphics](./01_r/01_ggplot.qmd)
   - [R Cheat Sheet](./01_r/01_r_cheatsheet.qmd)
