@@ -5,12 +5,6 @@ author: David Gerard
 
 [Syllabus](./syllabus.qmd)
 
-- Final project
-  - [Final Project Description](./project/group_project.qmd)
-  - [Three Stories of Regression](./project/regression_stories.qmd)
-  - [AU Data Subscriptions](https://subjectguides.library.american.edu/az/databases?t=7411)
-  - [AU Data Librarian Resources](https://subjectguides.library.american.edu/c.php?g=1329947&p=9793262)
-  - [AU List of Government Data](https://subjectguides.library.american.edu/c.php?g=1329947&p=9988298)
 - Chapter 0: R
   - [Quarto](./01_r/01_quarto.qmd)
   - [R and Data Frames](./01_r/01_r_intro.qmd)
@@ -60,3 +54,9 @@ author: David Gerard
   - [Chapter 13 Worksheet](./13_ch13/13_worksheet.qmd)
 - Chapter 20:
   - [Logistic Regression](./14_ch20/14_logistic.qmd)
+- Final project
+  - [Final Project Description](./project/group_project.qmd)
+  - [Three Stories of Regression](./project/regression_stories.qmd)
+  - [AU Data Subscriptions](https://subjectguides.library.american.edu/az/databases?t=7411)
+  - [AU Data Librarian Resources](https://subjectguides.library.american.edu/c.php?g=1329947&p=9793262)
+  - [AU List of Government Data](https://subjectguides.library.american.edu/c.php?g=1329947&p=9988298)

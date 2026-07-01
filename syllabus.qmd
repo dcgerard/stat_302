@@ -65,9 +65,9 @@ This course builds on the basic tools of data analysis and methods of statistica
 
 # Grading
 
-- 10% Homework
+- 15% Homework
   - These will be self-graded.
-- 15% Participation
+- 10% Participation
   - Pay attention
   - Come to class
   - Answer questions
