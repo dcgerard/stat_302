@@ -642,3 +642,61 @@ increase in median rainfall ($p$-value `r round(tout$p.value, 3)`, 95% CI:
 `r round(exp(tout$conf.low), 1)` to `r round(exp(tout$conf.high), 1)` times).
 Note the causal language — cloud seeding was randomly assigned, so a causal
 conclusion is warranted.
+
+# Worked Example: Agent Orange
+
+Agent Orange is an herbicide used during the Vietnam War. Many Vietnam War veterans were exposed to Agent Orange, which is concerning, as it is known to contain compounds — such as a dioxin called TCDD (2,3,7,8-Tetrachlorodibenzo-*p*-dioxin) — associated with higher rates of cancer. In a 1987 study, researchers measured the dioxin content of 646 Vietnam veterans and 97 non-Vietnam veterans to determine whether Vietnam veterans have higher concentrations of dioxin on average.
+
+```{r}
+#| message: false
+dioxin <- read_csv("https://dcgerard.github.io/stat_302/data/case0302.csv")
+glimpse(dioxin)
+```
+Let's make a boxplot.
+
+```{r}
+ggplot(dioxin, aes(x = Veteran, y = Dioxin)) +
+  geom_boxplot()
+```
+
+The data appear approximately symmetric, except for a few extreme outliers among the Vietnam veterans. A log-transformation is inappropriate because of the 8 individuals with 0. A square root transformation does not help:
+```{r}
+ggplot(dioxin, aes(x = Veteran, y = Dioxin)) +
+  geom_boxplot() +
+  scale_y_sqrt()
+```
+
+Since the distribution is already approximately symmetric, let's check whether the results differ with and without the most extreme observations. Let's first filter out observations with extreme dioxin values:
+
+```{r}
+dioxin |>
+  filter(Dioxin < 20) ->
+  dioxin_sub
+```
+
+You can see that the filtered dataset no longer has those observations:
+
+```{r}
+ggplot(dioxin_sub, aes(x = Veteran, y = Dioxin)) +
+  geom_boxplot()
+```
+
+
+Now, let's run $t$-tests using both the full data set, 
+
+```{r}
+t.test(Dioxin ~ Veteran, data = dioxin) |>
+  tidy() |>
+  select(p.value)
+```
+and the reduced data set,
+```{r}
+t.test(Dioxin ~ Veteran, data = dioxin_sub) |>
+  tidy() |>
+  select(p.value)
+```
+
+The results do not change either way. Neither analysis shows evidence of a difference in mean dioxin concentration between the two veteran groups. We therefore report results from the full data set.
+
+The $t$-methods are robust here because of the large sample sizes. If the two analyses had given different results, we would use a rank-sum test (Chapter 4).
+
