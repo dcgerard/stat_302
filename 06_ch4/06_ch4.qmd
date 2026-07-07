@@ -1,0 +1,79 @@
+---
+title: "Non-parameteric Alternatives to $t$-tools"
+author: "David Gerard"
+date: today
+bibliography: "../bib.bib"
+---
+
+```{r setup}
+#| include: false
+set.seed(6)
+knitr::opts_chunk$set(echo       = TRUE,
+                      fig.height = 3,
+                      fig.width  = 6,
+                      fig.align  = "center")
+ggplot2::theme_set(ggplot2::theme_bw())
+```
+
+```{r}
+#| label: load-packages
+#| message: false
+library(tidyverse)
+library(broom)
+```
+
+# Learning Objectives
+
+- Recognize which non-parameteric method to use in one- and two-sample scenarios.
+- Understand the mechanims of these non-parameteric methods.
+- Implement these non-parameteric methods in R.
+
+# Assumptions of $t$-Tools
+
+- Assumptions in decreasing order of importance:
+  1. Independence between observational units.
+  2. Equal variance (if assuming $\sigma_1^2 = \sigma_2^2$).
+  3. Normality (no severe skew or outliers).
+
+- Solutions when violated:
+1. Independence: Use multiple linear regression for cluster effects, or use serial correlation adjustment methods (Chapter 15).
+  2. Equal variance: Use Welch's $t$-test (which I think you should always use anyway).
+  3. Normality: This chapter.
+     - Use a Wilcoxon rank sum test for an 2-sample $t$-test alternative.
+     - Use a Wilcoxon signed-rank test for a paired $t$-test alternative.
+     
+# Case Study
+
+- Traditional mathematical graphics have text separate from the graph. Some researchers think this makes learning harder by creating excess "cognitive load".
+
+- They assigned 14 students to learn a new mathematical subject using a traditional graph like this ("conventional") and a different 14 students to learn using a graph that incorporates together text and the graph ("modified").
+
+-   They then had the students complete math problems using the techniques they learned from the graphics. They measured how long it took each student to complete them.
+
+    ```{r}
+    #| message: false
+    graph <- read_csv("https://dcgerard.github.io/stat_302/data/case0402.csv")
+    glimpse(graph)
+    ```
+-   These data are highly skewed and non-normal
+    ```{r}
+    ggplot(graph, aes(x = Treatment, y = Time)) +
+      geom_boxplot() +
+      geom_jitter(width = 0.1)
+    ```
+
+- A more worrying issue is that there are 5 students in the conventional group that did not finish the math problems in the allotted time. 
+
+- Their values are listed as "300", but all we know is that their true values are greater than 300 seconds. 
+
+- We call such values "censored".
+
+- $t$-methods do not work well with very skewed data, and they cannot work at all with censored data. We need a new approach.
+
+# The Wilcoxon rank-sum test
+
+
+
+
+
+

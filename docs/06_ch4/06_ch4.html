@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
+<meta name="dcterms.date" content="2026-07-07">
 
-<title>Syllabus – Stat 302: Intermediate Statistics</title>
+<title>Non-parameteric Alternatives to t-tools – Stat 302: Intermediate Statistics</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -24,28 +25,63 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-33269adcf1721b81efc5ea7fcfe7f0ee.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-33269adcf1721b81efc5ea7fcfe7f0ee.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
 <script id="quarto-axe-checker-options" type="text/plain">dHJ1ZQ==</script>
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-0e01d36e12aedd38e6bb7bd9a7358603.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-0e01d36e12aedd38e6bb7bd9a7358603.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -74,8 +110,37 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="styles.css">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -85,7 +150,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Stat 302: Intermediate Statistics</span>
     </a>
   </div>
@@ -96,11 +161,11 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./data.html"> 
+    <a class="nav-link" href="../data.html"> 
 <span class="menu-text">Data</span></a>
   </li>  
 </ul>
@@ -119,20 +184,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#q1-learning-outcomes" id="toc-q1-learning-outcomes" class="nav-link active" data-scroll-target="#q1-learning-outcomes">Q1 Learning Outcomes:</a></li>
-  <li><a href="#q2-learning-outcomes" id="toc-q2-learning-outcomes" class="nav-link" data-scroll-target="#q2-learning-outcomes">Q2 Learning Outcomes:</a></li>
-  <li><a href="#course-description" id="toc-course-description" class="nav-link" data-scroll-target="#course-description">Course Description</a></li>
-  <li><a href="#required-text" id="toc-required-text" class="nav-link" data-scroll-target="#required-text">Required Text</a></li>
-  <li><a href="#tentative-schedule-of-topics" id="toc-tentative-schedule-of-topics" class="nav-link" data-scroll-target="#tentative-schedule-of-topics">Tentative Schedule of Topics</a></li>
-  <li><a href="#important-dates" id="toc-important-dates" class="nav-link" data-scroll-target="#important-dates">Important Dates</a></li>
-  <li><a href="#grading" id="toc-grading" class="nav-link" data-scroll-target="#grading">Grading</a></li>
-  <li><a href="#electronic-devices" id="toc-electronic-devices" class="nav-link" data-scroll-target="#electronic-devices">Electronic Devices</a></li>
-  <li><a href="#grade-snapshots" id="toc-grade-snapshots" class="nav-link" data-scroll-target="#grade-snapshots">Grade Snapshots</a></li>
-  <li><a href="#computing-and-software" id="toc-computing-and-software" class="nav-link" data-scroll-target="#computing-and-software">Computing and Software</a></li>
-  <li><a href="#academic-integrity" id="toc-academic-integrity" class="nav-link" data-scroll-target="#academic-integrity">Academic Integrity</a></li>
-  <li><a href="#sharing-course-content" id="toc-sharing-course-content" class="nav-link" data-scroll-target="#sharing-course-content">Sharing Course Content:</a></li>
-  <li><a href="#use-of-student-work" id="toc-use-of-student-work" class="nav-link" data-scroll-target="#use-of-student-work">Use of Student Work</a></li>
-  <li><a href="#syllabus-change-policy" id="toc-syllabus-change-policy" class="nav-link" data-scroll-target="#syllabus-change-policy">Syllabus Change Policy</a></li>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#assumptions-of-t-tools" id="toc-assumptions-of-t-tools" class="nav-link" data-scroll-target="#assumptions-of-t-tools">Assumptions of <span class="math inline">\(t\)</span>-Tools</a></li>
+  <li><a href="#case-study" id="toc-case-study" class="nav-link" data-scroll-target="#case-study">Case Study</a></li>
+  <li><a href="#the-wilcoxon-rank-sum-test" id="toc-the-wilcoxon-rank-sum-test" class="nav-link" data-scroll-target="#the-wilcoxon-rank-sum-test">The Wilcoxon rank-sum test</a></li>
   </ul>
 </nav>
     </div>
@@ -141,7 +196,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Syllabus</h1>
+<h1 class="title">Non-parameteric Alternatives to <span class="math inline">\(t\)</span>-tools</h1>
 </div>
 
 
@@ -155,6 +210,12 @@ ul.task-list li input[type="checkbox"] {
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 7, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -164,213 +225,77 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="learning-objectives" class="level1">
+<h1>Learning Objectives</h1>
 <ul>
-<li><strong>Instructor</strong>: Dr.&nbsp;David Gerard</li>
-<li><strong>Email</strong>: <a href="mailto:dgerard@american.edu" class="email">dgerard@american.edu</a></li>
-<li><strong>Office</strong>: DMTI 106E</li>
+<li>Recognize which non-parameteric method to use in one- and two-sample scenarios.</li>
+<li>Understand the mechanims of these non-parameteric methods.</li>
+<li>Implement these non-parameteric methods in R.</li>
 </ul>
-<section id="q1-learning-outcomes" class="level1">
-<h1>Q1 Learning Outcomes:</h1>
-<p><img src="./q1_banner.png" class="img-fluid" alt="Q1 learning outcomes.">&nbsp;</p>
+</section>
+<section id="assumptions-of-t-tools" class="level1">
+<h1>Assumptions of <span class="math inline">\(t\)</span>-Tools</h1>
+<ul>
+<li>Assumptions in decreasing order of importance:
 <ol type="1">
-<li><p>Students will solve quantitative problems including approaches that go beyond memorized procedures.</p></li>
-<li><p>Students will demonstrate an understanding of mathematical relationships from multiple perspectives, such as functions from graphical, verbal, numerical, and analytic points of view.</p></li>
+<li>Independence between observational units.</li>
+<li>Equal variance (if assuming <span class="math inline">\(\sigma_1^2 = \sigma_2^2\)</span>).</li>
+<li>Normality (no severe skew or outliers).</li>
+</ol></li>
+<li>Solutions when violated:</li>
+</ul>
+<ol type="1">
+<li>Independence: Use multiple linear regression for cluster effects, or use serial correlation adjustment methods (Chapter 15).</li>
+<li>Equal variance: Use Welch’s <span class="math inline">\(t\)</span>-test (which I think you should always use anyway).</li>
+<li>Normality: This chapter.
+<ul>
+<li>Use a Wilcoxon rank sum test for an 2-sample <span class="math inline">\(t\)</span>-test alternative.</li>
+<li>Use a Wilcoxon signed-rank test for a paired <span class="math inline">\(t\)</span>-test alternative.</li>
+</ul></li>
 </ol>
 </section>
-<section id="q2-learning-outcomes" class="level1">
-<h1>Q2 Learning Outcomes:</h1>
-<p><img src="./q2_banner.png" class="img-fluid" alt="Q2 learning outcomes.">&nbsp;</p>
-<ol type="1">
-<li><p>Translate real-world questions or intellectual inquiries into quantitative frameworks.</p></li>
-<li><p>Select and apply appropriate quantitative methods or reasoning.</p></li>
-<li><p>Draw appropriate insights from the application of a quantitative framework.</p></li>
-<li><p>Explain quantitative reasoning and insights using appropriate forms of representation so that others could replicate the findings.</p></li>
-</ol>
-</section>
-<section id="course-description" class="level1">
-<h1>Course Description</h1>
-<p>This course builds on the basic tools of data analysis and methods of statistical inference. The course analyzes data from designed experiments and observational studies, formulates questions and interprets the results in the context of the statistical problem of interest. Emphasis is placed on determining the appropriate statistical model, understanding the assumptions of the model, assessing whether the data satisfies the assumptions, and improving the model if necessary. Topics covered include two‐sample t‐tests, nonparametric procedures, analysis of variance, and linear and logistic regression. Statistical software is integrated into the course for exploration, analysis, and demonstration of concepts.</p>
-</section>
-<section id="required-text" class="level1">
-<h1>Required Text</h1>
-<blockquote class="blockquote">
-<p>Ramsey, F. L., Schafer, D. W. (2013). <a href="https://wrlc-amu.primo.exlibrisgroup.com/permalink/01WRLC_AMU/1g8hf8s/alma99132367533604102"><em>The Statistical Sleuth: A Course in Methods of Data Analysis</em></a>, 3rd Edition. United Kingdom: Brooks/Cole, Cengage Learning.</p>
-</blockquote>
+<section id="case-study" class="level1">
+<h1>Case Study</h1>
 <ul>
-<li>There will be occasional readings from other sources, such as journal articles, for class discussion or for homework assignments. These will be posted in Canvas or links will be given to find these online.</li>
-</ul>
-</section>
-<section id="tentative-schedule-of-topics" class="level1">
-<h1>Tentative Schedule of Topics</h1>
-<ul>
-<li>Week 1: Introduction to R</li>
-<li>Week 2–3: Chapters 2 and 3 (<em>t</em>-tools and <em>t</em>-tools assumptions)
-<ul>
-<li>This should be mostly review of Introductory Statistics, so we’ll go quick.</li>
-</ul></li>
-<li>Week 4: Chapter 4 (non-parametrics)</li>
-<li>Week 5: Chapter 5 (One-way ANOVA)</li>
-<li>Week 6: Sections 6.3–6.4 and supplemental readings (Multiple Comparisons, Family-wise Error Rate, Bonferroni/Holm, False Discovery Rate, Benjamini-Hochberg).</li>
-<li>Midterm 1</li>
-<li>Week 7–8: Chapters 7 and 8 (Simple Linear Regression)
-<ul>
-<li>This should also be mostly review of Introductory Statistics, so we’ll go quick.</li>
-</ul></li>
-<li>Week 9–12: Chapter 9–11 (Multiple Linear Regression)</li>
-<li>Week 13–14: Chapter 20 (Logistic Regression)</li>
-<li>Midterm 2</li>
-</ul>
-</section>
-<section id="important-dates" class="level1">
-<h1>Important Dates</h1>
-<ul>
-<li>*Tuesday, 10/13/2026: Midterm 1</li>
-<li>Friday, 10/16/2026: No class (Fall break).</li>
-<li>Friday, 11/06/2026: Last day to withdraw or change a grade option</li>
-<li>Tuesday, 11/24/2026: Class meets via Zoom (Thanksgiving)</li>
-<li>Friday, 11/27/2026: No class (Thanksgiving)</li>
-<li>*Friday, 12/11/2026: Midterm 2</li>
-<li>Friday, 12/18/2026: Final project presentations (11:20AM-01:50PM)</li>
-</ul>
-<p>*These dates are VERY tentative and subject to change.</p>
-</section>
-<section id="grading" class="level1">
-<h1>Grading</h1>
-<ul>
-<li>20% Homework
-<ul>
-<li>These will be self-graded.</li>
-</ul></li>
-<li>10% Participation
-<ul>
-<li>Pay attention</li>
-<li>Come to class</li>
-<li>Answer questions</li>
-<li>Stay off your phones, stay off social media, etc</li>
-</ul></li>
-<li>20% Final Project
-<ul>
-<li>Apply these statistical methods to a real-world dataset of your choice.</li>
-</ul></li>
-<li>50% In-class Exams
-<ul>
-<li>We’ll have two midterms, each worth about 25%.</li>
-</ul></li>
-</ul>
-<p>Usual grade cutoffs will be used:</p>
-<div class="cell">
+<li><p>Traditional mathematical graphics have text separate from the graph. Some researchers think this makes learning harder by creating excess “cognitive load”.</p></li>
+<li><p>They assigned 14 students to learn a new mathematical subject using a traditional graph like this (“conventional”) and a different 14 students to learn using a graph that incorporates together text and the graph (“modified”).</p></li>
+<li><p>They then had the students complete math problems using the techniques they learned from the graphics. They measured how long it took each student to complete them.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0402.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(graph)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 28
+Columns: 3
+$ Time      &lt;dbl&gt; 68, 70, 73, 75, 77, 80, 80, 132, 148, 155, 183, 197, 206, 21…
+$ Treatment &lt;chr&gt; "Modified", "Modified", "Modified", "Modified", "Modified", …
+$ Censored  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …</code></pre>
+</div>
+</div></li>
+<li><p>These data are highly skewed and non-normal</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(graph, <span class="fu">aes</span>(<span class="at">x =</span> Treatment, <span class="at">y =</span> Time)) <span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: left;">Grade</th>
-<th style="text-align: right;">Lower</th>
-<th style="text-align: right;">Upper</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">93</td>
-<td style="text-align: right;">100</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">A-</td>
-<td style="text-align: right;">90</td>
-<td style="text-align: right;">92</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">B+</td>
-<td style="text-align: right;">88</td>
-<td style="text-align: right;">89</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">B</td>
-<td style="text-align: right;">83</td>
-<td style="text-align: right;">87</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">B-</td>
-<td style="text-align: right;">80</td>
-<td style="text-align: right;">82</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">C+</td>
-<td style="text-align: right;">78</td>
-<td style="text-align: right;">79</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">C</td>
-<td style="text-align: right;">73</td>
-<td style="text-align: right;">77</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">C-</td>
-<td style="text-align: right;">70</td>
-<td style="text-align: right;">72</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">D</td>
-<td style="text-align: right;">60</td>
-<td style="text-align: right;">69</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">F</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">59</td>
-</tr>
-</tbody>
-</table>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="06_ch4_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
 </div>
 </div>
-<p>Individual assignments will not be curved. However, at the discretion of the instructor, the overall course grade at the end of the semester may be curved.</p>
-</section>
-<section id="electronic-devices" class="level1">
-<h1>Electronic Devices</h1>
-<p><strong>The use of electronic devices during class time will only be allowed with the instructor’s permission.</strong> I expect you to not be on your computer (even to take notes) most of the time. Please buy a dedicated notebook for this course.</p>
-<p>There will be specific times when we will use the computer as a statistical tool during class, but I expect that during those times you will not surf the net, do other class work, email or text.</p>
-<p>Exceptions to this policy will be made for those with an official <a href="https://www.american.edu/provost/academic-access/">ASAC</a> accommodation.</p>
-</section>
-<section id="grade-snapshots" class="level1">
-<h1>Grade Snapshots</h1>
-<p>Periodically, the professor may provide a grade snapshot that reflects the letter grade you would receive if final grades were assigned as of that day.</p>
-<p>Please note the following:</p>
-<ul>
-<li>These are not final grade estimates. Final grades will be determined at the end of the semester and will incorporate all remaining assignments, examinations, and participation.</li>
-<li>A provisional grading curve could be applied to these snapshots for illustrative purposes. The final grading curve, if applied, may differ.</li>
-<li>Final grades are influenced by multiple factors, including your continued performance and the relative performance of your peers. For example, even if you maintain the same level of performance, improvements by others could affect your final grade. Consequently, your final grade may be higher or lower than the grade shown in these snapshots, perhaps significantly.</li>
-<li>A value of “Excused” indicates that I did not provide a grade snapshot for you.</li>
+</div></li>
+<li><p>A more worrying issue is that there are 5 students in the conventional group that did not finish the math problems in the allotted time.</p></li>
+<li><p>Their values are listed as “300”, but all we know is that their true values are greater than 300 seconds.</p></li>
+<li><p>We call such values “censored”.</p></li>
+<li><p><span class="math inline">\(t\)</span>-methods do not work well with very skewed data, and they cannot work at all with censored data. We need a new approach.</p></li>
 </ul>
-<p>These snapshots are provided solely to indicate your current standing in the course and should not be interpreted as a guarantee or prediction of your final grade.</p>
 </section>
-<section id="computing-and-software" class="level1">
-<h1>Computing and Software</h1>
-<p>We will use the R computing language to complete some assignment questions. R is free and may be downloaded from the R website (<a href="http://cran.r-project.org/" class="uri">http://cran.r-project.org/</a>).</p>
-<p>As an IDE to work with R, I would recommend either RStudio or Positron:</p>
-<ul>
-<li>RStudio: <a href="https://www.rstudio.com/" class="uri">https://www.rstudio.com/</a></li>
-<li>Positron: <a href="https://positron.posit.co/" class="uri">https://positron.posit.co/</a></li>
-</ul>
-<p>I’ll be using RStudio in class. But Positron is built on top of VS Code. So if you have used Python in that environment, you might find Positron more intuitive.</p>
-<p>R and RStudio are also available on computers in the Anderson Computing Complex in addition to various labs across campus. R Studio may also be run from your web browser using American University’s <a href="https://americanuniversity.service-now.com/help/?id=sc_cat_item&amp;sys_id=1fdf972fdbb3db00771cfce9af961985">Virtual Applications System</a>. Please see me during office hours if you have questions regarding R.</p>
-</section>
-<section id="academic-integrity" class="level1">
-<h1>Academic Integrity</h1>
-<p>Standards of academic conduct are set forth in the university’s <a href="http://www.american.edu/academics/integrity/index.cfm">Academic Integrity Code</a>. By registering for this course, students have acknowledged their awareness of the Academic Integrity Code and they are obliged to become familiar with their rights and responsibilities as defined by the Code. Violations of the Academic Integrity Code will not be treated lightly and disciplinary action will be taken should violations occur. This includes cheating, fabrication, and plagiarism.</p>
-<p>No electronic resources are allowed for exams. If you touch your phone/computer/smart watch/smart glasses/etc during the exam then that is an automatic fail for the course.</p>
-<p>All solutions that I provide are under my copyright. These solutions are for personal use only and may not be distributed to anyone else. Giving these solutions to others, including other students or posting them on the internet, is a violation of my copyright and a violation of the student code of conduct.</p>
-</section>
-<section id="sharing-course-content" class="level1">
-<h1>Sharing Course Content:</h1>
-<p>Students are not permitted to make visual or audio recordings (including livestreams) of lectures or any class-related content or use any type of recording device unless prior permission from the instructor is obtained and there are no objections from any student in the class. If permission is granted, only students registered in the course may use or share recordings and any electronic copies of course materials (e.g., PowerPoints, formulas, lecture notes, and any discussions – online or otherwise). Use is limited to educational purposes even after the end of the course. Exceptions will be made for students who present a signed Letter of Accommodation from the Academic Support and Access Center. Further details are available from the <a href="https://www.american.edu/provost/academic-access/index.cfm">ASAC website</a>.</p>
-</section>
-<section id="use-of-student-work" class="level1">
-<h1>Use of Student Work</h1>
-<p>The professor will use academic work that you complete for educational purposes in this course during this semester. Your registration and continued enrollment constitute your consent.</p>
-</section>
-<section id="syllabus-change-policy" class="level1">
-<h1>Syllabus Change Policy</h1>
-<p>This syllabus is a guide for the course and is subject to change with advanced notice. These changes may come via email or Canvas. Make sure to check Canvas and your university-supplied email regularly. You are accountable for all such communications.</p>
+<section id="the-wilcoxon-rank-sum-test" class="level1">
+<h1>The Wilcoxon rank-sum test</h1>
 
 
 </section>
