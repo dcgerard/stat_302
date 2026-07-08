@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-07-07">
+<meta name="dcterms.date" content="2026-07-08">
 
 <title>Non-parameteric Alternatives to t-tools – Stat 302: Intermediate Statistics</title>
 <style>
@@ -187,7 +187,14 @@ window.Quarto = {
   <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
   <li><a href="#assumptions-of-t-tools" id="toc-assumptions-of-t-tools" class="nav-link" data-scroll-target="#assumptions-of-t-tools">Assumptions of <span class="math inline">\(t\)</span>-Tools</a></li>
   <li><a href="#case-study" id="toc-case-study" class="nav-link" data-scroll-target="#case-study">Case Study</a></li>
-  <li><a href="#the-wilcoxon-rank-sum-test" id="toc-the-wilcoxon-rank-sum-test" class="nav-link" data-scroll-target="#the-wilcoxon-rank-sum-test">The Wilcoxon rank-sum test</a></li>
+  <li><a href="#the-wilcoxon-rank-sum-test" id="toc-the-wilcoxon-rank-sum-test" class="nav-link" data-scroll-target="#the-wilcoxon-rank-sum-test">The Wilcoxon rank-sum test</a>
+  <ul class="collapse">
+  <li><a href="#main-idea" id="toc-main-idea" class="nav-link" data-scroll-target="#main-idea">Main Idea</a></li>
+  <li><a href="#rank-sum-test-in-r" id="toc-rank-sum-test-in-r" class="nav-link" data-scroll-target="#rank-sum-test-in-r">Rank-sum Test in R</a></li>
+  <li><a href="#exact-approach" id="toc-exact-approach" class="nav-link" data-scroll-target="#exact-approach">Exact Approach</a></li>
+  <li><a href="#confidence-intervals" id="toc-confidence-intervals" class="nav-link" data-scroll-target="#confidence-intervals">Confidence Intervals</a></li>
+  </ul></li>
+  <li><a href="#the-wilcoxon-signed-rank-test" id="toc-the-wilcoxon-signed-rank-test" class="nav-link" data-scroll-target="#the-wilcoxon-signed-rank-test">The Wilcoxon signed-rank test</a></li>
   </ul>
 </nav>
     </div>
@@ -213,7 +220,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 7, 2026</p>
+      <p class="date">July 8, 2026</p>
     </div>
   </div>
   
@@ -296,6 +303,441 @@ $ Censored  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 </section>
 <section id="the-wilcoxon-rank-sum-test" class="level1">
 <h1>The Wilcoxon rank-sum test</h1>
+<section id="main-idea" class="level2">
+<h2 class="anchored" data-anchor-id="main-idea">Main Idea</h2>
+<ul>
+<li><p>Also called the Mann-Whitney <span class="math inline">\(U\)</span>-test.</p></li>
+<li><p>Non-parameteric alternative to the two-sample <span class="math inline">\(t\)</span>-test</p>
+<ul>
+<li>Use when normality is violated</li>
+<li>Can use on Ordinal Data</li>
+<li>Can use with censored data, when the censored values can all be designated as “last place” (as in the learning case study).</li>
+</ul></li>
+<li><p><strong>Ordinal Data</strong>: Data where the order is known, but numeric values don’t have any inherent meaning.</p>
+<ul>
+<li>Likert Scale: <code>Strongly Disagree</code> &lt; <code>Disagree</code> &lt; <code>Neutral</code> &lt; <code>Agree</code> &lt; <code>Strongly Agree</code></li>
+<li>Visual Acuity: <code>20/20</code> &gt; <code>20/25</code> &gt; <code>20/30</code> …</li>
+</ul></li>
+<li><p>In numeric data that is approximately normal, the rank-sum test works almost as well as the two-sample <span class="math inline">\(t\)</span>-test.</p></li>
+<li><p>In data with extreme outliers, it works much better than the two-sample <span class="math inline">\(t\)</span>-test.</p></li>
+<li><p><strong>Main Idea</strong>: Transform the data into <strong>ranks</strong></p>
+<ul>
+<li>Smallest value has a rank of 1</li>
+<li>Second smallest value has a rank of 2</li>
+<li>…</li>
+</ul></li>
+<li><p>Ranks remove dependence on any distribution.</p></li>
+<li><p>Hypotheses:</p>
+<ul>
+<li>More complicated since the model isn’t metric.</li>
+<li>Let <span class="math inline">\(X\)</span> be a randomly sampled individual from population 1. Let <span class="math inline">\(Y\)</span> be a randomly sampled individual from population 2.</li>
+<li><span class="math inline">\(H_0: P(X &gt; Y) = P(X &lt; Y)\)</span>
+<ul>
+<li>Neither population has larger values on average.</li>
+</ul></li>
+<li><span class="math inline">\(H_A: P(X &gt; Y) \neq P(X &lt; Y)\)</span>
+<ul>
+<li>One population is more likely to have larger values.</li>
+</ul></li>
+</ul></li>
+<li><p>Procedure:</p>
+<ol type="1">
+<li>Rank all observations together
+<ul>
+<li>Combine both groups then do ranking.</li>
+<li>Ties are given an average rank.</li>
+</ul></li>
+<li>Sum all of the ranks in one of the groups.
+<ul>
+<li>Does not matter which one.</li>
+<li>Conventionally, smaller group is summed.</li>
+<li>Call the rank-sum-statistic <span class="math inline">\(R\)</span></li>
+</ul></li>
+<li>Compare <span class="math inline">\(R\)</span> to its null distribution to get a <span class="math inline">\(p\)</span>-value.</li>
+</ol></li>
+<li><p>For large <span class="math inline">\(n\)</span> (say, each group has a sample size of at least 5 and there aren’t too many ties), <span class="math inline">\(R \sim N(\mu_R, \sigma_R^2)\)</span> <strong>if <span class="math inline">\(H_0\)</span> is true</strong>.</p>
+<ul>
+<li><p><span class="math inline">\(\mu_R\)</span> and <span class="math inline">\(\sigma_R^2\)</span> are some known values that depend just on the number of observations <span class="math inline">\(n\)</span></p></li>
+<li><p>Thus, if <span class="math inline">\(H_0\)</span> is true, <span class="math inline">\(Z = (R - \mu_R) / \sigma_r \sim N(0, 1)\)</span></p></li>
+<li><p>Calculate the tail area probability of <span class="math inline">\(Z\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="06_ch4_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">abs</span>(z))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+</ul></li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Unneccesary detail
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Let <code>rankvec</code> be the vector of ranks (of length <code>n1 + n2</code>), <code>n1</code> be the sample size of the first group, and <code>n2</code> be the sample size of the second group. Then <span class="math inline">\(\mu_R\)</span> is</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(rankvec) <span class="sc">*</span> n1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>and <span class="math inline">\(\sigma_R^2\)</span> is</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(rankvec) <span class="sc">*</span> n1 <span class="sc">*</span> n2 <span class="sc">/</span> (n1 <span class="sc">+</span> n2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<ul>
+<li>Here is the process as represented in the book for the graphical data case study</li>
+</ul>
+<p><img src="./06_figures/display_45.svg" class="img-fluid" alt="Graphical display of calculation for rank-sum statistic">&nbsp;</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>A professor teaches two small sections. One is an advanced upper-undergraduate course with 5 students and the other is a freshman introductory course with 8 students. Here are his student evaluations of teaching for “Would you recommend this professor” question:</p>
+<ul>
+<li>Advanced: 5, 5, 4, 4, 2</li>
+<li>Introductory: 5, 5, 4, 4, 3, 3, 2, 1</li>
+</ul>
+<p>Calculate the rank-sum statistic using these data</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Value</th>
+<th>Group</th>
+<th>Order</th>
+<th>Rank</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>I</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>I</td>
+<td>2</td>
+<td>2.5</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>A</td>
+<td>3</td>
+<td>2.5</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>I</td>
+<td>4</td>
+<td>4.5</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>I</td>
+<td>5</td>
+<td>4.5</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>I</td>
+<td>6</td>
+<td>7.5</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>I</td>
+<td>7</td>
+<td>7.5</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>A</td>
+<td>8</td>
+<td>7.5</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>A</td>
+<td>9</td>
+<td>7.5</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>I</td>
+<td>10</td>
+<td>11.5</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>I</td>
+<td>11</td>
+<td>11.5</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>A</td>
+<td>12</td>
+<td>11.5</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>A</td>
+<td>13</td>
+<td>11.5</td>
+</tr>
+</tbody>
+</table>
+<p>Adding up the advanced student ranks, we get</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fl">2.5</span> <span class="sc">+</span> <span class="fl">7.5</span> <span class="sc">+</span> <span class="fl">7.5</span> <span class="sc">+</span> <span class="fl">11.5</span> <span class="sc">+</span> <span class="fl">11.5</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 40.5</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>You can calculate that the null mean of the ranks is</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 35</code></pre>
+</div>
+</div>
+<p>and the null variance of the ranks is</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 43.84615</code></pre>
+</div>
+</div>
+<p>What is the <span class="math inline">\(p\)</span>-value for the Wilcoxon rank-sum test?</p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>We calculate the <span class="math inline">\(Z\)</span>-statistic <span class="math display">\[
+Z = \frac{40.5 - 35}{\sqrt{43.84}} = 0.83
+\]</span> We compare this to a standard normal distribution.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fl">0.83</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4065388</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="rank-sum-test-in-r" class="level2">
+<h2 class="anchored" data-anchor-id="rank-sum-test-in-r">Rank-sum Test in R</h2>
+<ul>
+<li><p>You can use <code>wilcox.test()</code> to run a Wilcoxon rank-sum test in R.</p>
+<ul>
+<li>It uses the exact same syntax as the two-sample <span class="math inline">\(t\)</span>-test</li>
+<li>Have the response variable to the left of the tilde, have the grouping variable to the right of the tilde, tell R what data frame has the variables.</li>
+</ul></li>
+<li><p>Let’s use it on the graphical data.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Time <span class="sc">~</span> Treatment, <span class="at">data =</span> graph, <span class="at">exact =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 4
+  statistic p.value method                                           alternative
+      &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;                                            &lt;chr&gt;      
+1       164 0.00254 Wilcoxon rank sum test with continuity correcti… two.sided  </code></pre>
+</div>
+</div></li>
+</ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<p>You can load in the student evaluation data with</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>set <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>Class, <span class="sc">~</span>Score,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"A"</span>, <span class="dv">2</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"A"</span>, <span class="dv">4</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"A"</span>, <span class="dv">4</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"A"</span>, <span class="dv">5</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"A"</span>, <span class="dv">5</span>,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"I"</span>, <span class="dv">1</span>,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"I"</span>, <span class="dv">2</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"I"</span>, <span class="dv">3</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"I"</span>, <span class="dv">3</span>,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"I"</span>, <span class="dv">4</span>,</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"I"</span>, <span class="dv">4</span>,</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"I"</span>, <span class="dv">5</span>,</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"I"</span>, <span class="dv">5</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Use <code>wilcox.test()</code> to get the <span class="math inline">\(p\)</span>-value for the two-sample Wilcoxon rank-sum test.</p>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Score <span class="sc">~</span> Class, <span class="at">data =</span> set, <span class="at">exact =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 4
+  statistic p.value method                                           alternative
+      &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;                                            &lt;chr&gt;      
+1      25.5   0.450 Wilcoxon rank sum test with continuity correcti… two.sided  </code></pre>
+</div>
+</div>
+<p>Some comments:</p>
+<ol type="1">
+<li><p>The rank-sum statistic is different than the one we calculated because they subtract the minimum rank-sum statistic value <code>sum(1:5)</code> (the minimum possible, if all advanced students scored below all introductory students).</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fl">40.5</span> <span class="sc">-</span> <span class="fu">sum</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 25.5</code></pre>
+</div>
+</div></li>
+<li><p>The <span class="math inline">\(p\)</span>-values differ from our approach because</p>
+<ol type="a">
+<li>It uses a continuity correction (adding/subtracting half a rank to better approximate a discrete distribution with a continuous one).</li>
+<li>It uses <a href="https://en.wikipedia.org/wiki/Edgeworth_series">fancy math</a> to improve the asymptotic approximation.</li>
+</ol></li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+<section id="exact-approach" class="level2">
+<h2 class="anchored" data-anchor-id="exact-approach">Exact Approach</h2>
+<ul>
+<li><p>If <span class="math inline">\(n\)</span> is small, or there are very many ties, then an exact approach is possible by using the randomization distribution as the null distribution.</p>
+<ul>
+<li>Just like in Chapter 2.</li>
+</ul></li>
+<li><p>Procedure:</p>
+<ol type="1">
+<li>Randomize group (treatment) labels</li>
+<li>Calculate <span class="math inline">\(R\)</span></li>
+<li>Repeat steps 1 and 2 many many times.</li>
+<li>Calculate the proportion of simulated <span class="math inline">\(R\)</span>’s that are as extreme or more extreme than what we saw.</li>
+</ol></li>
+<li><p>Here is one iteration of generating the randomization distribution</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>graph <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">shuffled_treatment =</span> <span class="fu">sample</span>(Treatment)) <span class="ot">-&gt;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  graph</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(graph)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 28
+Columns: 4
+$ Time               &lt;dbl&gt; 68, 70, 73, 75, 77, 80, 80, 132, 148, 155, 183, 197…
+$ Treatment          &lt;chr&gt; "Modified", "Modified", "Modified", "Modified", "Mo…
+$ Censored           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ shuffled_treatment &lt;chr&gt; "Modified", "Modified", "Conventional", "Modified",…</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">rank</span>(graph<span class="sc">$</span>Time)[graph<span class="sc">$</span>shuffled_treatment <span class="sc">==</span> <span class="st">"Modified"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 196.5</code></pre>
+</div>
+</div></li>
+<li><p>We can do this many times to get this randomization distribution</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="06_ch4_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>The default in R is to use an exact approach for small sample sizes, but you can always force it to be exact.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Time <span class="sc">~</span> Treatment, <span class="at">data =</span> graph, <span class="at">exact =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 4
+  statistic p.value method                       alternative
+      &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;                        &lt;chr&gt;      
+1       164 0.00164 Wilcoxon rank sum exact test two.sided  </code></pre>
+</div>
+</div></li>
+<li><p>The conclusions don’t change for the exact or normal approach in this case.</p></li>
+<li><p>We conclude that we have convincing evidence that students typically finish math problems faster when given the modified graphics (<span class="math inline">\(p\)</span> = 0.0016).</p></li>
+</ul>
+</section>
+<section id="confidence-intervals" class="level2">
+<h2 class="anchored" data-anchor-id="confidence-intervals">Confidence Intervals</h2>
+<ul>
+<li><p>Under a stricter assumption of additivity, the test becomes more interpretable</p></li>
+<li><p>Let the CDF of <span class="math inline">\(X\)</span> be <span class="math inline">\(F_X()\)</span> and the CDF of <span class="math inline">\(Y\)</span> be <span class="math inline">\(F_Y()\)</span></p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<p>In words, what does <span class="math inline">\(F_X(2)\)</span> mean?</p>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<p>This tests if you remember what a CDF is. <span class="math inline">\(F_X(2)\)</span> is the probability that <span class="math inline">\(X\)</span> is less than or equal to 2.</p>
+</div>
+</div>
+</div></li>
+<li><p>If you assume <span class="math inline">\(F_X(a) = F_Y(a + \delta)\)</span> for all <span class="math inline">\(a\)</span> and some fixed <span class="math inline">\(\delta\)</span>, then <span class="math inline">\(\delta\)</span> is the additive effect.</p>
+<ul>
+<li>This assumes that the <strong>shape</strong> of the distributions of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are the same.</li>
+<li>It assumes that the <strong>only</strong> difference between the two is that one is shifted over.</li>
+<li>This is a strong assumption.</li>
+</ul></li>
+<li><p>Under the additivity assumption, the Wilcoxon rank-sum test is evaluating</p>
+<ul>
+<li><span class="math inline">\(H_0: \delta = 0\)</span></li>
+<li><span class="math inline">\(H_A: \delta \neq 0\)</span></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="06_ch4_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Faceted density plots, where two groups have same density." width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="06_ch4_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Faceted density plots where one group is shifted." width="576"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Under this assumption, we can come up with a confidence interval for <span class="math inline">\(\delta\)</span></p>
+<ul>
+<li>Run the rank-sum test using <span class="math inline">\(X\)</span> and <strong>shifted</strong> data <span class="math inline">\(Y - \delta_0\)</span> for some <span class="math inline">\(\delta_0\)</span></li>
+<li>If the <span class="math inline">\(p\)</span>-value is greater than 0.05, then <span class="math inline">\(\delta_0\)</span> is in the confidence interval.</li>
+<li>If the <span class="math inline">\(p\)</span>-value is less than 0.05, then <span class="math inline">\(\delta_0\)</span> is not in the confidence interval.</li>
+<li>Find all <span class="math inline">\(\delta_0\)</span>’s that have a <span class="math inline">\(p\)</span>-value greater than 0.05 (so we would not reject the null that <span class="math inline">\(\delta = \delta_0\)</span>).</li>
+</ul></li>
+<li><p>R can do this automatically.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Time <span class="sc">~</span> Treatment, <span class="at">data =</span> graph, <span class="at">exact =</span> <span class="cn">TRUE</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 7
+  estimate statistic p.value conf.low conf.high method               alternative
+     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;                &lt;chr&gt;      
+1       94       164 0.00164       59       158 Wilcoxon rank sum e… two.sided  </code></pre>
+</div>
+</div></li>
+<li><p>So the effect size is estimated to be between 59 seconds and 158 seconds (with 95% confidence)</p></li>
+</ul>
+</section>
+</section>
+<section id="the-wilcoxon-signed-rank-test" class="level1">
+<h1>The Wilcoxon signed-rank test</h1>
 
 
 </section>
