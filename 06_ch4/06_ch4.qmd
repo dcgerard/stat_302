@@ -45,6 +45,7 @@ plt_t <- function(mu = 0, sig = 1, lb = -Inf, ub = Inf, df = Inf, rng = c(-3, 3)
 #| message: false
 library(tidyverse)
 library(broom)
+library(gt)
 ```
 
 # Learning Objectives
@@ -416,3 +417,224 @@ Some comments:
 - So the effect size is estimated to be between 59 seconds and 158 seconds (with 95% confidence)
 
 # The Wilcoxon signed-rank test
+
+## Case Study
+
+- Otitis media in young children often causes middle-ear effusion (lingering fluid in the middle ear).
+- Persistent fluid can lead to temporary hearing loss, potentially disrupting learning development in the first two years.
+- Hypothesis: infants breastfed for at least one month may gain some immunity, resulting in shorter effusion than bottle-fed infants.
+- The study pairs 24 infants matched by age, sex, socioeconomic status, and medications—one breastfed, one bottle-fed per pair.
+- Outcome measured: duration of middle-ear effusion after the first otitis media episode.
+-   The data, from Table 9.11 of Rosner's *Fundamentals of Biostatistics (Eights Edition)*, can be read into R with
+
+    ```{r}
+    effusion <- tribble(
+      ~pair, ~breastfed, ~bottle_fed,
+      1, 20, 18,
+      2, 11, 35,
+      3, 3, 7,
+      4, 24, 182,
+      5, 7, 6,
+      6, 28, 33,
+      7, 58, 223,
+      8, 7, 7,
+      9, 39, 57,
+      10, 17, 76,
+      11, 17, 186,
+      12, 12, 29,
+      13, 52, 39,
+      14, 14, 15,
+      15, 12, 21,
+      16, 30, 28,
+      17, 7, 8,
+      18, 15, 27,
+      19, 65, 77,
+      20, 10, 12,
+      21, 7, 8,
+      22, 19, 16,
+      23, 34, 28,
+      24, 25, 20
+    )
+    ```
+
+-   We first calculate the differences
+    ```{r}
+    effusion |>
+      mutate(diff = bottle_fed - breastfed) ->
+      effusion
+    ```
+
+-   Plotting the differences, it looks like there are some extreme outliers. There appears to be two bottle-fed babies that had a very long duration of middle-ear effusion.
+    ```{r}
+    ggplot(effusion, aes(x = diff)) +
+      geom_histogram(bins = 30)
+    ```
+
+-   One solution would be to do inference on the log-ratio. This handles the outliers, but the data still appear somewhat skewed:
+    ```{r}
+    effusion |>
+      mutate(log_rat = log(bottle_fed) - log(breastfed)) |>
+      ggplot(aes(x = log_rat)) +
+      geom_histogram(bins = 8)
+    ```
+
+
+- Quite honestly, it might not be that bad to do a $t$-test on the log-ratio. It appears perhaps too skewed, so I might worry a little. But we'll try the alternative non-parameteric approach.
+
+## Main idea:
+
+- The Wilcoxon signed-rank test is a non-parameteric alternative to the paired (one-sample) $t$-test.
+
+- Assume data are symmetric (we'll get back to this), but not necessarily normal (e.g., lots of outliers are possible).
+
+- Then we want to test
+  - $H_0$: Median difference is 0
+    - This is the **population** median, not the sample median.
+  - $H_A:$ Median difference is non-zero
+
+- The idea is almost the very similar as the Wilcoxon rank-sum test with two differences:
+  1. Rank the absolute values
+  2. Add up ranks of one of the signs.
+
+![](./06_figures/display_45_sign.svg){fig-alt="Graphical display of calculation for signed-rank statistic"}\ 
+
+-   If the null is true and the median is 0, then $R \sim N(\mu_R, \sigma_R^2$ where
+    $$
+    \mu_R = \frac{n(n+1)}{4}\\
+    \sigma_R^2 = \frac{n(n+1)(2n+1)}{24}
+    $$
+
+-   Thus, if the null is true and the median difference is 0, then
+    $$
+    Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
+    $$
+    and we can compare $Z$ to a standard normal to get a $p$-value.
+    
+    ```{r}
+    #| echo: false
+    plt_t(mu = 0, sig = 1, lb = 2, two_sided = TRUE) +
+      geom_vline(xintercept = 2, lty = 2) +
+      scale_x_continuous(breaks = c(-2, 0, 2), labels = c("-Z", "0", "Z"))
+    ```
+    
+    ```r
+    2 * pnorm(-abs(z))
+    ```
+    
+::: {.panel-tabset}
+# Exercise
+Consider the twin study from Case 0202:
+```{r}
+#| message: false
+twins <- read_csv("https://dcgerard.github.io/stat_302/data/case0202.csv") |>
+  mutate(diff = Unaffected - Affected)
+```
+
+```{r}
+#| echo: false
+twins |>
+  gt()
+```
+Calculate the rank-sum statistic.
+
+# Solution
+
+
+:::
+
+
+## Wilcoxon signed-rank test in R
+
+-   Use `wilcox.test()` and the exact same syntax as in the one-sample $t$-test.
+    ```{r}
+    wilcox.test(diff ~ 1, data = effusion, conf.int = TRUE) |>
+      tidy()
+    ```
+
+- Thus, under the assumption of symmetry, we have evidence that breast feeding typically has shorter mid-ear effusion durations than formula babies ($p$ = 0.018). We estimate the median duration to be 7 days shorter for breastfed babies, with a 95% confidence interval of 1 day shorter to 30 days shorter.
+
+::: {.panel-tabset}
+# Exercise
+For the twin-study, test whether the median is 0.
+
+# Solution
+We verify symmetry:
+```{r}
+ggplot(twins, aes(x = diff)) +
+  geom_histogram(bins = 6)
+```
+It looks symmetric enough.
+
+```{r}
+wilcox.test(diff ~ 1, data = twins, conf.int = TRUE) |>
+  tidy()
+```
+
+We have strong evidence that median difference in the volume of the hippocampus is non-zero ($p$ = 0.002). We estimate that the median difference is 0.16 cm$^3$, with a 95% confidence interval of 0.07 cm$^3$ to 0.35 cm$^3$.
+
+:::
+    
+## When symmetry is violated
+
+- If you are randomly assigning treatments to pairs of units (e.g., if we would have randomly assigned which baby in a pair gets formula and which gets breast feeding), then the differences under the null are theoretically symmetric about 0.
+
+- Thus, under randomized experiments, hypotheses are:
+  - $H_0:$ No treatment effect
+  - $H_A$: Treatment effect
+
+- Thus, under random assignment in paired designs, the Wilcoxon signed-rank test exactly tests for what we are interested in.
+  
+- In observational studies, if symmetry is violated, the Wilcoxon signed-rank test actually tests the null that the *pseudomedian* is 0 versus the alternative that it is non-zero.
+
+- The **pseudomedian** is the median of a distribution is the median of the distribution of $(X_1 + X_2)/2$ where $X_1$ and $X_2$ are iid from the original distribution.
+
+- If the distribution is symmetric, then the pseudomedian is the same as the median. Under skew, they differ.
+
+-   E.g., we can approximate the pseudomedian of the exponential distribution (a skewed distribution) by
+    ```{r}
+    n <- 10000
+    x1 <- rexp(n)
+    x2 <- rexp(n)
+    median((x1 + x2) / 2)
+    ```
+
+-   Compare this to the theoretical median of the exponential
+    ```{r}
+    qexp(0.5)
+    ```
+    
+- Opinions differ, but I think the pseudomedian is a much less useful measure of center than the median.
+
+## Sign test
+
+- If symmetry is violated and you have an observational study, use the sign test.
+
+- Hypotheses:
+  - $H_0$: Median is 0
+  - $H_A:$ Median is non-zero
+  
+- Procedure:
+  - Count the number of positive values. Call this count $X$.
+  - Count the number of non-zero values. Call this count $n$.
+  - Under the null, $X \sim \mathrm{Binom}(n, 1/2)$
+  - Run a test for proportions (STAT-202 stuff) using $X$ with the the null that $p = 0.5$.
+  
+-   E.g., from our effusion data, the number of positive and number of non-zero values are:
+    ```{r}
+    npos <- sum(effusion$diff > 0)
+    npos
+    n <- sum(effusion$diff != 0)
+    n
+    ```
+
+-   We use `binom.test()` to test if the true proportion is 1/2.
+    ```{r}
+    binom.test(x = 16, n = 23, p = 0.5) |>
+      tidy()
+    ```
+
+- This shows us we have only week evidence of a non-zero median.
+
+- This is an example of how the sign test has **very low power**, so folks don't like to use it.
+
+- But it has the fewest assumptions (just independence of units) of a test that you will typically see.

@@ -194,7 +194,14 @@ window.Quarto = {
   <li><a href="#exact-approach" id="toc-exact-approach" class="nav-link" data-scroll-target="#exact-approach">Exact Approach</a></li>
   <li><a href="#confidence-intervals" id="toc-confidence-intervals" class="nav-link" data-scroll-target="#confidence-intervals">Confidence Intervals</a></li>
   </ul></li>
-  <li><a href="#the-wilcoxon-signed-rank-test" id="toc-the-wilcoxon-signed-rank-test" class="nav-link" data-scroll-target="#the-wilcoxon-signed-rank-test">The Wilcoxon signed-rank test</a></li>
+  <li><a href="#the-wilcoxon-signed-rank-test" id="toc-the-wilcoxon-signed-rank-test" class="nav-link" data-scroll-target="#the-wilcoxon-signed-rank-test">The Wilcoxon signed-rank test</a>
+  <ul class="collapse">
+  <li><a href="#case-study-1" id="toc-case-study-1" class="nav-link" data-scroll-target="#case-study-1">Case Study</a></li>
+  <li><a href="#main-idea-1" id="toc-main-idea-1" class="nav-link" data-scroll-target="#main-idea-1">Main idea:</a></li>
+  <li><a href="#wilcoxon-signed-rank-test-in-r" id="toc-wilcoxon-signed-rank-test-in-r" class="nav-link" data-scroll-target="#wilcoxon-signed-rank-test-in-r">Wilcoxon signed-rank test in R</a></li>
+  <li><a href="#when-symmetry-is-violated" id="toc-when-symmetry-is-violated" class="nav-link" data-scroll-target="#when-symmetry-is-violated">When symmetry is violated</a></li>
+  <li><a href="#sign-test" id="toc-sign-test" class="nav-link" data-scroll-target="#sign-test">Sign test</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -234,7 +241,8 @@ window.Quarto = {
 
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="learning-objectives" class="level1">
 <h1>Learning Objectives</h1>
@@ -738,8 +746,808 @@ $ shuffled_treatment &lt;chr&gt; "Modified", "Modified", "Conventional", "Modifi
 </section>
 <section id="the-wilcoxon-signed-rank-test" class="level1">
 <h1>The Wilcoxon signed-rank test</h1>
+<section id="case-study-1" class="level2">
+<h2 class="anchored" data-anchor-id="case-study-1">Case Study</h2>
+<ul>
+<li><p>Otitis media in young children often causes middle-ear effusion (lingering fluid in the middle ear).</p></li>
+<li><p>Persistent fluid can lead to temporary hearing loss, potentially disrupting learning development in the first two years.</p></li>
+<li><p>Hypothesis: infants breastfed for at least one month may gain some immunity, resulting in shorter effusion than bottle-fed infants.</p></li>
+<li><p>The study pairs 24 infants matched by age, sex, socioeconomic status, and medications—one breastfed, one bottle-fed per pair.</p></li>
+<li><p>Outcome measured: duration of middle-ear effusion after the first otitis media episode.</p></li>
+<li><p>The data, from Table 9.11 of Rosner’s <em>Fundamentals of Biostatistics (Eights Edition)</em>, can be read into R with</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>effusion <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>pair, <span class="sc">~</span>breastfed, <span class="sc">~</span>bottle_fed,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="dv">20</span>, <span class="dv">18</span>,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span>, <span class="dv">11</span>, <span class="dv">35</span>,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">7</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="dv">4</span>, <span class="dv">24</span>, <span class="dv">182</span>,</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">6</span>,</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="dv">6</span>, <span class="dv">28</span>, <span class="dv">33</span>,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="dv">7</span>, <span class="dv">58</span>, <span class="dv">223</span>,</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="dv">8</span>, <span class="dv">7</span>, <span class="dv">7</span>,</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="dv">9</span>, <span class="dv">39</span>, <span class="dv">57</span>,</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="dv">10</span>, <span class="dv">17</span>, <span class="dv">76</span>,</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  <span class="dv">11</span>, <span class="dv">17</span>, <span class="dv">186</span>,</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  <span class="dv">12</span>, <span class="dv">12</span>, <span class="dv">29</span>,</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>  <span class="dv">13</span>, <span class="dv">52</span>, <span class="dv">39</span>,</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>  <span class="dv">14</span>, <span class="dv">14</span>, <span class="dv">15</span>,</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>  <span class="dv">15</span>, <span class="dv">12</span>, <span class="dv">21</span>,</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>  <span class="dv">16</span>, <span class="dv">30</span>, <span class="dv">28</span>,</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  <span class="dv">17</span>, <span class="dv">7</span>, <span class="dv">8</span>,</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>  <span class="dv">18</span>, <span class="dv">15</span>, <span class="dv">27</span>,</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>  <span class="dv">19</span>, <span class="dv">65</span>, <span class="dv">77</span>,</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>  <span class="dv">20</span>, <span class="dv">10</span>, <span class="dv">12</span>,</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>  <span class="dv">21</span>, <span class="dv">7</span>, <span class="dv">8</span>,</span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>  <span class="dv">22</span>, <span class="dv">19</span>, <span class="dv">16</span>,</span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>  <span class="dv">23</span>, <span class="dv">34</span>, <span class="dv">28</span>,</span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>  <span class="dv">24</span>, <span class="dv">25</span>, <span class="dv">20</span></span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></li>
+<li><p>We first calculate the differences</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>effusion <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff =</span> bottle_fed <span class="sc">-</span> breastfed) <span class="ot">-&gt;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  effusion</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></li>
+<li><p>Plotting the differences, it looks like there are some extreme outliers. There appears to be two bottle-fed babies that had a very long duration of middle-ear effusion.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(effusion, <span class="fu">aes</span>(<span class="at">x =</span> diff)) <span class="sc">+</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="06_ch4_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>One solution would be to do inference on the log-ratio. This handles the outliers, but the data still appear somewhat skewed:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>effusion <span class="sc">|&gt;</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_rat =</span> <span class="fu">log</span>(bottle_fed) <span class="sc">-</span> <span class="fu">log</span>(breastfed)) <span class="sc">|&gt;</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> log_rat)) <span class="sc">+</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="06_ch4_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Quite honestly, it might not be that bad to do a <span class="math inline">\(t\)</span>-test on the log-ratio. It appears perhaps too skewed, so I might worry a little. But we’ll try the alternative non-parameteric approach.</p></li>
+</ul>
+</section>
+<section id="main-idea-1" class="level2">
+<h2 class="anchored" data-anchor-id="main-idea-1">Main idea:</h2>
+<ul>
+<li><p>The Wilcoxon signed-rank test is a non-parameteric alternative to the paired (one-sample) <span class="math inline">\(t\)</span>-test.</p></li>
+<li><p>Assume data are symmetric (we’ll get back to this), but not necessarily normal (e.g., lots of outliers are possible).</p></li>
+<li><p>Then we want to test</p>
+<ul>
+<li><span class="math inline">\(H_0\)</span>: Median difference is 0
+<ul>
+<li>This is the <strong>population</strong> median, not the sample median.</li>
+</ul></li>
+<li><span class="math inline">\(H_A:\)</span> Median difference is non-zero</li>
+</ul></li>
+<li><p>The idea is almost the very similar as the Wilcoxon rank-sum test with two differences:</p>
+<ol type="1">
+<li>Rank the absolute values</li>
+<li>Add up ranks of one of the signs.</li>
+</ol></li>
+</ul>
+<p><img src="./06_figures/display_45_sign.svg" class="img-fluid" alt="Graphical display of calculation for signed-rank statistic">&nbsp;</p>
+<ul>
+<li><p>If the null is true and the median is 0, then <span class="math inline">\(R \sim N(\mu_R, \sigma_R^2\)</span> where <span class="math display">\[
+\mu_R = \frac{n(n+1)}{4}\\
+\sigma_R^2 = \frac{n(n+1)(2n+1)}{24}
+\]</span></p></li>
+<li><p>Thus, if the null is true and the median difference is 0, then <span class="math display">\[
+Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
+\]</span> and we can compare <span class="math inline">\(Z\)</span> to a standard normal to get a <span class="math inline">\(p\)</span>-value.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="06_ch4_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">abs</span>(z))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+</ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<p>Consider the twin study from Case 0202:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>twins <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0202.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff =</span> Unaffected <span class="sc">-</span> Affected)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="kodrmckhly" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#kodrmckhly table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#kodrmckhly thead, #kodrmckhly tbody, #kodrmckhly tfoot, #kodrmckhly tr, #kodrmckhly td, #kodrmckhly th {
+  border-style: none;
+}
+
+#kodrmckhly p {
+  margin: 0;
+  padding: 0;
+}
+
+#kodrmckhly .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#kodrmckhly .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#kodrmckhly .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#kodrmckhly .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#kodrmckhly .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#kodrmckhly .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#kodrmckhly .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#kodrmckhly .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#kodrmckhly .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#kodrmckhly .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#kodrmckhly .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#kodrmckhly .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#kodrmckhly .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#kodrmckhly .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#kodrmckhly .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#kodrmckhly .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#kodrmckhly .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#kodrmckhly .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#kodrmckhly .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kodrmckhly .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#kodrmckhly .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#kodrmckhly .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#kodrmckhly .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kodrmckhly .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#kodrmckhly .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#kodrmckhly .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#kodrmckhly .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kodrmckhly .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#kodrmckhly .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#kodrmckhly .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#kodrmckhly .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#kodrmckhly .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#kodrmckhly .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kodrmckhly .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#kodrmckhly .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kodrmckhly .gt_left {
+  text-align: left;
+}
+
+#kodrmckhly .gt_center {
+  text-align: center;
+}
+
+#kodrmckhly .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#kodrmckhly .gt_font_normal {
+  font-weight: normal;
+}
+
+#kodrmckhly .gt_font_bold {
+  font-weight: bold;
+}
+
+#kodrmckhly .gt_font_italic {
+  font-style: italic;
+}
+
+#kodrmckhly .gt_super {
+  font-size: 65%;
+}
+
+#kodrmckhly .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#kodrmckhly .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#kodrmckhly .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#kodrmckhly .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#kodrmckhly .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#kodrmckhly .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#kodrmckhly .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#kodrmckhly .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#kodrmckhly div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="Unaffected" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Unaffected</th>
+<th id="Affected" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Affected</th>
+<th id="diff" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">diff</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="Unaffected">1.94</td>
+<td class="gt_row gt_right" headers="Affected">1.27</td>
+<td class="gt_row gt_right" headers="diff">0.67</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Unaffected">1.44</td>
+<td class="gt_row gt_right" headers="Affected">1.63</td>
+<td class="gt_row gt_right" headers="diff">-0.19</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Unaffected">1.56</td>
+<td class="gt_row gt_right" headers="Affected">1.47</td>
+<td class="gt_row gt_right" headers="diff">0.09</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Unaffected">1.58</td>
+<td class="gt_row gt_right" headers="Affected">1.39</td>
+<td class="gt_row gt_right" headers="diff">0.19</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Unaffected">2.06</td>
+<td class="gt_row gt_right" headers="Affected">1.93</td>
+<td class="gt_row gt_right" headers="diff">0.13</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Unaffected">1.66</td>
+<td class="gt_row gt_right" headers="Affected">1.26</td>
+<td class="gt_row gt_right" headers="diff">0.40</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Unaffected">1.75</td>
+<td class="gt_row gt_right" headers="Affected">1.71</td>
+<td class="gt_row gt_right" headers="diff">0.04</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Unaffected">1.77</td>
+<td class="gt_row gt_right" headers="Affected">1.67</td>
+<td class="gt_row gt_right" headers="diff">0.10</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Unaffected">1.78</td>
+<td class="gt_row gt_right" headers="Affected">1.28</td>
+<td class="gt_row gt_right" headers="diff">0.50</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Unaffected">1.92</td>
+<td class="gt_row gt_right" headers="Affected">1.85</td>
+<td class="gt_row gt_right" headers="diff">0.07</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Unaffected">1.25</td>
+<td class="gt_row gt_right" headers="Affected">1.02</td>
+<td class="gt_row gt_right" headers="diff">0.23</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Unaffected">1.93</td>
+<td class="gt_row gt_right" headers="Affected">1.34</td>
+<td class="gt_row gt_right" headers="diff">0.59</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Unaffected">2.04</td>
+<td class="gt_row gt_right" headers="Affected">2.02</td>
+<td class="gt_row gt_right" headers="diff">0.02</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Unaffected">1.62</td>
+<td class="gt_row gt_right" headers="Affected">1.59</td>
+<td class="gt_row gt_right" headers="diff">0.03</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Unaffected">2.08</td>
+<td class="gt_row gt_right" headers="Affected">1.97</td>
+<td class="gt_row gt_right" headers="diff">0.11</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Calculate the rank-sum statistic.</p>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+
+</div>
+</div>
+</div>
+</section>
+<section id="wilcoxon-signed-rank-test-in-r" class="level2">
+<h2 class="anchored" data-anchor-id="wilcoxon-signed-rank-test-in-r">Wilcoxon signed-rank test in R</h2>
+<ul>
+<li><p>Use <code>wilcox.test()</code> and the exact same syntax as in the one-sample <span class="math inline">\(t\)</span>-test.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(diff <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> effusion, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 7
+  estimate statistic p.value conf.low conf.high method               alternative
+     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;                &lt;chr&gt;      
+1        7       231  0.0181        1        30 Wilcoxon signed ran… two.sided  </code></pre>
+</div>
+</div></li>
+<li><p>Thus, under the assumption of symmetry, we have evidence that breast feeding typically has shorter mid-ear effusion durations than formula babies (<span class="math inline">\(p\)</span> = 0.018). We estimate the median duration to be 7 days shorter for breastfed babies, with a 95% confidence interval of 1 day shorter to 30 days shorter.</p></li>
+</ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<p>For the twin-study, test whether the median is 0.</p>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<p>We verify symmetry:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(twins, <span class="fu">aes</span>(<span class="at">x =</span> diff)) <span class="sc">+</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="06_ch4_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>It looks symmetric enough.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(diff <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> twins, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 7
+  estimate statistic p.value conf.low conf.high method               alternative
+     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;                &lt;chr&gt;      
+1    0.158       111 0.00201   0.0650     0.345 Wilcoxon signed ran… two.sided  </code></pre>
+</div>
+</div>
+<p>We have strong evidence that median difference in the volume of the hippocampus is non-zero (<span class="math inline">\(p\)</span> = 0.002). We estimate that the median difference is 0.16 cm<span class="math inline">\(^3\)</span>, with a 95% confidence interval of 0.07 cm<span class="math inline">\(^3\)</span> to 0.35 cm<span class="math inline">\(^3\)</span>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="when-symmetry-is-violated" class="level2">
+<h2 class="anchored" data-anchor-id="when-symmetry-is-violated">When symmetry is violated</h2>
+<ul>
+<li><p>If you are randomly assigning treatments to pairs of units (e.g., if we would have randomly assigned which baby in a pair gets formula and which gets breast feeding), then the differences under the null are theoretically symmetric about 0.</p></li>
+<li><p>Thus, under randomized experiments, hypotheses are:</p>
+<ul>
+<li><span class="math inline">\(H_0:\)</span> No treatment effect</li>
+<li><span class="math inline">\(H_A\)</span>: Treatment effect</li>
+</ul></li>
+<li><p>Thus, under random assignment in paired designs, the Wilcoxon signed-rank test exactly tests for what we are interested in.</p></li>
+<li><p>In observational studies, if symmetry is violated, the Wilcoxon signed-rank test actually tests the null that the <em>pseudomedian</em> is 0 versus the alternative that it is non-zero.</p></li>
+<li><p>The <strong>pseudomedian</strong> is the median of a distribution is the median of the distribution of <span class="math inline">\((X_1 + X_2)/2\)</span> where <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span> are iid from the original distribution.</p></li>
+<li><p>If the distribution is symmetric, then the pseudomedian is the same as the median. Under skew, they differ.</p></li>
+<li><p>E.g., we can approximate the pseudomedian of the exponential distribution (a skewed distribution) by</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>((x1 <span class="sc">+</span> x2) <span class="sc">/</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.846082</code></pre>
+</div>
+</div></li>
+<li><p>Compare this to the theoretical median of the exponential</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qexp</span>(<span class="fl">0.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6931472</code></pre>
+</div>
+</div></li>
+<li><p>Opinions differ, but I think the pseudomedian is a much less useful measure of center than the median.</p></li>
+</ul>
+</section>
+<section id="sign-test" class="level2">
+<h2 class="anchored" data-anchor-id="sign-test">Sign test</h2>
+<ul>
+<li><p>If symmetry is violated and you have an observational study, use the sign test.</p></li>
+<li><p>Hypotheses:</p>
+<ul>
+<li><span class="math inline">\(H_0\)</span>: Median is 0</li>
+<li><span class="math inline">\(H_A:\)</span> Median is non-zero</li>
+</ul></li>
+<li><p>Procedure:</p>
+<ul>
+<li>Count the number of positive values. Call this count <span class="math inline">\(X\)</span>.</li>
+<li>Count the number of non-zero values. Call this count <span class="math inline">\(n\)</span>.</li>
+<li>Under the null, <span class="math inline">\(X \sim \mathrm{Binom}(n, 1/2)\)</span></li>
+<li>Run a test for proportions (STAT-202 stuff) using <span class="math inline">\(X\)</span> with the the null that <span class="math inline">\(p = 0.5\)</span>.</li>
+</ul></li>
+<li><p>E.g., from our effusion data, the number of positive and number of non-zero values are:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>npos <span class="ot">&lt;-</span> <span class="fu">sum</span>(effusion<span class="sc">$</span>diff <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>npos</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 16</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">sum</span>(effusion<span class="sc">$</span>diff <span class="sc">!=</span> <span class="dv">0</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>n</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 23</code></pre>
+</div>
+</div></li>
+<li><p>We use <code>binom.test()</code> to test if the true proportion is 1/2.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="at">x =</span> <span class="dv">16</span>, <span class="at">n =</span> <span class="dv">23</span>, <span class="at">p =</span> <span class="fl">0.5</span>) <span class="sc">|&gt;</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 8
+  estimate statistic p.value parameter conf.low conf.high method     alternative
+     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      
+1    0.696        16  0.0931        23    0.471     0.868 Exact bin… two.sided  </code></pre>
+</div>
+</div></li>
+<li><p>This shows us we have only week evidence of a non-zero median.</p></li>
+<li><p>This is an example of how the sign test has <strong>very low power</strong>, so folks don’t like to use it.</p></li>
+<li><p>But it has the fewest assumptions (just independence of units) of a test that you will typically see.</p></li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
