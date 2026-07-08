@@ -533,13 +533,29 @@ twins <- read_csv("https://dcgerard.github.io/stat_302/data/case0202.csv") |>
 ```{r}
 #| echo: false
 twins |>
+  mutate(diff = round(diff, digits = 2)) |>
   gt()
 ```
 Calculate the rank-sum statistic.
 
 # Solution
 
+Rearranging, we get this table:
+```{r}
+#| echo: false
+twins |>
+  mutate(diff = round(diff, digits = 2)) |>
+  mutate(Magnitude = abs(diff)) |>
+  arrange(Magnitude) |>
+  mutate(Order = 1:n(), Rank = rank(Magnitude)) |>
+  select(Difference = diff, Magnitude, Order, Rank) ->
+  df
+gt(df)
+```
 
+Summing up the ranks of the negative values, we would get 9.5.
+
+Summing up the ranks of the positive values, we would get 110.5.
 :::
 
 
@@ -572,11 +588,12 @@ wilcox.test(diff ~ 1, data = twins, conf.int = TRUE) |>
 
 We have strong evidence that median difference in the volume of the hippocampus is non-zero ($p$ = 0.002). We estimate that the median difference is 0.16 cm$^3$, with a 95% confidence interval of 0.07 cm$^3$ to 0.35 cm$^3$.
 
+Note: The 111 differs from the solution of 110.5 when doing it "by hand" because I rounded the values earlier to make sure you weren't using R.
 :::
     
 ## When symmetry is violated
 
-- If you are randomly assigning treatments to pairs of units (e.g., if we would have randomly assigned which baby in a pair gets formula and which gets breast feeding), then the differences under the null are theoretically symmetric about 0.
+- If you are randomly assigning treatments to pairs of units (e.g., if we would have randomly assigned which baby in a pair gets formula and which gets breast feeding), then the differences under the null are theoretically symmetric about 0. See Section 6.10 of @lehmann2005testing (I am including a reference because I don't think this is often taught).
 
 - Thus, under randomized experiments, hypotheses are:
   - $H_0:$ No treatment effect
@@ -586,7 +603,7 @@ We have strong evidence that median difference in the volume of the hippocampus 
   
 - In observational studies, if symmetry is violated, the Wilcoxon signed-rank test actually tests the null that the *pseudomedian* is 0 versus the alternative that it is non-zero.
 
-- The **pseudomedian** is the median of a distribution is the median of the distribution of $(X_1 + X_2)/2$ where $X_1$ and $X_2$ are iid from the original distribution.
+- The **pseudomedian** is the median of the distribution of $(X_1 + X_2)/2$ where $X_1$ and $X_2$ are drawn indpendently from the original distribution.
 
 - If the distribution is symmetric, then the pseudomedian is the same as the median. Under skew, they differ.
 
@@ -621,10 +638,11 @@ We have strong evidence that median difference in the volume of the hippocampus 
   
 -   E.g., from our effusion data, the number of positive and number of non-zero values are:
     ```{r}
-    npos <- sum(effusion$diff > 0)
-    npos
-    n <- sum(effusion$diff != 0)
-    n
+    effusion |>
+      summarize(
+        npos = sum(diff > 0),
+        n = sum(diff != 0)
+      )
     ```
 
 -   We use `binom.test()` to test if the true proportion is 1/2.
@@ -638,3 +656,25 @@ We have strong evidence that median difference in the volume of the hippocampus 
 - This is an example of how the sign test has **very low power**, so folks don't like to use it.
 
 - But it has the fewest assumptions (just independence of units) of a test that you will typically see.
+
+::: {.panel-tabset}
+# Exercise
+Run the sign test for the twins data.
+
+# Solution
+We count the number of positive and non-zero values.
+```{r}
+twins |>
+  summarize(
+    npos = sum(diff > 0),
+    n = sum(diff != 0)
+  )
+```
+Let $X$ be the number of positive and $n$ the number of non-zero values. Then $X \sim \mathrm{Binom}(n, p)$. We run the test $H_0: p = 1/2$ versus $H_A: p \neq 1/2$.
+
+```{r}
+binom.test(x = 14, n = 15) |>
+  tidy()
+```
+We have strong evidence that the median difference is non-zero ($p < 0.001$).
+:::

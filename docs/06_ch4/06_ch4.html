@@ -60,7 +60,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -1412,7 +1431,567 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 <p>Calculate the rank-sum statistic.</p>
 </div>
 <div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<p>Rearranging, we get this table:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="ahejbfzcbo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ahejbfzcbo table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
+#ahejbfzcbo thead, #ahejbfzcbo tbody, #ahejbfzcbo tfoot, #ahejbfzcbo tr, #ahejbfzcbo td, #ahejbfzcbo th {
+  border-style: none;
+}
+
+#ahejbfzcbo p {
+  margin: 0;
+  padding: 0;
+}
+
+#ahejbfzcbo .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ahejbfzcbo .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ahejbfzcbo .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ahejbfzcbo .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ahejbfzcbo .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ahejbfzcbo .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ahejbfzcbo .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ahejbfzcbo .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ahejbfzcbo .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ahejbfzcbo .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ahejbfzcbo .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ahejbfzcbo .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ahejbfzcbo .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ahejbfzcbo .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ahejbfzcbo .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ahejbfzcbo .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ahejbfzcbo .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ahejbfzcbo .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ahejbfzcbo .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ahejbfzcbo .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ahejbfzcbo .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ahejbfzcbo .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ahejbfzcbo .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ahejbfzcbo .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ahejbfzcbo .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ahejbfzcbo .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ahejbfzcbo .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ahejbfzcbo .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ahejbfzcbo .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ahejbfzcbo .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ahejbfzcbo .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ahejbfzcbo .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ahejbfzcbo .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ahejbfzcbo .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ahejbfzcbo .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ahejbfzcbo .gt_left {
+  text-align: left;
+}
+
+#ahejbfzcbo .gt_center {
+  text-align: center;
+}
+
+#ahejbfzcbo .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ahejbfzcbo .gt_font_normal {
+  font-weight: normal;
+}
+
+#ahejbfzcbo .gt_font_bold {
+  font-weight: bold;
+}
+
+#ahejbfzcbo .gt_font_italic {
+  font-style: italic;
+}
+
+#ahejbfzcbo .gt_super {
+  font-size: 65%;
+}
+
+#ahejbfzcbo .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ahejbfzcbo .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ahejbfzcbo .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ahejbfzcbo .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ahejbfzcbo .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ahejbfzcbo .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ahejbfzcbo .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#ahejbfzcbo .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#ahejbfzcbo div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="Difference" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Difference</th>
+<th id="Magnitude" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Magnitude</th>
+<th id="Order" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Order</th>
+<th id="Rank" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Rank</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="Difference">0.02</td>
+<td class="gt_row gt_right" headers="Magnitude">0.02</td>
+<td class="gt_row gt_right" headers="Order">1</td>
+<td class="gt_row gt_right" headers="Rank">1.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Difference">0.03</td>
+<td class="gt_row gt_right" headers="Magnitude">0.03</td>
+<td class="gt_row gt_right" headers="Order">2</td>
+<td class="gt_row gt_right" headers="Rank">2.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Difference">0.04</td>
+<td class="gt_row gt_right" headers="Magnitude">0.04</td>
+<td class="gt_row gt_right" headers="Order">3</td>
+<td class="gt_row gt_right" headers="Rank">3.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Difference">0.07</td>
+<td class="gt_row gt_right" headers="Magnitude">0.07</td>
+<td class="gt_row gt_right" headers="Order">4</td>
+<td class="gt_row gt_right" headers="Rank">4.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Difference">0.09</td>
+<td class="gt_row gt_right" headers="Magnitude">0.09</td>
+<td class="gt_row gt_right" headers="Order">5</td>
+<td class="gt_row gt_right" headers="Rank">5.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Difference">0.10</td>
+<td class="gt_row gt_right" headers="Magnitude">0.10</td>
+<td class="gt_row gt_right" headers="Order">6</td>
+<td class="gt_row gt_right" headers="Rank">6.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Difference">0.11</td>
+<td class="gt_row gt_right" headers="Magnitude">0.11</td>
+<td class="gt_row gt_right" headers="Order">7</td>
+<td class="gt_row gt_right" headers="Rank">7.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Difference">0.13</td>
+<td class="gt_row gt_right" headers="Magnitude">0.13</td>
+<td class="gt_row gt_right" headers="Order">8</td>
+<td class="gt_row gt_right" headers="Rank">8.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Difference">-0.19</td>
+<td class="gt_row gt_right" headers="Magnitude">0.19</td>
+<td class="gt_row gt_right" headers="Order">9</td>
+<td class="gt_row gt_right" headers="Rank">9.5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Difference">0.19</td>
+<td class="gt_row gt_right" headers="Magnitude">0.19</td>
+<td class="gt_row gt_right" headers="Order">10</td>
+<td class="gt_row gt_right" headers="Rank">9.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Difference">0.23</td>
+<td class="gt_row gt_right" headers="Magnitude">0.23</td>
+<td class="gt_row gt_right" headers="Order">11</td>
+<td class="gt_row gt_right" headers="Rank">11.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Difference">0.40</td>
+<td class="gt_row gt_right" headers="Magnitude">0.40</td>
+<td class="gt_row gt_right" headers="Order">12</td>
+<td class="gt_row gt_right" headers="Rank">12.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Difference">0.50</td>
+<td class="gt_row gt_right" headers="Magnitude">0.50</td>
+<td class="gt_row gt_right" headers="Order">13</td>
+<td class="gt_row gt_right" headers="Rank">13.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Difference">0.59</td>
+<td class="gt_row gt_right" headers="Magnitude">0.59</td>
+<td class="gt_row gt_right" headers="Order">14</td>
+<td class="gt_row gt_right" headers="Rank">14.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Difference">0.67</td>
+<td class="gt_row gt_right" headers="Magnitude">0.67</td>
+<td class="gt_row gt_right" headers="Order">15</td>
+<td class="gt_row gt_right" headers="Rank">15.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Summing up the ranks of the negative values, we would get 9.5.</p>
+<p>Summing up the ranks of the positive values, we would get 110.5.</p>
 </div>
 </div>
 </div>
@@ -1447,7 +2026,7 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="06_ch4_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+<p><img src="06_ch4_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -1464,6 +2043,7 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 </div>
 </div>
 <p>We have strong evidence that median difference in the volume of the hippocampus is non-zero (<span class="math inline">\(p\)</span> = 0.002). We estimate that the median difference is 0.16 cm<span class="math inline">\(^3\)</span>, with a 95% confidence interval of 0.07 cm<span class="math inline">\(^3\)</span> to 0.35 cm<span class="math inline">\(^3\)</span>.</p>
+<p>Note: The 111 differs from the solution of 110.5 when doing it “by hand” because I rounded the values earlier to make sure you weren’t using R.</p>
 </div>
 </div>
 </div>
@@ -1471,7 +2051,7 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 <section id="when-symmetry-is-violated" class="level2">
 <h2 class="anchored" data-anchor-id="when-symmetry-is-violated">When symmetry is violated</h2>
 <ul>
-<li><p>If you are randomly assigning treatments to pairs of units (e.g., if we would have randomly assigned which baby in a pair gets formula and which gets breast feeding), then the differences under the null are theoretically symmetric about 0.</p></li>
+<li><p>If you are randomly assigning treatments to pairs of units (e.g., if we would have randomly assigned which baby in a pair gets formula and which gets breast feeding), then the differences under the null are theoretically symmetric about 0. See Section 6.10 of <span class="citation" data-cites="lehmann2005testing">Lehmann and Romano (<a href="#ref-lehmann2005testing" role="doc-biblioref">2005</a>)</span> (I am including a reference because I don’t think this is often taught).</p></li>
 <li><p>Thus, under randomized experiments, hypotheses are:</p>
 <ul>
 <li><span class="math inline">\(H_0:\)</span> No treatment effect</li>
@@ -1479,7 +2059,7 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 </ul></li>
 <li><p>Thus, under random assignment in paired designs, the Wilcoxon signed-rank test exactly tests for what we are interested in.</p></li>
 <li><p>In observational studies, if symmetry is violated, the Wilcoxon signed-rank test actually tests the null that the <em>pseudomedian</em> is 0 versus the alternative that it is non-zero.</p></li>
-<li><p>The <strong>pseudomedian</strong> is the median of a distribution is the median of the distribution of <span class="math inline">\((X_1 + X_2)/2\)</span> where <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span> are iid from the original distribution.</p></li>
+<li><p>The <strong>pseudomedian</strong> is the median of the distribution of <span class="math inline">\((X_1 + X_2)/2\)</span> where <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span> are drawn indpendently from the original distribution.</p></li>
 <li><p>If the distribution is symmetric, then the pseudomedian is the same as the median. Under skew, they differ.</p></li>
 <li><p>E.g., we can approximate the pseudomedian of the exponential distribution (a skewed distribution) by</p>
 <div class="cell" data-layout-align="center">
@@ -1519,21 +2099,22 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 </ul></li>
 <li><p>E.g., from our effusion data, the number of positive and number of non-zero values are:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>npos <span class="ot">&lt;-</span> <span class="fu">sum</span>(effusion<span class="sc">$</span>diff <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>npos</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>effusion <span class="sc">|&gt;</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">npos =</span> <span class="fu">sum</span>(diff <span class="sc">&gt;</span> <span class="dv">0</span>),</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">sum</span>(diff <span class="sc">!=</span> <span class="dv">0</span>)</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 16</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">sum</span>(effusion<span class="sc">$</span>diff <span class="sc">!=</span> <span class="dv">0</span>)</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>n</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 23</code></pre>
+<pre><code># A tibble: 1 × 2
+   npos     n
+  &lt;int&gt; &lt;int&gt;
+1    16    23</code></pre>
 </div>
 </div></li>
 <li><p>We use <code>binom.test()</code> to test if the true proportion is 1/2.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="at">x =</span> <span class="dv">16</span>, <span class="at">n =</span> <span class="dv">23</span>, <span class="at">p =</span> <span class="fl">0.5</span>) <span class="sc">|&gt;</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="at">x =</span> <span class="dv">16</span>, <span class="at">n =</span> <span class="dv">23</span>, <span class="at">p =</span> <span class="fl">0.5</span>) <span class="sc">|&gt;</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 8
   estimate statistic p.value parameter conf.low conf.high method     alternative
@@ -1545,12 +2126,53 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 <li><p>This is an example of how the sign test has <strong>very low power</strong>, so folks don’t like to use it.</p></li>
 <li><p>But it has the fewest assumptions (just independence of units) of a test that you will typically see.</p></li>
 </ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
+<p>Run the sign test for the twins data.</p>
+</div>
+<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
+<p>We count the number of positive and non-zero values.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>twins <span class="sc">|&gt;</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">npos =</span> <span class="fu">sum</span>(diff <span class="sc">&gt;</span> <span class="dv">0</span>),</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">sum</span>(diff <span class="sc">!=</span> <span class="dv">0</span>)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+   npos     n
+  &lt;int&gt; &lt;int&gt;
+1    14    15</code></pre>
+</div>
+</div>
+<p>Let <span class="math inline">\(X\)</span> be the number of positive and <span class="math inline">\(n\)</span> the number of non-zero values. Then <span class="math inline">\(X \sim \mathrm{Binom}(n, p)\)</span>. We run the test <span class="math inline">\(H_0: p = 1/2\)</span> versus <span class="math inline">\(H_A: p \neq 1/2\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="at">x =</span> <span class="dv">14</span>, <span class="at">n =</span> <span class="dv">15</span>) <span class="sc">|&gt;</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 8
+  estimate statistic  p.value parameter conf.low conf.high method    alternative
+     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;      
+1    0.933        14 0.000977        15    0.681     0.998 Exact bi… two.sided  </code></pre>
+</div>
+</div>
+<p>We have strong evidence that the median difference is non-zero (<span class="math inline">\(p &lt; 0.001\)</span>).</p>
+</div>
+</div>
+</div>
+
 
 
 </section>
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-lehmann2005testing" class="csl-entry" role="listitem">
+Lehmann, Erich Leo, and Joseph P Romano. 2005. <em>Testing Statistical Hypotheses</em>. Springer.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
