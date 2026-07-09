@@ -68,7 +68,11 @@ were assigned at random to one of six diet groups:
 The response is **lifetime in months**. We are interested in:
 
 1. Are *any* of the diets different from each other in terms of longevity?
-2. Which specific diets differ, and by how much?
+2. Do controls (N/N85) live longer than those on nonpurified diets (NP)?
+3. Does restricting diets from 85 kcal/wk (N/N85) to 50 kcal/wk (N/R50) increase lifetime?
+4. Does Further restriction from 50 kcal/wk (N/R50) to 40 kcal/wk (N/R40) result in even more increase lifetime?
+5. Does lowering protein (N/R50 lopro) reduce lifetime compare to those already on a restricted diet (N/R50)?
+6. Does restriction both before and after weaning (R/R50) increase lifetime relative to just after weaning (N/R50)?
 
 
 - Pairwise comparisons of interest:
@@ -100,11 +104,7 @@ case0501 |>
 
 ## Case Study 5.1.2: The Spock Conspiracy Trial
 
-In 1968, Dr. Benjamin Spock was tried in Boston on charges related to
-encouraging draft resistance during the Vietnam War. The defense argued that
-the Spock trial judge (referred to here as "Spock's" judge) systematically
-underrepresented women on jury venires. They compared this judge's venires
-with those of six other Boston-area district judges (labeled A–F).
+In 1968, Dr. Benjamin Spock was tried in Boston on charges related to encouraging draft resistance during the Vietnam War. The defense argued that the Spock trial judge (referred to here as "Spock's" judge) systematically underrepresented women on jury venires. They compared this judge's venires with those of six other Boston-area district judges (labeled A–F).
 
 This is an **observational study**: judge assignment to cases was not
 randomized.
@@ -114,6 +114,7 @@ We are interested in:
 
 1. Is Spock's judge's mean percent-women lower than the other judges?
 2. Are the other judges' means all the same?
+   - Important to add context that Spock's judge might be illegally removing women from the venire.
 
 ```{r}
 #| label: spock-eda
@@ -126,6 +127,8 @@ ggplot(case0502, aes(x = Judge, y = Percent)) +
 ```{r}
 #| label: spock-dotplot
 #| fig-width: 7
+#| echo: false
+#| eval: false
 ggplot(case0502, aes(x = Judge, y = Percent)) +
   geom_jitter(width = 0.15, height = 0) +
   stat_summary(fun = mean, geom = "crossbar",
