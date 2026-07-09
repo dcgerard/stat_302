@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-07-08">
+<meta name="dcterms.date" content="2026-07-09">
 
 <title>Non-parametric Alternatives to t-tools – Stat 302: Intermediate Statistics</title>
 <style>
@@ -217,6 +217,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#case-study-1" id="toc-case-study-1" class="nav-link" data-scroll-target="#case-study-1">Case Study</a></li>
   <li><a href="#main-idea-1" id="toc-main-idea-1" class="nav-link" data-scroll-target="#main-idea-1">Main idea:</a></li>
+  <li><a href="#permutation-distribution" id="toc-permutation-distribution" class="nav-link" data-scroll-target="#permutation-distribution">Permutation Distribution</a></li>
   <li><a href="#wilcoxon-signed-rank-test-in-r" id="toc-wilcoxon-signed-rank-test-in-r" class="nav-link" data-scroll-target="#wilcoxon-signed-rank-test-in-r">Wilcoxon signed-rank test in R</a></li>
   <li><a href="#when-symmetry-is-violated" id="toc-when-symmetry-is-violated" class="nav-link" data-scroll-target="#when-symmetry-is-violated">When symmetry is violated</a></li>
   <li><a href="#sign-test" id="toc-sign-test" class="nav-link" data-scroll-target="#sign-test">Sign test</a></li>
@@ -246,7 +247,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 8, 2026</p>
+      <p class="date">July 9, 2026</p>
     </div>
   </div>
   
@@ -339,7 +340,10 @@ $ Censored  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 <ul>
 <li>Use when normality is violated</li>
 <li>Can use on Ordinal Data</li>
-<li>Can use with censored data, when the censored values can all be designated as “last place” (as in the learning case study).</li>
+<li>Can use with censored data, when the censored values can all be designated as “last place” (as in the learning case study).
+<ul>
+<li>For more complicated censoring, need more complicated methods.</li>
+</ul></li>
 </ul></li>
 <li><p><strong>Ordinal Data</strong>: Data where the order is known, but numeric values don’t have any inherent meaning.</p>
 <ul>
@@ -642,7 +646,8 @@ Z = \frac{40.5 - 35}{\sqrt{43.84}} = 0.83
 <section id="exact-approach" class="level2">
 <h2 class="anchored" data-anchor-id="exact-approach">Exact Approach</h2>
 <ul>
-<li><p>If <span class="math inline">\(n\)</span> is small, or there are very many ties, then an exact approach is possible by using the randomization distribution as the null distribution.</p>
+<li><p>If <span class="math inline">\(n\)</span> is small, or there are very many ties, then you shouldn’t use the normal approximation.</p></li>
+<li><p>An exact approach is possible by using the randomization distribution as the null distribution.</p>
 <ul>
 <li>Just like in Chapter 2.</li>
 </ul></li>
@@ -656,20 +661,15 @@ Z = \frac{40.5 - 35}{\sqrt{43.84}} = 0.83
 <li><p>Here is one iteration of generating the randomization distribution</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>graph <span class="sc">|&gt;</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">shuffled_treatment =</span> <span class="fu">sample</span>(Treatment)) <span class="ot">-&gt;</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  graph</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(graph)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">shuffled_treatment =</span> <span class="fu">sample</span>(Treatment)) <span class="sc">|&gt;</span> <span class="co"># Shuffle labels</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rank =</span> <span class="fu">rank</span>(Time)) <span class="sc">|&gt;</span> <span class="co"># Rank all values</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(shuffled_treatment <span class="sc">==</span> <span class="st">"Modified"</span>) <span class="sc">|&gt;</span> <span class="co"># Get just shuffled modified observations</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">R =</span> <span class="fu">sum</span>(rank)) <span class="co"># Sum the ranks</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Rows: 28
-Columns: 4
-$ Time               &lt;dbl&gt; 68, 70, 73, 75, 77, 80, 80, 132, 148, 155, 183, 197…
-$ Treatment          &lt;chr&gt; "Modified", "Modified", "Modified", "Modified", "Mo…
-$ Censored           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
-$ shuffled_treatment &lt;chr&gt; "Modified", "Modified", "Conventional", "Modified",…</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">rank</span>(graph<span class="sc">$</span>Time)[graph<span class="sc">$</span>shuffled_treatment <span class="sc">==</span> <span class="st">"Modified"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 196.5</code></pre>
+<pre><code># A tibble: 1 × 1
+      R
+  &lt;dbl&gt;
+1  196.</code></pre>
 </div>
 </div></li>
 <li><p>We can do this many times to get this randomization distribution</p>
@@ -684,8 +684,8 @@ $ shuffled_treatment &lt;chr&gt; "Modified", "Modified", "Conventional", "Modifi
 </div></li>
 <li><p>The default in R is to use an exact approach for small sample sizes, but you can always force it to be exact.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Time <span class="sc">~</span> Treatment, <span class="at">data =</span> graph, <span class="at">exact =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Time <span class="sc">~</span> Treatment, <span class="at">data =</span> graph, <span class="at">exact =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 4
   statistic p.value method                       alternative
@@ -751,8 +751,8 @@ $ shuffled_treatment &lt;chr&gt; "Modified", "Modified", "Conventional", "Modifi
 </ul></li>
 <li><p>R can do this automatically.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Time <span class="sc">~</span> Treatment, <span class="at">data =</span> graph, <span class="at">exact =</span> <span class="cn">TRUE</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Time <span class="sc">~</span> Treatment, <span class="at">data =</span> graph, <span class="at">exact =</span> <span class="cn">TRUE</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 7
   estimate statistic p.value conf.low conf.high method               alternative
@@ -776,44 +776,44 @@ $ shuffled_treatment &lt;chr&gt; "Modified", "Modified", "Conventional", "Modifi
 <li><p>Outcome measured: duration of middle-ear effusion after the first otitis media episode.</p></li>
 <li><p>The data, from Table 9.11 of Rosner’s <em>Fundamentals of Biostatistics (Eighth Edition)</em>, can be read into R with</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>effusion <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>pair, <span class="sc">~</span>breastfed, <span class="sc">~</span>bottle_fed,</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="dv">20</span>, <span class="dv">18</span>,</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span>, <span class="dv">11</span>, <span class="dv">35</span>,</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">7</span>,</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="dv">4</span>, <span class="dv">24</span>, <span class="dv">182</span>,</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">6</span>,</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="dv">6</span>, <span class="dv">28</span>, <span class="dv">33</span>,</span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="dv">7</span>, <span class="dv">58</span>, <span class="dv">223</span>,</span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="dv">8</span>, <span class="dv">7</span>, <span class="dv">7</span>,</span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="dv">9</span>, <span class="dv">39</span>, <span class="dv">57</span>,</span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="dv">10</span>, <span class="dv">17</span>, <span class="dv">76</span>,</span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  <span class="dv">11</span>, <span class="dv">17</span>, <span class="dv">186</span>,</span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  <span class="dv">12</span>, <span class="dv">12</span>, <span class="dv">29</span>,</span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>  <span class="dv">13</span>, <span class="dv">52</span>, <span class="dv">39</span>,</span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>  <span class="dv">14</span>, <span class="dv">14</span>, <span class="dv">15</span>,</span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>  <span class="dv">15</span>, <span class="dv">12</span>, <span class="dv">21</span>,</span>
-<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>  <span class="dv">16</span>, <span class="dv">30</span>, <span class="dv">28</span>,</span>
-<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  <span class="dv">17</span>, <span class="dv">7</span>, <span class="dv">8</span>,</span>
-<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>  <span class="dv">18</span>, <span class="dv">15</span>, <span class="dv">27</span>,</span>
-<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>  <span class="dv">19</span>, <span class="dv">65</span>, <span class="dv">77</span>,</span>
-<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>  <span class="dv">20</span>, <span class="dv">10</span>, <span class="dv">12</span>,</span>
-<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>  <span class="dv">21</span>, <span class="dv">7</span>, <span class="dv">8</span>,</span>
-<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>  <span class="dv">22</span>, <span class="dv">19</span>, <span class="dv">16</span>,</span>
-<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>  <span class="dv">23</span>, <span class="dv">34</span>, <span class="dv">28</span>,</span>
-<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>  <span class="dv">24</span>, <span class="dv">25</span>, <span class="dv">20</span></span>
-<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>effusion <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>pair, <span class="sc">~</span>breastfed, <span class="sc">~</span>bottle_fed,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="dv">20</span>, <span class="dv">18</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span>, <span class="dv">11</span>, <span class="dv">35</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">7</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="dv">4</span>, <span class="dv">24</span>, <span class="dv">182</span>,</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">6</span>,</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="dv">6</span>, <span class="dv">28</span>, <span class="dv">33</span>,</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="dv">7</span>, <span class="dv">58</span>, <span class="dv">223</span>,</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="dv">8</span>, <span class="dv">7</span>, <span class="dv">7</span>,</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="dv">9</span>, <span class="dv">39</span>, <span class="dv">57</span>,</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="dv">10</span>, <span class="dv">17</span>, <span class="dv">76</span>,</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  <span class="dv">11</span>, <span class="dv">17</span>, <span class="dv">186</span>,</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  <span class="dv">12</span>, <span class="dv">12</span>, <span class="dv">29</span>,</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  <span class="dv">13</span>, <span class="dv">52</span>, <span class="dv">39</span>,</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>  <span class="dv">14</span>, <span class="dv">14</span>, <span class="dv">15</span>,</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  <span class="dv">15</span>, <span class="dv">12</span>, <span class="dv">21</span>,</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>  <span class="dv">16</span>, <span class="dv">30</span>, <span class="dv">28</span>,</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>  <span class="dv">17</span>, <span class="dv">7</span>, <span class="dv">8</span>,</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>  <span class="dv">18</span>, <span class="dv">15</span>, <span class="dv">27</span>,</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>  <span class="dv">19</span>, <span class="dv">65</span>, <span class="dv">77</span>,</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>  <span class="dv">20</span>, <span class="dv">10</span>, <span class="dv">12</span>,</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>  <span class="dv">21</span>, <span class="dv">7</span>, <span class="dv">8</span>,</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>  <span class="dv">22</span>, <span class="dv">19</span>, <span class="dv">16</span>,</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>  <span class="dv">23</span>, <span class="dv">34</span>, <span class="dv">28</span>,</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>  <span class="dv">24</span>, <span class="dv">25</span>, <span class="dv">20</span></span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
 <li><p>We first calculate the differences</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>effusion <span class="sc">|&gt;</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff =</span> bottle_fed <span class="sc">-</span> breastfed) <span class="ot">-&gt;</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  effusion</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>effusion <span class="sc">|&gt;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff =</span> bottle_fed <span class="sc">-</span> breastfed) <span class="ot">-&gt;</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  effusion</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
 <li><p>Plotting the differences, it looks like there are some extreme outliers. There appear to be three bottle-fed babies that had a very long duration of middle-ear effusion.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(effusion, <span class="fu">aes</span>(<span class="at">x =</span> diff)) <span class="sc">+</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"white"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(effusion, <span class="fu">aes</span>(<span class="at">x =</span> diff)) <span class="sc">+</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"white"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -824,10 +824,10 @@ $ shuffled_treatment &lt;chr&gt; "Modified", "Modified", "Conventional", "Modifi
 </div></li>
 <li><p>One solution would be to do inference on the log-ratio. This handles the outliers, but the data still appear somewhat skewed:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>effusion <span class="sc">|&gt;</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_rat =</span> <span class="fu">log</span>(bottle_fed) <span class="sc">-</span> <span class="fu">log</span>(breastfed)) <span class="sc">|&gt;</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> log_rat)) <span class="sc">+</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>effusion <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_rat =</span> <span class="fu">log</span>(bottle_fed) <span class="sc">-</span> <span class="fu">log</span>(breastfed)) <span class="sc">|&gt;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> log_rat)) <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -876,7 +876,7 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 </div>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">abs</span>(z))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">abs</span>(z))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 </ul>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false" href="">Solution</a></li></ul>
@@ -884,8 +884,8 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 <div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
 <p>Consider the twin study from Case 0202:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>twins <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0202.csv"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff =</span> Unaffected <span class="sc">-</span> Affected)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>twins <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0202.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff =</span> Unaffected <span class="sc">-</span> Affected)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -1997,6 +1997,47 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 </div>
 </div>
 </section>
+<section id="permutation-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="permutation-distribution">Permutation Distribution</h2>
+<ul>
+<li><p>We randomly flip the sign of each difference, independently, each with probability 1/2.</p>
+<ul>
+<li>Note the difference from the rank-sum test: there we permuted the labels (keeping the number in each group fixed). Here, each pair’s sign is flipped independently, so the number of negative signs is <em>not</em> fixed.</li>
+</ul></li>
+<li><p>Intuitively, this is randomly switching which baby in each pair is labeled as “formula fed” and which is labeled as “breastfed”.</p>
+<ul>
+<li>If effusion duration was about the same between the two populations, then within any pair it should not matter which baby we call “breastfed” and which we call “formula fed”.</li>
+<li>So under the null, each difference is equally likely to be positive or negative, and the distribution of the rank statistic should be the same no matter how we flip the signs.</li>
+</ul></li>
+<li><p>This allows us to compare our signed-rank statistic to the permutation distribution and obtain exact inference when the sample size is too small (or there are too many ties) for the normal approximation to work.</p></li>
+<li><p>One iteration of this would be</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>effusion <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(diff <span class="sc">!=</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">magnitude =</span> <span class="fu">abs</span>(diff)) <span class="sc">|&gt;</span> <span class="co"># absolute value of difference</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rank =</span> <span class="fu">rank</span>(magnitude)) <span class="sc">|&gt;</span> <span class="co"># rank of absolute value</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sign_flipped =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"Negative"</span>, <span class="st">"Positive"</span>), <span class="at">size =</span> <span class="fu">n</span>(), <span class="at">replace =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> <span class="co"># Randomly flip each sign, independently</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(sign_flipped <span class="sc">==</span> <span class="st">"Negative"</span>) <span class="sc">|&gt;</span> <span class="co"># Get just the negative flipped signs</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">R =</span> <span class="fu">sum</span>(rank)) <span class="co"># Sum ranks</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+      R
+  &lt;dbl&gt;
+1   158</code></pre>
+</div>
+</div></li>
+<li><p>Doing this many times to get the randomization distribution</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="06_ch4_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div></li>
+</ul>
+</section>
 <section id="wilcoxon-signed-rank-test-in-r" class="level2">
 <h2 class="anchored" data-anchor-id="wilcoxon-signed-rank-test-in-r">Wilcoxon signed-rank test in R</h2>
 <ul>
@@ -2013,6 +2054,27 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 </div></li>
 <li><p>Thus, under the assumption of symmetry, we have evidence that breastfed babies typically have shorter mid-ear effusion durations than formula-fed babies (<span class="math inline">\(p\)</span> = 0.018). We estimate the median duration to be 7 days shorter for breastfed babies, with a 95% confidence interval of 1 day shorter to 30 days shorter.</p></li>
 </ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Unneccesary Detail
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>In R, they exclude all 0’s from the test when calculating the signed-rank statistic. You should remove the 0’s too.</p>
+<ul>
+<li>E.g., zeros don’t tell us anything about whether breastfed or formula-fed babies have longer effusion durations.</li>
+</ul></li>
+<li><p>In R, they again subtract the minimum possible R value.</p></li>
+<li><p>Above, they calculated the signed-rank statistic for the positive values, not the negative values. This does not change the <span class="math inline">\(p\)</span>-value.</p></li>
+<li><p>The default is to run an exact test. If you use the normal approximation (<code>exact = FALSE</code>), R again uses a continuity correction and fancy math to improve the normal approximation.</p></li>
+</ul>
+</div>
+</div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false" href="">Solution</a></li></ul>
 <div class="tab-content">
@@ -2027,7 +2089,7 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="06_ch4_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+<p><img src="06_ch4_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -2069,7 +2131,7 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n)</span>
 <span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>((x1 <span class="sc">+</span> x2) <span class="sc">/</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.846082</code></pre>
+<pre><code>[1] 0.8455364</code></pre>
 </div>
 </div></li>
 <li><p>Compare this to the theoretical median of the exponential</p>

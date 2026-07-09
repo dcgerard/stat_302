@@ -107,6 +107,7 @@ library(gt)
   - Use when normality is violated
   - Can use on Ordinal Data
   - Can use with censored data, when the censored values can all be designated as "last place" (as in the learning case study).
+    - For more complicated censoring, need more complicated methods.
   
 - **Ordinal Data**: Data where the order is known, but numeric values don't have any inherent meaning.
   - Likert Scale: `Strongly Disagree` < `Disagree` < `Neutral` < `Agree` < `Strongly Agree`
@@ -293,7 +294,9 @@ Some comments:
 
 ## Exact Approach
 
-- If $n$ is small, or there are very many ties, then an exact approach is possible by using the randomization distribution as the null distribution.
+- If $n$ is small, or there are very many ties, then you shouldn't use the normal approximation.
+
+- An exact approach is possible by using the randomization distribution as the null distribution.
   - Just like in Chapter 2.
   
 - Procedure:
@@ -305,10 +308,10 @@ Some comments:
 -   Here is one iteration of generating the randomization distribution  
     ```{r}
     graph |>
-      mutate(shuffled_treatment = sample(Treatment)) ->
-      graph
-    glimpse(graph)
-    sum(rank(graph$Time)[graph$shuffled_treatment == "Modified"])
+      mutate(shuffled_treatment = sample(Treatment)) |> # Shuffle labels
+      mutate(rank = rank(Time)) |> # Rank all values
+      filter(shuffled_treatment == "Modified") |> # Get just shuffled modified observations
+      summarize(R = sum(rank)) # Sum the ranks
     ```
 
 -   We can do this many times to get this randomization distribution
@@ -559,6 +562,51 @@ Summing up the ranks of the negative values, we would get 9.5.
 Summing up the ranks of the positive values, we would get 110.5.
 :::
 
+## Permutation Distribution
+
+- We randomly flip the sign of each difference, independently, each with probability 1/2.
+  - Note the difference from the rank-sum test: there we permuted the labels (keeping the number in each group fixed). Here, each pair's sign is flipped independently, so the number of negative signs is *not* fixed.
+
+- Intuitively, this is randomly switching which baby in each pair is labeled as "formula fed" and which is labeled as "breastfed".
+  - If effusion duration was about the same between the two populations, then within any pair it should not matter which baby we call "breastfed" and which we call "formula fed".
+  - So under the null, each difference is equally likely to be positive or negative, and the distribution of the rank statistic should be the same no matter how we flip the signs.
+
+- This allows us to compare our signed-rank statistic to the permutation distribution and obtain exact inference when the sample size is too small (or there are too many ties) for the normal approximation to work.
+
+-   One iteration of this would be
+    ```{r}
+    effusion |>
+      filter(diff != 0) |>
+      mutate(magnitude = abs(diff)) |> # absolute value of difference
+      mutate(rank = rank(magnitude)) |> # rank of absolute value
+      mutate(sign_flipped = sample(c("Negative", "Positive"), size = n(), replace = TRUE)) |> # Randomly flip each sign, independently
+      filter(sign_flipped == "Negative") |> # Get just the negative flipped signs
+      summarize(R = sum(rank)) # Sum ranks
+    ```
+    
+-   Doing this many times to get the randomization distribution
+
+    ```{r}
+    #| echo: false
+    effusion |>
+      filter(diff != 0) |>
+      mutate(magnitude = abs(diff)) |> # absolute value of difference
+      mutate(rank = rank(magnitude)) -> # rank of absolute value
+      df
+    niter <- 5000
+    rvec <- rep(NA_real_, length.out = niter)
+    for (i in seq_len(niter)) {
+      flip <- sample(c(TRUE, FALSE), size = nrow(df), replace = TRUE) # Randomly flip each sign, independently
+      rvec[[i]] <- sum(df$rank[flip]) # Sum ranks of the flipped-negative values
+    }
+    
+    tibble(r = rvec) |>
+      ggplot(aes(x = r)) +
+      geom_histogram(bins = 30) +
+      geom_vline(xintercept = 68, lty = 2, col = "red")
+    ```
+
+
 
 ## Wilcoxon signed-rank test in R
 
@@ -569,6 +617,18 @@ Summing up the ranks of the positive values, we would get 110.5.
     ```
 
 - Thus, under the assumption of symmetry, we have evidence that breastfed babies typically have shorter mid-ear effusion durations than formula-fed babies ($p$ = 0.018). We estimate the median duration to be 7 days shorter for breastfed babies, with a 95% confidence interval of 1 day shorter to 30 days shorter.
+
+::: {.callout-warning}
+# Unneccesary Detail
+- In R, they exclude all 0's from the test when calculating the signed-rank statistic. You should remove the 0's too.
+  - E.g., zeros don't tell us anything about whether breastfed or formula-fed babies have longer effusion durations.
+
+- In R, they again subtract the minimum possible R value.
+
+- Above, they calculated the signed-rank statistic for the positive values, not the negative values. This does not change the $p$-value.
+
+- The default is to run an exact test. If you use the normal approximation (`exact = FALSE`), R again uses a continuity correction and fancy math to improve the normal approximation.
+:::
 
 ::: {.panel-tabset}
 # Exercise
