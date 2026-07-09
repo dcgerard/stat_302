@@ -50,6 +50,7 @@ library(gt)
 
 # Learning Objectives
 
+- Chapter 4
 - Recognize which non-parametric method to use in one- and two-sample scenarios.
 - Understand the mechanisms of these non-parametric methods.
 - Implement these non-parametric methods in R.
