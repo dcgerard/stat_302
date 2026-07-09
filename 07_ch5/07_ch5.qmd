@@ -22,6 +22,7 @@ ggplot2::theme_set(ggplot2::theme_bw())
 #| label: load-packages
 #| message: false
 library(tidyverse)
+library(gt)
 ```
 
 # Learning Objectives
@@ -72,12 +73,14 @@ The response is **lifetime in months**. We are interested in:
 
 - Pairwise comparisons of interest:
   
-  ![Relationship among the six diet groups. Arrows connect groups that share a base diet or caloric level; the vertical chain (N/N85 → N/R50 → N/R40) shows increasing post-weaning restriction.](ch5_fig/diet_groups.svg){fig-align="center" width="85%"}
+  ![Relationship among the six diet groups. Arrows connect pairwise relationships of interest where there is only one condition that differs between diets. The slash represents pre- and post-weaning diets.](ch5_fig/diet_groups.svg){fig-align="center" width="85%"}
 
 ```{r}
 #| label: diet-eda
 #| fig-width: 7
-ggplot(case0501, aes(x = Diet, y = Lifetime)) +
+case0501 |>
+  mutate(Diet = factor(Diet, levels = c("NP", "N/N85", "N/R50", "R/R50", "lopro", "N/R40"))) |> ## Relevel to get boxplots in correct order
+  ggplot(aes(x = Diet, y = Lifetime)) +
   geom_boxplot() +
   labs(y = "Lifetime (months)", x = "Diet group")
 ```
@@ -85,12 +88,14 @@ ggplot(case0501, aes(x = Diet, y = Lifetime)) +
 ```{r}
 #| label: diet-summary
 case0501 |>
+  mutate(Diet = factor(Diet, levels = c("NP", "N/N85", "N/R50", "R/R50", "lopro", "N/R40"))) |> ## Relevel to get boxplots in correct order
   group_by(Diet) |>
   summarise(n       = n(),
             Mean    = mean(Lifetime),
             SD      = sd(Lifetime),
             Median  = median(Lifetime)) |>
-  knitr::kable(digits = 1)
+  gt() |>
+  fmt_number(columns = c(3, 4, 5), decimals = 1)
 ```
 
 ## Case Study 5.1.2: The Spock Conspiracy Trial
