@@ -673,7 +673,7 @@ twins |>
 Let $X$ be the number of positive and $n$ the number of non-zero values. Then $X \sim \mathrm{Binom}(n, p)$. We run the test $H_0: p = 1/2$ versus $H_A: p \neq 1/2$.
 
 ```{r}
-binom.test(x = 14, n = 15) |>
+binom.test(x = 14, n = 15, p = 0.5) |>
   tidy()
 ```
 We have strong evidence that the median difference is non-zero ($p < 0.001$).
