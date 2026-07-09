@@ -9,7 +9,7 @@
 <meta name="author" content="David Gerard">
 <meta name="dcterms.date" content="2026-07-08">
 
-<title>Non-parameteric Alternatives to t-tools – Stat 302: Intermediate Statistics</title>
+<title>Non-parametric Alternatives to t-tools – Stat 302: Intermediate Statistics</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -229,7 +229,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Non-parameteric Alternatives to <span class="math inline">\(t\)</span>-tools</h1>
+<h1 class="title">Non-parametric Alternatives to <span class="math inline">\(t\)</span>-tools</h1>
 </div>
 
 
@@ -266,9 +266,9 @@ window.Quarto = {
 <section id="learning-objectives" class="level1">
 <h1>Learning Objectives</h1>
 <ul>
-<li>Recognize which non-parameteric method to use in one- and two-sample scenarios.</li>
-<li>Understand the mechanims of these non-parameteric methods.</li>
-<li>Implement these non-parameteric methods in R.</li>
+<li>Recognize which non-parametric method to use in one- and two-sample scenarios.</li>
+<li>Understand the mechanisms of these non-parametric methods.</li>
+<li>Implement these non-parametric methods in R.</li>
 </ul>
 </section>
 <section id="assumptions-of-t-tools" class="level1">
@@ -280,17 +280,17 @@ window.Quarto = {
 <li>Equal variance (if assuming <span class="math inline">\(\sigma_1^2 = \sigma_2^2\)</span>).</li>
 <li>Normality (no severe skew or outliers).</li>
 </ol></li>
-<li>Solutions when violated:</li>
-</ul>
+<li>Solutions when violated:
 <ol type="1">
 <li>Independence: Use multiple linear regression for cluster effects, or use serial correlation adjustment methods (Chapter 15).</li>
 <li>Equal variance: Use Welch’s <span class="math inline">\(t\)</span>-test (which I think you should always use anyway).</li>
 <li>Normality: This chapter.
 <ul>
-<li>Use a Wilcoxon rank sum test for an 2-sample <span class="math inline">\(t\)</span>-test alternative.</li>
+<li>Use a Wilcoxon rank sum test for a 2-sample <span class="math inline">\(t\)</span>-test alternative.</li>
 <li>Use a Wilcoxon signed-rank test for a paired <span class="math inline">\(t\)</span>-test alternative.</li>
 </ul></li>
-</ol>
+</ol></li>
+</ul>
 </section>
 <section id="case-study" class="level1">
 <h1>Case Study</h1>
@@ -334,7 +334,7 @@ $ Censored  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 <h2 class="anchored" data-anchor-id="main-idea">Main Idea</h2>
 <ul>
 <li><p>Also called the Mann-Whitney <span class="math inline">\(U\)</span>-test.</p></li>
-<li><p>Non-parameteric alternative to the two-sample <span class="math inline">\(t\)</span>-test</p>
+<li><p>Non-parametric alternative to the two-sample <span class="math inline">\(t\)</span>-test</p>
 <ul>
 <li>Use when normality is violated</li>
 <li>Can use on Ordinal Data</li>
@@ -385,7 +385,7 @@ $ Censored  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 <li><p>For large <span class="math inline">\(n\)</span> (say, each group has a sample size of at least 5 and there aren’t too many ties), <span class="math inline">\(R \sim N(\mu_R, \sigma_R^2)\)</span> <strong>if <span class="math inline">\(H_0\)</span> is true</strong>.</p>
 <ul>
 <li><p><span class="math inline">\(\mu_R\)</span> and <span class="math inline">\(\sigma_R^2\)</span> are some known values that depend just on the number of observations <span class="math inline">\(n\)</span></p></li>
-<li><p>Thus, if <span class="math inline">\(H_0\)</span> is true, <span class="math inline">\(Z = (R - \mu_R) / \sigma_r \sim N(0, 1)\)</span></p></li>
+<li><p>Thus, if <span class="math inline">\(H_0\)</span> is true, <span class="math inline">\(Z = (R - \mu_R) / \sigma_R \sim N(0, 1)\)</span></p></li>
 <li><p>Calculate the tail area probability of <span class="math inline">\(Z\)</span>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -405,7 +405,7 @@ $ Censored  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Unneccesary detail
+<span class="screen-reader-only">Warning</span>Unnecessary detail
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -621,7 +621,7 @@ Z = \frac{40.5 - 35}{\sqrt{43.84}} = 0.83
 </div>
 <p>Some comments:</p>
 <ol type="1">
-<li><p>The rank-sum statistic is different than the one we calculated because they subtract the minimum rank-sum statistic value <code>sum(1:5)</code> (the minimum possible, if all advanced students scored below all introductory students).</p>
+<li><p>The rank-sum statistic is different from the one we calculated because they subtract the minimum rank-sum statistic value <code>sum(1:5)</code> (the minimum possible, if all advanced students scored below all introductory students).</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fl">40.5</span> <span class="sc">-</span> <span class="fu">sum</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -773,7 +773,7 @@ $ shuffled_treatment &lt;chr&gt; "Modified", "Modified", "Conventional", "Modifi
 <li><p>Hypothesis: infants breastfed for at least one month may gain some immunity, resulting in shorter effusion than bottle-fed infants.</p></li>
 <li><p>The study pairs 24 infants matched by age, sex, socioeconomic status, and medications—one breastfed, one bottle-fed per pair.</p></li>
 <li><p>Outcome measured: duration of middle-ear effusion after the first otitis media episode.</p></li>
-<li><p>The data, from Table 9.11 of Rosner’s <em>Fundamentals of Biostatistics (Eights Edition)</em>, can be read into R with</p>
+<li><p>The data, from Table 9.11 of Rosner’s <em>Fundamentals of Biostatistics (Eighth Edition)</em>, can be read into R with</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>effusion <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>pair, <span class="sc">~</span>breastfed, <span class="sc">~</span>bottle_fed,</span>
@@ -809,10 +809,10 @@ $ shuffled_treatment &lt;chr&gt; "Modified", "Modified", "Conventional", "Modifi
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff =</span> bottle_fed <span class="sc">-</span> breastfed) <span class="ot">-&gt;</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  effusion</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
-<li><p>Plotting the differences, it looks like there are some extreme outliers. There appears to be two bottle-fed babies that had a very long duration of middle-ear effusion.</p>
+<li><p>Plotting the differences, it looks like there are some extreme outliers. There appear to be three bottle-fed babies that had a very long duration of middle-ear effusion.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(effusion, <span class="fu">aes</span>(<span class="at">x =</span> diff)) <span class="sc">+</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"white"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -835,13 +835,13 @@ $ shuffled_treatment &lt;chr&gt; "Modified", "Modified", "Conventional", "Modifi
 </div>
 </div>
 </div></li>
-<li><p>Quite honestly, it might not be that bad to do a <span class="math inline">\(t\)</span>-test on the log-ratio. It appears perhaps too skewed, so I might worry a little. But we’ll try the alternative non-parameteric approach.</p></li>
+<li><p>Quite honestly, it might not be that bad to do a <span class="math inline">\(t\)</span>-test on the log-ratio. It appears perhaps too skewed, so I might worry a little. But we’ll try the alternative non-parametric approach.</p></li>
 </ul>
 </section>
 <section id="main-idea-1" class="level2">
 <h2 class="anchored" data-anchor-id="main-idea-1">Main idea:</h2>
 <ul>
-<li><p>The Wilcoxon signed-rank test is a non-parameteric alternative to the paired (one-sample) <span class="math inline">\(t\)</span>-test.</p></li>
+<li><p>The Wilcoxon signed-rank test is a non-parametric alternative to the paired (one-sample) <span class="math inline">\(t\)</span>-test.</p></li>
 <li><p>Assume data are symmetric (we’ll get back to this), but not necessarily normal (e.g., lots of outliers are possible).</p></li>
 <li><p>Then we want to test</p>
 <ul>
@@ -851,7 +851,7 @@ $ shuffled_treatment &lt;chr&gt; "Modified", "Modified", "Conventional", "Modifi
 </ul></li>
 <li><span class="math inline">\(H_A:\)</span> Median difference is non-zero</li>
 </ul></li>
-<li><p>The idea is almost the very similar as the Wilcoxon rank-sum test with two differences:</p>
+<li><p>The idea is very similar to the Wilcoxon rank-sum test, with two differences:</p>
 <ol type="1">
 <li>Rank the absolute values</li>
 <li>Add up ranks of one of the signs.</li>
@@ -859,7 +859,7 @@ $ shuffled_treatment &lt;chr&gt; "Modified", "Modified", "Conventional", "Modifi
 </ul>
 <p><img src="./06_figures/display_45_sign.svg" class="img-fluid" alt="Graphical display of calculation for signed-rank statistic">&nbsp;</p>
 <ul>
-<li><p>If the null is true and the median is 0, then <span class="math inline">\(R \sim N(\mu_R, \sigma_R^2\)</span> where <span class="math display">\[
+<li><p>If the null is true and the median is 0, then <span class="math inline">\(R \sim N(\mu_R, \sigma_R^2)\)</span> where <span class="math display">\[
 \mu_R = \frac{n(n+1)}{4}\\
 \sigma_R^2 = \frac{n(n+1)(2n+1)}{24}
 \]</span></p></li>
@@ -1428,7 +1428,7 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 </div>
 </div>
 </div>
-<p>Calculate the rank-sum statistic.</p>
+<p>Calculate the signed-rank statistic.</p>
 </div>
 <div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
 <p>Rearranging, we get this table:</p>
@@ -2010,7 +2010,7 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 1        7       231  0.0181        1        30 Wilcoxon signed ran… two.sided  </code></pre>
 </div>
 </div></li>
-<li><p>Thus, under the assumption of symmetry, we have evidence that breast feeding typically has shorter mid-ear effusion durations than formula babies (<span class="math inline">\(p\)</span> = 0.018). We estimate the median duration to be 7 days shorter for breastfed babies, with a 95% confidence interval of 1 day shorter to 30 days shorter.</p></li>
+<li><p>Thus, under the assumption of symmetry, we have evidence that breastfed babies typically have shorter mid-ear effusion durations than formula-fed babies (<span class="math inline">\(p\)</span> = 0.018). We estimate the median duration to be 7 days shorter for breastfed babies, with a 95% confidence interval of 1 day shorter to 30 days shorter.</p></li>
 </ul>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false" href="">Solution</a></li></ul>
@@ -2051,7 +2051,7 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 <section id="when-symmetry-is-violated" class="level2">
 <h2 class="anchored" data-anchor-id="when-symmetry-is-violated">When symmetry is violated</h2>
 <ul>
-<li><p>If you are randomly assigning treatments to pairs of units (e.g., if we would have randomly assigned which baby in a pair gets formula and which gets breast feeding), then the differences under the null are theoretically symmetric about 0. See Section 6.10 of <span class="citation" data-cites="lehmann2005testing">Lehmann and Romano (<a href="#ref-lehmann2005testing" role="doc-biblioref">2005</a>)</span> (I am including a reference because I don’t think this is often taught).</p></li>
+<li><p>If you are randomly assigning treatments to pairs of units (e.g., if we had randomly assigned which baby in a pair gets formula and which gets breast milk), then the differences under the null are theoretically symmetric about 0. See Section 6.10 of <span class="citation" data-cites="lehmann2005testing">Lehmann and Romano (<a href="#ref-lehmann2005testing" role="doc-biblioref">2005</a>)</span> (I am including a reference because I don’t think this is often taught).</p></li>
 <li><p>Thus, under randomized experiments, hypotheses are:</p>
 <ul>
 <li><span class="math inline">\(H_0:\)</span> No treatment effect</li>
@@ -2059,7 +2059,7 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 </ul></li>
 <li><p>Thus, under random assignment in paired designs, the Wilcoxon signed-rank test exactly tests for what we are interested in.</p></li>
 <li><p>In observational studies, if symmetry is violated, the Wilcoxon signed-rank test actually tests the null that the <em>pseudomedian</em> is 0 versus the alternative that it is non-zero.</p></li>
-<li><p>The <strong>pseudomedian</strong> is the median of the distribution of <span class="math inline">\((X_1 + X_2)/2\)</span> where <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span> are drawn indpendently from the original distribution.</p></li>
+<li><p>The <strong>pseudomedian</strong> is the median of the distribution of <span class="math inline">\((X_1 + X_2)/2\)</span> where <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span> are drawn independently from the original distribution.</p></li>
 <li><p>If the distribution is symmetric, then the pseudomedian is the same as the median. Under skew, they differ.</p></li>
 <li><p>E.g., we can approximate the pseudomedian of the exponential distribution (a skewed distribution) by</p>
 <div class="cell" data-layout-align="center">
@@ -2095,7 +2095,7 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 <li>Count the number of positive values. Call this count <span class="math inline">\(X\)</span>.</li>
 <li>Count the number of non-zero values. Call this count <span class="math inline">\(n\)</span>.</li>
 <li>Under the null, <span class="math inline">\(X \sim \mathrm{Binom}(n, 1/2)\)</span></li>
-<li>Run a test for proportions (STAT-202 stuff) using <span class="math inline">\(X\)</span> with the the null that <span class="math inline">\(p = 0.5\)</span>.</li>
+<li>Run a test for proportions (STAT-202 stuff) using <span class="math inline">\(X\)</span> with the null that <span class="math inline">\(p = 0.5\)</span>.</li>
 </ul></li>
 <li><p>E.g., from our effusion data, the number of positive and number of non-zero values are:</p>
 <div class="cell" data-layout-align="center">
@@ -2122,7 +2122,7 @@ Z = \frac{R - \mu_R}{\sigma_R} \sim N(0,1)
 1    0.696        16  0.0931        23    0.471     0.868 Exact bin… two.sided  </code></pre>
 </div>
 </div></li>
-<li><p>This shows us we have only week evidence of a non-zero median.</p></li>
+<li><p>This shows us we have only weak evidence of a non-zero median.</p></li>
 <li><p>This is an example of how the sign test has <strong>very low power</strong>, so folks don’t like to use it.</p></li>
 <li><p>But it has the fewest assumptions (just independence of units) of a test that you will typically see.</p></li>
 </ul>
