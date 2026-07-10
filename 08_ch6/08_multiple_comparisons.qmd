@@ -46,14 +46,10 @@ case0601 <- read_csv("https://dcgerard.github.io/stat_302/data/case0601.csv")
 
 ## $p$-Values and False Positives
 
-A $p$-value is the probability of seeing data as extreme as what was observed
-**if $H_0$ were true**. When $\alpha = 0.05$ and $H_0$ is true, there is a 5%
-chance of a false positive (rejecting $H_0$) in any single test.
-
-If we run $m$ independent tests, all with true null hypotheses, and reject
-each at $\alpha = 0.05$, we would expect to falsely reject $0.05m$ of them.
-With $m = 21$ pairwise tests (as in the Spock data), that's about one
-spurious rejection on average — even when all means are identical.
+- $p$-value = probability of data as extreme as observed **if $H_0$ were true**.
+- Single test at $\alpha = 0.05$ with $H_0$ true $\Rightarrow$ 5% chance of a false positive.
+- Run $m$ tests (all $H_0$ true), reject each at $\alpha$ $\Rightarrow$ expect $0.05m$ false rejections.
+- $m = 21$ pairwise tests $\Rightarrow$ ~1 spurious rejection on average, even when all means equal.
 
 ## Simulation Illustration
 
@@ -65,14 +61,14 @@ pvalue <- 2 * pt(-abs(tvec), df = 20)
 mean(pvalue < 0.05)
 ```
 
-Even though every test was simulated under $H_0$, roughly 5% of the 1,000
-$p$-values are below 0.05.
+- All 1,000 tests simulated under $H_0$.
+- Still ~5% of $p$-values fall below 0.05.
 
 <img src="https://imgs.xkcd.com/comics/significant.png" alt="XKCD graphic depicting p-value hacking">
 
 ## Data Snooping
 
-Consider the following five-group dataset where all means are truly equal:
+- Five-group dataset below — all means are **truly equal**.
 
 ```{r}
 #| label: snoop-data
@@ -87,31 +83,28 @@ ggplot(df_snoop, aes(x = x, y = y)) +
        title = "Five groups — all means truly equal")
 ```
 
-Looking at the plot, groups 1 and 3 appear to have the largest difference.
-If we tested only that pair after peeking at the data, the naive $p$-value
-would be misleadingly small — we selected the pair *because* it looked
-extreme:
+- Groups 1 and 3 look most different in the plot.
+- Test only that pair *after* peeking $\Rightarrow$ misleadingly small $p$-value.
+- Problem: we picked the pair *because* it looked extreme.
 
 ```{r}
 #| label: snoop-pvals
 pairwise.t.test(df_snoop$y, df_snoop$x, p.adjust.method = "none")
 ```
 
-**Data snooping** occurs when you select which hypotheses to test *after*
-looking at the data. It inflates the Type I error rate beyond $\alpha$.
-
-A **planned comparison** is a hypothesis test chosen *before* looking at the
-data — based on scientific reasoning, not on what the data suggest.
+- **Data snooping**: choosing which hypotheses to test *after* seeing the data.
+    - Inflates Type I error rate beyond $\alpha$.
+- **Planned comparison**: hypothesis chosen *before* seeing the data.
+    - Based on scientific reasoning, not on what the data suggest.
 
 ---
 
 # Case Study: Physical Handicaps and Perceived Qualifications
 
-How do physical handicaps affect people's perception of employment
-qualifications? Researchers prepared five videotaped job interviews in which
-the same actor appeared with a different apparent handicap in each tape. Seventy
-undergraduates were randomly assigned to view one tape and rate the applicant's
-qualifications on a 0–10 scale.
+- **Question:** do physical handicaps affect perceived job qualifications?
+- **Design:** five videotaped interviews, same actor, different apparent handicap in each.
+- 70 undergraduates randomly assigned to view one tape.
+- Rated the applicant's qualifications on a 0–10 scale.
 
 ```{r}
 #| label: handicap-load
@@ -127,7 +120,7 @@ ggplot(case0601, aes(x = Handicap, y = Score)) +
   labs(y = "Qualification score (0–10)")
 ```
 
-Running all $\binom{5}{2} = 10$ pairwise tests without adjustment:
+All $\binom{5}{2} = 10$ pairwise tests, **no adjustment**:
 
 ```{r}
 #| label: handicap-unadj
@@ -136,19 +129,16 @@ pairwise.t.test(x = case0601$Score,
                 p.adjust.method = "none")
 ```
 
-A handful of $p$-values are below 0.05. But we ran 10 tests simultaneously —
-even if all null hypotheses were true we would expect $10 \times 0.05 = 0.5$
-false rejections on average. Are these moderate $p$-values genuine signals or
-lucky noise?
+- A handful of $p$-values are below 0.05.
+- But we ran 10 tests at once: even under all-true nulls, expect $10 \times 0.05 = 0.5$ false rejections.
+- **Question:** genuine signal, or lucky noise?
 
 ---
 
 # Family-Wise Error Rate
 
-The **family-wise error rate (FWER)** is the probability of making *at least
-one* Type I error across a family of hypothesis tests.
-
-The **adjusted $p$-value** for a test in a family is defined so that:
+- **Family-wise error rate (FWER):** probability of *at least one* Type I error across the family of tests.
+- **Adjusted $p$-value:** defined so that
 
 > Rejecting when the adjusted $p$-value $< \alpha$ guarantees that the FWER
 > is at most $\alpha$.
@@ -159,22 +149,20 @@ The **adjusted $p$-value** for a test in a family is defined so that:
 
 ## Bonferroni
 
-**Procedure:** Multiply each raw $p$-value by $m$ (the total number of tests).
+- **Procedure:** multiply each raw $p$-value by $m$ (total number of tests).
+- **Conditions:** any family of pre-planned tests; need not be pairwise.
 
-**Conditions:** Applies to any family of pre-planned tests; tests need not be
-pairwise comparisons.
+**Proof that FWER $\leq \alpha$:**
 
-**Proof that the FWER $\leq \alpha$:** Let $m_0$ be the number of tests where
-$H_0$ is true and $p_i$ the raw $p$-value for test $i$.
+- Let $m_0$ = number of tests with $H_0$ true; $p_i$ = raw $p$-value for test $i$.
 
 $$\text{FWER} = Pr(mp_1 \leq \alpha \text{ or } \cdots \text{ or } mp_{m_0} \leq \alpha)$$
 
-The key inequality is the **Bonferroni (union) bound**: for any events
-$A_1, \ldots, A_k$,
+- Key tool — the **Bonferroni (union) bound**: for any events $A_1, \ldots, A_k$,
 
 $$Pr(A_1 \cup A_2 \cup \cdots \cup A_k) \leq Pr(A_1) + Pr(A_2) + \cdots + Pr(A_k)$$
 
-illustrated below for three events:
+- Illustrated below for three events:
 
 ::: {layout-ncol=2}
 ![Individual probabilities](bonferroni_1.svg)
@@ -182,7 +170,7 @@ illustrated below for three events:
 ![Union is at most the sum](bonferroni_2.svg)
 :::
 
-Applying this bound:
+- Applying the bound:
 
 $$\text{FWER} \leq Pr(mp_1 \leq \alpha) + \cdots + Pr(mp_{m_0} \leq \alpha)
 = \frac{\alpha}{m} + \cdots + \frac{\alpha}{m}
@@ -191,27 +179,17 @@ $$\text{FWER} \leq Pr(mp_1 \leq \alpha) + \cdots + Pr(mp_{m_0} \leq \alpha)
 
 ## Holm
 
-**Procedure:** Order the raw $p$-values from smallest to largest:
-$p_{(1)} \leq p_{(2)} \leq \cdots \leq p_{(m)}$. The Holm-adjusted $p$-value
-for the $k$th smallest is $\min\bigl((m - k + 1) \cdot p_{(k)},\; 1\bigr)$,
-applied sequentially so that adjusted values are non-decreasing.
-
-**Conditions:** Same as Bonferroni — any pre-planned tests.
-
-**Advantage:** Holm is uniformly more powerful than Bonferroni (it rejects at
-least as often) while still controlling the FWER at $\alpha$.
+- **Procedure:** order raw $p$-values $p_{(1)} \leq p_{(2)} \leq \cdots \leq p_{(m)}$.
+    - $k$th smallest adjusted to $\min\bigl((m - k + 1) \cdot p_{(k)},\; 1\bigr)$.
+    - Applied sequentially so adjusted values are non-decreasing.
+- **Conditions:** same as Bonferroni — any pre-planned tests.
+- **Advantage:** uniformly more powerful than Bonferroni (rejects at least as often), still controls FWER at $\alpha$.
 
 ## Tukey-Kramer
 
-**Procedure:** Uses the *studentized range distribution* to derive exact
-$p$-values and confidence intervals for all $\binom{I}{2}$ pairwise
-comparisons simultaneously.
-
-**Conditions:** Only valid for **all pairwise comparisons** in a balanced or
-unbalanced one-way ANOVA (pre-planned).
-
-**Advantage:** Smaller adjusted $p$-values than Bonferroni or Holm when the
-goal is all pairwise tests.
+- **Procedure:** uses the *studentized range distribution* for exact $p$-values and CIs across all $\binom{I}{2}$ pairwise comparisons at once.
+- **Conditions:** only valid for **all pairwise comparisons** in a one-way ANOVA (balanced or unbalanced, pre-planned).
+- **Advantage:** smaller adjusted $p$-values than Bonferroni/Holm when goal is all pairwise tests.
 
 ---
 
@@ -244,8 +222,8 @@ pairwise.t.test(x = case0601$Score,
 
 ## Tukey-Kramer Adjustment
 
-`TukeyHSD()` takes an `aov()` object and returns all pairwise comparisons
-with Tukey-adjusted $p$-values and confidence intervals:
+- `TukeyHSD()` takes an `aov()` object.
+- Returns all pairwise comparisons with Tukey-adjusted $p$-values and CIs.
 
 ```{r}
 #| label: tukey
@@ -262,9 +240,8 @@ plot(tout)
 
 ## Adjusted Confidence Intervals
 
-Every confidence interval has the form
-$\text{estimate} \pm \text{multiplier} \times SE$.
-Adjusting for multiple comparisons means using a **larger multiplier**:
+- Every CI has the form $\text{estimate} \pm \text{multiplier} \times SE$.
+- Adjusting for multiple comparisons = use a **larger multiplier**.
 
 | Method | Multiplier |
 |:-------|:-----------|
@@ -272,8 +249,7 @@ Adjusting for multiple comparisons means using a **larger multiplier**:
 | Bonferroni ($m$ tests) | $t_{n-I}(1 - \alpha/(2m))$ |
 | Tukey-Kramer | Studentized-range quantile (automatic via `TukeyHSD()`) |
 
-A larger multiplier means wider intervals — correctly reflecting the
-additional uncertainty from testing many hypotheses.
+- Larger multiplier $\Rightarrow$ wider intervals — reflects the extra uncertainty from testing many hypotheses.
 
 ::: {.callout-note}
 ## Which method to use?

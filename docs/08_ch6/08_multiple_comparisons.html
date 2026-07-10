@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-25">
+<meta name="dcterms.date" content="2026-07-10">
 
 <title>Multiple Comparisons – Stat 302: Intermediate Statistics</title>
 <style>
@@ -231,7 +231,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 25, 2026</p>
+      <p class="date">July 10, 2026</p>
     </div>
   </div>
   
@@ -261,8 +261,12 @@ window.Quarto = {
 <h1>The Multiple Testing Problem</h1>
 <section id="p-values-and-false-positives" class="level2">
 <h2 class="anchored" data-anchor-id="p-values-and-false-positives"><span class="math inline">\(p\)</span>-Values and False Positives</h2>
-<p>A <span class="math inline">\(p\)</span>-value is the probability of seeing data as extreme as what was observed <strong>if <span class="math inline">\(H_0\)</span> were true</strong>. When <span class="math inline">\(\alpha = 0.05\)</span> and <span class="math inline">\(H_0\)</span> is true, there is a 5% chance of a false positive (rejecting <span class="math inline">\(H_0\)</span>) in any single test.</p>
-<p>If we run <span class="math inline">\(m\)</span> independent tests, all with true null hypotheses, and reject each at <span class="math inline">\(\alpha = 0.05\)</span>, we would expect to falsely reject <span class="math inline">\(0.05m\)</span> of them. With <span class="math inline">\(m = 21\)</span> pairwise tests (as in the Spock data), that’s about one spurious rejection on average — even when all means are identical.</p>
+<ul>
+<li><span class="math inline">\(p\)</span>-value = probability of data as extreme as observed <strong>if <span class="math inline">\(H_0\)</span> were true</strong>.</li>
+<li>Single test at <span class="math inline">\(\alpha = 0.05\)</span> with <span class="math inline">\(H_0\)</span> true <span class="math inline">\(\Rightarrow\)</span> 5% chance of a false positive.</li>
+<li>Run <span class="math inline">\(m\)</span> tests (all <span class="math inline">\(H_0\)</span> true), reject each at <span class="math inline">\(\alpha\)</span> <span class="math inline">\(\Rightarrow\)</span> expect <span class="math inline">\(0.05m\)</span> false rejections.</li>
+<li><span class="math inline">\(m = 21\)</span> pairwise tests <span class="math inline">\(\Rightarrow\)</span> ~1 spurious rejection on average, even when all means equal.</li>
+</ul>
 </section>
 <section id="simulation-illustration" class="level2">
 <h2 class="anchored" data-anchor-id="simulation-illustration">Simulation Illustration</h2>
@@ -275,12 +279,17 @@ window.Quarto = {
 <pre><code>[1] 0.062</code></pre>
 </div>
 </div>
-<p>Even though every test was simulated under <span class="math inline">\(H_0\)</span>, roughly 5% of the 1,000 <span class="math inline">\(p\)</span>-values are below 0.05.</p>
+<ul>
+<li>All 1,000 tests simulated under <span class="math inline">\(H_0\)</span>.</li>
+<li>Still ~5% of <span class="math inline">\(p\)</span>-values fall below 0.05.</li>
+</ul>
 <p><img src="https://imgs.xkcd.com/comics/significant.png" alt="XKCD graphic depicting p-value hacking"></p>
 </section>
 <section id="data-snooping" class="level2">
 <h2 class="anchored" data-anchor-id="data-snooping">Data Snooping</h2>
-<p>Consider the following five-group dataset where all means are truly equal:</p>
+<ul>
+<li>Five-group dataset below — all means are <strong>truly equal</strong>.</li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -290,7 +299,11 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Looking at the plot, groups 1 and 3 appear to have the largest difference. If we tested only that pair after peeking at the data, the naive <span class="math inline">\(p\)</span>-value would be misleadingly small — we selected the pair <em>because</em> it looked extreme:</p>
+<ul>
+<li>Groups 1 and 3 look most different in the plot.</li>
+<li>Test only that pair <em>after</em> peeking <span class="math inline">\(\Rightarrow\)</span> misleadingly small <span class="math inline">\(p\)</span>-value.</li>
+<li>Problem: we picked the pair <em>because</em> it looked extreme.</li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.t.test</span>(df_snoop<span class="sc">$</span>y, df_snoop<span class="sc">$</span>x, <span class="at">p.adjust.method =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -308,14 +321,27 @@ data:  df_snoop$y and df_snoop$x
 P value adjustment method: none </code></pre>
 </div>
 </div>
-<p><strong>Data snooping</strong> occurs when you select which hypotheses to test <em>after</em> looking at the data. It inflates the Type I error rate beyond <span class="math inline">\(\alpha\)</span>.</p>
-<p>A <strong>planned comparison</strong> is a hypothesis test chosen <em>before</em> looking at the data — based on scientific reasoning, not on what the data suggest.</p>
+<ul>
+<li><strong>Data snooping</strong>: choosing which hypotheses to test <em>after</em> seeing the data.
+<ul>
+<li>Inflates Type I error rate beyond <span class="math inline">\(\alpha\)</span>.</li>
+</ul></li>
+<li><strong>Planned comparison</strong>: hypothesis chosen <em>before</em> seeing the data.
+<ul>
+<li>Based on scientific reasoning, not on what the data suggest.</li>
+</ul></li>
+</ul>
 <hr>
 </section>
 </section>
 <section id="case-study-physical-handicaps-and-perceived-qualifications" class="level1">
 <h1>Case Study: Physical Handicaps and Perceived Qualifications</h1>
-<p>How do physical handicaps affect people’s perception of employment qualifications? Researchers prepared five videotaped job interviews in which the same actor appeared with a different apparent handicap in each tape. Seventy undergraduates were randomly assigned to view one tape and rate the applicant’s qualifications on a 0–10 scale.</p>
+<ul>
+<li><strong>Question:</strong> do physical handicaps affect perceived job qualifications?</li>
+<li><strong>Design:</strong> five videotaped interviews, same actor, different apparent handicap in each.</li>
+<li>70 undergraduates randomly assigned to view one tape.</li>
+<li>Rated the applicant’s qualifications on a 0–10 scale.</li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>case0601 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0601.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -331,7 +357,7 @@ P value adjustment method: none </code></pre>
 </div>
 </div>
 </div>
-<p>Running all <span class="math inline">\(\binom{5}{2} = 10\)</span> pairwise tests without adjustment:</p>
+<p>All <span class="math inline">\(\binom{5}{2} = 10\)</span> pairwise tests, <strong>no adjustment</strong>:</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.t.test</span>(<span class="at">x =</span> case0601<span class="sc">$</span>Score,</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">g =</span> case0601<span class="sc">$</span>Handicap,</span>
@@ -351,13 +377,19 @@ Wheelchair 0.1433  0.3520   0.0401  0.4756
 P value adjustment method: none </code></pre>
 </div>
 </div>
-<p>A handful of <span class="math inline">\(p\)</span>-values are below 0.05. But we ran 10 tests simultaneously — even if all null hypotheses were true we would expect <span class="math inline">\(10 \times 0.05 = 0.5\)</span> false rejections on average. Are these moderate <span class="math inline">\(p\)</span>-values genuine signals or lucky noise?</p>
+<ul>
+<li>A handful of <span class="math inline">\(p\)</span>-values are below 0.05.</li>
+<li>But we ran 10 tests at once: even under all-true nulls, expect <span class="math inline">\(10 \times 0.05 = 0.5\)</span> false rejections.</li>
+<li><strong>Question:</strong> genuine signal, or lucky noise?</li>
+</ul>
 <hr>
 </section>
 <section id="family-wise-error-rate" class="level1">
 <h1>Family-Wise Error Rate</h1>
-<p>The <strong>family-wise error rate (FWER)</strong> is the probability of making <em>at least one</em> Type I error across a family of hypothesis tests.</p>
-<p>The <strong>adjusted <span class="math inline">\(p\)</span>-value</strong> for a test in a family is defined so that:</p>
+<ul>
+<li><strong>Family-wise error rate (FWER):</strong> probability of <em>at least one</em> Type I error across the family of tests.</li>
+<li><strong>Adjusted <span class="math inline">\(p\)</span>-value:</strong> defined so that</li>
+</ul>
 <blockquote class="blockquote">
 <p>Rejecting when the adjusted <span class="math inline">\(p\)</span>-value <span class="math inline">\(&lt; \alpha\)</span> guarantees that the FWER is at most <span class="math inline">\(\alpha\)</span>.</p>
 </blockquote>
@@ -367,13 +399,22 @@ P value adjustment method: none </code></pre>
 <h1>Correction Procedures</h1>
 <section id="bonferroni" class="level2">
 <h2 class="anchored" data-anchor-id="bonferroni">Bonferroni</h2>
-<p><strong>Procedure:</strong> Multiply each raw <span class="math inline">\(p\)</span>-value by <span class="math inline">\(m\)</span> (the total number of tests).</p>
-<p><strong>Conditions:</strong> Applies to any family of pre-planned tests; tests need not be pairwise comparisons.</p>
-<p><strong>Proof that the FWER <span class="math inline">\(\leq \alpha\)</span>:</strong> Let <span class="math inline">\(m_0\)</span> be the number of tests where <span class="math inline">\(H_0\)</span> is true and <span class="math inline">\(p_i\)</span> the raw <span class="math inline">\(p\)</span>-value for test <span class="math inline">\(i\)</span>.</p>
+<ul>
+<li><strong>Procedure:</strong> multiply each raw <span class="math inline">\(p\)</span>-value by <span class="math inline">\(m\)</span> (total number of tests).</li>
+<li><strong>Conditions:</strong> any family of pre-planned tests; need not be pairwise.</li>
+</ul>
+<p><strong>Proof that FWER <span class="math inline">\(\leq \alpha\)</span>:</strong></p>
+<ul>
+<li>Let <span class="math inline">\(m_0\)</span> = number of tests with <span class="math inline">\(H_0\)</span> true; <span class="math inline">\(p_i\)</span> = raw <span class="math inline">\(p\)</span>-value for test <span class="math inline">\(i\)</span>.</li>
+</ul>
 <p><span class="math display">\[\text{FWER} = Pr(mp_1 \leq \alpha \text{ or } \cdots \text{ or } mp_{m_0} \leq \alpha)\]</span></p>
-<p>The key inequality is the <strong>Bonferroni (union) bound</strong>: for any events <span class="math inline">\(A_1, \ldots, A_k\)</span>,</p>
+<ul>
+<li>Key tool — the <strong>Bonferroni (union) bound</strong>: for any events <span class="math inline">\(A_1, \ldots, A_k\)</span>,</li>
+</ul>
 <p><span class="math display">\[Pr(A_1 \cup A_2 \cup \cdots \cup A_k) \leq Pr(A_1) + Pr(A_2) + \cdots + Pr(A_k)\]</span></p>
-<p>illustrated below for three events:</p>
+<ul>
+<li>Illustrated below for three events:</li>
+</ul>
 <div class="quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
@@ -394,7 +435,9 @@ P value adjustment method: none </code></pre>
 </div>
 </div>
 </div>
-<p>Applying this bound:</p>
+<ul>
+<li>Applying the bound:</li>
+</ul>
 <p><span class="math display">\[\text{FWER} \leq Pr(mp_1 \leq \alpha) + \cdots + Pr(mp_{m_0} \leq \alpha)
 = \frac{\alpha}{m} + \cdots + \frac{\alpha}{m}
 = \frac{m_0 \alpha}{m}
@@ -402,15 +445,23 @@ P value adjustment method: none </code></pre>
 </section>
 <section id="holm" class="level2">
 <h2 class="anchored" data-anchor-id="holm">Holm</h2>
-<p><strong>Procedure:</strong> Order the raw <span class="math inline">\(p\)</span>-values from smallest to largest: <span class="math inline">\(p_{(1)} \leq p_{(2)} \leq \cdots \leq p_{(m)}\)</span>. The Holm-adjusted <span class="math inline">\(p\)</span>-value for the <span class="math inline">\(k\)</span>th smallest is <span class="math inline">\(\min\bigl((m - k + 1) \cdot p_{(k)},\; 1\bigr)\)</span>, applied sequentially so that adjusted values are non-decreasing.</p>
-<p><strong>Conditions:</strong> Same as Bonferroni — any pre-planned tests.</p>
-<p><strong>Advantage:</strong> Holm is uniformly more powerful than Bonferroni (it rejects at least as often) while still controlling the FWER at <span class="math inline">\(\alpha\)</span>.</p>
+<ul>
+<li><strong>Procedure:</strong> order raw <span class="math inline">\(p\)</span>-values <span class="math inline">\(p_{(1)} \leq p_{(2)} \leq \cdots \leq p_{(m)}\)</span>.
+<ul>
+<li><span class="math inline">\(k\)</span>th smallest adjusted to <span class="math inline">\(\min\bigl((m - k + 1) \cdot p_{(k)},\; 1\bigr)\)</span>.</li>
+<li>Applied sequentially so adjusted values are non-decreasing.</li>
+</ul></li>
+<li><strong>Conditions:</strong> same as Bonferroni — any pre-planned tests.</li>
+<li><strong>Advantage:</strong> uniformly more powerful than Bonferroni (rejects at least as often), still controls FWER at <span class="math inline">\(\alpha\)</span>.</li>
+</ul>
 </section>
 <section id="tukey-kramer" class="level2">
 <h2 class="anchored" data-anchor-id="tukey-kramer">Tukey-Kramer</h2>
-<p><strong>Procedure:</strong> Uses the <em>studentized range distribution</em> to derive exact <span class="math inline">\(p\)</span>-values and confidence intervals for all <span class="math inline">\(\binom{I}{2}\)</span> pairwise comparisons simultaneously.</p>
-<p><strong>Conditions:</strong> Only valid for <strong>all pairwise comparisons</strong> in a balanced or unbalanced one-way ANOVA (pre-planned).</p>
-<p><strong>Advantage:</strong> Smaller adjusted <span class="math inline">\(p\)</span>-values than Bonferroni or Holm when the goal is all pairwise tests.</p>
+<ul>
+<li><strong>Procedure:</strong> uses the <em>studentized range distribution</em> for exact <span class="math inline">\(p\)</span>-values and CIs across all <span class="math inline">\(\binom{I}{2}\)</span> pairwise comparisons at once.</li>
+<li><strong>Conditions:</strong> only valid for <strong>all pairwise comparisons</strong> in a one-way ANOVA (balanced or unbalanced, pre-planned).</li>
+<li><strong>Advantage:</strong> smaller adjusted <span class="math inline">\(p\)</span>-values than Bonferroni/Holm when goal is all pairwise tests.</li>
+</ul>
 <hr>
 </section>
 </section>
@@ -466,7 +517,10 @@ P value adjustment method: holm </code></pre>
 </section>
 <section id="tukey-kramer-adjustment" class="level2">
 <h2 class="anchored" data-anchor-id="tukey-kramer-adjustment">Tukey-Kramer Adjustment</h2>
-<p><code>TukeyHSD()</code> takes an <code>aov()</code> object and returns all pairwise comparisons with Tukey-adjusted <span class="math inline">\(p\)</span>-values and confidence intervals:</p>
+<ul>
+<li><code>TukeyHSD()</code> takes an <code>aov()</code> object.</li>
+<li>Returns all pairwise comparisons with Tukey-adjusted <span class="math inline">\(p\)</span>-values and CIs.</li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>tout <span class="ot">&lt;-</span> <span class="fu">TukeyHSD</span>(aout_handicap)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>tout</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -503,7 +557,10 @@ Wheelchair-None      0.4428571 -1.2888756  2.1745899 0.9517374</code></pre>
 </section>
 <section id="adjusted-confidence-intervals" class="level2">
 <h2 class="anchored" data-anchor-id="adjusted-confidence-intervals">Adjusted Confidence Intervals</h2>
-<p>Every confidence interval has the form <span class="math inline">\(\text{estimate} \pm \text{multiplier} \times SE\)</span>. Adjusting for multiple comparisons means using a <strong>larger multiplier</strong>:</p>
+<ul>
+<li>Every CI has the form <span class="math inline">\(\text{estimate} \pm \text{multiplier} \times SE\)</span>.</li>
+<li>Adjusting for multiple comparisons = use a <strong>larger multiplier</strong>.</li>
+</ul>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 40%">
@@ -530,7 +587,9 @@ Wheelchair-None      0.4428571 -1.2888756  2.1745899 0.9517374</code></pre>
 </tr>
 </tbody>
 </table>
-<p>A larger multiplier means wider intervals — correctly reflecting the additional uncertainty from testing many hypotheses.</p>
+<ul>
+<li>Larger multiplier <span class="math inline">\(\Rightarrow\)</span> wider intervals — reflects the extra uncertainty from testing many hypotheses.</li>
+</ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">

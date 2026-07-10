@@ -885,7 +885,7 @@ In the Spock case, the one where each judge has its own mean.
 
 In the longevity case, the one where each diet has its own mean.
 
-The reduced models might be wrong. This would violate the indepdendence assumption, since residuals within groups would be correlated due to the group structure.
+The reduced models might be wrong. This would violate the independence assumption, since residuals within groups would be correlated due to the group structure.
 :::
 
 ## Residual Plots in R
