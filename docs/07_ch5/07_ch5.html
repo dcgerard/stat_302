@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-07-09">
+<meta name="dcterms.date" content="2026-07-10">
 
 <title>One-Way ANOVA – Stat 302: Intermediate Statistics</title>
 <style>
@@ -258,7 +258,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 9, 2026</p>
+      <p class="date">July 10, 2026</p>
     </div>
   </div>
   
@@ -277,8 +277,9 @@ window.Quarto = {
 <section id="learning-objectives" class="level1">
 <h1>Learning Objectives</h1>
 <ul>
+<li>Chapter 5</li>
 <li>Explain the one-way ANOVA model for observational studies and randomized experiments.</li>
-<li>State and interpret the nested hypotheses.</li>
+<li>State and interpret nested hypotheses.</li>
 <li>Compute and interpret the pooled variance estimate <span class="math inline">\(s_p^2\)</span>.</li>
 <li>Conduct pairwise <span class="math inline">\(t\)</span>-tests using the pooled variance.</li>
 <li>Set up and interpret the ANOVA <span class="math inline">\(F\)</span>-test using the extra-sum-of-squares framework.</li>
@@ -291,13 +292,17 @@ window.Quarto = {
 <section id="case-studies" class="level1">
 <h1>Case Studies</h1>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>case0501 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0501.csv"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>case0502 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0502.csv"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Judge =</span> <span class="fu">factor</span>(Judge))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>case0501 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0501.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Diet =</span> <span class="fu">factor</span>(Diet, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"NP"</span>, <span class="st">"N/N85"</span>, <span class="st">"N/R50"</span>, <span class="st">"R/R50"</span>, <span class="st">"lopro"</span>, <span class="st">"N/R40"</span>)))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>case0502 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0502.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Judge =</span> <span class="fu">factor</span>(Judge, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Spock's"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>, <span class="st">"E"</span>, <span class="st">"F"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="case-study-5.1.1-diet-restriction-and-longevity" class="level2">
 <h2 class="anchored" data-anchor-id="case-study-5.1.1-diet-restriction-and-longevity">Case Study 5.1.1: Diet Restriction and Longevity</h2>
-<p>A series of studies found that restricting caloric intake can dramatically increase life expectancy in animals. In one randomized experiment, female mice were assigned at random to one of six diet groups:</p>
+<ul>
+<li>Restricting caloric intake can dramatically increase life expectancy in animals.</li>
+<li>Randomized experiment: female mice assigned at random to one of six diet groups.</li>
+</ul>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 53%">
@@ -356,10 +361,9 @@ window.Quarto = {
 </ul>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>case0501 <span class="sc">|&gt;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Diet =</span> <span class="fu">factor</span>(Diet, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"NP"</span>, <span class="st">"N/N85"</span>, <span class="st">"N/R50"</span>, <span class="st">"R/R50"</span>, <span class="st">"lopro"</span>, <span class="st">"N/R40"</span>))) <span class="sc">|&gt;</span> <span class="do">## Relevel to get boxplots in correct order</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Diet, <span class="at">y =</span> Lifetime)) <span class="sc">+</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Lifetime (months)"</span>, <span class="at">x =</span> <span class="st">"Diet group"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Diet, <span class="at">y =</span> Lifetime)) <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Lifetime (months)"</span>, <span class="at">x =</span> <span class="st">"Diet group"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -370,14 +374,13 @@ window.Quarto = {
 </div>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>case0501 <span class="sc">|&gt;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Diet =</span> <span class="fu">factor</span>(Diet, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"NP"</span>, <span class="st">"N/N85"</span>, <span class="st">"N/R50"</span>, <span class="st">"R/R50"</span>, <span class="st">"lopro"</span>, <span class="st">"N/R40"</span>))) <span class="sc">|&gt;</span> <span class="do">## Relevel to get boxplots in correct order</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Diet) <span class="sc">|&gt;</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n       =</span> <span class="fu">n</span>(),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">Mean    =</span> <span class="fu">mean</span>(Lifetime),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">SD      =</span> <span class="fu">sd</span>(Lifetime),</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">Median  =</span> <span class="fu">median</span>(Lifetime)) <span class="sc">|&gt;</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), <span class="at">decimals =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Diet) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n       =</span> <span class="fu">n</span>(),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">Mean    =</span> <span class="fu">mean</span>(Lifetime),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">SD      =</span> <span class="fu">sd</span>(Lifetime),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">Median  =</span> <span class="fu">median</span>(Lifetime)) <span class="sc">|&gt;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), <span class="at">decimals =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="jsgbozvhxc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#jsgbozvhxc table {
@@ -891,9 +894,14 @@ window.Quarto = {
 </section>
 <section id="case-study-5.1.2-the-spock-conspiracy-trial" class="level2">
 <h2 class="anchored" data-anchor-id="case-study-5.1.2-the-spock-conspiracy-trial">Case Study 5.1.2: The Spock Conspiracy Trial</h2>
-<p>In 1968, Dr.&nbsp;Benjamin Spock was tried in Boston on charges related to encouraging draft resistance during the Vietnam War. The defense argued that the Spock trial judge (referred to here as “Spock’s” judge) systematically underrepresented women on jury venires. They compared this judge’s venires with those of six other Boston-area district judges (labeled A–F).</p>
-<p>This is an <strong>observational study</strong>: judge assignment to cases was not randomized.</p>
-<p>The response is <code>Percent</code> — the percentage of women on each venire. We are interested in:</p>
+<ul>
+<li>1968: Dr.&nbsp;Benjamin Spock tried in Boston for encouraging draft resistance (Vietnam War).</li>
+<li>Defense argued the trial judge (“Spock’s judge”) systematically underrepresented women on jury venires.</li>
+<li>Compared this judge’s venires with six other Boston-area district judges (A–F).</li>
+<li><strong>Observational study</strong>: judge assignment to cases was not randomized.</li>
+<li>Response: <code>Percent</code> = percentage of women on each venire.</li>
+</ul>
+<p>We are interested in:</p>
 <ol type="1">
 <li>Is Spock’s judge’s mean percent-women lower than the other judges?</li>
 <li>Are the other judges’ means all the same?
@@ -947,8 +955,15 @@ window.Quarto = {
 </tbody>
 </table>
 <p><strong>Model:</strong> <span class="math display">\[Y_{ij} = \mu_i + \varepsilon_{ij}\]</span></p>
-<p>In words: each observed value equals the true group mean plus a random individual-level noise term. The noise captures everything we can’t explain — genetic variation between mice, measurement error, day-to-day fluctuation in a judge’s venire composition, etc.</p>
-<p>The key restriction is <strong>equal variance</strong>: <span class="math inline">\(\sigma^2\)</span> is assumed the same for every group and every individual. A mouse in the N/R40 diet group has the same background noise variance as a mouse in the NP group; they just have different expected lifetimes. This is the <span class="math inline">\(I\)</span>-group generalization of the pooled two-sample <span class="math inline">\(t\)</span>-test from Chapter 2.</p>
+<ul>
+<li>Each observed value = true group mean + random individual-level noise.</li>
+<li>Noise captures everything unexplained: genetic variation between mice, measurement error, day-to-day fluctuation in a judge’s venire, etc.</li>
+<li>Key restriction — <strong>equal variance</strong>: <span class="math inline">\(\sigma^2\)</span> is the same for every group and every individual.
+<ul>
+<li>A mouse in the N/R40 group has the same noise variance as a mouse in NP; they only differ in expected lifetime.</li>
+</ul></li>
+<li>This is the <span class="math inline">\(I\)</span>-group generalization of the pooled two-sample <span class="math inline">\(t\)</span>-test (Chapter 2).</li>
+</ul>
 <p><strong>Spock trial interpretation:</strong></p>
 <ul>
 <li><span class="math inline">\(\mu_1\)</span> = true mean percent-women for Spock’s judge across all possible venires</li>
@@ -966,7 +981,6 @@ window.Quarto = {
 </section>
 <section id="hypotheses" class="level1">
 <h1>Hypotheses</h1>
-<p>With <span class="math inline">\(I\)</span> groups there are many possible hypotheses.</p>
 <section id="pairwise-hypotheses" class="level2">
 <h2 class="anchored" data-anchor-id="pairwise-hypotheses">Pairwise Hypotheses</h2>
 <p>Test whether any specific pair of means differs: <span class="math display">\[H_0: \mu_2 = \mu_5, \qquad H_A: \mu_2 \neq \mu_5\]</span></p>
@@ -988,17 +1002,33 @@ window.Quarto = {
 <section id="group-sample-means" class="level2">
 <h2 class="anchored" data-anchor-id="group-sample-means">Group Sample Means</h2>
 <p>Estimate <span class="math inline">\(\mu_i\)</span> with the group sample mean: <span class="math display">\[\bar{Y}_{i\bullet} = \frac{1}{n_i}\sum_{j=1}^{n_i} Y_{ij}\]</span></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="07_ch5_files/figure-html/spock-dotplot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="pooled-variance" class="level2">
 <h2 class="anchored" data-anchor-id="pooled-variance">Pooled Variance</h2>
-<p>Each group has its own sample standard deviation <span class="math inline">\(s_i\)</span>, measuring the spread of observations <em>within</em> that group. Because we assume the same true variance <span class="math inline">\(\sigma^2\)</span> for every group, we can combine these within-group estimates into one more accurate estimate. We weight each group by the amount of information it contributes — groups with more observations get more weight:</p>
+<ul>
+<li>Each group has its own sample SD <span class="math inline">\(s_i\)</span> = spread of observations <em>within</em> that group.</li>
+<li>Same true variance <span class="math inline">\(\sigma^2\)</span> assumed for every group <span class="math inline">\(\Rightarrow\)</span> combine the within-group estimates into one more accurate estimate.</li>
+<li>Weight each group by information contributed — more observations, more weight:</li>
+</ul>
 <p><span class="math display">\[s_p^2 = \frac{(n_1-1)s_1^2 + (n_2-1)s_2^2 + \cdots + (n_I-1)s_I^2}
                {(n_1-1) + (n_2-1) + \cdots + (n_I-1)}\]</span></p>
-<p>In words: each term <span class="math inline">\((n_i-1)s_i^2\)</span> in the numerator is the sum of squared deviations from group <span class="math inline">\(i\)</span>’s mean. Adding these across all groups gives the total within-group variation. Dividing by the total degrees of freedom gives the average within-group variance.</p>
-<p>The denominator is <span class="math inline">\(\nu = n - I\)</span> (the total degrees of freedom available for estimating variance within groups — we lose one degree of freedom per group because we estimated each group’s mean).</p>
+<ul>
+<li>Numerator: each <span class="math inline">\((n_i-1)s_i^2\)</span> = sum of squared deviations from group <span class="math inline">\(i\)</span>’s mean; summed = total within-group variation.</li>
+<li>Denominator <span class="math inline">\(\nu = n - I\)</span> = total degrees of freedom (lose one df per group for estimating each group’s mean).</li>
+<li>So <span class="math inline">\(s_p^2\)</span> = average within-group variance.</li>
+</ul>
 <p>Two observations:</p>
 <ul>
-<li>This is a weighted average of the within-group variance estimates, weighted by their degrees of freedom.</li>
+<li>Weighted average of the within-group variance estimates, weighted by their degrees of freedom.</li>
 <li>When <span class="math inline">\(I = 2\)</span> this reduces exactly to the pooled variance from Chapter 2.</li>
 </ul>
 <hr>
@@ -1084,8 +1114,8 @@ n = \sum_{i=1}^{I}n_i
 <tr class="header">
 <th style="text-align: center;">Group</th>
 <th style="text-align: left;">Judge</th>
-<th style="text-align: center;">Full model prediction</th>
-<th style="text-align: center;">Reduced model prediction</th>
+<th style="text-align: center;">Full model estimates</th>
+<th style="text-align: center;">Reduced model estimates</th>
 </tr>
 </thead>
 <tbody>
@@ -1133,9 +1163,27 @@ n = \sum_{i=1}^{I}n_i
 </tr>
 </tbody>
 </table>
-<p>In the <strong>full model</strong>, each group gets its own sample mean as a prediction. Spock’s judge’s venires are predicted by Spock’s judge’s average; Judge A’s venires are predicted by Judge A’s average; and so on. There are 7 free parameters — one per judge.</p>
-<p>In the <strong>reduced model</strong>, every observation — regardless of judge — is predicted by the same grand average <span class="math inline">\(\bar{Y}_{\bullet\bullet}\)</span> (the mean over all 46 venires). This is the model that says <span class="math inline">\(H_0\)</span> is true: if all judges have the same expected percent-women, then the best single prediction for any venire is just the overall average.</p>
-<p><strong>What is a residual?</strong> A residual is simply the distance between an observed value and the model’s prediction for it:</p>
+<ul>
+<li><strong>Full model</strong>: each group gets its own sample mean as prediction.
+<ul>
+<li>Spock’s venires predicted by Spock’s average, Judge A’s by Judge A’s, etc.</li>
+<li>7 free parameters — one per judge.</li>
+</ul></li>
+<li><strong>Reduced model</strong>: every observation predicted by the same grand average <span class="math inline">\(\bar{Y}_{\bullet\bullet}\)</span> (mean over all 46 venires).
+<ul>
+<li>This is the <span class="math inline">\(H_0\)</span>-is-true model: if all judges have the same expected percent-women, the best single prediction is the overall average.</li>
+</ul></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="07_ch5_files/figure-html/null-vs-full.1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>What is a residual?</strong> The distance between an observed value and the model’s prediction for it:</p>
 <ul>
 <li><p>Full model residual: <span class="math inline">\(Y_{ij} - \bar{Y}_{i\bullet}\)</span></p>
 <ul>
@@ -1146,7 +1194,11 @@ n = \sum_{i=1}^{I}n_i
 <li>how far observation <span class="math inline">\((i,j)\)</span> is from <em>the grand mean</em></li>
 </ul></li>
 </ul>
-<p>Intuitively, if the groups really have different means, the full model residuals will be small (each observation is close to its own group mean), while the reduced model residuals will be large (observations from Spock’s group, for example, are far from the overall grand mean).</p>
+<p>Intuitively, if the groups really have different means:</p>
+<ul>
+<li>Full model residuals are small — each observation is close to its group mean.</li>
+<li>Reduced model residuals are large — e.g.&nbsp;Spock’s observations are far from the grand mean.</li>
+</ul>
 </section>
 <section id="sums-of-squared-residuals" class="level2">
 <h2 class="anchored" data-anchor-id="sums-of-squared-residuals">Sums of Squared Residuals</h2>
@@ -1164,21 +1216,24 @@ n = \sum_{i=1}^{I}n_i
 </ul></li>
 <li><p>The <strong>extra sum of squares</strong> (ESS) measures how much the fit improves when we go from the reduced model to the full model:</p>
 <p><span class="math display">\[ESS = RSS_{reduced} - RSS_{full}, \quad df_{extra} = I - 1\]</span></p></li>
-<li><p><strong>NOTE: <span class="math inline">\(RSS_{reduced} \geq RSS_{full}\)</span></strong></p>
+<li><p><strong>NOTE: <span class="math inline">\(RSS_{reduced} \geq RSS_{full}\)</span></strong> (so <span class="math inline">\(ESS \geq 0\)</span> always)</p>
 <ul>
-<li>The full model has the reduced model as a special case: if all the <span class="math inline">\(\mu_i\)</span> happen to be equal, the full model’s separate group means would all estimate the same value as the grand mean, and the two models would give identical fits. In general, the full model has more flexibility, so it can <em>never</em> fit worse than the reduced model. It can always do at least as well. Therefore <span class="math inline">\(ESS \geq 0\)</span> always.</li>
+<li>Reduced model is a special case of the full model (set all <span class="math inline">\(\mu_i\)</span> equal).</li>
+<li>Full model has more flexibility, so it can <em>never</em> fit worse — always at least as good.</li>
 </ul></li>
 <li><p><strong>What does ESS tell us?</strong></p>
 <ul>
-<li>If <span class="math inline">\(H_0\)</span> is true (all means really are equal), fitting separate group means should not improve the fit by very much — the data don’t contain strong evidence for distinct groups. In that case, ESS will be positive but small. If the means truly differ (the data come from groups with different means), the full model will fit much better, and ESS will be large. The <span class="math inline">\(F\)</span>-test formalizes what “small” and “large” mean.</li>
+<li><span class="math inline">\(H_0\)</span> true (means equal): separate group means barely improve fit <span class="math inline">\(\Rightarrow\)</span> ESS positive but small.</li>
+<li>Means truly differ: full model fits much better <span class="math inline">\(\Rightarrow\)</span> ESS large.</li>
+<li>The <span class="math inline">\(F\)</span>-test formalizes what “small” and “large” mean.</li>
 </ul></li>
 </ul>
-<p>The plots below illustrate this for the Spock data. Red bars/lines show the model’s fitted means; larger gaps between points and those lines = larger residuals.</p>
+<p>The plots below illustrate this for the Spock data. Red bars/lines show the model’s fitted means; larger gaps between points and those lines = larger residuals (blue dashed lines).</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="07_ch5_files/figure-html/null-vs-full-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="864"></p>
+<p><img src="07_ch5_files/figure-html/null-vs-full.2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="864"></p>
 </figure>
 </div>
 </div>
@@ -1196,7 +1251,10 @@ n = \sum_{i=1}^{I}n_i
 </section>
 <section id="the-f-statistic" class="level2">
 <h2 class="anchored" data-anchor-id="the-f-statistic">The <span class="math inline">\(F\)</span>-Statistic</h2>
-<p>If <span class="math inline">\(H_0\)</span> is true, both <span class="math inline">\(ESS/df_{extra}\)</span> and <span class="math inline">\(RSS_{full}/df_{full} = s_p^2\)</span> estimate the same <span class="math inline">\(\sigma^2\)</span>, so their ratio should be near 1. If <span class="math inline">\(H_A\)</span> is true, the means differ and <span class="math inline">\(ESS\)</span> will be inflated, pushing the ratio above 1.</p>
+<ul>
+<li><span class="math inline">\(H_0\)</span> true: both <span class="math inline">\(ESS/df_{extra}\)</span> and <span class="math inline">\(RSS_{full}/df_{full} = s_p^2\)</span> estimate the same <span class="math inline">\(\sigma^2\)</span> <span class="math inline">\(\Rightarrow\)</span> ratio near 1.</li>
+<li><span class="math inline">\(H_A\)</span> true: means differ, <span class="math inline">\(ESS\)</span> inflated <span class="math inline">\(\Rightarrow\)</span> ratio above 1.</li>
+</ul>
 <p><span class="math display">\[F = \frac{ESS / df_{extra}}{s_p^2}
     = \frac{ESS / (I-1)}{RSS_{full} / (n-I)}\]</span></p>
 <p>Under <span class="math inline">\(H_0\)</span>, <span class="math inline">\(F \sim F_{I-1,\; n-I}\)</span>. The <span class="math inline">\(p\)</span>-value uses only the upper tail (large <span class="math inline">\(F\)</span> is evidence against <span class="math inline">\(H_0\)</span>).</p>
@@ -1218,21 +1276,519 @@ n = \sum_{i=1}^{I}n_i
 <h2 class="anchored" data-anchor-id="p-value-for-the-spock-omnibus-test"><span class="math inline">\(p\)</span>-Value for the Spock Omnibus Test</h2>
 <p>The Spock data has <span class="math inline">\(I = 7\)</span> judges and <span class="math inline">\(n = 46\)</span> venires, so <span class="math inline">\(df_{extra} = 6\)</span> and <span class="math inline">\(df_{full} = 39\)</span>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>n     <span class="ot">&lt;-</span> <span class="fu">nrow</span>(case0502)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>I     <span class="ot">&lt;-</span> <span class="fu">n_distinct</span>(case0502<span class="sc">$</span>Judge)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df_extra <span class="ot">&lt;-</span> I <span class="sc">-</span> <span class="dv">1</span>          <span class="co"># 6</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>df_full  <span class="ot">&lt;-</span> n <span class="sc">-</span> I          <span class="co"># 39</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>ess      <span class="ot">&lt;-</span> rss_null <span class="sc">-</span> rss_full</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>sp2      <span class="ot">&lt;-</span> rss_full <span class="sc">/</span> df_full</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>fstat    <span class="ot">&lt;-</span> (ess <span class="sc">/</span> df_extra) <span class="sc">/</span> sp2</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">ESS =</span> ess, <span class="at">RSS_full =</span> rss_full, <span class="at">sp2 =</span> sp2, <span class="at">F =</span> fstat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>        ESS    RSS_full         sp2           F 
-1927.080865 1864.445222   47.806288    6.718366 </code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>case0502 <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">muhat_null =</span> <span class="fu">mean</span>(Percent)) <span class="sc">|&gt;</span> <span class="co"># null mean</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Judge) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">muhat_alt =</span> <span class="fu">mean</span>(Percent)) <span class="sc">|&gt;</span> <span class="co"># alt mean</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>( </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">resid_null =</span> Percent <span class="sc">-</span> muhat_null, </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">resid_alt =</span> Percent <span class="sc">-</span> muhat_alt</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">rss_null =</span> <span class="fu">sum</span>(resid_null<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">rss_alt =</span> <span class="fu">sum</span>(resid_alt<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">I =</span> <span class="fu">n_distinct</span>(Judge)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">df_null =</span> n <span class="sc">-</span> <span class="dv">1</span>,</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">df_full =</span> n <span class="sc">-</span> I,</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">df_extra =</span> df_null <span class="sc">-</span> df_full, <span class="do">## I - 1</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">ess =</span> rss_null <span class="sc">-</span> rss_full,</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">sp2 =</span> rss_full <span class="sc">/</span> df_full,</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">fstat =</span> (ess <span class="sc">/</span> df_extra) <span class="sc">/</span> sp2</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="ot">-&gt;</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="hzxjnzhprw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#hzxjnzhprw table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#hzxjnzhprw thead, #hzxjnzhprw tbody, #hzxjnzhprw tfoot, #hzxjnzhprw tr, #hzxjnzhprw td, #hzxjnzhprw th {
+  border-style: none;
+}
+
+#hzxjnzhprw p {
+  margin: 0;
+  padding: 0;
+}
+
+#hzxjnzhprw .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#hzxjnzhprw .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#hzxjnzhprw .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#hzxjnzhprw .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#hzxjnzhprw .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#hzxjnzhprw .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hzxjnzhprw .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#hzxjnzhprw .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#hzxjnzhprw .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#hzxjnzhprw .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#hzxjnzhprw .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#hzxjnzhprw .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#hzxjnzhprw .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#hzxjnzhprw .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#hzxjnzhprw .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#hzxjnzhprw .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#hzxjnzhprw .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#hzxjnzhprw .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#hzxjnzhprw .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hzxjnzhprw .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#hzxjnzhprw .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#hzxjnzhprw .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#hzxjnzhprw .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hzxjnzhprw .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#hzxjnzhprw .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#hzxjnzhprw .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hzxjnzhprw .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hzxjnzhprw .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#hzxjnzhprw .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hzxjnzhprw .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#hzxjnzhprw .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hzxjnzhprw .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#hzxjnzhprw .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hzxjnzhprw .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#hzxjnzhprw .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hzxjnzhprw .gt_left {
+  text-align: left;
+}
+
+#hzxjnzhprw .gt_center {
+  text-align: center;
+}
+
+#hzxjnzhprw .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#hzxjnzhprw .gt_font_normal {
+  font-weight: normal;
+}
+
+#hzxjnzhprw .gt_font_bold {
+  font-weight: bold;
+}
+
+#hzxjnzhprw .gt_font_italic {
+  font-style: italic;
+}
+
+#hzxjnzhprw .gt_super {
+  font-size: 65%;
+}
+
+#hzxjnzhprw .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#hzxjnzhprw .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#hzxjnzhprw .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#hzxjnzhprw .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#hzxjnzhprw .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#hzxjnzhprw .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#hzxjnzhprw .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#hzxjnzhprw .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#hzxjnzhprw div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="rss_null" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">rss_null</th>
+<th id="rss_alt" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">rss_alt</th>
+<th id="n" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">n</th>
+<th id="I" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">I</th>
+<th id="df_null" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">df_null</th>
+<th id="df_full" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">df_full</th>
+<th id="df_extra" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">df_extra</th>
+<th id="ess" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">ess</th>
+<th id="sp2" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">sp2</th>
+<th id="fstat" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">fstat</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="rss_null">3,791.53</td>
+<td class="gt_row gt_right" headers="rss_alt">1,864.45</td>
+<td class="gt_row gt_right" headers="n">46</td>
+<td class="gt_row gt_right" headers="I">7</td>
+<td class="gt_row gt_right" headers="df_null">45</td>
+<td class="gt_row gt_right" headers="df_full">39</td>
+<td class="gt_row gt_right" headers="df_extra">6</td>
+<td class="gt_row gt_right" headers="ess">1,927.08</td>
+<td class="gt_row gt_right" headers="sp2">47.81</td>
+<td class="gt_row gt_right" headers="fstat">6.72</td>
+</tr>
+</tbody>
+</table>
+
+</div>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pf</span>(fstat, <span class="at">df1 =</span> df_extra, <span class="at">df2 =</span> df_full, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pf</span>(df<span class="sc">$</span>fstat, <span class="at">df1 =</span> df<span class="sc">$</span>df_extra, <span class="at">df2 =</span> df<span class="sc">$</span>df_full, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6.095823e-05</code></pre>
 </div>
@@ -1254,23 +1810,23 @@ n = \sum_{i=1}^{I}n_i
 <p>An F-test can be used to compare any two <strong>nested</strong> models.</p>
 <p>In the Spock example, we had three nested models:</p>
 <ul>
-<li><strong>Null</strong>: all means equal <span class="math inline">\((\mu)\)</span></li>
-<li><strong>Intermediate</strong>: Spock’s judge differs from a common mean for the rest <span class="math inline">\((\mu_\text{Spock}, \mu_\text{others})\)</span></li>
-<li><strong>Full</strong>: all seven means free <span class="math inline">\((\mu_1, \mu_2, \ldots, \mu_7)\)</span></li>
+<li><strong><span class="math inline">\(H_1\)</span></strong>: all means equal <span class="math inline">\((\mu)\)</span></li>
+<li><strong><span class="math inline">\(H_2\)</span></strong>: Spock’s judge differs from a common mean for the rest <span class="math inline">\((\mu_\text{Spock}, \mu_\text{others})\)</span></li>
+<li><strong><span class="math inline">\(H_3\)</span></strong>: all seven means free <span class="math inline">\((\mu_1, \mu_2, \ldots, \mu_7)\)</span></li>
 </ul>
 <p>Here is what each model predicts for each judge in the Spock data.</p>
-<p><strong>Null vs.&nbsp;Intermediate</strong> — Is Spock’s judge different from the rest?</p>
+<p><strong><span class="math inline">\(H_1\)</span> vs.&nbsp;<span class="math inline">\(H_2\)</span></strong> — Is Spock’s judge different from the rest?</p>
 <ul>
-<li><span class="math inline">\(H_0: \mu_1 = \cdots = \mu_7\)</span> (all same)</li>
-<li><span class="math inline">\(H_A: \mu_1 \neq \mu_2 = \cdots = \mu_7\)</span> (Spock is different)</li>
+<li><span class="math inline">\(H_1: \mu_1 = \cdots = \mu_7\)</span> (all same)</li>
+<li><span class="math inline">\(H_2: \mu_1 \neq \mu_2 = \cdots = \mu_7\)</span> (Spock is different)</li>
 </ul>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th style="text-align: center;">Group</th>
 <th style="text-align: left;">Judge</th>
-<th style="text-align: center;">Null (reduced)</th>
-<th style="text-align: center;">Intermediate (full)</th>
+<th style="text-align: center;"><span class="math inline">\(H_1\)</span> (reduced)</th>
+<th style="text-align: center;"><span class="math inline">\(H_2\)</span> (full)</th>
 </tr>
 </thead>
 <tbody>
@@ -1318,8 +1874,12 @@ n = \sum_{i=1}^{I}n_i
 </tr>
 </tbody>
 </table>
-<p>Here <span class="math inline">\(\bar{Y}_{\bullet\bullet}\)</span> is the grand mean of all 46 venires, and <span class="math inline">\(\bar{Y}_{0}\)</span> is the average percent-women across all venires belonging to judges A–F (groups 2 through 7). The intermediate model has 2 parameters: one for Spock’s judge (<span class="math inline">\(\bar{Y}_{1\bullet}\)</span>) and one pooled mean for the remaining six judges (<span class="math inline">\(\bar{Y}_{0}\)</span>).</p>
-<p>The plots below show how these two models fit the data. The drop in RSS when moving from the null to the intermediate model is the ESS for this test.</p>
+<ul>
+<li><span class="math inline">\(\bar{Y}_{\bullet\bullet}\)</span> = grand mean of all 46 venires.</li>
+<li><span class="math inline">\(\bar{Y}_{0}\)</span> = average percent-women across all venires of judges A–F (groups 2–7).</li>
+<li><span class="math inline">\(H_2\)</span> has 2 parameters: Spock’s judge (<span class="math inline">\(\bar{Y}_{1\bullet}\)</span>) and one pooled mean for the other six (<span class="math inline">\(\bar{Y}_{0}\)</span>).</li>
+</ul>
+<p>Plots below: the drop in RSS from <span class="math inline">\(H_1\)</span> to <span class="math inline">\(H_2\)</span> is the ESS for this test.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -1329,18 +1889,18 @@ n = \sum_{i=1}^{I}n_i
 </div>
 </div>
 </div>
-<p><strong>Intermediate vs.&nbsp;Full</strong> — Do judges A–F differ among themselves?</p>
+<p><strong><span class="math inline">\(H_2\)</span> vs.&nbsp;<span class="math inline">\(H_3\)</span></strong> — Do judges A–F differ among themselves?</p>
 <ul>
-<li><span class="math inline">\(H_0: \mu_1 \neq \mu_2 = \cdots = \mu_7\)</span> (Spock is different)</li>
-<li><span class="math inline">\(H_A:\)</span> At least one <span class="math inline">\(\mu_i \neq \mu_j\)</span> for <span class="math inline">\(i,j\in \{2,\ldots,7\}\)</span></li>
+<li><span class="math inline">\(H_2: \mu_1 \neq \mu_2 = \cdots = \mu_7\)</span> (Spock is different)</li>
+<li><span class="math inline">\(H_3:\)</span> At least one <span class="math inline">\(\mu_i \neq \mu_j\)</span> for <span class="math inline">\(i,j\in \{2,\ldots,7\}\)</span></li>
 </ul>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th style="text-align: center;">Group</th>
 <th style="text-align: left;">Judge</th>
-<th style="text-align: center;">Intermediate (reduced)</th>
-<th style="text-align: center;">Full</th>
+<th style="text-align: center;"><span class="math inline">\(H_2\)</span> (reduced)</th>
+<th style="text-align: center;"><span class="math inline">\(H_3\)</span></th>
 </tr>
 </thead>
 <tbody>
@@ -1388,8 +1948,10 @@ n = \sum_{i=1}^{I}n_i
 </tr>
 </tbody>
 </table>
-<p>This test asks: after accounting for Spock’s judge, do the remaining six judges’ venires show any systematic differences from each other?</p>
-<p>The plots below compare the fit of the intermediate model (reduced) against the full model. The ESS here captures only the variation <em>among</em> judges A–F.</p>
+<ul>
+<li>Asks: after accounting for Spock’s judge, do the remaining six judges differ from each other?</li>
+<li>Plots below compare <span class="math inline">\(H_2\)</span> (reduced) vs.&nbsp;<span class="math inline">\(H_3\)</span>; ESS here captures only variation <em>among</em> judges A–F.</li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -1399,7 +1961,15 @@ n = \sum_{i=1}^{I}n_i
 </div>
 </div>
 </div>
-<p>Notice that we always fit <em>both</em> models using <em>all</em> the data — we never discard Spock’s judge’s observations even when comparing only judges A–F. This matters for the variance estimate: instead of testing on a subset of 39 venires (judges A–F only, <span class="math inline">\(df = 32\)</span>), we keep all 46 venires and use <span class="math inline">\(s_p^2\)</span> from the full model (<span class="math inline">\(df = 39\)</span>). More degrees of freedom means a better variance estimate and a more powerful test.</p>
+<ul>
+<li>Always fit <em>both</em> models using <em>all</em> the data — never discard Spock’s observations, even when comparing only judges A–F.</li>
+<li>Matters for the variance estimate:
+<ul>
+<li>Subset of 39 venires (A–F only): <span class="math inline">\(df = 32\)</span>.</li>
+<li>All 46 venires with <span class="math inline">\(s_p^2\)</span> from the full model: <span class="math inline">\(df = 39\)</span>.</li>
+</ul></li>
+<li>More df <span class="math inline">\(\Rightarrow\)</span> better variance estimate <span class="math inline">\(\Rightarrow\)</span> more powerful test.</li>
+</ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="ch5_fig/model_hierarchy.svg" class="img-fluid figure-img" style="width:90.0%"></p>
@@ -1462,18 +2032,21 @@ n = \sum_{i=1}^{I}n_i
 <h2 class="anchored" data-anchor-id="checking-the-grouping-variable">Checking the Grouping Variable</h2>
 <p>Before fitting, confirm the grouping variable is a <code>factor</code> or <code>character</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(case0502<span class="sc">$</span>Judge)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(case0502<span class="sc">$</span>Judge)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "factor"</code></pre>
 </div>
 </div>
-<p>If it were numeric, <code>aov()</code> would treat it as a continuous predictor, not a grouping variable. Use <code>as.factor()</code> or <code>mutate(Judge = factor(Judge))</code> to fix this.</p>
+<ul>
+<li>If numeric, <code>aov()</code> treats it as a continuous predictor, not a grouping variable.</li>
+<li>Fix with <code>as.factor()</code> or <code>mutate(Judge = factor(Judge))</code>.</li>
+</ul>
 </section>
 <section id="omnibus-f-test-with-aov-and-tidy" class="level2">
 <h2 class="anchored" data-anchor-id="omnibus-f-test-with-aov-and-tidy">Omnibus <span class="math inline">\(F\)</span>-Test with <code>aov()</code> and <code>tidy()</code></h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>aout_full <span class="ot">&lt;-</span> <span class="fu">aov</span>(Percent <span class="sc">~</span> Judge, <span class="at">data =</span> case0502)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(aout_full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>aout_h3 <span class="ot">&lt;-</span> <span class="fu">aov</span>(Percent <span class="sc">~</span> Judge, <span class="at">data =</span> case0502)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(aout_h3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 6
   term         df sumsq meansq statistic    p.value
@@ -1525,23 +2098,23 @@ n = \sum_{i=1}^{I}n_i
 <section id="pairwise-comparisons" class="level2">
 <h2 class="anchored" data-anchor-id="pairwise-comparisons">Pairwise Comparisons</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ptout <span class="ot">&lt;-</span> <span class="fu">pairwise.t.test</span>(<span class="at">x =</span> case0502<span class="sc">$</span>Percent,</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">g =</span> case0502<span class="sc">$</span>Judge,</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">p.adjust.method =</span> <span class="st">"none"</span>)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>ptout</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ptout <span class="ot">&lt;-</span> <span class="fu">pairwise.t.test</span>(<span class="at">x =</span> case0502<span class="sc">$</span>Percent,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">g =</span> case0502<span class="sc">$</span>Judge,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">p.adjust.method =</span> <span class="st">"none"</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>ptout</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pairwise comparisons using t tests with pooled SD 
 
 data:  case0502$Percent and case0502$Judge 
 
-        A       B       C       D      E      F     
-B       0.9049  -       -       -      -      -     
-C       0.2007  0.2226  -       -      -      -     
-D       0.2258  0.2483  0.6997  -      -      -     
-E       0.0955  0.1038  0.5616  0.9953 -      -     
-F       0.0651  0.0689  0.4846  0.9707 0.9638 -     
-Spock's 1.1e-05 6.4e-06 7.2e-05 0.0275 0.0016 0.0006
+  Spock's A      B      C      D      E     
+A 1.1e-05 -      -      -      -      -     
+B 6.4e-06 0.9049 -      -      -      -     
+C 7.2e-05 0.2007 0.2226 -      -      -     
+D 0.0275  0.2258 0.2483 0.6997 -      -     
+E 0.0016  0.0955 0.1038 0.5616 0.9953 -     
+F 0.0006  0.0651 0.0689 0.4846 0.9707 0.9638
 
 P value adjustment method: none </code></pre>
 </div>
@@ -1550,24 +2123,23 @@ P value adjustment method: none </code></pre>
 </section>
 <section id="nested-model-comparisons-with-anova" class="level2">
 <h2 class="anchored" data-anchor-id="nested-model-comparisons-with-anova">Nested Model Comparisons with <code>anova()</code></h2>
-<p>To test the intermediate hypothesis (Spock’s differs; others pooled):</p>
+<p>To test <span class="math inline">\(H_2\)</span> (Spock’s differs; others same) versus <span class="math inline">\(H_1\)</span> (all same):</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>case0502 <span class="ot">&lt;-</span> case0502 <span class="sc">|&gt;</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">isSpock =</span> Judge <span class="sc">==</span> <span class="st">"Spock's"</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>aout_intermediate <span class="ot">&lt;-</span> <span class="fu">aov</span>(Percent <span class="sc">~</span> isSpock, <span class="at">data =</span> case0502)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>aout_null         <span class="ot">&lt;-</span> <span class="fu">aov</span>(Percent <span class="sc">~</span> <span class="dv">1</span>,       <span class="at">data =</span> case0502)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>case0502 <span class="ot">&lt;-</span> case0502 <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">isSpock =</span> Judge <span class="sc">==</span> <span class="st">"Spock's"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>aout_h2 <span class="ot">&lt;-</span> <span class="fu">aov</span>(Percent <span class="sc">~</span> isSpock, <span class="at">data =</span> case0502)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>aout_h1 <span class="ot">&lt;-</span> <span class="fu">aov</span>(Percent <span class="sc">~</span> <span class="dv">1</span>,       <span class="at">data =</span> case0502)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(aout_intermediate, aout_full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(aout_h2, aout_h3) <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Analysis of Variance Table
-
-Model 1: Percent ~ isSpock
-Model 2: Percent ~ Judge
-  Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
-1     44 2190.9                           
-2     39 1864.5  5    326.46 1.3658 0.2582</code></pre>
+<pre><code># A tibble: 2 × 7
+  term              df.residual   rss    df sumsq statistic p.value
+  &lt;chr&gt;                   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+1 Percent ~ isSpock          44 2191.    NA   NA      NA     NA    
+2 Percent ~ Judge            39 1864.     5  326.      1.37   0.258</code></pre>
 </div>
 </div>
 <p>The rows are:</p>
@@ -1618,23 +2190,18 @@ Model 2: Percent ~ Judge
 <h2 class="anchored" data-anchor-id="full-sequential-anova-table">Full Sequential ANOVA Table</h2>
 <p>Compare all three models at once:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(aout_null, aout_intermediate, aout_full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(aout_h1, aout_h2, aout_h3) <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Analysis of Variance Table
-
-Model 1: Percent ~ 1
-Model 2: Percent ~ isSpock
-Model 3: Percent ~ Judge
-  Res.Df    RSS Df Sum of Sq       F    Pr(&gt;F)    
-1     45 3791.5                                   
-2     44 2190.9  1   1600.62 33.4814 1.026e-06 ***
-3     39 1864.4  5    326.46  1.3658    0.2582    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<pre><code># A tibble: 3 × 7
+  term              df.residual   rss    df sumsq statistic     p.value
+  &lt;chr&gt;                   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+1 Percent ~ 1                45 3792.    NA   NA      NA    NA         
+2 Percent ~ isSpock          44 2191.     1 1601.     33.5   0.00000103
+3 Percent ~ Judge            39 1864.     5  326.      1.37  0.258     </code></pre>
 </div>
 </div>
-<p>This produces the sequential table shown in the hierarchy section above. Row 2 tests Null vs Intermediate; Row 3 tests Intermediate vs Full.</p>
-<p>Note: the <span class="math inline">\(F\)</span>-statistics shown here use <span class="math inline">\(s_p^2\)</span> from the <strong>full</strong> model (<code>aout_full</code>) as the denominator.</p>
+<p>This produces the sequential table shown in the hierarchy section above. Row 2 tests <span class="math inline">\(H_1\)</span> vs <span class="math inline">\(H_2\)</span>; Row 3 tests <span class="math inline">\(H_2\)</span> vs <span class="math inline">\(H_3\)</span>.</p>
 <hr>
 </section>
 </section>
@@ -1653,8 +2220,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <h2 class="anchored" data-anchor-id="residual-plots-in-r">Residual Plots in R</h2>
 <p>The quickest way is <code>plot()</code> applied to an <code>aov()</code> object:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(aout_full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(aout_h3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1662,7 +2229,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The two most important panels:</p>
 <ul>
@@ -1672,22 +2239,26 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </section>
 <section id="manual-ggplot2-residual-plots" class="level2">
 <h2 class="anchored" data-anchor-id="manual-ggplot2-residual-plots">Manual <code>ggplot2</code> Residual Plots</h2>
+<ul>
+<li><p>Use <code>augment()</code> to get the fitted values and the residuals.</p></li>
+<li><p>You can then use ggplot2 code as you like.</p></li>
+</ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>aug_full <span class="ot">&lt;-</span> <span class="fu">augment</span>(aout_full)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>p_rv_fit <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(aug_full, <span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Fitted values (group means)"</span>,</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Residuals"</span>,</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Residuals vs. fitted"</span>)</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>p_rv_grp <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(aug_full, <span class="fu">aes</span>(<span class="at">x =</span> Judge, <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Residuals"</span>, <span class="at">title =</span> <span class="st">"Residuals by group"</span>)</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>p_rv_fit <span class="sc">+</span> p_rv_grp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>aug_full <span class="ot">&lt;-</span> <span class="fu">augment</span>(aout_h3)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>p_rv_fit <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(aug_full, <span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Fitted values (group means)"</span>,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Residuals"</span>,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Residuals vs. fitted"</span>)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>p_rv_grp <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(aug_full, <span class="fu">aes</span>(<span class="at">x =</span> Judge, <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Residuals"</span>, <span class="at">title =</span> <span class="st">"Residuals by group"</span>)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>p_rv_fit <span class="sc">+</span> p_rv_grp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1697,10 +2268,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(aug_full, <span class="fu">aes</span>(<span class="at">sample =</span> .resid)) <span class="sc">+</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Normal Q-Q plot of residuals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(aug_full, <span class="fu">aes</span>(<span class="at">sample =</span> .resid)) <span class="sc">+</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Normal Q-Q plot of residuals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1755,7 +2326,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Non-normality / outliers</td>
-<td style="text-align: left;">Transformation; run with and without outlier</td>
+<td style="text-align: left;">Transformation; run with and without outlier ; Kruskal-Wallis</td>
 </tr>
 </tbody>
 </table>
@@ -1764,18 +2335,31 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </section>
 <section id="random-effects" class="level1">
 <h1>Random Effects</h1>
-<p>In the fixed-effects model above, the groups (judges, diets) are the specific groups of interest — we want to compare these particular groups.</p>
-<p>Sometimes the groups are <strong>not</strong> of direct interest. Instead, they are a random sample from a larger population of groups, and we want to make inferences about <strong>variability among groups</strong> in that population.</p>
-<p><strong>Example</strong>: Quality control — measuring output of 7 randomly selected machines from a factory. We don’t care about those specific 7 machines; we want to know how much machine-to-machine variability exists across the entire factory floor.</p>
-<p>When groups are a random sample from a larger population of groups, use the <strong>random-effects model</strong>.</p>
+<ul>
+<li><strong>Fixed effects</strong> (so far): the groups (judges, diets) are the specific groups of interest — we compare these particular groups.</li>
+<li><strong>Random effects</strong>: groups are <em>not</em> of direct interest.
+<ul>
+<li>They are a random sample from a larger population of groups.</li>
+<li>Goal: infer <strong>variability among groups</strong> in that population.</li>
+</ul></li>
+<li><strong>Example</strong> — quality control: output of 7 randomly selected machines.
+<ul>
+<li>Don’t care about those 7 specific machines.</li>
+<li>Want machine-to-machine variability across the whole factory floor.</li>
+</ul></li>
+<li>When groups are a random sample from a larger population, use the <strong>random-effects model</strong>.</li>
+</ul>
 <section id="the-random-effects-model" class="level2">
 <h2 class="anchored" data-anchor-id="the-random-effects-model">The Random-Effects Model</h2>
 <p>The model is written in two layers:</p>
 <p><span class="math display">\[Y_{ij} = \mu_i + \varepsilon_{ij},
 \quad \text{var}(\varepsilon_{ij}) = \sigma^2\]</span> <span class="math display">\[\mu_i = \mu + \xi_i,
 \quad \text{var}(\xi_i) = \sigma_p^2\]</span></p>
-<p>The first line is identical to the fixed-effects model. The second line says that each group mean <span class="math inline">\(\mu_i\)</span> is itself <strong>random</strong> — it is the overall average <span class="math inline">\(\mu\)</span> plus a random group-specific deviation <span class="math inline">\(\xi_i\)</span>. These deviations have mean 0 and variance <span class="math inline">\(\sigma_p^2\)</span>.</p>
-<p>In words: every observation has two sources of randomness:</p>
+<ul>
+<li>Line 1: identical to the fixed-effects model.</li>
+<li>Line 2: each group mean <span class="math inline">\(\mu_i\)</span> is itself <strong>random</strong> — overall average <span class="math inline">\(\mu\)</span> plus a random group-specific deviation <span class="math inline">\(\xi_i\)</span> (mean 0, variance <span class="math inline">\(\sigma_p^2\)</span>).</li>
+</ul>
+<p>Every observation has two sources of randomness:</p>
 <ol type="1">
 <li><strong>Within-group noise</strong> <span class="math inline">\(\varepsilon_{ij}\)</span>: how much individual <span class="math inline">\(j\)</span> in group <span class="math inline">\(i\)</span> differs from its group’s mean (variance <span class="math inline">\(\sigma^2\)</span>).</li>
 <li><strong>Between-group noise</strong> <span class="math inline">\(\xi_i\)</span>: how much group <span class="math inline">\(i\)</span>’s mean differs from the overall mean <span class="math inline">\(\mu\)</span> (variance <span class="math inline">\(\sigma_p^2\)</span>).</li>
@@ -1786,17 +2370,21 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </section>
 <section id="why-use-this-model" class="level2">
 <h2 class="anchored" data-anchor-id="why-use-this-model">Why Use This Model?</h2>
-<p>In one-way ANOVA, the <span class="math inline">\(p\)</span>-value from the <span class="math inline">\(F\)</span>-test is identical whether you treat groups as fixed or random. So why bother with random effects?</p>
-<p>In more complex models — for example, when you have multiple random factors, or when the same individuals appear in multiple groups — treating groups as random leads to different (and generally better) estimates and inference. The one-way case is the simplest introduction to this framework.</p>
+<ul>
+<li>In one-way ANOVA, the <span class="math inline">\(F\)</span>-test <span class="math inline">\(p\)</span>-value is identical for fixed or random groups. So why bother?</li>
+<li>In more complex models — multiple random factors, or the same individuals in multiple groups — treating groups as random gives different (generally better) estimates and inference.</li>
+<li>The one-way case is the simplest introduction to this framework.</li>
+</ul>
 </section>
 <section id="intraclass-correlation-icc" class="level2">
 <h2 class="anchored" data-anchor-id="intraclass-correlation-icc">Intraclass Correlation (ICC)</h2>
 <p>The ICC measures the <strong>proportion of total variance explained by group membership</strong>:</p>
 <p><span class="math display">\[\text{ICC} = \frac{\hat\sigma_p^2}{\hat\sigma_p^2 + \hat\sigma^2}\]</span></p>
-<p>To see why: the total variance of any observation <span class="math inline">\(Y_{ij}\)</span> is <span class="math inline">\(\sigma_p^2 + \sigma^2\)</span> (between-group plus within-group). The ICC is the fraction of that total coming from between-group differences.</p>
 <ul>
-<li><strong>ICC close to 1</strong>: most variation is <em>between</em> groups — knowing the group an observation belongs to tells you most of what you need to know about its value.</li>
-<li><strong>ICC close to 0</strong>: most variation is <em>within</em> groups — group membership explains very little; individual-level noise dominates.</li>
+<li><p>Total variance of any <span class="math inline">\(Y_{ij}\)</span> = <span class="math inline">\(\sigma_p^2 + \sigma^2\)</span> (between-group + within-group).</p></li>
+<li><p>ICC = fraction of that total coming from between-group differences.</p></li>
+<li><p><strong>ICC close to 1</strong>: most variation is <em>between</em> groups — knowing the group an observation belongs to tells you most of what you need to know about its value.</p></li>
+<li><p><strong>ICC close to 0</strong>: most variation is <em>within</em> groups — group membership explains very little; individual-level noise dominates.</p></li>
 </ul>
 <hr>
 </section>
@@ -1827,7 +2415,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <li>Which pairs, if any, show evidence of a difference at <span class="math inline">\(\alpha = 0.05\)</span>?</li>
 <li>Why is it potentially problematic to use <span class="math inline">\(\alpha = 0.05\)</span> for each test individually when conducting this many comparisons?</li>
 </ol>
-<p><strong>5.</strong> Fit the three nested models for the Spock data (null, intermediate, full) and reproduce the sequential ANOVA table using <code>anova()</code>.</p>
+<p><strong>5.</strong> Fit the three nested models for the Spock data (<span class="math inline">\(H_1\)</span>, <span class="math inline">\(H_2\)</span>, <span class="math inline">\(H_3\)</span>) and reproduce the sequential ANOVA table using <code>anova()</code>.</p>
 <ol type="a">
 <li>What is Spock’s judge’s estimated percent-women on the venire?</li>
 <li>What is the pooled estimate for the other six judges?</li>

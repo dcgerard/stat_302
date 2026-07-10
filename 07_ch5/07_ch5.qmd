@@ -27,9 +27,10 @@ library(gt)
 
 # Learning Objectives
 
+- Chapter 5
 - Explain the one-way ANOVA model for observational studies and randomized
   experiments.
-- State and interpret the nested hypotheses.
+- State and interpret nested hypotheses.
 - Compute and interpret the pooled variance estimate $s_p^2$.
 - Conduct pairwise $t$-tests using the pooled variance.
 - Set up and interpret the ANOVA $F$-test using the extra-sum-of-squares
@@ -45,16 +46,18 @@ library(gt)
 ```{r}
 #| label: load-data
 #| message: false
-case0501 <- read_csv("https://dcgerard.github.io/stat_302/data/case0501.csv")
+case0501 <- read_csv("https://dcgerard.github.io/stat_302/data/case0501.csv") |>
+  mutate(Diet = factor(Diet, levels = c("NP", "N/N85", "N/R50", "R/R50", "lopro", "N/R40")))
 case0502 <- read_csv("https://dcgerard.github.io/stat_302/data/case0502.csv") |>
-  mutate(Judge = factor(Judge))
+  mutate(Judge = factor(Judge, levels = c("Spock's", "A", "B", "C", "D", "E", "F")))
 ```
 
 ## Case Study 5.1.1: Diet Restriction and Longevity
 
-A series of studies found that restricting caloric intake can dramatically
-increase life expectancy in animals. In one randomized experiment, female mice
-were assigned at random to one of six diet groups:
+- Restricting caloric intake can dramatically increase life expectancy in
+  animals.
+- Randomized experiment: female mice assigned at random to one of six diet
+  groups.
 
 | Label | Diet |
 |:------|:-----|
@@ -83,7 +86,6 @@ The response is **lifetime in months**. We are interested in:
 #| label: diet-eda
 #| fig-width: 7
 case0501 |>
-  mutate(Diet = factor(Diet, levels = c("NP", "N/N85", "N/R50", "R/R50", "lopro", "N/R40"))) |> ## Relevel to get boxplots in correct order
   ggplot(aes(x = Diet, y = Lifetime)) +
   geom_boxplot() +
   labs(y = "Lifetime (months)", x = "Diet group")
@@ -92,7 +94,6 @@ case0501 |>
 ```{r}
 #| label: diet-summary
 case0501 |>
-  mutate(Diet = factor(Diet, levels = c("NP", "N/N85", "N/R50", "R/R50", "lopro", "N/R40"))) |> ## Relevel to get boxplots in correct order
   group_by(Diet) |>
   summarise(n       = n(),
             Mean    = mean(Lifetime),
@@ -104,12 +105,15 @@ case0501 |>
 
 ## Case Study 5.1.2: The Spock Conspiracy Trial
 
-In 1968, Dr. Benjamin Spock was tried in Boston on charges related to encouraging draft resistance during the Vietnam War. The defense argued that the Spock trial judge (referred to here as "Spock's" judge) systematically underrepresented women on jury venires. They compared this judge's venires with those of six other Boston-area district judges (labeled A–F).
+- 1968: Dr. Benjamin Spock tried in Boston for encouraging draft resistance
+  (Vietnam War).
+- Defense argued the trial judge ("Spock's judge") systematically
+  underrepresented women on jury venires.
+- Compared this judge's venires with six other Boston-area district judges
+  (A–F).
+- **Observational study**: judge assignment to cases was not randomized.
+- Response: `Percent` = percentage of women on each venire.
 
-This is an **observational study**: judge assignment to cases was not
-randomized.
-
-The response is `Percent` — the percentage of women on each venire.
 We are interested in:
 
 1. Is Spock's judge's mean percent-women lower than the other judges?
@@ -122,19 +126,6 @@ We are interested in:
 ggplot(case0502, aes(x = Judge, y = Percent)) +
   geom_boxplot() +
   labs(y = "Percent women on venire")
-```
-
-```{r}
-#| label: spock-dotplot
-#| fig-width: 7
-#| echo: false
-#| eval: false
-ggplot(case0502, aes(x = Judge, y = Percent)) +
-  geom_jitter(width = 0.15, height = 0) +
-  stat_summary(fun = mean, geom = "crossbar",
-               color = "tomato", linewidth = 0.5, width = 0.55) +
-  labs(y = "Percent women on venire",
-       caption = "Red bars = group sample means")
 ```
 
 ---
@@ -156,16 +147,15 @@ observations.
 **Model:**
 $$Y_{ij} = \mu_i + \varepsilon_{ij}$$
 
-In words: each observed value equals the true group mean plus a random
-individual-level noise term. The noise captures everything we can't explain —
-genetic variation between mice, measurement error, day-to-day fluctuation in
-a judge's venire composition, etc.
-
-The key restriction is **equal variance**: $\sigma^2$ is assumed the same for
-every group and every individual. A mouse in the N/R40 diet group has the same
-background noise variance as a mouse in the NP group; they just have different
-expected lifetimes. This is the $I$-group generalization of the pooled
-two-sample $t$-test from Chapter 2.
+- Each observed value = true group mean + random individual-level noise.
+- Noise captures everything unexplained: genetic variation between mice,
+  measurement error, day-to-day fluctuation in a judge's venire, etc.
+- Key restriction — **equal variance**: $\sigma^2$ is the same for every group
+  and every individual.
+  - A mouse in the N/R40 group has the same noise variance as a mouse in NP;
+    they only differ in expected lifetime.
+- This is the $I$-group generalization of the pooled two-sample $t$-test
+  (Chapter 2).
 
 **Spock trial interpretation:**
 
@@ -188,8 +178,6 @@ two-sample $t$-test from Chapter 2.
 ---
 
 # Hypotheses
-
-With $I$ groups there are many possible hypotheses.
 
 ## Pairwise Hypotheses
 
@@ -220,30 +208,39 @@ judges?*
 Estimate $\mu_i$ with the group sample mean:
 $$\bar{Y}_{i\bullet} = \frac{1}{n_i}\sum_{j=1}^{n_i} Y_{ij}$$
 
+```{r}
+#| label: spock-dotplot
+#| fig-width: 7
+#| echo: false
+ggplot(case0502, aes(x = Judge, y = Percent)) +
+  geom_jitter(width = 0.15, height = 0) +
+  stat_summary(fun = mean, geom = "crossbar",
+               color = "tomato", linewidth = 0.5, width = 0.55) +
+  labs(y = "Percent women on venire",
+       caption = "Red bars = group sample means")
+```
+
 ## Pooled Variance
 
-Each group has its own sample standard deviation $s_i$, measuring the spread
-of observations *within* that group. Because we assume the same true variance
-$\sigma^2$ for every group, we can combine these within-group estimates into one
-more accurate estimate. We weight each group by the amount of information it
-contributes — groups with more observations get more weight:
+- Each group has its own sample SD $s_i$ = spread of observations *within*
+  that group.
+- Same true variance $\sigma^2$ assumed for every group $\Rightarrow$ combine
+  the within-group estimates into one more accurate estimate.
+- Weight each group by information contributed — more observations, more weight:
 
 $$s_p^2 = \frac{(n_1-1)s_1^2 + (n_2-1)s_2^2 + \cdots + (n_I-1)s_I^2}
                {(n_1-1) + (n_2-1) + \cdots + (n_I-1)}$$
 
-In words: each term $(n_i-1)s_i^2$ in the numerator is the sum of squared
-deviations from group $i$'s mean. Adding these across all groups gives the
-total within-group variation. Dividing by the total degrees of freedom gives
-the average within-group variance.
-
-The denominator is $\nu = n - I$ (the total degrees of freedom available for
-estimating variance within groups — we lose one degree of freedom per group
-because we estimated each group's mean).
+- Numerator: each $(n_i-1)s_i^2$ = sum of squared deviations from group $i$'s
+  mean; summed = total within-group variation.
+- Denominator $\nu = n - I$ = total degrees of freedom (lose one df per group
+  for estimating each group's mean).
+- So $s_p^2$ = average within-group variance.
 
 Two observations:
 
-- This is a weighted average of the within-group variance estimates, weighted
-  by their degrees of freedom.
+- Weighted average of the within-group variance estimates, weighted by their
+  degrees of freedom.
 - When $I = 2$ this reduces exactly to the pooled variance from Chapter 2.
 
 ---
@@ -324,7 +321,7 @@ $$
 For the Spock data ($I = 7$ judges), here is what each model predicts for
 each group:
 
-| Group | Judge | Full model prediction | Reduced model prediction |
+| Group | Judge | Full model estimates | Reduced model estimates |
 |:-----:|:------|:---------------------:|:------------------------:|
 | 1 | Spock's | $\bar{Y}_{1\bullet}$ | $\bar{Y}_{\bullet\bullet}$ |
 | 2 | Judge A | $\bar{Y}_{2\bullet}$ | $\bar{Y}_{\bullet\bullet}$ |
@@ -334,64 +331,16 @@ each group:
 | 6 | Judge E | $\bar{Y}_{6\bullet}$ | $\bar{Y}_{\bullet\bullet}$ |
 | 7 | Judge F | $\bar{Y}_{7\bullet}$ | $\bar{Y}_{\bullet\bullet}$ |
 
-In the **full model**, each group gets its own sample mean as a prediction.
-Spock's judge's venires are predicted by Spock's judge's average; Judge A's
-venires are predicted by Judge A's average; and so on. There are 7 free
-parameters — one per judge.
-
-In the **reduced model**, every observation — regardless of judge — is
-predicted by the same grand average $\bar{Y}_{\bullet\bullet}$ (the mean over
-all 46 venires). This is the model that says $H_0$ is true: if all judges
-have the same expected percent-women, then the best single prediction for any
-venire is just the overall average.
-
-**What is a residual?** A residual is simply the distance between an observed
-value and the model's prediction for it:
-
-- Full model residual: $Y_{ij} - \bar{Y}_{i\bullet}$ 
-
-  - how far observation $(i,j)$ is from *its group's mean*
-  
-- Reduced model residual: $Y_{ij} - \bar{Y}_{\bullet\bullet}$ 
-
-  - how far observation $(i,j)$ is from *the grand mean*
-
-Intuitively, if the groups really have different means, the full model
-residuals will be small (each observation is close to its own group mean),
-while the reduced model residuals will be large (observations from Spock's
-group, for example, are far from the overall grand mean).
-
-## Sums of Squared Residuals
-
-The **residual sum of squares** (RSS) for each model is:
-
-$$RSS_{full} = \sum_i \sum_j (Y_{ij} - \bar{Y}_{i\bullet})^2,
-\quad df_{full} = n - I$$
-
-$$RSS_{reduced} = \sum_i \sum_j (Y_{ij} - \bar{Y}_{\bullet\bullet})^2,
-\quad df_{reduced} = n - 1$$
-
-- Each RSS adds up all the squared residuals across every observation.
-  - a small RSS means predictions are close to the data
-  - a large RSS means they are far away. 
-  - Both RSS values involve squaring (so positive and negative residuals don't cancel) and summing (so we get a single overall measure).
-
-- The **extra sum of squares** (ESS) measures how much the fit improves when we go from the reduced model to the full model:
-
-  $$ESS = RSS_{reduced} - RSS_{full}, \quad df_{extra} = I - 1$$
-
-- **NOTE: $RSS_{reduced} \geq RSS_{full}$** 
-  - The full model has the reduced model as a special case: if all the $\mu_i$ happen to be equal, the full model's separate group means would all estimate the same value as the grand mean, and the two models would give identical fits. In general, the full model has more flexibility, so it can *never* fit worse than the reduced model. It can always do at least as well. Therefore $ESS \geq 0$ always.
-
-- **What does ESS tell us?** 
-  - If $H_0$ is true (all means really are equal), fitting separate group means should not improve the fit by very much — the data don't contain strong evidence for distinct groups. In that case, ESS will be positive but small. If the means truly differ (the data come from groups with different means), the full model will fit much better, and ESS will be large. The $F$-test formalizes what "small" and "large" mean.
-
-The plots below illustrate this for the Spock data. Red bars/lines show the
-model's fitted means; larger gaps between points and those lines = larger
-residuals.
-
+- **Full model**: each group gets its own sample mean as prediction.
+  - Spock's venires predicted by Spock's average, Judge A's by Judge A's, etc.
+  - 7 free parameters — one per judge.
+- **Reduced model**: every observation predicted by the same grand average
+  $\bar{Y}_{\bullet\bullet}$ (mean over all 46 venires).
+  - This is the $H_0$-is-true model: if all judges have the same expected
+    percent-women, the best single prediction is the overall average.
+    
 ```{r}
-#| label: null-vs-full
+#| label: null-vs-full.1
 #| echo: false
 #| fig-width: 9
 #| fig-height: 3.2
@@ -427,6 +376,111 @@ p_full <- ggplot(case0502, aes(x = Judge, y = Percent)) +
 p_null + p_full
 ```
 
+**What is a residual?** The distance between an observed value and the model's
+prediction for it:
+
+- Full model residual: $Y_{ij} - \bar{Y}_{i\bullet}$ 
+
+  - how far observation $(i,j)$ is from *its group's mean*
+  
+- Reduced model residual: $Y_{ij} - \bar{Y}_{\bullet\bullet}$ 
+
+  - how far observation $(i,j)$ is from *the grand mean*
+
+Intuitively, if the groups really have different means:
+
+- Full model residuals are small — each observation is close to its group mean.
+- Reduced model residuals are large — e.g. Spock's observations are far from
+  the grand mean.
+
+## Sums of Squared Residuals
+
+The **residual sum of squares** (RSS) for each model is:
+
+$$RSS_{full} = \sum_i \sum_j (Y_{ij} - \bar{Y}_{i\bullet})^2,
+\quad df_{full} = n - I$$
+
+$$RSS_{reduced} = \sum_i \sum_j (Y_{ij} - \bar{Y}_{\bullet\bullet})^2,
+\quad df_{reduced} = n - 1$$
+
+- Each RSS adds up all the squared residuals across every observation.
+  - a small RSS means predictions are close to the data
+  - a large RSS means they are far away. 
+  - Both RSS values involve squaring (so positive and negative residuals don't cancel) and summing (so we get a single overall measure).
+
+- The **extra sum of squares** (ESS) measures how much the fit improves when we go from the reduced model to the full model:
+
+  $$ESS = RSS_{reduced} - RSS_{full}, \quad df_{extra} = I - 1$$
+
+- **NOTE: $RSS_{reduced} \geq RSS_{full}$** (so $ESS \geq 0$ always)
+  - Reduced model is a special case of the full model (set all $\mu_i$ equal).
+  - Full model has more flexibility, so it can *never* fit worse — always at
+    least as good.
+
+- **What does ESS tell us?**
+  - $H_0$ true (means equal): separate group means barely improve fit $\Rightarrow$
+    ESS positive but small.
+  - Means truly differ: full model fits much better $\Rightarrow$ ESS large.
+  - The $F$-test formalizes what "small" and "large" mean.
+
+The plots below illustrate this for the Spock data. Red bars/lines show the
+model's fitted means; larger gaps between points and those lines = larger
+residuals (blue dashed lines).
+
+```{r}
+#| label: null-vs-full.2
+#| echo: false
+#| fig-width: 9
+#| fig-height: 3.2
+#| message: false
+ybar <- mean(case0502$Percent)
+
+grp_means <- case0502 |>
+  group_by(Judge) |>
+  summarise(mean_pct = mean(Percent))
+
+rss_null <- sum((case0502$Percent - ybar)^2)
+rss_full <- case0502 |>
+  left_join(grp_means, by = "Judge") |>
+  summarise(rss = sum((Percent - mean_pct)^2)) |>
+  pull(rss)
+
+## Pre-compute jittered x-positions so residual segments line up with points
+plot_df <- case0502 |>
+  left_join(grp_means, by = "Judge") |>
+  mutate(xpos = as.integer(Judge) + runif(n(), -0.12, 0.12))
+
+p_null <- ggplot(plot_df, aes(x = xpos, y = Percent)) +
+  geom_segment(aes(xend = xpos, yend = ybar),
+               color = "blue", linetype = "dashed", linewidth = 0.4) +
+  geom_point(alpha = 0.7) +
+  geom_hline(yintercept = ybar, color = "tomato",
+             linetype = "dashed", linewidth = 1) +
+  scale_x_continuous(breaks = 1:nlevels(case0502$Judge),
+                     labels = levels(case0502$Judge)) +
+  labs(x = "Judge",
+       title = "Null model: one overall mean",
+       subtitle = paste0("RSS_reduced = ", round(rss_null, 0))) +
+  theme(plot.subtitle = element_text(size = 9))
+
+p_full <- ggplot(plot_df, aes(x = xpos, y = Percent)) +
+  geom_segment(aes(xend = xpos, yend = mean_pct),
+               color = "blue", linetype = "dashed", linewidth = 0.4) +
+  geom_point(alpha = 0.7) +
+  geom_segment(data = grp_means,
+               aes(x = as.integer(Judge) - 0.3, xend = as.integer(Judge) + 0.3,
+                   y = mean_pct, yend = mean_pct),
+               color = "tomato", linewidth = 0.6, inherit.aes = FALSE) +
+  scale_x_continuous(breaks = 1:nlevels(case0502$Judge),
+                     labels = levels(case0502$Judge)) +
+  labs(x = "Judge",
+       title = "Full model: separate group means",
+       subtitle = paste0("RSS_full = ", round(rss_full, 0))) +
+  theme(plot.subtitle = element_text(size = 9))
+
+p_null + p_full
+```
+
 The squared residuals are much smaller under the full model, confirming that
 group means differ substantially.
 
@@ -450,9 +504,9 @@ ggplot(sq_resid_df, aes(x = Model, y = sq_resid)) +
 
 ## The $F$-Statistic
 
-If $H_0$ is true, both $ESS/df_{extra}$ and $RSS_{full}/df_{full} = s_p^2$
-estimate the same $\sigma^2$, so their ratio should be near 1. If $H_A$ is
-true, the means differ and $ESS$ will be inflated, pushing the ratio above 1.
+- $H_0$ true: both $ESS/df_{extra}$ and $RSS_{full}/df_{full} = s_p^2$ estimate
+  the same $\sigma^2$ $\Rightarrow$ ratio near 1.
+- $H_A$ true: means differ, $ESS$ inflated $\Rightarrow$ ratio above 1.
 
 $$F = \frac{ESS / df_{extra}}{s_p^2}
     = \frac{ESS / (I-1)}{RSS_{full} / (n-I)}$$
@@ -469,7 +523,7 @@ The $F$ distribution is parameterized by two degrees of freedom: numerator
 #| label: f-dist-shapes
 #| echo: false
 #| fig-width: 9
-#| fig-height: 3
+#| fig-height: 5
 x_seq <- seq(0, 6, length = 300)
 f_df <- bind_rows(
   data.frame(x = x_seq, y = df(x_seq, 2,   10),  label = "F(2, 10)"),
@@ -491,19 +545,42 @@ and $df_{full} = 39$.
 
 ```{r}
 #| label: spock-ftest-manual
-n     <- nrow(case0502)
-I     <- n_distinct(case0502$Judge)
-df_extra <- I - 1          # 6
-df_full  <- n - I          # 39
-ess      <- rss_null - rss_full
-sp2      <- rss_full / df_full
-fstat    <- (ess / df_extra) / sp2
-c(ESS = ess, RSS_full = rss_full, sp2 = sp2, F = fstat)
+case0502 |>
+  mutate(muhat_null = mean(Percent)) |> # null mean
+  group_by(Judge) |>
+  mutate(muhat_alt = mean(Percent)) |> # alt mean
+  ungroup() |>
+  mutate( 
+    resid_null = Percent - muhat_null, 
+    resid_alt = Percent - muhat_alt
+  ) |>
+  summarize(
+    rss_null = sum(resid_null^2),
+    rss_alt = sum(resid_alt^2),
+    n = n(),
+    I = n_distinct(Judge)
+  ) |>
+  mutate(
+    df_null = n - 1,
+    df_full = n - I,
+    df_extra = df_null - df_full, ## I - 1
+    ess = rss_null - rss_full,
+    sp2 = rss_full / df_full,
+    fstat = (ess / df_extra) / sp2
+  ) ->
+  df
+```
+
+```{r}
+#| echo: false
+df |>
+  gt() |>
+  fmt_number(columns = c(1,2,8,9,10), decimals = 2)
 ```
 
 ```{r}
 #| label: spock-pvalue
-pf(fstat, df1 = df_extra, df2 = df_full, lower.tail = FALSE)
+pf(df$fstat, df1 = df$df_extra, df2 = df$df_full, lower.tail = FALSE)
 ```
 
 ```{r}
@@ -512,16 +589,16 @@ pf(fstat, df1 = df_extra, df2 = df_full, lower.tail = FALSE)
 #| fig-height: 2.8
 x <- seq(0, 8, length = 500)
 y <- df(x, df1 = 6, df2 = 39)
-poly_x <- c(fstat, x[x >= fstat], max(x[x >= fstat]))
-poly_y <- c(0, y[x >= fstat], 0)
+poly_x <- c(df$fstat, x[x >= df$fstat], max(x[x >= df$fstat]))
+poly_y <- c(0, y[x >= df$fstat], 0)
 
 ggplot(data.frame(x = x, y = y), aes(x, y)) +
   geom_line() +
   geom_polygon(data = data.frame(x = poly_x, y = poly_y),
-               aes(x, y), fill = "steelblue", alpha = 0.6) +
-  geom_vline(xintercept = fstat, linetype = "dashed") +
-  annotate("text", x = fstat + 0.35, y = 0.05,
-           label = paste0("F* = ", round(fstat, 2)), hjust = 0) +
+               aes(x, y), fill = "#E69F00", alpha = 0.6, color = "#E69F00") +
+  geom_vline(xintercept = df$fstat, linetype = "dashed") +
+  annotate("text", x = df$fstat + 0.35, y = 0.05,
+           label = paste0("F* = ", round(df$fstat, 2)), hjust = 0) +
   labs(x = "F", y = "f(F)",
        title = expression(F[list(6, 39)] ~ "null distribution"),
        subtitle = "Shaded area = p-value")
@@ -535,19 +612,19 @@ An F-test can be used to compare any two **nested** models.
 
 In the Spock example, we had three nested models:
 
-- **Null**: all means equal $(\mu)$
-- **Intermediate**: Spock's judge differs from a common mean for the rest
+- **$H_1$**: all means equal $(\mu)$
+- **$H_2$**: Spock's judge differs from a common mean for the rest
   $(\mu_\text{Spock}, \mu_\text{others})$
-- **Full**: all seven means free $(\mu_1, \mu_2, \ldots, \mu_7)$
+- **$H_3$**: all seven means free $(\mu_1, \mu_2, \ldots, \mu_7)$
 
 Here is what each model predicts for each judge in the Spock data.
 
-**Null vs. Intermediate** — Is Spock's judge different from the rest?
+**$H_1$ vs. $H_2$** — Is Spock's judge different from the rest?
 
-- $H_0: \mu_1 = \cdots = \mu_7$ (all same)
-- $H_A: \mu_1 \neq \mu_2 = \cdots = \mu_7$ (Spock is different)
+- $H_1: \mu_1 = \cdots = \mu_7$ (all same)
+- $H_2: \mu_1 \neq \mu_2 = \cdots = \mu_7$ (Spock is different)
 
-| Group | Judge | Null (reduced) | Intermediate (full) |
+| Group | Judge | $H_1$ (reduced) | $H_2$ (full) |
 |:-----:|:------|:--------------:|:-------------------:|
 | 1 | Spock's | $\bar{Y}_{\bullet\bullet}$ | $\bar{Y}_{1\bullet}$ |
 | 2 | Judge A | $\bar{Y}_{\bullet\bullet}$ | $\bar{Y}_{0}$ |
@@ -557,15 +634,13 @@ Here is what each model predicts for each judge in the Spock data.
 | 6 | Judge E | $\bar{Y}_{\bullet\bullet}$ | $\bar{Y}_{0}$ |
 | 7 | Judge F | $\bar{Y}_{\bullet\bullet}$ | $\bar{Y}_{0}$ |
 
-Here $\bar{Y}_{\bullet\bullet}$ is the grand mean of all 46 venires, and
-$\bar{Y}_{0}$ is the average percent-women across all venires belonging to
-judges A–F (groups 2 through 7). The intermediate model has 2 parameters:
-one for Spock's judge ($\bar{Y}_{1\bullet}$) and one pooled mean for the
-remaining six judges ($\bar{Y}_{0}$).
+- $\bar{Y}_{\bullet\bullet}$ = grand mean of all 46 venires.
+- $\bar{Y}_{0}$ = average percent-women across all venires of judges A–F
+  (groups 2–7).
+- $H_2$ has 2 parameters: Spock's judge ($\bar{Y}_{1\bullet}$)
+  and one pooled mean for the other six ($\bar{Y}_{0}$).
 
-The plots below show how these two models fit the data. The drop in RSS
-when moving from the null to the intermediate model is the ESS for this
-test.
+Plots below: the drop in RSS from $H_1$ to $H_2$ is the ESS for this test.
 
 ```{r}
 #| label: null-vs-inter
@@ -597,7 +672,7 @@ p_null2 <- ggplot(case0502, aes(x = Judge, y = Percent)) +
   geom_jitter(width = 0.12, height = 0, alpha = 0.7) +
   geom_hline(yintercept = ybar, color = "tomato",
              linetype = "dashed", linewidth = 1) +
-  labs(title = "Null model: one overall mean",
+  labs(title = expression(H[1] * ": one overall mean"),
        subtitle = paste0("RSS = ", round(rss_null, 0))) +
   theme(plot.subtitle = element_text(size = 9))
 
@@ -607,19 +682,19 @@ p_inter <- ggplot(case0502, aes(x = Judge, y = Percent)) +
                aes(x = x, xend = xend, y = y, yend = yend),
                color = "tomato", linetype = "dashed", linewidth = 1,
                inherit.aes = FALSE) +
-  labs(title = "Intermediate model: Spock's judge differs",
+  labs(title = expression(H[2] * ": Spock's judge differs"),
        subtitle = paste0("RSS = ", round(rss_inter, 0))) +
   theme(plot.subtitle = element_text(size = 9))
 
 p_null2 + p_inter
 ```
 
-**Intermediate vs. Full** — Do judges A–F differ among themselves?
+**$H_2$ vs. $H_3$** — Do judges A–F differ among themselves?
 
-- $H_0: \mu_1 \neq \mu_2 = \cdots = \mu_7$ (Spock is different)
-- $H_A:$ At least one $\mu_i \neq \mu_j$ for $i,j\in \{2,\ldots,7\}$
+- $H_2: \mu_1 \neq \mu_2 = \cdots = \mu_7$ (Spock is different)
+- $H_3:$ At least one $\mu_i \neq \mu_j$ for $i,j\in \{2,\ldots,7\}$
 
-| Group | Judge | Intermediate (reduced) | Full |
+| Group | Judge | $H_2$ (reduced) | $H_3$ |
 |:-----:|:------|:----------------------:|:----:|
 | 1 | Spock's | $\bar{Y}_{1\bullet}$ | $\bar{Y}_{1\bullet}$ |
 | 2 | Judge A | $\bar{Y}_{0}$ | $\bar{Y}_{2\bullet}$ |
@@ -629,11 +704,10 @@ p_null2 + p_inter
 | 6 | Judge E | $\bar{Y}_{0}$ | $\bar{Y}_{6\bullet}$ |
 | 7 | Judge F | $\bar{Y}_{0}$ | $\bar{Y}_{7\bullet}$ |
 
-This test asks: after accounting for Spock's judge, do the remaining six
-judges' venires show any systematic differences from each other?
-
-The plots below compare the fit of the intermediate model (reduced) against
-the full model. The ESS here captures only the variation *among* judges A–F.
+- Asks: after accounting for Spock's judge, do the remaining six judges differ
+  from each other?
+- Plots below compare $H_2$ (reduced) vs. $H_3$; ESS here captures only
+  variation *among* judges A–F.
 
 ```{r}
 #| label: inter-vs-full
@@ -646,7 +720,7 @@ p_inter2 <- ggplot(case0502, aes(x = Judge, y = Percent)) +
                aes(x = x, xend = xend, y = y, yend = yend),
                color = "tomato", linetype = "dashed", linewidth = 1,
                inherit.aes = FALSE) +
-  labs(title = "Intermediate model: Spock's judge differs",
+  labs(title = expression(H[2] * ": Spock's judge differs"),
        subtitle = paste0("RSS = ", round(rss_inter, 0))) +
   theme(plot.subtitle = element_text(size = 9))
 
@@ -654,19 +728,19 @@ p_full2 <- ggplot(case0502, aes(x = Judge, y = Percent)) +
   geom_jitter(width = 0.12, height = 0, alpha = 0.7) +
   stat_summary(fun = mean, geom = "crossbar",
                color = "tomato", linewidth = 0.5, width = 0.55) +
-  labs(title = "Full model: all judges separate",
+  labs(title = expression(H[3] * ": all judges separate"),
        subtitle = paste0("RSS = ", round(rss_full, 0))) +
   theme(plot.subtitle = element_text(size = 9))
 
 p_inter2 + p_full2
 ```
 
-Notice that we always fit *both* models using *all* the data — we never
-discard Spock's judge's observations even when comparing only judges A–F. This
-matters for the variance estimate: instead of testing on a subset of 39 venires
-(judges A–F only, $df = 32$), we keep all 46 venires and use $s_p^2$ from the
-full model ($df = 39$). More degrees of freedom means a better variance
-estimate and a more powerful test.
+- Always fit *both* models using *all* the data — never discard Spock's
+  observations, even when comparing only judges A–F.
+- Matters for the variance estimate:
+  - Subset of 39 venires (A–F only): $df = 32$.
+  - All 46 venires with $s_p^2$ from the full model: $df = 39$.
+- More df $\Rightarrow$ better variance estimate $\Rightarrow$ more powerful test.
 
 ![Hierarchy of models for the Spock trial. Arrows show $F$-tests between adjacent models. RSS = residual sum of squares; df = degrees of freedom.](ch5_fig/model_hierarchy.svg){fig-align="center" width="90%"}
 
@@ -697,16 +771,16 @@ Before fitting, confirm the grouping variable is a `factor` or `character`:
 class(case0502$Judge)
 ```
 
-If it were numeric, `aov()` would treat it as a continuous predictor, not
-a grouping variable. Use `as.factor()` or `mutate(Judge = factor(Judge))`
-to fix this.
+- If numeric, `aov()` treats it as a continuous predictor, not a grouping
+  variable.
+- Fix with `as.factor()` or `mutate(Judge = factor(Judge))`.
 
 ## Omnibus $F$-Test with `aov()` and `tidy()`
 
 ```{r}
 #| label: aov-full
-aout_full <- aov(Percent ~ Judge, data = case0502)
-tidy(aout_full)
+aout_h3 <- aov(Percent ~ Judge, data = case0502)
+tidy(aout_h3)
 ```
 
 The table has two rows:
@@ -732,20 +806,21 @@ even when comparing just two groups.
 
 ## Nested Model Comparisons with `anova()`
 
-To test the intermediate hypothesis (Spock's differs; others pooled):
+To test $H_2$ (Spock's differs; others same) versus $H_1$ (all same):
 
 ```{r}
 #| label: nested-models
 case0502 <- case0502 |>
   mutate(isSpock = Judge == "Spock's")
 
-aout_intermediate <- aov(Percent ~ isSpock, data = case0502)
-aout_null         <- aov(Percent ~ 1,       data = case0502)
+aout_h2 <- aov(Percent ~ isSpock, data = case0502)
+aout_h1 <- aov(Percent ~ 1,       data = case0502)
 ```
 
 ```{r}
 #| label: spock-vs-others
-anova(aout_intermediate, aout_full)
+anova(aout_h2, aout_h3) |>
+  tidy()
 ```
 
 The rows are:
@@ -761,14 +836,12 @@ Compare all three models at once:
 
 ```{r}
 #| label: three-model-anova
-anova(aout_null, aout_intermediate, aout_full)
+anova(aout_h1, aout_h2, aout_h3) |>
+  tidy()
 ```
 
 This produces the sequential table shown in the hierarchy section above. Row 2
-tests Null vs Intermediate; Row 3 tests Intermediate vs Full.
-
-Note: the $F$-statistics shown here use $s_p^2$ from the **full** model
-(`aout_full`) as the denominator.
+tests $H_1$ vs $H_2$; Row 3 tests $H_2$ vs $H_3$.
 
 ---
 
@@ -799,7 +872,7 @@ The quickest way is `plot()` applied to an `aov()` object:
 #| fig-width: 7
 #| fig-height: 6
 par(mfrow = c(2, 2))
-plot(aout_full)
+plot(aout_h3)
 par(mfrow = c(1, 1))
 ```
 
@@ -812,10 +885,14 @@ The two most important panels:
 
 ## Manual `ggplot2` Residual Plots
 
+- Use `augment()` to get the fitted values and the residuals.
+
+- You can then use ggplot2 code as you like.
+
 ```{r}
 #| label: ggplot-resids
 #| warning: false
-aug_full <- augment(aout_full)
+aug_full <- augment(aout_h3)
 
 p_rv_fit <- ggplot(aug_full, aes(x = .fitted, y = .resid)) +
   geom_point() +
@@ -881,26 +958,22 @@ tibble(resid = resid_out, fitted = aug_full$.fitted) |>
 |:----------|:---------|
 | Independence | ANOVA with blocking (Chapters 12–13) |
 | Unequal variance | Welch-style ANOVA; log transformation |
-| Non-normality / outliers | Transformation; run with and without outlier |
+| Non-normality / outliers | Transformation; run with and without outlier ; Kruskal-Wallis |
 
 ---
 
 # Random Effects
 
-In the fixed-effects model above, the groups (judges, diets) are the
-specific groups of interest — we want to compare these particular groups.
-
-Sometimes the groups are **not** of direct interest. Instead, they are a
-random sample from a larger population of groups, and we want to make
-inferences about **variability among groups** in that population.
-
-**Example**: Quality control — measuring output of 7 randomly selected
-machines from a factory. We don't care about those specific 7 machines; we
-want to know how much machine-to-machine variability exists across the entire
-factory floor.
-
-When groups are a random sample from a larger population of groups, use the
-**random-effects model**.
+- **Fixed effects** (so far): the groups (judges, diets) are the specific
+  groups of interest — we compare these particular groups.
+- **Random effects**: groups are *not* of direct interest.
+  - They are a random sample from a larger population of groups.
+  - Goal: infer **variability among groups** in that population.
+- **Example** — quality control: output of 7 randomly selected machines.
+  - Don't care about those 7 specific machines.
+  - Want machine-to-machine variability across the whole factory floor.
+- When groups are a random sample from a larger population, use the
+  **random-effects model**.
 
 ## The Random-Effects Model
 
@@ -911,12 +984,11 @@ $$Y_{ij} = \mu_i + \varepsilon_{ij},
 $$\mu_i = \mu + \xi_i,
 \quad \text{var}(\xi_i) = \sigma_p^2$$
 
-The first line is identical to the fixed-effects model. The second line says
-that each group mean $\mu_i$ is itself **random** — it is the overall average
-$\mu$ plus a random group-specific deviation $\xi_i$. These deviations have
-mean 0 and variance $\sigma_p^2$.
+- Line 1: identical to the fixed-effects model.
+- Line 2: each group mean $\mu_i$ is itself **random** — overall average $\mu$
+  plus a random group-specific deviation $\xi_i$ (mean 0, variance $\sigma_p^2$).
 
-In words: every observation has two sources of randomness:
+Every observation has two sources of randomness:
 
 1. **Within-group noise** $\varepsilon_{ij}$: how much individual $j$ in
    group $i$ differs from its group's mean (variance $\sigma^2$).
@@ -935,13 +1007,12 @@ the same $F_{I-1,\, n-I}$ null distribution.
 
 ## Why Use This Model?
 
-In one-way ANOVA, the $p$-value from the $F$-test is identical whether you
-treat groups as fixed or random. So why bother with random effects?
-
-In more complex models — for example, when you have multiple random factors,
-or when the same individuals appear in multiple groups — treating groups as
-random leads to different (and generally better) estimates and inference.
-The one-way case is the simplest introduction to this framework.
+- In one-way ANOVA, the $F$-test $p$-value is identical for fixed or random
+  groups. So why bother?
+- In more complex models — multiple random factors, or the same individuals
+  in multiple groups — treating groups as random gives different (generally
+  better) estimates and inference.
+- The one-way case is the simplest introduction to this framework.
 
 ## Intraclass Correlation (ICC)
 
@@ -950,9 +1021,9 @@ membership**:
 
 $$\text{ICC} = \frac{\hat\sigma_p^2}{\hat\sigma_p^2 + \hat\sigma^2}$$
 
-To see why: the total variance of any observation $Y_{ij}$ is
-$\sigma_p^2 + \sigma^2$ (between-group plus within-group). The ICC is the
-fraction of that total coming from between-group differences.
+- Total variance of any $Y_{ij}$ = $\sigma_p^2 + \sigma^2$ (between-group +
+  within-group).
+- ICC = fraction of that total coming from between-group differences.
 
 - **ICC close to 1**: most variation is *between* groups — knowing the group
   an observation belongs to tells you most of what you need to know about its
@@ -1002,8 +1073,8 @@ $p$-values (unadjusted).
 
 ```
 
-**5.** Fit the three nested models for the Spock data (null, intermediate,
-full) and reproduce the sequential ANOVA table using `anova()`.
+**5.** Fit the three nested models for the Spock data ($H_1$, $H_2$, $H_3$)
+and reproduce the sequential ANOVA table using `anova()`.
 
   a. What is Spock's judge's estimated percent-women on the venire?
   b. What is the pooled estimate for the other six judges?
