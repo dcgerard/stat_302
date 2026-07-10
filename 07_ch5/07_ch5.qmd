@@ -843,6 +843,22 @@ anova(aout_h1, aout_h2, aout_h3) |>
 This produces the sequential table shown in the hierarchy section above. Row 2
 tests $H_1$ vs $H_2$; Row 3 tests $H_2$ vs $H_3$.
 
+
+::: {.callout-warning}
+# Unnecessary Detail
+Note that in R, it is customary to use the fullest model's estimate of $\sigma^2$ in the denominator for **all** $F$-statistics in an ANOVA table. Thus, we get slightly different results for
+```{r}
+anova(aout_h1, aout_h2)$F[[2]]
+anova(aout_h1, aout_h2, aout_h3)$F[[2]]
+```
+
+- Both $F$-statistics evaluate $H_1$ versus $H_2$
+- The first estimates $\sigma^2$ from the $H_2$ fit.
+- The second estimates $\sigma^2$ from the $H_3$ fit.
+- The idea is that the least biased (though, not necessarily the best) estimate of $\sigma^2$ comes from the most complicated model.
+- In practice, I don't think this matters that much. But it is something to be aware of.
+:::
+
 ---
 
 # Assumptions and Diagnostics
@@ -859,9 +875,18 @@ order of importance:
 The **residual** for observation $(i,j)$ under the full model is:
 $$e_{ij} = Y_{ij} - \bar{Y}_{i\bullet}$$
 
-Plotting residuals removes the group-mean structure, letting us focus on
-the *variation about the mean* without visual clutter from the differences
-in means between groups.
+Plotting residuals removes the group-mean structure, letting us focus on the *variation about the mean* without visual clutter from the differences in means between groups.
+
+::: {.callout-important}
+# Which Model to Evaluate?
+Evaluate a rich model. 
+
+In the Spock case, the one where each judge has its own mean.
+
+In the longevity case, the one where each diet has its own mean.
+
+The reduced models might be wrong. This would violate the indepdendence assumption, since residuals within groups would be correlated due to the group structure.
+:::
 
 ## Residual Plots in R
 
@@ -958,7 +983,7 @@ tibble(resid = resid_out, fitted = aug_full$.fitted) |>
 |:----------|:---------|
 | Independence | ANOVA with blocking (Chapters 12–13) |
 | Unequal variance | Welch-style ANOVA; log transformation |
-| Non-normality / outliers | Transformation; run with and without outlier ; Kruskal-Wallis |
+| Non-normality / outliers | Transformation; run with and without outlier; Kruskal-Wallis |
 
 ---
 
