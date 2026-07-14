@@ -44,14 +44,14 @@ case0502 <- read_csv("https://dcgerard.github.io/stat_302/data/case0502.csv") |>
   mutate(Judge = factor(Judge))
 ```
 
-The model is $Y_{ij} = \mu_i + \varepsilon_{ij}$, where $Y_{ij}$ is the
-percent women on venire $j$ of judge $i$, $\mu_i$ is judge $i$'s true mean,
-and $\varepsilon_{ij}$ is individual noise with variance $\sigma^2$. There
-are $I = 7$ judges and $n = 46$ venires.
-
-The omnibus $F$-test from Chapter 5 gave very strong evidence that the seven
-judges do not all have the same mean ($p < 0.001$). Now we want to ask more
-specific questions.
+- The model is $Y_{ij} = \mu_i + \varepsilon_{ij}$, where
+  - $Y_{ij}$ is the percent women on venire $j$ of judge $i$,
+  - $\mu_i$ is judge $i$'s true mean,
+  - $\varepsilon_{ij}$ is individual noise with variance $\sigma^2$.
+- There are $I = 7$ judges and $n = 46$ venires.
+- The omnibus $F$-test from Chapter 5 gave very strong evidence that the seven
+  judges do not all have the same mean ($p < 0.001$). Now we want to ask more
+  specific questions.
 
 ---
 
@@ -142,10 +142,11 @@ aout_full <- aov(Percent ~ Judge, data = case0502)
 coef(aout_full)
 ```
 
-The interpretation: `(Intercept)` = $\hat{\mu}_A$ (judge A's mean);
-`JudgeB` = $\hat{\mu}_B - \hat{\mu}_A$; and so on. The group means are
-$\hat{\mu}_i = \hat{\mu} + \hat{\delta}_i$, but this parameterization
-makes setting up coefficient vectors awkward.
+- Interpretation:
+  - `(Intercept)` = $\hat{\mu}_A$ (judge A's mean);
+  - `JudgeB` = $\hat{\mu}_B - \hat{\mu}_A$; and so on.
+- The group means are $\hat{\mu}_i = \hat{\mu} + \hat{\delta}_i$, but this
+  parameterization makes setting up coefficient vectors awkward.
 
 ## Forcing the Group-Means Parameterization
 
@@ -222,7 +223,7 @@ The order is `A, B, C, D, E, F, Spock's` — so position 7 is Spock's judge.
 
 - The $J$ groups have coefficients $1/J$ and the $K$ groups have coefficients $-1/K$.
 
-- E.g., suppose we want to test if the average of means of Judges A, B, and C was the same as the average of means of Judges C, D, and E
+- E.g., suppose we want to test if the average of means of Judges A, B, and C was the same as the average of means of Judges D, E, and F
   - We are not really interested in this hypothesis. This is for demonstration purposes.
   
   $$H_0: \tfrac{1}{3}\mu_A + \tfrac{1}{3}\mu_B + \tfrac{1}{3}\mu_C - \tfrac{1}{3}\mu_D - \tfrac{1}{3}\mu_E - \tfrac{1}{3}\mu_F = 0$$

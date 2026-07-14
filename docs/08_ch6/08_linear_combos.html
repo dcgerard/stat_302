@@ -269,8 +269,16 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>case0502 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0502.csv"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Judge =</span> <span class="fu">factor</span>(Judge))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The model is <span class="math inline">\(Y_{ij} = \mu_i + \varepsilon_{ij}\)</span>, where <span class="math inline">\(Y_{ij}\)</span> is the percent women on venire <span class="math inline">\(j\)</span> of judge <span class="math inline">\(i\)</span>, <span class="math inline">\(\mu_i\)</span> is judge <span class="math inline">\(i\)</span>’s true mean, and <span class="math inline">\(\varepsilon_{ij}\)</span> is individual noise with variance <span class="math inline">\(\sigma^2\)</span>. There are <span class="math inline">\(I = 7\)</span> judges and <span class="math inline">\(n = 46\)</span> venires.</p>
-<p>The omnibus <span class="math inline">\(F\)</span>-test from Chapter 5 gave very strong evidence that the seven judges do not all have the same mean (<span class="math inline">\(p &lt; 0.001\)</span>). Now we want to ask more specific questions.</p>
+<ul>
+<li>The model is <span class="math inline">\(Y_{ij} = \mu_i + \varepsilon_{ij}\)</span>, where
+<ul>
+<li><span class="math inline">\(Y_{ij}\)</span> is the percent women on venire <span class="math inline">\(j\)</span> of judge <span class="math inline">\(i\)</span>,</li>
+<li><span class="math inline">\(\mu_i\)</span> is judge <span class="math inline">\(i\)</span>’s true mean,</li>
+<li><span class="math inline">\(\varepsilon_{ij}\)</span> is individual noise with variance <span class="math inline">\(\sigma^2\)</span>.</li>
+</ul></li>
+<li>There are <span class="math inline">\(I = 7\)</span> judges and <span class="math inline">\(n = 46\)</span> venires.</li>
+<li>The omnibus <span class="math inline">\(F\)</span>-test from Chapter 5 gave very strong evidence that the seven judges do not all have the same mean (<span class="math inline">\(p &lt; 0.001\)</span>). Now we want to ask more specific questions.</li>
+</ul>
 <hr>
 </section>
 <section id="linear-combinations" class="level1">
@@ -337,7 +345,14 @@ JudgeSpock's
  -19.4977778 </code></pre>
 </div>
 </div>
-<p>The interpretation: <code>(Intercept)</code> = <span class="math inline">\(\hat{\mu}_A\)</span> (judge A’s mean); <code>JudgeB</code> = <span class="math inline">\(\hat{\mu}_B - \hat{\mu}_A\)</span>; and so on. The group means are <span class="math inline">\(\hat{\mu}_i = \hat{\mu} + \hat{\delta}_i\)</span>, but this parameterization makes setting up coefficient vectors awkward.</p>
+<ul>
+<li>Interpretation:
+<ul>
+<li><code>(Intercept)</code> = <span class="math inline">\(\hat{\mu}_A\)</span> (judge A’s mean);</li>
+<li><code>JudgeB</code> = <span class="math inline">\(\hat{\mu}_B - \hat{\mu}_A\)</span>; and so on.</li>
+</ul></li>
+<li>The group means are <span class="math inline">\(\hat{\mu}_i = \hat{\mu} + \hat{\delta}_i\)</span>, but this parameterization makes setting up coefficient vectors awkward.</li>
+</ul>
 </section>
 <section id="forcing-the-group-means-parameterization" class="level2">
 <h2 class="anchored" data-anchor-id="forcing-the-group-means-parameterization">Forcing the Group-Means Parameterization</h2>
@@ -427,7 +442,7 @@ JudgeSpock's
 \gamma = \frac{\mu_{1.1} + \cdots + \mu_{1.J}}{J} - \frac{\mu_{2.1}+\cdots+\mu_{2.K}}{K}.
 \]</span></p></li>
 <li><p>The <span class="math inline">\(J\)</span> groups have coefficients <span class="math inline">\(1/J\)</span> and the <span class="math inline">\(K\)</span> groups have coefficients <span class="math inline">\(-1/K\)</span>.</p></li>
-<li><p>E.g., suppose we want to test if the average of means of Judges A, B, and C was the same as the average of means of Judges C, D, and E</p>
+<li><p>E.g., suppose we want to test if the average of means of Judges A, B, and C was the same as the average of means of Judges D, E, and F</p>
 <ul>
 <li>We are not really interested in this hypothesis. This is for demonstration purposes.</li>
 </ul>

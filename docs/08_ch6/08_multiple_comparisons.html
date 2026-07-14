@@ -448,7 +448,7 @@ P value adjustment method: none </code></pre>
 <h2 class="anchored" data-anchor-id="holm">Holm</h2>
 <ul>
 <li><p>More powerful alternative to Bonferroni, with applications in the exact same scenarios as Bonferroni.</p></li>
-<li><p>We won’t cover what it does exactly. But you should always use it over Bonferroni. (Holm the default in R’s <code>p.adjust()</code>).</p>
+<li><p>We won’t cover what it does exactly. But you should always use it over Bonferroni. (Holm is the default in R’s <code>p.adjust()</code>).</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pvec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.001</span>, <span class="fl">0.01</span>, <span class="fl">0.03</span>, <span class="fl">0.04</span>, <span class="fl">0.05</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -477,9 +477,9 @@ P value adjustment method: none </code></pre>
 <li>Let <span class="math inline">\(\bar{Y}_{\max}\)</span> be the maximum mean of <span class="math inline">\(I\)</span> groups.</li>
 <li>Let <span class="math inline">\(\bar{Y}_{\min}\)</span> be the min mean of <span class="math inline">\(I\)</span> groups.</li>
 <li>If the sample sizes are all the same, then SE of each pairwise comparison is <span class="math inline">\(s_{p}\sqrt{1/n + 1/n}\)</span>. Call this <span class="math inline">\(\text{SE}\)</span>.</li>
-<li>All pairwise tests reject when <span class="math display">\[
-\frac{\bar{Y}_i - \bar{Y}_J}{\text{SE}} &lt; C
-\]</span> for some <span class="math inline">\(C\)</span>.</li>
+<li>A pairwise test rejects when <span class="math display">\[
+\frac{|\bar{Y}_i - \bar{Y}_j|}{\text{SE}} &gt; C
+\]</span> for some cutoff <span class="math inline">\(C\)</span>.</li>
 <li>Tukey-Kramer find the distribution of <span class="math display">\[
 \frac{\bar{Y}_{\max} - \bar{Y}_{\min}}{\text{SE}}
 \]</span></li>
@@ -637,7 +637,7 @@ Wheelchair-None      0.4428571 -1.2888756  2.1745899 0.9517374</code></pre>
 <section id="other-methods" class="level1">
 <h1>Other methods</h1>
 <ul>
-<li>Dunnett: All pairwise comparisons versus a single reference value.
+<li>Dunnett: All comparisons versus a single reference value.
 <ul>
 <li>I.e., if <span class="math inline">\(\mu_0\)</span> is the reference mean, then it will calculate tests and confidence intervals for <span class="math inline">\(\mu_0 - \mu_i\)</span> for all other <span class="math inline">\(i\)</span>.</li>
 <li>More powerful than Tukey when you just care about reference comparisons.</li>

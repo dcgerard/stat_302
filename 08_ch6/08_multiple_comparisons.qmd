@@ -181,7 +181,7 @@ $$\text{FWER} \leq Pr(mp_1 \leq \alpha) + \cdots + Pr(mp_{m_0} \leq \alpha)
 
 - More powerful alternative to Bonferroni, with applications in the exact same scenarios as Bonferroni.
 
--   We won't cover what it does exactly. But you should always use it over Bonferroni. (Holm the default in R's `p.adjust()`).
+-   We won't cover what it does exactly. But you should always use it over Bonferroni. (Holm is the default in R's `p.adjust()`).
 
     ```{r}
     pvec <- c(0.001, 0.01, 0.03, 0.04, 0.05)
@@ -206,11 +206,11 @@ $$\text{FWER} \leq Pr(mp_1 \leq \alpha) + \cdots + Pr(mp_{m_0} \leq \alpha)
   - Let $\bar{Y}_{\max}$ be the maximum mean of $I$ groups.
   - Let $\bar{Y}_{\min}$ be the min mean of $I$ groups.
   - If the sample sizes are all the same, then SE of each pairwise comparison is $s_{p}\sqrt{1/n + 1/n}$. Call this $\text{SE}$.
-  - All pairwise tests reject when
+  - A pairwise test rejects when
     $$
-    \frac{\bar{Y}_i - \bar{Y}_J}{\text{SE}} < C
+    \frac{|\bar{Y}_i - \bar{Y}_j|}{\text{SE}} > C
     $$
-    for some $C$.
+    for some cutoff $C$.
   - Tukey-Kramer find the distribution of 
     $$
     \frac{\bar{Y}_{\max} - \bar{Y}_{\min}}{\text{SE}}
@@ -293,7 +293,7 @@ plot(tout)
 
 # Other methods
 
-- Dunnett: All pairwise comparisons versus a single reference value. 
+- Dunnett: All comparisons versus a single reference value.
   - I.e., if $\mu_0$ is the reference mean, then it will calculate tests and confidence intervals for $\mu_0 - \mu_i$ for all other $i$.
   - More powerful than Tukey when you just care about reference comparisons.
   
