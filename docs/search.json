@@ -1194,14 +1194,14 @@
     "href": "08_ch6/08_multiple_comparisons.html#holm",
     "title": "Multiple Comparisons",
     "section": "Holm",
-    "text": "Holm\n\nProcedure: order raw \\(p\\)-values \\(p_{(1)} \\leq p_{(2)} \\leq \\cdots \\leq p_{(m)}\\).\n\n\\(k\\)th smallest adjusted to \\(\\min\\bigl((m - k + 1) \\cdot p_{(k)},\\; 1\\bigr)\\).\nApplied sequentially so adjusted values are non-decreasing.\n\nConditions: same as Bonferroni — any pre-planned tests.\nAdvantage: uniformly more powerful than Bonferroni (rejects at least as often), still controls FWER at \\(\\alpha\\)."
+    "text": "Holm\n\nMore powerful alternative to Bonferroni, with applications in the exact same scenarios as Bonferroni.\nWe won’t cover what it does exactly. But you should always use it over Bonferroni. (Holm the default in R’s p.adjust()).\n\npvec &lt;- c(0.001, 0.01, 0.03, 0.04, 0.05)\n\n\np.adjust(pvec, method = \"bonferroni\")\n\n[1] 0.005 0.050 0.150 0.200 0.250\n\n\n\np.adjust(pvec, method = \"holm\")\n\n[1] 0.005 0.040 0.090 0.090 0.090"
   },
   {
     "objectID": "08_ch6/08_multiple_comparisons.html#tukey-kramer",
     "href": "08_ch6/08_multiple_comparisons.html#tukey-kramer",
     "title": "Multiple Comparisons",
     "section": "Tukey-Kramer",
-    "text": "Tukey-Kramer\n\nProcedure: uses the studentized range distribution for exact \\(p\\)-values and CIs across all \\(\\binom{I}{2}\\) pairwise comparisons at once.\nConditions: only valid for all pairwise comparisons in a one-way ANOVA (balanced or unbalanced, pre-planned).\nAdvantage: smaller adjusted \\(p\\)-values than Bonferroni/Holm when goal is all pairwise tests."
+    "text": "Tukey-Kramer\n\nProcedure: uses the studentized range distribution for exact \\(p\\)-values and CIs across all \\(\\binom{I}{2}\\) pairwise comparisons at once.\nConditions: only valid for all pairwise comparisons in a one-way ANOVA.\nAdvantage: smaller adjusted \\(p\\)-values than Bonferroni/Holm when goal is all pairwise tests.\nIntuition:\n\nLet \\(\\bar{Y}_{\\max}\\) be the maximum mean of \\(I\\) groups.\nLet \\(\\bar{Y}_{\\min}\\) be the min mean of \\(I\\) groups.\nIf the sample sizes are all the same, then SE of each pairwise comparison is \\(s_{p}\\sqrt{1/n + 1/n}\\). Call this \\(\\text{SE}\\).\nAll pairwise tests reject when \\[\n\\frac{\\bar{Y}_i - \\bar{Y}_J}{\\text{SE}} &lt; C\n\\] for some \\(C\\).\nTukey-Kramer find the distribution of \\[\n\\frac{\\bar{Y}_{\\max} - \\bar{Y}_{\\min}}{\\text{SE}}\n\\]\nThis is called the “Studentized Range Distribution”. It’s essentially how extreme the largest \\(t\\)-statistic (among \\(\\binom{I}{2}\\) pairwise comparisons) can get.\nQuantiles of this distribution are used to find \\(C\\) to control the family wise Type I error rate."
   },
   {
     "objectID": "08_ch6/08_multiple_comparisons.html#bonferroni-adjustment",

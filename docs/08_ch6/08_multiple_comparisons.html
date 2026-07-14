@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-07-10">
+<meta name="dcterms.date" content="2026-07-14">
 
 <title>Multiple Comparisons – Stat 302: Intermediate Statistics</title>
 <style>
@@ -206,6 +206,7 @@ window.Quarto = {
   <li><a href="#tukey-kramer-adjustment" id="toc-tukey-kramer-adjustment" class="nav-link" data-scroll-target="#tukey-kramer-adjustment">Tukey-Kramer Adjustment</a></li>
   <li><a href="#adjusted-confidence-intervals" id="toc-adjusted-confidence-intervals" class="nav-link" data-scroll-target="#adjusted-confidence-intervals">Adjusted Confidence Intervals</a></li>
   </ul></li>
+  <li><a href="#other-methods" id="toc-other-methods" class="nav-link" data-scroll-target="#other-methods">Other methods</a></li>
   </ul>
 </nav>
     </div>
@@ -231,7 +232,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 10, 2026</p>
+      <p class="date">July 14, 2026</p>
     </div>
   </div>
   
@@ -446,21 +447,45 @@ P value adjustment method: none </code></pre>
 <section id="holm" class="level2">
 <h2 class="anchored" data-anchor-id="holm">Holm</h2>
 <ul>
-<li><strong>Procedure:</strong> order raw <span class="math inline">\(p\)</span>-values <span class="math inline">\(p_{(1)} \leq p_{(2)} \leq \cdots \leq p_{(m)}\)</span>.
-<ul>
-<li><span class="math inline">\(k\)</span>th smallest adjusted to <span class="math inline">\(\min\bigl((m - k + 1) \cdot p_{(k)},\; 1\bigr)\)</span>.</li>
-<li>Applied sequentially so adjusted values are non-decreasing.</li>
-</ul></li>
-<li><strong>Conditions:</strong> same as Bonferroni — any pre-planned tests.</li>
-<li><strong>Advantage:</strong> uniformly more powerful than Bonferroni (rejects at least as often), still controls FWER at <span class="math inline">\(\alpha\)</span>.</li>
+<li><p>More powerful alternative to Bonferroni, with applications in the exact same scenarios as Bonferroni.</p></li>
+<li><p>We won’t cover what it does exactly. But you should always use it over Bonferroni. (Holm the default in R’s <code>p.adjust()</code>).</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pvec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.001</span>, <span class="fl">0.01</span>, <span class="fl">0.03</span>, <span class="fl">0.04</span>, <span class="fl">0.05</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(pvec, <span class="at">method =</span> <span class="st">"bonferroni"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.005 0.050 0.150 0.200 0.250</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(pvec, <span class="at">method =</span> <span class="st">"holm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.005 0.040 0.090 0.090 0.090</code></pre>
+</div>
+</div></li>
 </ul>
 </section>
 <section id="tukey-kramer" class="level2">
 <h2 class="anchored" data-anchor-id="tukey-kramer">Tukey-Kramer</h2>
 <ul>
-<li><strong>Procedure:</strong> uses the <em>studentized range distribution</em> for exact <span class="math inline">\(p\)</span>-values and CIs across all <span class="math inline">\(\binom{I}{2}\)</span> pairwise comparisons at once.</li>
-<li><strong>Conditions:</strong> only valid for <strong>all pairwise comparisons</strong> in a one-way ANOVA (balanced or unbalanced, pre-planned).</li>
-<li><strong>Advantage:</strong> smaller adjusted <span class="math inline">\(p\)</span>-values than Bonferroni/Holm when goal is all pairwise tests.</li>
+<li><p><strong>Procedure:</strong> uses the <em>studentized range distribution</em> for exact <span class="math inline">\(p\)</span>-values and CIs across all <span class="math inline">\(\binom{I}{2}\)</span> pairwise comparisons at once.</p></li>
+<li><p><strong>Conditions:</strong> only valid for <strong>all pairwise comparisons</strong> in a one-way ANOVA.</p></li>
+<li><p><strong>Advantage:</strong> smaller adjusted <span class="math inline">\(p\)</span>-values than Bonferroni/Holm when goal is all pairwise tests.</p></li>
+<li><p><strong>Intuition</strong>:</p>
+<ul>
+<li>Let <span class="math inline">\(\bar{Y}_{\max}\)</span> be the maximum mean of <span class="math inline">\(I\)</span> groups.</li>
+<li>Let <span class="math inline">\(\bar{Y}_{\min}\)</span> be the min mean of <span class="math inline">\(I\)</span> groups.</li>
+<li>If the sample sizes are all the same, then SE of each pairwise comparison is <span class="math inline">\(s_{p}\sqrt{1/n + 1/n}\)</span>. Call this <span class="math inline">\(\text{SE}\)</span>.</li>
+<li>All pairwise tests reject when <span class="math display">\[
+\frac{\bar{Y}_i - \bar{Y}_J}{\text{SE}} &lt; C
+\]</span> for some <span class="math inline">\(C\)</span>.</li>
+<li>Tukey-Kramer find the distribution of <span class="math display">\[
+\frac{\bar{Y}_{\max} - \bar{Y}_{\min}}{\text{SE}}
+\]</span></li>
+<li>This is called the “Studentized Range Distribution”. It’s essentially how extreme the largest <span class="math inline">\(t\)</span>-statistic (among <span class="math inline">\(\binom{I}{2}\)</span> pairwise comparisons) can get.</li>
+<li>Quantiles of this distribution are used to find <span class="math inline">\(C\)</span> to control the family wise Type I error rate.</li>
+</ul></li>
 </ul>
 <hr>
 </section>
@@ -469,14 +494,14 @@ P value adjustment method: none </code></pre>
 <h1>Implementation in R</h1>
 <p>Continuing with the handicap study (<code>case0601</code>):</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>aout_handicap <span class="ot">&lt;-</span> <span class="fu">aov</span>(Score <span class="sc">~</span> Handicap, <span class="at">data =</span> case0601)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>aout_handicap <span class="ot">&lt;-</span> <span class="fu">aov</span>(Score <span class="sc">~</span> Handicap, <span class="at">data =</span> case0601)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="bonferroni-adjustment" class="level2">
 <h2 class="anchored" data-anchor-id="bonferroni-adjustment">Bonferroni Adjustment</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.t.test</span>(<span class="at">x =</span> case0601<span class="sc">$</span>Score,</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">g =</span> case0601<span class="sc">$</span>Handicap,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.t.test</span>(<span class="at">x =</span> case0601<span class="sc">$</span>Score,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">g =</span> case0601<span class="sc">$</span>Handicap,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pairwise comparisons using t tests with pooled SD 
@@ -496,9 +521,9 @@ P value adjustment method: bonferroni </code></pre>
 <section id="holm-adjustment" class="level2">
 <h2 class="anchored" data-anchor-id="holm-adjustment">Holm Adjustment</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.t.test</span>(<span class="at">x =</span> case0601<span class="sc">$</span>Score,</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">g =</span> case0601<span class="sc">$</span>Handicap,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">p.adjust.method =</span> <span class="st">"holm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.t.test</span>(<span class="at">x =</span> case0601<span class="sc">$</span>Score,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">g =</span> case0601<span class="sc">$</span>Handicap,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">p.adjust.method =</span> <span class="st">"holm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pairwise comparisons using t tests with pooled SD 
@@ -522,8 +547,8 @@ P value adjustment method: holm </code></pre>
 <li>Returns all pairwise comparisons with Tukey-adjusted <span class="math inline">\(p\)</span>-values and CIs.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>tout <span class="ot">&lt;-</span> <span class="fu">TukeyHSD</span>(aout_handicap)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>tout</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>tout <span class="ot">&lt;-</span> <span class="fu">TukeyHSD</span>(aout_handicap)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>tout</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Tukey multiple comparisons of means
     95% family-wise confidence level
@@ -545,7 +570,7 @@ Wheelchair-None      0.4428571 -1.2888756  2.1745899 0.9517374</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -607,9 +632,24 @@ Wheelchair-None      0.4428571 -1.2888756  2.1745899 0.9517374</code></pre>
 </ul>
 </div>
 </div>
-
-
 </section>
+</section>
+<section id="other-methods" class="level1">
+<h1>Other methods</h1>
+<ul>
+<li>Dunnett: All pairwise comparisons versus a single reference value.
+<ul>
+<li>I.e., if <span class="math inline">\(\mu_0\)</span> is the reference mean, then it will calculate tests and confidence intervals for <span class="math inline">\(\mu_0 - \mu_i\)</span> for all other <span class="math inline">\(i\)</span>.</li>
+<li>More powerful than Tukey when you just care about reference comparisons.</li>
+</ul></li>
+<li>Scheffé: All possible contrasts.
+<ul>
+<li>Do as many tests as you want (planned or unplanned).</li>
+<li>Very wide intervals.</li>
+</ul></li>
+</ul>
+
+
 </section>
 
 </main> <!-- /main -->
