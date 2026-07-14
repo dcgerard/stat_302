@@ -20,7 +20,8 @@ ggplot2::theme_set(ggplot2::theme_bw())
 #| label: load-packages
 #| message: false
 library(tidyverse)
-library(car)
+library(multcomp)
+library(broom)
 ```
 
 # Learning Objectives
@@ -29,7 +30,7 @@ library(car)
 - Estimate a linear combination and compute its standard error.
 - Conduct a hypothesis test and form a confidence interval for a linear
   combination.
-- Use `linearHypothesis()` from the `car` package to test linear combinations
+- Use `glht()` from the `multcomp` package to test linear combinations
   in R.
 
 ---
@@ -168,89 +169,191 @@ $p$-values. Only switch to `~ Judge - 1` immediately before calling
 
 ## Checking the Factor Level Order
 
-The coefficient vector must be in the **same order as the factor levels**:
+The coefficient vector must be in the **same order as the coefficient estimates**:
 
 ```{r}
 #| label: factor-levels
-levels(case0502$Judge)
+coef(aout_lc)
 ```
 
 The order is `A, B, C, D, E, F, Spock's` — so position 7 is Spock's judge.
 
 ## Setting Up Coefficient Vectors
 
-**Test 1:** Is Spock's mean different from the average of the other six?
+- Is Spock's mean different from the average of the other six?
 
-$$H_0: \mu_{\text{Spock's}} - \tfrac{1}{6}\mu_A - \tfrac{1}{6}\mu_B - \cdots - \tfrac{1}{6}\mu_F = 0$$
+  $$H_0: \mu_{\text{Spock's}} - \tfrac{1}{6}\mu_A - \tfrac{1}{6}\mu_B - \cdots - \tfrac{1}{6}\mu_F = 0$$
 
-```{r}
-#| label: coef-vec1
-combo_vec1 <- c(-1/6, -1/6, -1/6, -1/6, -1/6, -1/6, 1)
-```
+-   We set up the coefficient vector. The syntax for the `{multcomp}` package requires it to be a matrix. Just modify this syntax for future use:
+    ```{r}
+    #| label: coef-vec1
+    combo_vec1 <- matrix(c(-1/6, -1/6, -1/6, -1/6, -1/6, -1/6, 1), nrow = 1)
+    ```
 
-**Test 2:** Is the average of judges A–C equal to the average of judges D–F?
-
-$$H_0: \tfrac{1}{3}\mu_A + \tfrac{1}{3}\mu_B + \tfrac{1}{3}\mu_C - \tfrac{1}{3}\mu_D - \tfrac{1}{3}\mu_E - \tfrac{1}{3}\mu_F = 0$$
-
-```{r}
-#| label: coef-vec2
-combo_vec2 <- c(1/3, 1/3, 1/3, -1/3, -1/3, -1/3, 0)
-```
 
 ## Running the Tests
 
+-   Put the model object as `model` and the coefficients as `linfct`:
+    ```{r}
+    #| label: lh-test1
+    glht(model = aout_lc, linfct = combo_vec1) |>
+      tidy(conf.int = TRUE)
+    ```
+
+
+
+- Strong evidence that Spock's judge's mean differs from the pooled mean of the other six ($p < 0.001$). With 95% confidence, we estimate that Spock's Judge's venires have an average of 9.6 to 20.3 percentage-points fewer women than the average of the other judges.
+
+# Other Contrasts of Interest
+
+## Comparing Averages of Group Means
+
+- The Spock hypothesis above is an example of comparing averages of group means.
+  - We had two groups in that case, Spock's judge (group 1), and all other judges (group 2).
+  
+- More generally, we can compare groups 1.1,1.2,...,1.$J$ to groups 2.1,2.2,...,2.$K$ 
+  - $J$ groups in group 1
+  - $K$ groups in group 2.
+  
+- Suppose the means are $\mu_{1.1}, \mu_{1.2},\ldots,\mu_{1.J}$ and $\mu_{2.1}, \mu_{2.2},\ldots,\mu_{2.K}$. Then the contrast is
+  $$
+  \gamma = \frac{\mu_{1.1} + \cdots + \mu_{1.J}}{J} - \frac{\mu_{2.1}+\cdots+\mu_{2.K}}{K}.
+  $$
+
+- The $J$ groups have coefficients $1/J$ and the $K$ groups have coefficients $-1/K$.
+
+- E.g., suppose we want to test if the average of means of Judges A, B, and C was the same as the average of means of Judges C, D, and E
+  - We are not really interested in this hypothesis. This is for demonstration purposes.
+  
+  $$H_0: \tfrac{1}{3}\mu_A + \tfrac{1}{3}\mu_B + \tfrac{1}{3}\mu_C - \tfrac{1}{3}\mu_D - \tfrac{1}{3}\mu_E - \tfrac{1}{3}\mu_F = 0$$
+
+-   Set up aov object and constrast vector:
+    ```{r}
+    #| label: coef-vec2
+    aout_lc <- aov(Percent ~ Judge - 1, data = case0502)
+    coef(aout_lc)
+    combo_vec2 <- matrix(c(1/3, 1/3, 1/3, -1/3, -1/3, -1/3, 0), nrow = 1)
+    ```
+
+-   Run linear hypothesis test:
+    ```{r}
+    #| label: lh-test2
+    glht(model = aout_lc, linfct = combo_vec2) |>
+      tidy(conf.int = TRUE)
+    ```
+  
+- Some evidence that the first three non-Spock judges
+(A–C) differ from the last three (D–F) ($p = 0.045$).
+
+## Pairwise Comparisons
+
+- A pairwise comparison is an example of a contrast.
+
+- E.g., suppose we want to just compare Spock's Judge to Judge F, then the contrast is
+
+  $$
+  \gamma = \mu_{\text{Spock's}} - \mu_{F}
+  $$
+
+- And we are testing the null
+
+  $$
+  H_0: \gamma = 0
+  $$
+  
+- We learned how to do this using `pairwise.t.test()`, but we can also use the linear hypothesis framework
+
+-   Set up aov object and constrast vector:
+    ```{r}
+    #| label: coef-vec3
+    aout_lc <- aov(Percent ~ Judge - 1, data = case0502)
+    coef(aout_lc)
+    combo_vec3 <- matrix(c(0, 0, 0, 0, 0, -1, 1), nrow = 1)
+    ```
+
+-   Run linear hypothesis test:
+    ```{r}
+    #| label: lh-test3
+    glht(model = aout_lc, linfct = combo_vec3) |>
+      tidy(conf.int = TRUE)
+    ```
+-   It's the same $p$-value in the bottom right of this table:
+    ```{r}
+    pairwise.t.test(case0502$Percent, case0502$Judge, p.adjust.method = "none")
+    ```
+
+::: {.panel-tabset}
+## Exercise
+What would be the contrast for comparing Spock's judge to Judge A?
+
+## Solution
 ```{r}
-#| label: lh-test1
-lhout1 <- linearHypothesis(model = aout_lc, hypothesis.matrix = combo_vec1)
-lhout1
+matrix(c(-1, 0, 0, 0, 0, 0, 1), nrow = 1)
 ```
+:::
 
-```{r}
-#| label: lh-test2
-lhout2 <- linearHypothesis(model = aout_lc, hypothesis.matrix = combo_vec2)
-lhout2
-```
+::: {.panel-tabset}
+## Exercise
+Is this a contrast?
+$$
+\gamma = -\mu_1 + -2 \mu_2 + \mu_3
+$$
 
-Strong evidence that Spock's judge's mean differs from the pooled mean of the
-other six ($p < 0.001$). No evidence that the first three non-Spock judges
-(A–C) differ from the last three (D–F) ($p = 0.26$).
+## Solution
+No. The coefficients add up to -2, not 0.
+:::
 
-## Correspondence to the $t$-Test
+## Comparing Rates
 
-`linearHypothesis()` returns an $F$-statistic. For a **single** linear
-combination, $F = t^2$, so $|t| = \sqrt{F}$:
+-   Recall the diet restriction case study from Chapter 5. They gave mice different restricted diets and measured their life time.
+    ```{r}
+    #| message: false
+    mice <- read_csv("https://dcgerard.github.io/stat_302/data/case0501.csv")
+    ```
 
-```{r}
-#| label: t-from-f
-sqrt(lhout1$F[2])
-```
+- What if researchers wanted to measure the amount of lifetime gained per kcal reduction in diet?
 
-We can verify this manually. First, compute $\hat\gamma$ and $SE(\hat\gamma)$:
+-   E.g., we have two mice, one on an 85 kcal/wk diet (`N/N85`) and the other on a 50 kcal/wk diet (`N/R50`). 
 
-```{r}
-#| label: manual-t
-#| message: false
-sumdat <- case0502 |>
-  group_by(Judge) |>
-  summarise(ybar = mean(Percent), n = n())
+- The contrast of interest is
+$$
+\frac{\mu_{\text{N/R50}} - \mu_{\text{N/N85}}}{85 - 50}
+$$
+-   Let's verify the order of coefficient estimates:
+    ```{r}
+    aout_mice <- aov(Lifetime ~ Diet - 1, data = mice)
+    coef(aout_mice)
+    ```
 
-gamma_hat <- sum(combo_vec1 * sumdat$ybar)
+-   Set up the contrast
 
-sp  <- sqrt(sum(aout_lc$residuals^2) / (nrow(case0502) - 7))
-se_gamma <- sp * sqrt(sum(combo_vec1^2 / sumdat$n))
+    ```{r}
+    combo_mice_1 <- matrix(c(0, -1/35, 0, 1/35, 0, 0), nrow = 1)
+    ```
 
-tstat <- gamma_hat / se_gamma
+-   Get a confidence interval
+    ```{r}
+    glht(model = aout_mice, linfct = combo_mice_1) |>
+      tidy(conf.int = TRUE)
+    ```
 
-cat("gamma_hat =", round(gamma_hat, 3), "\n",
-    "SE       =", round(se_gamma, 3), "\n",
-    "t*       =", round(tstat, 3), "\n")
-```
+- So for a 1 kcal reduction per week, we can expect on average an increase of 0.27 months of life (95% CI: 0.21 months to 0.34 months).
 
-```{r}
-#| label: pvalue-match
-2 * pt(-abs(tstat), df = nrow(case0502) - 7)
-lhout1$`Pr(>F)`[2]
-```
+- If we want to compare the rate from 85 kcal/wk to 50 kcal/week with the rate from 50 kcal/wk to 40 kcal/wk, we set up the contrast:
 
-The $p$-values are identical, confirming the equivalence.
+  $$
+  \frac{\mu_{\text{N/R50}} - \mu_{\text{N/N85}}}{85 - 50} - \frac{\mu_{\text{N/R40}} - \mu_{\text{N/R50}}}{50-40} = -\frac{1}{35}\mu_{\text{N/N85}} + \frac{9}{70}\mu_{\text{N/R50}} - \frac{1}{10}\mu_{\text{N/R40}}
+  $$
+-   This will test if the rates are the same for both reductions. We can set up this test in R with
+    ```{r}
+    coef(aout_mice)
+    combo_mice_2 <- matrix(c(0, -1/35, -1/10, 9/70, 0, 0), nrow = 1)
+    glht(model = aout_mice, linfct = combo_mice_2) |>
+          tidy(conf.int = TRUE)
+    ```
 
+- We have no evidence that rates differ going from 85 kcal/wk to 50 kcal/wk and going from 50 kcal/wk to 40 kcal/wk ($p$ = 0.96).
+
+# Linear trends
+
+- Skip this section in the *Statistical Sleuth*. Nobody does it.

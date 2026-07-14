@@ -41,7 +41,7 @@ in the dataset (A, B, E) have a different mean from the three with the lowest
   a. Write out the coefficient vector for this contrast (using the factor level
      order A, B, C, D, E, F, Spock's). Does it qualify as a contrast?
 
-  b. Use `linearHypothesis()` to test this hypothesis. Report the $F$-statistic,
+  b. Use `glht()` to test this hypothesis. Report the $F$-statistic,
      $p$-value, and your conclusion.
 
 ```{r}
@@ -53,7 +53,7 @@ special case of a linear combination.
 
   a. What is the coefficient vector (in the order A, B, C, D, E, F, Spock's)?
 
-  b. Verify using `linearHypothesis()` that the $p$-value matches what
+  b. Verify using `glht()` that the $p$-value matches what
      `pairwise.t.test()` gives (with `p.adjust.method = "none"`).
 
 ```{r}
@@ -133,7 +133,7 @@ single pre-planned contrast.
 
 ```
 
-**11.** Test the planned contrast from Exercise 10 using `linearHypothesis()`
+**11.** Test the planned contrast from Exercise 10 using `glht()`
 (refit with `~ location - 1` first). Report the $F$-statistic, $p$-value,
 and a plain-language conclusion. Because this is a single pre-planned
 comparison, no multiplicity adjustment is needed.

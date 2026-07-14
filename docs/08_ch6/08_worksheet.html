@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-07-10">
+<meta name="dcterms.date" content="2026-07-14">
 
 <title>Chapter 6 Worksheet – Stat 302: Intermediate Statistics</title>
 <style>
@@ -230,7 +230,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 10, 2026</p>
+      <p class="date">July 14, 2026</p>
     </div>
   </div>
   
@@ -256,12 +256,12 @@ window.Quarto = {
 <p><strong>1.</strong> In the Spock data, suppose researchers wanted — <strong>before looking at the data</strong> — to test whether the three judges with the highest average percent-women in the dataset (A, B, E) have a different mean from the three with the lowest (C, D, F), ignoring Spock’s judge entirely.</p>
 <ol type="a">
 <li><p>Write out the coefficient vector for this contrast (using the factor level order A, B, C, D, E, F, Spock’s). Does it qualify as a contrast?</p></li>
-<li><p>Use <code>linearHypothesis()</code> to test this hypothesis. Report the <span class="math inline">\(F\)</span>-statistic, <span class="math inline">\(p\)</span>-value, and your conclusion.</p></li>
+<li><p>Use <code>glht()</code> to test this hypothesis. Report the <span class="math inline">\(F\)</span>-statistic, <span class="math inline">\(p\)</span>-value, and your conclusion.</p></li>
 </ol>
 <p><strong>2.</strong> The hypothesis <span class="math inline">\(H_0: \mu_A = \mu_B\)</span> is a pairwise comparison — a special case of a linear combination.</p>
 <ol type="a">
 <li><p>What is the coefficient vector (in the order A, B, C, D, E, F, Spock’s)?</p></li>
-<li><p>Verify using <code>linearHypothesis()</code> that the <span class="math inline">\(p\)</span>-value matches what <code>pairwise.t.test()</code> gives (with <code>p.adjust.method = "none"</code>).</p></li>
+<li><p>Verify using <code>glht()</code> that the <span class="math inline">\(p\)</span>-value matches what <code>pairwise.t.test()</code> gives (with <code>p.adjust.method = "none"</code>).</p></li>
 </ol>
 <p><strong>3.</strong> What is the estimated value of <span class="math inline">\(\gamma\)</span> for the contrast that compares Spock’s mean to the average of the other six judges? Interpret this number in the context of the study.</p>
 <p><strong>4.</strong> Compute a 95% confidence interval for <span class="math inline">\(\gamma\)</span> (Spock’s mean minus the average of the other six means) using the formula <span class="math inline">\(\hat{\gamma} \pm t_{n-I}(0.975) \cdot SE(\hat\gamma)\)</span>. What does this interval tell you about how different Spock’s judge is?</p>
@@ -280,7 +280,7 @@ window.Quarto = {
 <li><p>Write the null hypothesis in terms of the six location means <span class="math inline">\(\mu_1, \ldots, \mu_6\)</span>.</p></li>
 <li><p>Check the factor level order of <code>location</code>, then set up the coefficient vector.</p></li>
 </ol>
-<p><strong>11.</strong> Test the planned contrast from Exercise 10 using <code>linearHypothesis()</code> (refit with <code>~ location - 1</code> first). Report the <span class="math inline">\(F\)</span>-statistic, <span class="math inline">\(p\)</span>-value, and a plain-language conclusion. Because this is a single pre-planned comparison, no multiplicity adjustment is needed.</p>
+<p><strong>11.</strong> Test the planned contrast from Exercise 10 using <code>glht()</code> (refit with <code>~ location - 1</code> first). Report the <span class="math inline">\(F\)</span>-statistic, <span class="math inline">\(p\)</span>-value, and a plain-language conclusion. Because this is a single pre-planned comparison, no multiplicity adjustment is needed.</p>
 <p><strong>12.</strong> Explain in your own words why the Tukey-Kramer procedure gives smaller adjusted <span class="math inline">\(p\)</span>-values than Bonferroni for all-pairwise comparisons, while Bonferroni is more general. In which situation would you prefer Bonferroni over Tukey-Kramer?</p>
 
 

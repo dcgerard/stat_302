@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-07-10">
+<meta name="dcterms.date" content="2026-07-14">
 
 <title>Linear Combinations of Group Means – Stat 302: Intermediate Statistics</title>
 <style>
@@ -203,8 +203,14 @@ window.Quarto = {
   <li><a href="#checking-the-factor-level-order" id="toc-checking-the-factor-level-order" class="nav-link" data-scroll-target="#checking-the-factor-level-order">Checking the Factor Level Order</a></li>
   <li><a href="#setting-up-coefficient-vectors" id="toc-setting-up-coefficient-vectors" class="nav-link" data-scroll-target="#setting-up-coefficient-vectors">Setting Up Coefficient Vectors</a></li>
   <li><a href="#running-the-tests" id="toc-running-the-tests" class="nav-link" data-scroll-target="#running-the-tests">Running the Tests</a></li>
-  <li><a href="#correspondence-to-the-t-test" id="toc-correspondence-to-the-t-test" class="nav-link" data-scroll-target="#correspondence-to-the-t-test">Correspondence to the <span class="math inline">\(t\)</span>-Test</a></li>
   </ul></li>
+  <li><a href="#other-contrasts-of-interest" id="toc-other-contrasts-of-interest" class="nav-link" data-scroll-target="#other-contrasts-of-interest">Other Contrasts of Interest</a>
+  <ul class="collapse">
+  <li><a href="#comparing-averages-of-group-means" id="toc-comparing-averages-of-group-means" class="nav-link" data-scroll-target="#comparing-averages-of-group-means">Comparing Averages of Group Means</a></li>
+  <li><a href="#pairwise-comparisons" id="toc-pairwise-comparisons" class="nav-link" data-scroll-target="#pairwise-comparisons">Pairwise Comparisons</a></li>
+  <li><a href="#comparing-rates" id="toc-comparing-rates" class="nav-link" data-scroll-target="#comparing-rates">Comparing Rates</a></li>
+  </ul></li>
+  <li><a href="#linear-trends" id="toc-linear-trends" class="nav-link" data-scroll-target="#linear-trends">Linear trends</a></li>
   </ul>
 </nav>
     </div>
@@ -230,7 +236,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 10, 2026</p>
+      <p class="date">July 14, 2026</p>
     </div>
   </div>
   
@@ -244,7 +250,8 @@ window.Quarto = {
 
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="learning-objectives" class="level1">
 <h1>Learning Objectives</h1>
@@ -252,7 +259,7 @@ window.Quarto = {
 <li>Define a linear combination and a contrast of group means.</li>
 <li>Estimate a linear combination and compute its standard error.</li>
 <li>Conduct a hypothesis test and form a confidence interval for a linear combination.</li>
-<li>Use <code>linearHypothesis()</code> from the <code>car</code> package to test linear combinations in R.</li>
+<li>Use <code>glht()</code> from the <code>multcomp</code> package to test linear combinations in R.</li>
 </ul>
 <hr>
 </section>
@@ -361,113 +368,253 @@ JudgeSpock's
 </section>
 <section id="checking-the-factor-level-order" class="level2">
 <h2 class="anchored" data-anchor-id="checking-the-factor-level-order">Checking the Factor Level Order</h2>
-<p>The coefficient vector must be in the <strong>same order as the factor levels</strong>:</p>
+<p>The coefficient vector must be in the <strong>same order as the coefficient estimates</strong>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(case0502<span class="sc">$</span>Judge)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(aout_lc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "A"       "B"       "C"       "D"       "E"       "F"       "Spock's"</code></pre>
+<pre><code>      JudgeA       JudgeB       JudgeC       JudgeD       JudgeE       JudgeF 
+    34.12000     33.61667     29.10000     27.00000     26.96667     26.80000 
+JudgeSpock's 
+    14.62222 </code></pre>
 </div>
 </div>
 <p>The order is <code>A, B, C, D, E, F, Spock's</code> — so position 7 is Spock’s judge.</p>
 </section>
 <section id="setting-up-coefficient-vectors" class="level2">
 <h2 class="anchored" data-anchor-id="setting-up-coefficient-vectors">Setting Up Coefficient Vectors</h2>
-<p><strong>Test 1:</strong> Is Spock’s mean different from the average of the other six?</p>
-<p><span class="math display">\[H_0: \mu_{\text{Spock's}} - \tfrac{1}{6}\mu_A - \tfrac{1}{6}\mu_B - \cdots - \tfrac{1}{6}\mu_F = 0\]</span></p>
+<ul>
+<li><p>Is Spock’s mean different from the average of the other six?</p>
+<p><span class="math display">\[H_0: \mu_{\text{Spock's}} - \tfrac{1}{6}\mu_A - \tfrac{1}{6}\mu_B - \cdots - \tfrac{1}{6}\mu_F = 0\]</span></p></li>
+<li><p>We set up the coefficient vector. The syntax for the <code>{multcomp}</code> package requires it to be a matrix. Just modify this syntax for future use:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>combo_vec1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p><strong>Test 2:</strong> Is the average of judges A–C equal to the average of judges D–F?</p>
-<p><span class="math display">\[H_0: \tfrac{1}{3}\mu_A + \tfrac{1}{3}\mu_B + \tfrac{1}{3}\mu_C - \tfrac{1}{3}\mu_D - \tfrac{1}{3}\mu_E - \tfrac{1}{3}\mu_F = 0\]</span></p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>combo_vec2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>combo_vec1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="dv">1</span>), <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></li>
+</ul>
 </section>
 <section id="running-the-tests" class="level2">
 <h2 class="anchored" data-anchor-id="running-the-tests">Running the Tests</h2>
+<ul>
+<li><p>Put the model object as <code>model</code> and the coefficients as <code>linfct</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>lhout1 <span class="ot">&lt;-</span> <span class="fu">linearHypothesis</span>(<span class="at">model =</span> aout_lc, <span class="at">hypothesis.matrix =</span> combo_vec1)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>lhout1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glht</span>(<span class="at">model =</span> aout_lc, <span class="at">linfct =</span> combo_vec1) <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 7
+  contrast null.value estimate conf.low conf.high statistic adj.p.value
+  &lt;chr&gt;         &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+1 1                 0    -15.0    -20.3     -9.63     -5.67  0.00000149</code></pre>
+</div>
+</div></li>
+<li><p>Strong evidence that Spock’s judge’s mean differs from the pooled mean of the other six (<span class="math inline">\(p &lt; 0.001\)</span>). With 95% confidence, we estimate that Spock’s Judge’s venires have an average of 9.6 to 20.3 percentage-points fewer women than the average of the other judges.</p></li>
+</ul>
+</section>
+</section>
+<section id="other-contrasts-of-interest" class="level1">
+<h1>Other Contrasts of Interest</h1>
+<section id="comparing-averages-of-group-means" class="level2">
+<h2 class="anchored" data-anchor-id="comparing-averages-of-group-means">Comparing Averages of Group Means</h2>
+<ul>
+<li><p>The Spock hypothesis above is an example of comparing averages of group means.</p>
+<ul>
+<li>We had two groups in that case, Spock’s judge (group 1), and all other judges (group 2).</li>
+</ul></li>
+<li><p>More generally, we can compare groups 1.1,1.2,…,1.<span class="math inline">\(J\)</span> to groups 2.1,2.2,…,2.<span class="math inline">\(K\)</span></p>
+<ul>
+<li><span class="math inline">\(J\)</span> groups in group 1</li>
+<li><span class="math inline">\(K\)</span> groups in group 2.</li>
+</ul></li>
+<li><p>Suppose the means are <span class="math inline">\(\mu_{1.1}, \mu_{1.2},\ldots,\mu_{1.J}\)</span> and <span class="math inline">\(\mu_{2.1}, \mu_{2.2},\ldots,\mu_{2.K}\)</span>. Then the contrast is <span class="math display">\[
+\gamma = \frac{\mu_{1.1} + \cdots + \mu_{1.J}}{J} - \frac{\mu_{2.1}+\cdots+\mu_{2.K}}{K}.
+\]</span></p></li>
+<li><p>The <span class="math inline">\(J\)</span> groups have coefficients <span class="math inline">\(1/J\)</span> and the <span class="math inline">\(K\)</span> groups have coefficients <span class="math inline">\(-1/K\)</span>.</p></li>
+<li><p>E.g., suppose we want to test if the average of means of Judges A, B, and C was the same as the average of means of Judges C, D, and E</p>
+<ul>
+<li>We are not really interested in this hypothesis. This is for demonstration purposes.</li>
+</ul>
+<p><span class="math display">\[H_0: \tfrac{1}{3}\mu_A + \tfrac{1}{3}\mu_B + \tfrac{1}{3}\mu_C - \tfrac{1}{3}\mu_D - \tfrac{1}{3}\mu_E - \tfrac{1}{3}\mu_F = 0\]</span></p></li>
+<li><p>Set up aov object and constrast vector:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>aout_lc <span class="ot">&lt;-</span> <span class="fu">aov</span>(Percent <span class="sc">~</span> Judge <span class="sc">-</span> <span class="dv">1</span>, <span class="at">data =</span> case0502)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(aout_lc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      JudgeA       JudgeB       JudgeC       JudgeD       JudgeE       JudgeF 
+    34.12000     33.61667     29.10000     27.00000     26.96667     26.80000 
+JudgeSpock's 
+    14.62222 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>combo_vec2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="dv">0</span>), <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></li>
+<li><p>Run linear hypothesis test:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glht</span>(<span class="at">model =</span> aout_lc, <span class="at">linfct =</span> combo_vec2) <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 7
+  contrast null.value estimate conf.low conf.high statistic adj.p.value
+  &lt;chr&gt;         &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+1 1                 0     5.36    0.133      10.6      2.07      0.0447</code></pre>
+</div>
+</div></li>
+<li><p>Some evidence that the first three non-Spock judges (A–C) differ from the last three (D–F) (<span class="math inline">\(p = 0.045\)</span>).</p></li>
+</ul>
+</section>
+<section id="pairwise-comparisons" class="level2">
+<h2 class="anchored" data-anchor-id="pairwise-comparisons">Pairwise Comparisons</h2>
+<ul>
+<li><p>A pairwise comparison is an example of a contrast.</p></li>
+<li><p>E.g., suppose we want to just compare Spock’s Judge to Judge F, then the contrast is</p>
+<p><span class="math display">\[
+\gamma = \mu_{\text{Spock's}} - \mu_{F}
+\]</span></p></li>
+<li><p>And we are testing the null</p>
+<p><span class="math display">\[
+H_0: \gamma = 0
+\]</span></p></li>
+<li><p>We learned how to do this using <code>pairwise.t.test()</code>, but we can also use the linear hypothesis framework</p></li>
+<li><p>Set up aov object and constrast vector:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>aout_lc <span class="ot">&lt;-</span> <span class="fu">aov</span>(Percent <span class="sc">~</span> Judge <span class="sc">-</span> <span class="dv">1</span>, <span class="at">data =</span> case0502)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(aout_lc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      JudgeA       JudgeB       JudgeC       JudgeD       JudgeE       JudgeF 
+    34.12000     33.61667     29.10000     27.00000     26.96667     26.80000 
+JudgeSpock's 
+    14.62222 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>combo_vec3 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></li>
+<li><p>Run linear hypothesis test:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glht</span>(<span class="at">model =</span> aout_lc, <span class="at">linfct =</span> combo_vec3) <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 7
+  contrast null.value estimate conf.low conf.high statistic adj.p.value
+  &lt;chr&gt;         &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+1 1                 0    -12.2    -18.8     -5.59     -3.74    0.000597</code></pre>
+</div>
+</div></li>
+<li><p>It’s the same <span class="math inline">\(p\)</span>-value in the bottom right of this table:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairwise.t.test</span>(case0502<span class="sc">$</span>Percent, case0502<span class="sc">$</span>Judge, <span class="at">p.adjust.method =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Linear hypothesis test:
-- 0.166666666666667 JudgeA - 0.166666666666667 JudgeB - 0.166666666666667 JudgeC - 0.166666666666667 JudgeD - 0.166666666666667 JudgeE - 0.166666666666667 JudgeF  + JudgeSpock's = 0
+    Pairwise comparisons using t tests with pooled SD 
 
-Model 1: restricted model
-Model 2: Percent ~ Judge - 1
+data:  case0502$Percent and case0502$Judge 
 
-  Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
-1     40 3401.2                                  
-2     39 1864.4  1    1536.8 32.146 1.489e-06 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+        A       B       C       D      E      F     
+B       0.9049  -       -       -      -      -     
+C       0.2007  0.2226  -       -      -      -     
+D       0.2258  0.2483  0.6997  -      -      -     
+E       0.0955  0.1038  0.5616  0.9953 -      -     
+F       0.0651  0.0689  0.4846  0.9707 0.9638 -     
+Spock's 1.1e-05 6.4e-06 7.2e-05 0.0275 0.0016 0.0006
+
+P value adjustment method: none </code></pre>
 </div>
+</div></li>
+</ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>What would be the contrast for comparing Spock’s judge to Judge A?</p>
 </div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>lhout2 <span class="ot">&lt;-</span> <span class="fu">linearHypothesis</span>(<span class="at">model =</span> aout_lc, <span class="at">hypothesis.matrix =</span> combo_vec2)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>lhout2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-Linear hypothesis test:
-0.333333333333333 JudgeA  + 0.333333333333333 JudgeB  + 0.333333333333333 JudgeC - 0.333333333333333 JudgeD - 0.333333333333333 JudgeE - 0.333333333333333 JudgeF = 0
-
-Model 1: restricted model
-Model 2: Percent ~ Judge - 1
-
-  Res.Df    RSS Df Sum of Sq      F  Pr(&gt;F)  
-1     40 2070.1                              
-2     39 1864.5  1    205.68 4.3024 0.04471 *
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<pre><code>     [,1] [,2] [,3] [,4] [,5] [,6] [,7]
+[1,]   -1    0    0    0    0    0    1</code></pre>
 </div>
 </div>
-<p>Strong evidence that Spock’s judge’s mean differs from the pooled mean of the other six (<span class="math inline">\(p &lt; 0.001\)</span>). No evidence that the first three non-Spock judges (A–C) differ from the last three (D–F) (<span class="math inline">\(p = 0.26\)</span>).</p>
+</div>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>Is this a contrast? <span class="math display">\[
+\gamma = -\mu_1 + -2 \mu_2 + \mu_3
+\]</span></p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>No.&nbsp;The coefficients add up to -2, not 0.</p>
+</div>
+</div>
+</div>
 </section>
-<section id="correspondence-to-the-t-test" class="level2">
-<h2 class="anchored" data-anchor-id="correspondence-to-the-t-test">Correspondence to the <span class="math inline">\(t\)</span>-Test</h2>
-<p><code>linearHypothesis()</code> returns an <span class="math inline">\(F\)</span>-statistic. For a <strong>single</strong> linear combination, <span class="math inline">\(F = t^2\)</span>, so <span class="math inline">\(|t| = \sqrt{F}\)</span>:</p>
+<section id="comparing-rates" class="level2">
+<h2 class="anchored" data-anchor-id="comparing-rates">Comparing Rates</h2>
+<ul>
+<li><p>Recall the diet restriction case study from Chapter 5. They gave mice different restricted diets and measured their life time.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(lhout1<span class="sc">$</span>F[<span class="dv">2</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 5.669737</code></pre>
-</div>
-</div>
-<p>We can verify this manually. First, compute <span class="math inline">\(\hat\gamma\)</span> and <span class="math inline">\(SE(\hat\gamma)\)</span>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>mice <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0501.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></li>
+<li><p>What if researchers wanted to measure the amount of lifetime gained per kcal reduction in diet?</p></li>
+<li><p>E.g., we have two mice, one on an 85 kcal/wk diet (<code>N/N85</code>) and the other on a 50 kcal/wk diet (<code>N/R50</code>).</p></li>
+<li><p>The contrast of interest is <span class="math display">\[
+\frac{\mu_{\text{N/R50}} - \mu_{\text{N/N85}}}{85 - 50}
+\]</span></p></li>
+<li><p>Let’s verify the order of coefficient estimates:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>sumdat <span class="ot">&lt;-</span> case0502 <span class="sc">|&gt;</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Judge) <span class="sc">|&gt;</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ybar =</span> <span class="fu">mean</span>(Percent), <span class="at">n =</span> <span class="fu">n</span>())</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>gamma_hat <span class="ot">&lt;-</span> <span class="fu">sum</span>(combo_vec1 <span class="sc">*</span> sumdat<span class="sc">$</span>ybar)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>sp  <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(aout_lc<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (<span class="fu">nrow</span>(case0502) <span class="sc">-</span> <span class="dv">7</span>))</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>se_gamma <span class="ot">&lt;-</span> sp <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(combo_vec1<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> sumdat<span class="sc">$</span>n))</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>tstat <span class="ot">&lt;-</span> gamma_hat <span class="sc">/</span> se_gamma</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"gamma_hat ="</span>, <span class="fu">round</span>(gamma_hat, <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SE       ="</span>, <span class="fu">round</span>(se_gamma, <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"t*       ="</span>, <span class="fu">round</span>(tstat, <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>aout_mice <span class="ot">&lt;-</span> <span class="fu">aov</span>(Lifetime <span class="sc">~</span> Diet <span class="sc">-</span> <span class="dv">1</span>, <span class="at">data =</span> mice)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(aout_mice)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>gamma_hat = -14.978 
- SE       = 2.642 
- t*       = -5.67 </code></pre>
+<pre><code>Dietlopro DietN/N85 DietN/R40 DietN/R50    DietNP DietR/R50 
+ 39.68571  32.69123  45.11667  42.29718  27.40204  42.88571 </code></pre>
 </div>
-</div>
+</div></li>
+<li><p>Set up the contrast</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(tstat), <span class="at">df =</span> <span class="fu">nrow</span>(case0502) <span class="sc">-</span> <span class="dv">7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>combo_mice_1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">35</span>, <span class="dv">0</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">35</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></li>
+<li><p>Get a confidence interval</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glht</span>(<span class="at">model =</span> aout_mice, <span class="at">linfct =</span> combo_mice_1) <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.489078e-06</code></pre>
+<pre><code># A tibble: 1 × 7
+  contrast null.value estimate conf.low conf.high statistic adj.p.value
+  &lt;chr&gt;         &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+1 1                 0    0.274    0.208     0.341      8.09    1.07e-14</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>lhout1<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;F)</span><span class="st">`</span>[<span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></li>
+<li><p>So for a 1 kcal reduction per week, we can expect on average an increase of 0.27 months of life (95% CI: 0.21 months to 0.34 months).</p></li>
+<li><p>If we want to compare the rate from 85 kcal/wk to 50 kcal/week with the rate from 50 kcal/wk to 40 kcal/wk, we set up the contrast:</p>
+<p><span class="math display">\[
+\frac{\mu_{\text{N/R50}} - \mu_{\text{N/N85}}}{85 - 50} - \frac{\mu_{\text{N/R40}} - \mu_{\text{N/R50}}}{50-40} = -\frac{1}{35}\mu_{\text{N/N85}} + \frac{9}{70}\mu_{\text{N/R50}} - \frac{1}{10}\mu_{\text{N/R40}}
+\]</span></p></li>
+<li><p>This will test if the rates are the same for both reductions. We can set up this test in R with</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(aout_mice)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.489078e-06</code></pre>
+<pre><code>Dietlopro DietN/N85 DietN/R40 DietN/R50    DietNP DietR/R50 
+ 39.68571  32.69123  45.11667  42.29718  27.40204  42.88571 </code></pre>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>combo_mice_2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">35</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">10</span>, <span class="dv">9</span><span class="sc">/</span><span class="dv">70</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="at">nrow =</span> <span class="dv">1</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glht</span>(<span class="at">model =</span> aout_mice, <span class="at">linfct =</span> combo_mice_2) <span class="sc">|&gt;</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 7
+  contrast null.value estimate conf.low conf.high statistic adj.p.value
+  &lt;chr&gt;         &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+1 1                 0 -0.00749   -0.275     0.260   -0.0552       0.956</code></pre>
 </div>
-<p>The <span class="math inline">\(p\)</span>-values are identical, confirming the equivalence.</p>
-
-
+</div></li>
+<li><p>We have no evidence that rates differ going from 85 kcal/wk to 50 kcal/wk and going from 50 kcal/wk to 40 kcal/wk (<span class="math inline">\(p\)</span> = 0.96).</p></li>
+</ul>
 </section>
+</section>
+<section id="linear-trends" class="level1">
+<h1>Linear trends</h1>
+<ul>
+<li>Skip this section in the <em>Statistical Sleuth</em>. Nobody does it.</li>
+</ul>
+
+
 </section>
 
 </main> <!-- /main -->
