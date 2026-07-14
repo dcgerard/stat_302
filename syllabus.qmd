@@ -40,14 +40,12 @@ This course builds on the basic tools of data analysis and methods of statistica
 
 - Week 1: Introduction to R
 - Week 2--3: Chapters 2 and 3 (*t*-tools and *t*-tools assumptions)
-  - This should be mostly review of Introductory Statistics, so we'll go quick.
 - Week 4: Chapter 4 (non-parametrics)
 - Week 5: Chapter 5 (One-way ANOVA)
-- Week 6: Sections 6.3--6.4 and supplemental readings (Multiple Comparisons, Family-wise Error Rate, Bonferroni/Holm, False Discovery Rate, Benjamini-Hochberg).
+- Week 6: Chapter 6 and Section 16.5.8 (Linear Combinations, Multiple Comparisons).
 - Midterm 1
 - Week 7--8: Chapters 7 and 8 (Simple Linear Regression)
-  - This should also be mostly review of Introductory Statistics, so we'll go quick.
-- Week 9--12: Chapter 9--11 (Multiple Linear Regression)
+- Week 9--12: Chapters 9--11 (Multiple Linear Regression)
 - Week 13--14: Chapter 20 (Logistic Regression)
 - Midterm 2
 
