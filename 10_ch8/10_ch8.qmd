@@ -37,7 +37,7 @@ library(lmtest)
 - Interpret log-transformations of the explanatory and/or response variable.
 - Use sandwich standard errors to handle non-constant variance.
 - Perform a lack-of-fit $F$-test to assess whether a linear model is adequate.
-- Ch 8 in the book.
+- Chapter 8 in the book.
 
 ---
 
@@ -77,6 +77,7 @@ library(lmtest)
 ## Dataset 1: Gold Standard
 
 Generate some fake data:
+
 ```{r}
 #| label: d1-gen
 x <- rnorm(100, sd = 1)
@@ -107,9 +108,9 @@ augment(lmout) |>
 - Variance looks equal for all $x$.
 - Everything looks ideal.
 
-### Don't get fooled by distribution of x
+### Don't Get Fooled by the Distribution of $x$
 
-The distribution of x doesn't matter. The below plot is **also** perfect
+The distribution of $x$ does not matter. The data below are **also** ideal:
 
 ```{r}
 #| label: d1a-gen
@@ -137,11 +138,10 @@ augment(lmout) |>
   labs(x = "Fitted values", y = "Residuals")
 ```
 
----
-
 ## Dataset 2: Curved Monotone Relationship, Equal Variances
 
-Fake data
+Generate some fake data:
+
 ```{r}
 #| label: d2-gen
 x <- rexp(100)
@@ -198,11 +198,9 @@ augment(lmout) |>
 After the $\log$ transformation of $x$, the residual plot looks flat and
 even — the linearity and equal-variance assumptions are now satisfied.
 
----
-
 ## Dataset 3: Curved Non-Monotone Relationship, Equal Variances
 
-Fake data
+Generate some fake data:
 
 ```{r}
 #| label: d3-gen
@@ -234,7 +232,7 @@ augment(lmout) |>
 - Residual plot has a parabolic form.
 
 **Solution 1:** Add a quadratic term:
-$$Y_i = \beta_0 + \beta_1 X_i + \beta_2 X_i^2$$
+$$Y_i = \beta_0 + \beta_1 X_i + \beta_2 X_i^2 + \varepsilon_i$$
 
 ```{r}
 #| label: d3-quad-fit
@@ -258,7 +256,7 @@ augment(quad_lm) |>
 
 **Solution 2:** Fit a broken-line (piecewise linear) model using the `lm.br`
 package:
-$$Y_i = \begin{cases} \beta_0 + \beta_1 X_i & \text{if } X_i < C \\ \beta_0^* + \beta_1^* X_i & \text{if } X_i > C \end{cases}$$
+$$Y_i = \begin{cases} \beta_0 + \beta_1 X_i + \varepsilon_i & \text{if } X_i < C \\ \beta_0^* + \beta_1^* X_i + \varepsilon_i & \text{if } X_i > C \end{cases}$$
 
 ```{r}
 #| label: d3-lmbr
@@ -281,11 +279,9 @@ tibble(.fitted = fitted(lmbr_out), .resid = resid(lmbr_out)) |>
   labs(x = "Fitted values", y = "Residuals")
 ```
 
----
-
 ## Dataset 4: Curved Relationship, Variance Increases with $Y$
 
-Fake data
+Generate some fake data:
 
 ```{r}
 #| label: d4-gen
@@ -343,9 +339,10 @@ augment(lmout) |>
 After taking $\log(y)$, both the linearity and equal-variance problems are
 resolved.
 
-### Again, don't get fooled by distribution of x
+### Again, Don't Get Fooled by the Distribution of $x$
 
-Still look for increasing variances for increasing x, even if the distribution of x is discrete.
+You should still look for increasing variance as $x$ increases, even when the
+distribution of $x$ is discrete.
 
 ```{r}
 #| label: d4a-gen
@@ -405,11 +402,9 @@ augment(lmout) |>
 After taking $\log(y)$, both the linearity and equal-variance problems are
 resolved.
 
----
-
 ## Dataset 5: Linear Relationship, Equal Variances, Skewed Errors
 
-Fake data
+Generate some fake data:
 
 ```{r}
 #| label: d5-gen
@@ -444,7 +439,7 @@ augment(lmout) |>
 
 1. Do nothing, but report the skewness (usually acceptable for large $n$).
 2. Fit a **quantile regression** for the median:
-   $$\text{Median}(Y_i) = \beta_0 + \beta_1 X_i$$
+   $$\text{Median}(Y_i \mid X_i) = \beta_0 + \beta_1 X_i$$
 
 ```{r}
 #| label: d5-quantreg
@@ -464,9 +459,9 @@ The quantile regression line (red) is not very different from the OLS line
 (blue) — skewness with equal variance has little practical effect on the
 coefficient estimates.
 
----
-
 ## Dataset 6: Linear Relationship, Unequal Variances
+
+Generate some fake data:
 
 ```{r}
 #| label: d6-gen
@@ -518,9 +513,9 @@ Confidence intervals with sandwich standard errors:
 coefci(lmout, vcov = sandwich)
 ```
 
-## Intuition of Sandwich Estimator of Variance
+## Intuition Behind the Sandwich Estimator of Variance
 
-Simplified model: $Y_i = \beta_1 X_i$ (zero intercept).
+Consider a simplified model with a zero intercept: $Y_i = \beta_1 X_i + \varepsilon_i$.
 
 Using calculus:
 $$\hat{\beta}_1 = \frac{\sum_{i=1}^n X_i Y_i}{\sum_{i=1}^n X_i^2}$$
@@ -528,16 +523,18 @@ $$\hat{\beta}_1 = \frac{\sum_{i=1}^n X_i Y_i}{\sum_{i=1}^n X_i^2}$$
 So:
 $$\text{Var}(\hat{\beta}_1) = \text{Var}\!\left(\frac{\sum_{i=1}^n X_i Y_i}{\sum_{i=1}^n X_i^2}\right) = \frac{\sum_{i=1}^n X_i^2\,\text{Var}(Y_i \mid X_i)}{\left(\sum_{i=1}^n X_i^2\right)^2}$$
 
-- **Usual method:** Estimate $\text{Var}(Y_i \mid X_i)$ with $s_p^2$ — assumes the same variance for all $i$.
+- **Usual method:** Estimate $\text{Var}(Y_i \mid X_i)$ with $\hat{\sigma}^2$ — assumes the same variance for all $i$.
 - **Sandwich method:** Estimate $\text{Var}(Y_i \mid X_i)$ with $(Y_i - \hat{\beta}_1 X_i)^2$ — allows a different variance at each $i$.
 
 The sandwich estimator yields accurate standard errors for the coefficient
 estimates as long as:
 
-1. The linearity assumption holds, and 
-2. The sample size is large enough. 
+1. The linearity assumption holds, and
+2. The sample size is large enough.
 
-Note that sandwich standard errors **cannot** be used for prediction intervals.
+::: {.callout-warning}
+Sandwich standard errors **cannot** be used for prediction intervals.
+:::
 
 ---
 
@@ -554,8 +551,6 @@ $$\mu(Y \mid X+1) = \beta_0 + \beta_1(X+1) = \mu(Y \mid X) + \beta_1$$
   groups that differ by one unit in $X$.
 - **Randomized experiment:** $\beta_1$ is the mean increase in $Y$ when $X$ is
   increased by one unit.
-
----
 
 ## No Log on $X$, Log on $Y$
 
@@ -574,57 +569,55 @@ $$\text{Median}(Y \mid X+1) = \text{Median}(Y \mid X) \cdot \exp(\beta_1)$$
   differ by one unit in $X$.
 - **Randomized experiment:** $\exp(\beta_1)$ is the multiplicative change in median $Y$ when $X$ increases by one unit.
 
-### Voltage and Breakdown Time):
+### Example: Voltage and Breakdown Time
+
+Researchers applied different voltage levels to an insulating fluid and
+measured the time until the fluid broke down.
 
 ```{r}
+#| label: volt-ex-load
 #| message: false
 voltage <- read_csv("https://dcgerard.github.io/stat_302/data/case0802.csv")
 ```
 
--   Two variables:
-    - Voltage applied to insulating fluid
-    - Time to failure.
-  
-    ```{r}
-    #| message: false
-    ggplot(voltage, aes(x = Voltage, y = Time)) +
-      geom_point() +
-      geom_smooth(method = lm, se = FALSE)
-    ```
+The relationship is curved with unequal variance:
 
--   Log on $Y$ works best
+```{r}
+#| label: volt-ex-scatter
+#| message: false
+ggplot(voltage, aes(x = Voltage, y = Time)) +
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE)
+```
 
-    ```{r}
-    #| message: false
-    ggplot(voltage, aes(x = Voltage, y = Time)) +
-      geom_point() +
-      geom_smooth(method = lm, se = FALSE) +
-      scale_y_log10()
-    ```
+A log-transformation of $Y$ works best:
 
--   We fit the model
-    ```{r}
-    lm(I(log(Time)) ~ Voltage, data = voltage) |>
-      tidy()
-    ```
+```{r}
+#| label: volt-ex-log-scatter
+#| message: false
+ggplot(voltage, aes(x = Voltage, y = Time)) +
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE) +
+  scale_y_log10()
+```
 
+We fit the model with $\log(\text{Time})$ as the response:
 
-- $\hat\beta_1 = -0.51$,
+```{r}
+#| label: volt-ex-fit
+lm(I(log(Time)) ~ Voltage, data = voltage) |>
+  tidy(conf.int = TRUE)
+```
 
-- 95% CI $(-0.62, -0.39)$.
-
--   $\exp(-0.51) = 0.6$: a 1 kV increase is associated with 60% of the median breakdown time. So a 40% decrease.
-
-    $$
-    \text{Median}(Y \mid X+1) - \text{Median}(Y \mid X)
-= (\exp(\beta_1) - 1)\,\text{Median}(Y \mid X) = -0.4\,\text{Median}(Y \mid X)
-    $$
-
-- 95% CI for the multiplicative effect: $(\exp(-0.62), \exp(-0.39)) = (0.54, 0.68)$. So a a 32% to 46% decrease.
-
-
-
----
+- $\hat\beta_1 = -0.51$, with 95% CI $(-0.62, -0.39)$.
+- $\exp(-0.51) = 0.60$, so a 1 kV increase in voltage is associated with a
+  median breakdown time that is 0.60 times as large — a 40% decrease:
+  $$
+  \text{Median}(Y \mid X+1) - \text{Median}(Y \mid X)
+  = (\exp(\beta_1) - 1)\,\text{Median}(Y \mid X) = -0.4\,\text{Median}(Y \mid X)
+  $$
+- The 95% CI for the multiplicative effect is
+  $(\exp(-0.62), \exp(-0.39)) = (0.54, 0.68)$ — a 32% to 46% decrease.
 
 ## Log on $X$, No Log on $Y$
 
@@ -640,41 +633,50 @@ $$\mu(Y \mid 2X) = \beta_0 + \beta_1\log(2X) = \mu(Y \mid X) + \beta_1\log(2)$$
 A similar interpretation holds for $\beta_1\log(10)$ and a 10-fold increase in
 $X$.
 
-### pH and time after slaughter:
+### Example: pH and Time After Slaughter
+
+Researchers measured the pH of steer carcasses at various times after
+slaughter.
 
 ```{r}
+#| label: meat-load
 #| message: false
 meat <- read_csv("https://dcgerard.github.io/stat_302/data/case0702.csv")
 ```
 
--   Two variables: Time since slaughter and pH of meat
-    ```{r}
-    #| message: false
-    ggplot(meat, aes(x = Time, y = pH)) +
-      geom_point() + 
-      geom_smooth(method = lm, se = FALSE)
-    ```
+The relationship between time since slaughter and pH looks curved:
 
--   Plot is a better with log-$X$
-    ```{r}
-    #| message: false
-    ggplot(meat, aes(x = Time, y = pH)) +
-      geom_point() + 
-      geom_smooth(method = lm, se = FALSE) +
-      scale_x_log10()
-    ```
+```{r}
+#| label: meat-scatter
+#| message: false
+ggplot(meat, aes(x = Time, y = pH)) +
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE)
+```
 
--   We fit a regression on the log scale of x.
-    ```{r}
-    lm(pH ~ I(log(Time)), data = meat) |>
-      tidy(conf.int = TRUE)
-    ```
+The plot looks better with a log-transformation of $X$:
 
-- $\hat{\beta}_1 = -0.726$
-- Doubling the time decreases pH by $0.726\log(2) = 0.503$.
-- 95% CI: $(0.646\log(2),\,0.805\log(2)) = (0.448,\,0.558)$.
+```{r}
+#| label: meat-log-scatter
+#| message: false
+ggplot(meat, aes(x = Time, y = pH)) +
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE) +
+  scale_x_log10()
+```
 
----
+We fit a regression with $\log(\text{Time})$ as the explanatory variable:
+
+```{r}
+#| label: meat-fit
+lm(pH ~ I(log(Time)), data = meat) |>
+  tidy(conf.int = TRUE)
+```
+
+- $\hat{\beta}_1 = -0.726$.
+- Doubling the time after slaughter is associated with a decrease in mean pH
+  of $0.726\log(2) = 0.503$.
+- 95% CI for this decrease: $(0.646\log(2),\,0.805\log(2)) = (0.448,\,0.558)$.
 
 ## Log on $X$, Log on $Y$
 
@@ -693,47 +695,54 @@ $$\text{Median}(Y \mid 2X) = \text{Median}(Y \mid X) \cdot 2^{\beta_1}$$
 A similar interpretation holds for $10^{\beta_1}$ and a 10-fold increase in
 $X$.
 
-### Island area and number of species
+### Example: Island Area and Number of Species
+
+Researchers measured the area of islands in the West Indies and counted the
+number of amphibian species on each island.
 
 ```{r}
+#| label: species-load
 #| message: false
 species <- read_csv("https://dcgerard.github.io/stat_302/data/case0801.csv")
 ```
 
--   Researchers measured the area of islands in the West Indies and counted the number of amphibian species on them.
-    ```{r}
-    #| message: false
-    ggplot(species, aes(x = Area, y = Species)) +
-      geom_point() +
-      geom_smooth(method = lm, se = FALSE)
-    ```
+```{r}
+#| label: species-scatter
+#| message: false
+ggplot(species, aes(x = Area, y = Species)) +
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE)
+```
 
--   A log-log relationship works best
-    ```{r}
-    #| message: false
-    ggplot(species, aes(x = Area, y = Species)) +
-      geom_point() +
-      geom_smooth(method = lm, se = FALSE) +
-      scale_x_log10() +
-      scale_y_log10()
-    ```
+A log-log relationship works best:
 
--   We fit the linear model
-    ```{r}
-    lm(I(log(Species)) ~ I(log(Area)), data = species) |>
-      tidy(conf.int = TRUE)
-    ```
+```{r}
+#| label: species-log-scatter
+#| message: false
+ggplot(species, aes(x = Area, y = Species)) +
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE) +
+  scale_x_log10() +
+  scale_y_log10()
+```
 
--   The estimated relationship is, for $S$ the number of species and $A$ the island area:
-    $$
-    S = e^{1.93}A^{0.25}
-    $$
+We fit the linear model:
 
-- Islands with twice the area have $2^{0.25} = 1.19$ times more species, or 19% more.
+```{r}
+#| label: species-fit
+lm(I(log(Species)) ~ I(log(Area)), data = species) |>
+  tidy(conf.int = TRUE)
+```
 
-- The 95% confidence interval is $(2^{0.22}, 2^{0.28}) = (1.16, 1.22)$. Or, 16% to 22% more.
-
----
+- The estimated relationship, for $S$ the number of species and $A$ the island
+  area, is
+  $$
+  S = e^{1.93}A^{0.25}
+  $$
+- Islands with twice the area have $2^{0.25} = 1.19$ times as many species —
+  19% more.
+- The 95% confidence interval is $(2^{0.22}, 2^{0.28}) = (1.16, 1.22)$ — 16%
+  to 22% more species.
 
 ## Other Transformations
 
@@ -828,8 +837,8 @@ tidy(lmout, conf.int = TRUE)
 
 ## Interpretation on the Original Scale
 
-A one kV increase results in a $\exp(-0.507) = 0.60$ multiplicative change in
-median breakdown time — a 40% decrease.
+A one kV increase in voltage results in a multiplicative change of
+$\exp(-0.507) = 0.60$ in median breakdown time — a 40% decrease.
 
 ```{r}
 #| label: voltage-interpret
@@ -856,6 +865,9 @@ tidy(lmout, conf.int = TRUE) |>
 
 ## We Could Have Viewed This as an ANOVA Problem
 
+The voltage variable only takes seven distinct values, so we could have
+treated it as categorical and used ANOVA:
+
 ```{r}
 #| label: lof-boxplot
 case0802 <- case0802 |>
@@ -877,148 +889,144 @@ ggplot(case0802, aes(x = VoltageFac, y = logTime)) +
 
 ## Lack-of-Fit $F$-Test
 
-- $H_0: E[Y_i] = \beta_0 + \beta_1X_i$ (mean is based on line)
-- $H_A: E[Y_i] = \mu_j$ where $X_i = j$ (mean is based on group)
+- $H_0: E[Y_i] = \beta_0 + \beta_1X_i$ (the means lie on a line).
+- $H_A: E[Y_i] = \mu_j$ where $X_i = j$ (each group has its own mean).
 
--   Full Model Estimates
+Under the **full model**, each voltage group gets its own estimated mean
+(dashed red segments):
 
-    ```{r}
-    #| label: lof-full-setup
-    #| message: false
-    #| echo: false
-    lmout <- lm(logTime ~ Voltage, data = case0802)
-    
-    meandf <- case0802 |>
-      group_by(VoltageFac) |>
-      summarize(mean = mean(logTime)) |>
-      mutate(z = as.numeric(VoltageFac)) |>
-      mutate(zlower = z - 1/3, zupper = z + 1/3)
-    
-    case0802 <- case0802 |>
-      mutate(jitterx = jitter(as.numeric(VoltageFac)),
-             fitted  = fitted(lmout)) |>
-      left_join(select(meandf, VoltageFac, mean), by = "VoltageFac")
-    ```
-    
-    ```{r}
-    #| label: lof-full-plot
-    #| echo: false
-    ggplot(case0802, aes(x = jitterx, y = logTime)) +
-      geom_point() +
-      scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +
-      geom_segment(data = meandf,
-                   mapping = aes(x = zlower, xend = zupper, y = mean, yend = mean),
-                   col = 2, lty = 2) +
-      labs(x = "Voltage")
-    ```
+```{r}
+#| label: lof-full-setup
+#| message: false
+#| echo: false
+lmout <- lm(logTime ~ Voltage, data = case0802)
 
--   Reduced Model Estimates
+meandf <- case0802 |>
+  group_by(VoltageFac) |>
+  summarize(mean = mean(logTime)) |>
+  mutate(z = as.numeric(VoltageFac)) |>
+  mutate(zlower = z - 1/3, zupper = z + 1/3)
 
-    ```{r}
-    #| label: lof-reduced-plot
-    ggplot(case0802, aes(x = jitterx, y = logTime)) +
-      geom_point() +
-      scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +
-      geom_line(mapping = aes(x = (Voltage - 24) / 2, y = fitted), lty = 2, col = 2) +
-      labs(x = "Voltage")
-    ```
+case0802 <- case0802 |>
+  mutate(jitterx = jitter(as.numeric(VoltageFac)),
+         fitted  = fitted(lmout)) |>
+  left_join(select(meandf, VoltageFac, mean), by = "VoltageFac")
+```
 
--   Residuals Under Full
+```{r}
+#| label: lof-full-plot
+#| echo: false
+ggplot(case0802, aes(x = jitterx, y = logTime)) +
+  geom_point() +
+  scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +
+  geom_segment(data = meandf,
+               mapping = aes(x = zlower, xend = zupper, y = mean, yend = mean),
+               col = 2, lty = 2) +
+  labs(x = "Voltage")
+```
 
-    ```{r}
-    #| label: lof-resid-full
-    #| echo: false
-    ggplot(case0802, aes(x = jitterx, y = logTime)) +
-      geom_point() +
-      scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +
-      geom_segment(data = meandf,
-                   mapping = aes(x = zlower, xend = zupper, y = mean, yend = mean),
-                   col = 2, lty = 2) +
-      geom_segment(mapping = aes(x = jitterx, xend = jitterx, y = logTime, yend = mean),
-                   col = "blue") +
-      labs(x = "Voltage")
-    ```
+Under the **reduced model**, the group means must lie on a line:
 
--   Residuals Under Reduced
+```{r}
+#| label: lof-reduced-plot
+#| echo: false
+ggplot(case0802, aes(x = jitterx, y = logTime)) +
+  geom_point() +
+  scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +
+  geom_line(mapping = aes(x = (Voltage - 24) / 2, y = fitted), lty = 2, col = 2) +
+  labs(x = "Voltage")
+```
 
-    ```{r}
-    #| label: lof-resid-reduced
-    #| echo: false
-    ggplot(case0802, aes(x = jitterx, y = logTime)) +
-      geom_point() +
-      scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +
-      geom_line(mapping = aes(x = (Voltage - 24) / 2, y = fitted), lty = 2, col = 2) +
-      geom_segment(mapping = aes(x = jitterx, xend = jitterx, y = logTime, yend = fitted),
-                   col = "blue") +
-      labs(x = "Voltage")
-    ```
+Residuals under the full model:
 
--   Lack-of-Fit $F$-Statistic
+```{r}
+#| label: lof-resid-full
+#| echo: false
+ggplot(case0802, aes(x = jitterx, y = logTime)) +
+  geom_point() +
+  scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +
+  geom_segment(data = meandf,
+               mapping = aes(x = zlower, xend = zupper, y = mean, yend = mean),
+               col = 2, lty = 2) +
+  geom_segment(mapping = aes(x = jitterx, xend = jitterx, y = logTime, yend = mean),
+               col = "blue") +
+  labs(x = "Voltage")
+```
 
-    ```{r}
-    #| label: lof-calc
-    #| message: false
-    case0802 <- read_csv("https://dcgerard.github.io/stat_302/data/case0802.csv")
-    case0802 |>
-      mutate(logTime = log(Time)) ->
-      case0802
-    lmout <- lm(logTime ~ Voltage, data = case0802) ## estimates linear model
-    case0802 |>
-      group_by(Voltage) |>
-      mutate(mean = mean(logTime)) |> ## full model means
-      ungroup() |>
-      mutate(fitted = fitted(lmout)) ->
-      case0802
-    rss_full    <- sum((case0802$logTime - case0802$mean)^2)
-    rss_reduced <- sum((case0802$logTime - case0802$fitted)^2)
-    ESS         <- rss_reduced - rss_full
-    df_full     <- 69
-    df_reduced  <- 74
-    df_extra    <- df_reduced - df_full
-    fstat       <- (ESS / df_extra) / (rss_full / df_full)
-    ```
+Residuals under the reduced model:
 
-- $RSS_{full}$ = `r rss_full`
+```{r}
+#| label: lof-resid-reduced
+#| echo: false
+ggplot(case0802, aes(x = jitterx, y = logTime)) +
+  geom_point() +
+  scale_x_continuous(breaks = 1:7, labels = levels(case0802$VoltageFac)) +
+  geom_line(mapping = aes(x = (Voltage - 24) / 2, y = fitted), lty = 2, col = 2) +
+  geom_segment(mapping = aes(x = jitterx, xend = jitterx, y = logTime, yend = fitted),
+               col = "blue") +
+  labs(x = "Voltage")
+```
 
+We calculate the lack-of-fit $F$-statistic using the extra sum of squares:
+
+```{r}
+#| label: lof-calc
+#| message: false
+case0802 <- read_csv("https://dcgerard.github.io/stat_302/data/case0802.csv")
+case0802 |>
+  mutate(logTime = log(Time)) ->
+  case0802
+lmout <- lm(logTime ~ Voltage, data = case0802) ## estimates linear model
+case0802 |>
+  group_by(Voltage) |>
+  mutate(mean = mean(logTime)) |> ## full model means
+  ungroup() |>
+  mutate(fitted = fitted(lmout)) ->
+  case0802
+rss_full    <- sum((case0802$logTime - case0802$mean)^2)
+rss_reduced <- sum((case0802$logTime - case0802$fitted)^2)
+ESS         <- rss_reduced - rss_full
+df_full     <- 69
+df_reduced  <- 74
+df_extra    <- df_reduced - df_full
+fstat       <- (ESS / df_extra) / (rss_full / df_full)
+```
+
+- $RSS_{full}$ = `r round(rss_full, 3)`
 - $df_{full} = n - I$ = 76 - 7 = 69
-
-- $RSS_{reduced}$ = `r rss_reduced`
-
+- $RSS_{reduced}$ = `r round(rss_reduced, 3)`
 - $df_{reduced} = n - 2$ = 76 - 2 = 74
-
-- $ESS = RSS_{reduced} - RSS_{full}$ = `r ESS`
-
+- $ESS = RSS_{reduced} - RSS_{full}$ = `r round(ESS, 3)`
 - $df_{extra} = df_{reduced} - df_{full}$ = 74 - 69 = 5
+- $F$-statistic $= \frac{ESS / df_{extra}}{RSS_{full} / df_{full}}$ = `r round(fstat, 4)`
 
-- $F$-statistic $= \frac{ESS / df_{extra}}{RSS_{full} / df_{full}}$ = `r fstat`
+We compare the $F$-statistic to an $F_{5,69}$ distribution:
 
--   Compare to $F_{5,69}$
+```{r}
+#| label: lof-fdist
+#| echo: false
+x <- seq(0, 5, length = 100)
+y <- df(x, 5, 69)
 
-    ```{r}
-    #| label: lof-fdist
-    #| echo: false
-    x <- seq(0, 5, length = 100)
-    y <- df(x, 5, 69)
-    
-    which_x <- x > fstat
-    polydf <- data.frame(
-      polyx = c(min(x[which_x]), x[which_x], max(x[which_x]), min(x[which_x])),
-      polyy = c(0, y[which_x], 0, 0)
-    )
-    ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
-      geom_line() +
-      geom_polygon(data = polydf, aes(x = polyx, y = polyy), fill = "blue", alpha = 3/4) +
-      labs(x = "F-stat", y = "Density")
-    ```
+which_x <- x > fstat
+polydf <- data.frame(
+  polyx = c(min(x[which_x]), x[which_x], max(x[which_x]), min(x[which_x])),
+  polyy = c(0, y[which_x], 0, 0)
+)
+ggplot(data.frame(x = x, y = y), aes(x = x, y = y)) +
+  geom_line() +
+  geom_polygon(data = polydf, aes(x = polyx, y = polyy), fill = "blue", alpha = 3/4) +
+  labs(x = "F-stat", y = "Density")
+```
 
--   Calculate $p$-value
+We calculate the $p$-value as the area to the right of the $F$-statistic:
 
-    ```{r}
-    #| label: lof-pvalue
-    pf(0.5024, df1 = 5, df2 = 69, lower.tail = FALSE)
-    ```
+```{r}
+#| label: lof-pvalue
+pf(fstat, df1 = 5, df2 = 69, lower.tail = FALSE)
+```
 
-## Lack of Fit in R
+## Lack-of-Fit Test in R
 
 Create a factor variable:
 
