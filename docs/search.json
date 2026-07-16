@@ -1250,42 +1250,42 @@
     "href": "09_ch7/09_ch7.html#conditional-distributions",
     "title": "Simple Linear Regression",
     "section": "Conditional Distributions",
-    "text": "Conditional Distributions\nThe key assumptions are:\n\nThe mean of \\(Y\\) is a linear function of \\(X\\): \\(E(Y \\mid X) = \\beta_0 + \\beta_1 X\\).\nThe variance of \\(Y\\) is the same for every value of \\(X\\) (constant \\(\\sigma^2\\)).\nIndividual observations are independent.\nIdeally, \\(Y \\mid X\\) is normally distributed.\n\nThe animation below illustrates assumptions 1 and 2: at each fixed velocity \\(x_0\\), the distance values are normally distributed around the fitted line, and the spread \\(\\sigma\\) is the same at every \\(x_0\\).\n\n\n\nConditional distributions shift along the regression line as \\(x_0\\) moves, but the spread stays constant."
+    "text": "Conditional Distributions\nThe key assumptions are:\n\nThe mean of \\(Y\\) is a linear function of \\(X\\): \\(E(Y \\mid X) = \\beta_0 + \\beta_1 X\\).\nThe variance of \\(Y\\) is the same for every value of \\(X\\) (constant \\(\\sigma^2\\)).\nIndividual observations are independent.\nIdeally, \\(Y \\mid X\\) is normally distributed.\n\nThe animation below illustrates assumptions 1 and 2:\n\nAt each fixed velocity \\(x_0\\), the distance values are normally distributed around the fitted line.\nThe spread \\(\\sigma\\) is the same at every \\(x_0\\).\n\n\n\n\nConditional distributions shift along the regression line as \\(x_0\\) moves, but the spread stays constant."
   },
   {
     "objectID": "09_ch7/09_ch7.html#the-ols-criterion",
     "href": "09_ch7/09_ch7.html#the-ols-criterion",
     "title": "Simple Linear Regression",
     "section": "The OLS Criterion",
-    "text": "The OLS Criterion\nWe choose \\(\\hat\\beta_0\\) and \\(\\hat\\beta_1\\) to minimize the sum of squared residuals:\n\\[\\text{RSS} = \\sum_{i=1}^{n} \\hat\\varepsilon_i^2\n= \\sum_{i=1}^{n} \\bigl(Y_i - \\hat\\beta_0 - \\hat\\beta_1 X_i\\bigr)^2.\\]\nThe resulting estimates are called the ordinary least squares (OLS) estimates."
+    "text": "The OLS Criterion\n\nWe choose \\(\\hat\\beta_0\\) and \\(\\hat\\beta_1\\) to minimize the sum of squared residuals:\n\\[\\text{RSS} = \\sum_{i=1}^{n} \\hat\\varepsilon_i^2\n= \\sum_{i=1}^{n} \\bigl(Y_i - \\hat\\beta_0 - \\hat\\beta_1 X_i\\bigr)^2.\\]\nThe resulting estimates are called the ordinary least squares (OLS) estimates."
   },
   {
     "objectID": "09_ch7/09_ch7.html#visualizing-ols",
     "href": "09_ch7/09_ch7.html#visualizing-ols",
     "title": "Simple Linear Regression",
     "section": "Visualizing OLS",
-    "text": "Visualizing OLS\nThree candidate lines are shown below. The vertical segments are the residuals. The OLS line has the smallest total squared length."
+    "text": "Visualizing OLS\n\nThree candidate lines are shown below.\nThe vertical segments are the residuals.\nThe OLS line has the smallest total squared length.\n\n\n\n\n\n\n\n\n\n\nThe name “least squares” is literal:\n\nEach residual is the vertical distance from a point to the line.\nDraw a square whose side length equals that residual.\nThe area of each square is a squared residual \\(\\hat\\varepsilon_i^2\\).\nThe RSS is the total shaded area — OLS is the line that makes it smallest."
   },
   {
     "objectID": "09_ch7/09_ch7.html#closed-form-solutions",
     "href": "09_ch7/09_ch7.html#closed-form-solutions",
     "title": "Simple Linear Regression",
     "section": "Closed-Form Solutions",
-    "text": "Closed-Form Solutions\nUsing calculus one can show that the OLS estimates are:\n\\[\\hat\\beta_1 = \\frac{s_Y}{s_X}\\, r_{XY},\n\\qquad\n\\hat\\beta_0 = \\bar Y - \\hat\\beta_1 \\bar X,\\]\nwhere \\(s_X\\), \\(s_Y\\) are the sample standard deviations and \\(r_{XY}\\) is the sample correlation."
+    "text": "Closed-Form Solutions\n\nUsing calculus one can show that the OLS estimates are:\n\\[\\hat\\beta_1 = \\frac{s_Y}{s_X}\\, r_{XY},\n\\qquad\n\\hat\\beta_0 = \\bar Y - \\hat\\beta_1 \\bar X,\\]\nwhere \\(s_X\\), \\(s_Y\\) are the sample standard deviations and \\(r_{XY}\\) is the sample correlation."
   },
   {
     "objectID": "09_ch7/09_ch7.html#estimating-sigma2",
     "href": "09_ch7/09_ch7.html#estimating-sigma2",
     "title": "Simple Linear Regression",
     "section": "Estimating \\(\\sigma^2\\)",
-    "text": "Estimating \\(\\sigma^2\\)\nThe residuals \\(\\hat\\varepsilon_i = Y_i - \\hat\\beta_0 - \\hat\\beta_1 X_i\\) measure leftover variability. The estimated variance is:\n\\[\\hat\\sigma^2 = \\frac{\\sum_{i=1}^n \\hat\\varepsilon_i^2}{n - 2}\n= \\frac{\\text{RSS}}{n - 2}.\\]\nWe divide by \\(n - 2\\) because two parameters (\\(\\beta_0\\) and \\(\\beta_1\\)) are estimated — leaving \\(\\nu = n - 2\\) degrees of freedom."
+    "text": "Estimating \\(\\sigma^2\\)\n\nThe residuals \\(\\hat\\varepsilon_i = Y_i - \\hat\\beta_0 - \\hat\\beta_1 X_i\\) measure leftover variability.\nThe estimated variance is:\n\\[\\hat\\sigma^2 = \\frac{\\sum_{i=1}^n \\hat\\varepsilon_i^2}{n - 2}\n= \\frac{\\text{RSS}}{n - 2}.\\]\nWe divide by \\(n - 2\\) because two parameters (\\(\\beta_0\\) and \\(\\beta_1\\)) are estimated — leaving \\(\\nu = n - 2\\) degrees of freedom."
   },
   {
     "objectID": "09_ch7/09_ch7.html#sampling-distributions",
     "href": "09_ch7/09_ch7.html#sampling-distributions",
     "title": "Simple Linear Regression",
     "section": "Sampling Distributions",
-    "text": "Sampling Distributions\nBecause \\(\\hat\\beta_0\\) and \\(\\hat\\beta_1\\) depend on the random sample, they have sampling distributions. If we repeatedly drew new samples (keeping the \\(X_i\\) values fixed) and re-estimated, the resulting estimates would vary.\n\n\n\n\n\n\n\n\n\nBlue = true regression line; dashed red = estimated line from that simulated sample. The slope shifts across samples, but centers on the true \\(\\beta_1\\).\nThe histograms below confirm that the sampling distributions of \\(\\hat\\beta_0\\) and \\(\\hat\\beta_1\\) are (approximately) normal:"
+    "text": "Sampling Distributions\n\nBecause \\(\\hat\\beta_0\\) and \\(\\hat\\beta_1\\) depend on the random sample, they have sampling distributions.\nIf we repeatedly drew new samples (keeping the \\(X_i\\) values fixed) and re-estimated, the resulting estimates would vary.\n\n\n\n\n\n\n\n\n\n\n\nBlue = true regression line.\nDashed red = estimated line from that simulated sample.\nThe slope shifts across samples, but centers on the true \\(\\beta_1\\).\n\nThe histograms below confirm that the sampling distributions of \\(\\hat\\beta_0\\) and \\(\\hat\\beta_1\\) are (approximately) normal:"
   },
   {
     "objectID": "09_ch7/09_ch7.html#theoretical-standard-errors",
@@ -1299,7 +1299,7 @@
     "href": "09_ch7/09_ch7.html#t-tests",
     "title": "Simple Linear Regression",
     "section": "\\(t\\)-Tests",
-    "text": "\\(t\\)-Tests\nReplacing \\(\\hat\\sigma\\) for \\(\\sigma\\) introduces extra variability, so the standardized estimates follow a \\(t\\) distribution:\n\\[t^* = \\frac{\\hat\\beta_1 - \\beta_1}{SE(\\hat\\beta_1)} \\sim t_{n-2},\n\\qquad\nt^* = \\frac{\\hat\\beta_0 - \\beta_0}{SE(\\hat\\beta_0)} \\sim t_{n-2}.\\]\nTo test \\(H_0 : \\beta_1 = 0\\) (no linear association), compute \\(t^* = \\hat\\beta_1 / SE(\\hat\\beta_1)\\) and find the two-sided \\(p\\)-value \\(2 P(t_{n-2} \\leq -|t^*|)\\)."
+    "text": "\\(t\\)-Tests\n\nReplacing \\(\\hat\\sigma\\) for \\(\\sigma\\) introduces extra variability, so the standardized estimates follow a \\(t\\) distribution:\n\\[t^* = \\frac{\\hat\\beta_1 - \\beta_1}{SE(\\hat\\beta_1)} \\sim t_{n-2},\n\\qquad\nt^* = \\frac{\\hat\\beta_0 - \\beta_0}{SE(\\hat\\beta_0)} \\sim t_{n-2}.\\]\nTo test \\(H_0 : \\beta_1 = 0\\) (no linear association):\n\nCompute \\(t^* = \\hat\\beta_1 / SE(\\hat\\beta_1)\\).\nFind the two-sided \\(p\\)-value \\(2 P(t_{n-2} \\leq -|t^*|)\\)."
   },
   {
     "objectID": "09_ch7/09_ch7.html#confidence-intervals",
@@ -1320,49 +1320,49 @@
     "href": "09_ch7/09_ch7.html#interpretation",
     "title": "Simple Linear Regression",
     "section": "Interpretation",
-    "text": "Interpretation\nRandomized experiment: A one-unit increase in \\(X\\) causes a \\(\\hat\\beta_1\\) unit change in the mean of \\(Y\\).\nObservational study: Populations that differ by one unit in \\(X\\) differ by \\(\\hat\\beta_1\\) units in \\(Y\\) on average.\nFor the nebula data (observational): nebulae with a recession velocity 1 km/s faster tend to be about 0.0014 megaparsecs farther from Earth (\\(p &lt; 0.001\\), 95% CI: 0.00090 to 0.0018)."
+    "text": "Interpretation\n\nRandomized experiment: a one-unit increase in \\(X\\) causes a \\(\\hat\\beta_1\\) unit change in the mean of \\(Y\\).\nObservational study: populations that differ by one unit in \\(X\\) differ by \\(\\hat\\beta_1\\) units in \\(Y\\) on average.\nFor the nebula data (observational):\n\nNebulae with a recession velocity 1 km/s faster tend to be about 0.0014 megaparsecs farther from Earth (\\(p &lt; 0.001\\), 95% CI: 0.00090 to 0.0018)."
   },
   {
     "objectID": "09_ch7/09_ch7.html#pointwise-confidence-intervals",
     "href": "09_ch7/09_ch7.html#pointwise-confidence-intervals",
     "title": "Simple Linear Regression",
     "section": "Pointwise Confidence Intervals",
-    "text": "Pointwise Confidence Intervals\nA pointwise confidence interval at \\(X_0\\) estimates the mean response \\(\\beta_0 + \\beta_1 X_0\\):\n\\[\\hat\\beta_0 + \\hat\\beta_1 X_0 \\;\\pm\\; t_{n-2}(0.975) \\cdot\nSE\\!\\left(\\hat\\beta_0 + \\hat\\beta_1 X_0\\right),\\]\nwhere\n\\[SE\\!\\left(\\hat\\beta_0 + \\hat\\beta_1 X_0\\right)\n= \\hat\\sigma \\sqrt{\\frac{1}{n} + \\frac{(X_0 - \\bar X)^2}{(n-1)s_X^2}}.\\]\nIn R, use predict() with interval = \"confidence\":\n\npredict(lmout, newdata = data.frame(Velocity = 100),\n        interval = \"confidence\")\n\n        fit       lwr       upr\n1 0.5364112 0.3216131 0.7512093\n\n\ngeom_smooth(method = \"lm\") draws these pointwise intervals as a shaded band:\n\nggplot(case0701, aes(x = Velocity, y = Distance)) +\n  geom_point() +\n  geom_smooth(method = \"lm\", formula = y ~ x) +\n  labs(x = \"Recession velocity (km/s)\", y = \"Distance (megaparsecs)\")"
+    "text": "Pointwise Confidence Intervals\n\nA pointwise confidence interval at \\(X_0\\) estimates the mean response \\(\\beta_0 + \\beta_1 X_0\\):\n\\[\\hat\\beta_0 + \\hat\\beta_1 X_0 \\;\\pm\\; t_{n-2}(0.975) \\cdot\nSE\\!\\left(\\hat\\beta_0 + \\hat\\beta_1 X_0\\right),\\]\nwhere\n\\[SE\\!\\left(\\hat\\beta_0 + \\hat\\beta_1 X_0\\right)\n= \\hat\\sigma \\sqrt{\\frac{1}{n} + \\frac{(X_0 - \\bar X)^2}{(n-1)s_X^2}}.\\]\n\nIn R, use predict() with interval = \"confidence\":\n\npredict(lmout, newdata = data.frame(Velocity = 100),\n        interval = \"confidence\")\n\n        fit       lwr       upr\n1 0.5364112 0.3216131 0.7512093\n\n\ngeom_smooth(method = \"lm\") draws these pointwise intervals as a shaded band:\n\nggplot(case0701, aes(x = Velocity, y = Distance)) +\n  geom_point() +\n  geom_smooth(method = \"lm\", formula = y ~ x) +\n  labs(x = \"Recession velocity (km/s)\", y = \"Distance (megaparsecs)\")"
   },
   {
     "objectID": "09_ch7/09_ch7.html#simultaneous-confidence-bands",
     "href": "09_ch7/09_ch7.html#simultaneous-confidence-bands",
     "title": "Simple Linear Regression",
     "section": "Simultaneous Confidence Bands",
-    "text": "Simultaneous Confidence Bands\nA simultaneous confidence band captures the entire regression line at once with 95% confidence:\n\\[\\hat\\beta_0 + \\hat\\beta_1 X_0 \\;\\pm\\; \\sqrt{2 F_{2,\\,n-2}(0.95)}\n\\cdot SE\\!\\left(\\hat\\beta_0 + \\hat\\beta_1 X_0\\right).\\]\nThe wider multiplier \\(\\sqrt{2 F_{2,n-2}(0.95)}\\) replaces \\(t_{n-2}(0.975)\\) to account for all values of \\(X_0\\) simultaneously.\n\n\n\n\n\n\nNote\n\n\n\ngeom_smooth() draws pointwise intervals, not simultaneous bands. For simultaneous bands, a third-party package such as investr is needed."
+    "text": "Simultaneous Confidence Bands\n\nA simultaneous confidence band captures the entire regression line at once with 95% confidence:\n\\[\\hat\\beta_0 + \\hat\\beta_1 X_0 \\;\\pm\\; \\sqrt{2 F_{2,\\,n-2}(0.95)}\n\\cdot SE\\!\\left(\\hat\\beta_0 + \\hat\\beta_1 X_0\\right).\\]\nThe wider multiplier \\(\\sqrt{2 F_{2,n-2}(0.95)}\\) replaces \\(t_{n-2}(0.975)\\) to account for all values of \\(X_0\\) simultaneously.\n\n\n\n\n\n\n\nNote\n\n\n\ngeom_smooth() draws pointwise intervals, not simultaneous bands. For simultaneous bands, a third-party package such as investr is needed."
   },
   {
     "objectID": "09_ch7/09_ch7.html#prediction-intervals",
     "href": "09_ch7/09_ch7.html#prediction-intervals",
     "title": "Simple Linear Regression",
     "section": "Prediction Intervals",
-    "text": "Prediction Intervals\nA prediction interval gives likely values for a future observation at \\(X_0\\), not just the mean:\n\\[\\hat\\beta_0 + \\hat\\beta_1 X_0 \\;\\pm\\; t_{n-2}(0.975)\n\\sqrt{\\hat\\sigma^2 + SE\\!\\left(\\hat\\beta_0 + \\hat\\beta_1 X_0\\right)^2}.\\]\nThe extra \\(\\hat\\sigma^2\\) term accounts for individual variation around the mean. Prediction intervals are always wider than confidence intervals.\n\n\n\n\n\n\nWarningPrediction intervals are sensitive to non-normality\n\n\n\nConfidence intervals for the mean are protected by the central limit theorem. Prediction intervals, which try to capture a single future observation, are not — they rely directly on the normality assumption.\n\n\n\npredict(lmout, newdata = data.frame(Velocity = 100),\n        interval = \"prediction\")\n\n        fit        lwr      upr\n1 0.5364112 -0.3318046 1.404627"
+    "text": "Prediction Intervals\n\nA prediction interval gives likely values for a future observation at \\(X_0\\), not just the mean:\n\\[\\hat\\beta_0 + \\hat\\beta_1 X_0 \\;\\pm\\; t_{n-2}(0.975)\n\\sqrt{\\hat\\sigma^2 + SE\\!\\left(\\hat\\beta_0 + \\hat\\beta_1 X_0\\right)^2}.\\]\nThe extra \\(\\hat\\sigma^2\\) term accounts for individual variation around the mean.\nPrediction intervals are always wider than confidence intervals.\n\n\n\n\n\n\n\nWarningPrediction intervals are sensitive to non-normality\n\n\n\nConfidence intervals for the mean are protected by the central limit theorem. Prediction intervals, which try to capture a single future observation, are not — they rely directly on the normality assumption.\n\n\n\npredict(lmout, newdata = data.frame(Velocity = 100),\n        interval = \"prediction\")\n\n        fit        lwr      upr\n1 0.5364112 -0.3318046 1.404627"
   },
   {
     "objectID": "09_ch7/09_ch7.html#comparing-the-three-interval-types",
     "href": "09_ch7/09_ch7.html#comparing-the-three-interval-types",
     "title": "Simple Linear Regression",
     "section": "Comparing the Three Interval Types",
-    "text": "Comparing the Three Interval Types\n\n\n\n\n\n\n\n\n\nThe prediction interval is widest; the pointwise confidence interval is narrowest; and the simultaneous band falls between."
+    "text": "Comparing the Three Interval Types\n\n\n\n\n\n\n\n\n\n\nThe prediction interval is widest.\nThe pointwise confidence interval is narrowest.\nThe simultaneous band falls between."
   },
   {
     "objectID": "09_ch7/09_ch7.html#is-the-intercept-zero",
     "href": "09_ch7/09_ch7.html#is-the-intercept-zero",
     "title": "Simple Linear Regression",
     "section": "Is the Intercept Zero?",
-    "text": "Is the Intercept Zero?\nThe Big Bang model requires \\(\\beta_0 = 0\\). tidy() gives the test directly:\n\ntidy(lmout)\n\n# A tibble: 2 × 5\n  term        estimate std.error statistic    p.value\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;\n1 (Intercept)  0.399    0.119         3.36 0.00280   \n2 Velocity     0.00137  0.000228      6.02 0.00000461\n\n\nThe \\(p\\)-value for \\(H_0 : \\beta_0 = 0\\) is well below 0.05, so we reject the hypothesis that the intercept is zero. The nebula data are inconsistent with the simple \\(Y = TX\\) Big Bang model (or there is systematic measurement error)."
+    "text": "Is the Intercept Zero?\nThe Big Bang model requires \\(\\beta_0 = 0\\). tidy() gives the test directly:\n\ntidy(lmout)\n\n# A tibble: 2 × 5\n  term        estimate std.error statistic    p.value\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;\n1 (Intercept)  0.399    0.119         3.36 0.00280   \n2 Velocity     0.00137  0.000228      6.02 0.00000461\n\n\n\nThe \\(p\\)-value for \\(H_0 : \\beta_0 = 0\\) is well below 0.05, so we reject the hypothesis that the intercept is zero.\nThe nebula data are inconsistent with the simple \\(Y = TX\\) Big Bang model (or there is systematic measurement error)."
   },
   {
     "objectID": "09_ch7/09_ch7.html#estimating-the-age-of-the-universe",
     "href": "09_ch7/09_ch7.html#estimating-the-age-of-the-universe",
     "title": "Simple Linear Regression",
     "section": "Estimating the Age of the Universe",
-    "text": "Estimating the Age of the Universe\nIf we nonetheless assume the Big Bang model and force \\(\\beta_0 = 0\\), we fit a line through the origin with - 1:\n\nlm_noint &lt;- lm(Distance ~ Velocity - 1, data = case0701)\ntidy(lm_noint, conf.int = TRUE)\n\n# A tibble: 1 × 7\n  term     estimate std.error statistic  p.value conf.low conf.high\n  &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;\n1 Velocity  0.00192  0.000191      10.0 7.05e-10  0.00153   0.00232\n\n\nThe estimated age is approximately 0.00192 megaparsec-seconds per km (95% CI: 0.00153 to 0.00232). Converting to years gives an estimate of roughly 1.9 billion years — far too young by modern standards (the universe is approximately 13.8 billion years old), reflecting the limited accuracy of Hubble’s early distance measurements."
+    "text": "Estimating the Age of the Universe\nIf we nonetheless assume the Big Bang model and force \\(\\beta_0 = 0\\), we fit a line through the origin with - 1:\n\nlm_noint &lt;- lm(Distance ~ Velocity - 1, data = case0701)\ntidy(lm_noint, conf.int = TRUE)\n\n# A tibble: 1 × 7\n  term     estimate std.error statistic  p.value conf.low conf.high\n  &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;\n1 Velocity  0.00192  0.000191      10.0 7.05e-10  0.00153   0.00232\n\n\n\nThe estimated age is approximately 0.00192 megaparsec-seconds per km (95% CI: 0.00153 to 0.00232).\nConverting to years gives an estimate of roughly 1.9 billion years — far too young by modern standards (the universe is approximately 13.8 billion years old).\nThis reflects the limited accuracy of Hubble’s early distance measurements."
   },
   {
     "objectID": "10_ch8/10_ch8.html",

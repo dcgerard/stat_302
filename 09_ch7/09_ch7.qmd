@@ -38,15 +38,16 @@ library(broom)
 
 # Case Study: The Big Bang and the Age of the Universe
 
-According to Big Bang theory, the distance $Y$ between any two celestial
-objects and their recession velocity $X$ (the speed at which they are moving
-apart) are related by the age of the universe $T$:
-$$Y = TX.$$
-
-Edwin Hubble measured recession velocities and distances for 24 nebulae beyond
-the Milky Way. If the Big Bang model is correct, the slope of a regression of
-Distance on Velocity estimates the age of the universe, and the intercept
-should be zero.
+- According to Big Bang theory, the distance $Y$ between any two celestial
+  objects and their recession velocity $X$ (the speed at which they are moving
+  apart) are related by the age of the universe $T$:
+  $$Y = TX.$$
+- Edwin Hubble measured recession velocities and distances for 24 nebulae
+  beyond the Milky Way.
+- If the Big Bang model is correct:
+  - The **slope** of a regression of Distance on Velocity estimates the age of
+    the universe.
+  - The **intercept** should be zero.
 
 ```{r}
 #| label: scatter
@@ -69,8 +70,10 @@ ggplot(case0701, aes(x = Velocity, y = Distance)) +
 
 Every straight line has the equation
 $$Y = \beta_0 + \beta_1 X,$$
-where $\beta_1$ is the **slope** (rise over run) and $\beta_0$ is the
-**$y$-intercept** (the value of the line at $X = 0$).
+where
+
+- $\beta_1$ is the **slope** (rise over run), and
+- $\beta_0$ is the **$y$-intercept** (the value of the line at $X = 0$).
 
 ![Slope and intercept of a line](ch7_fig/line_review.svg){fig-align="center" width="65%"}
 
@@ -99,9 +102,11 @@ The key assumptions are:
 3. Individual observations are **independent**.
 4. Ideally, $Y \mid X$ is **normally distributed**.
 
-The animation below illustrates assumptions 1 and 2: at each fixed velocity $x_0$,
-the distance values are normally distributed around the fitted line, and the
-spread $\sigma$ is the same at every $x_0$.
+The animation below illustrates assumptions 1 and 2:
+
+- At each fixed velocity $x_0$, the distance values are normally distributed
+  around the fitted line.
+- The spread $\sigma$ is the same at every $x_0$.
 
 ![Conditional distributions shift along the regression line as $x_0$ moves, but the spread stays constant.](ch7_fig/cond_dist.gif){fig-align="center" width="70%"}
 
@@ -111,19 +116,20 @@ spread $\sigma$ is the same at every $x_0$.
 
 ## The OLS Criterion
 
-We choose $\hat\beta_0$ and $\hat\beta_1$ to minimize the **sum of squared
-residuals**:
+- We choose $\hat\beta_0$ and $\hat\beta_1$ to minimize the **sum of squared
+  residuals**:
 
-$$\text{RSS} = \sum_{i=1}^{n} \hat\varepsilon_i^2
-= \sum_{i=1}^{n} \bigl(Y_i - \hat\beta_0 - \hat\beta_1 X_i\bigr)^2.$$
+  $$\text{RSS} = \sum_{i=1}^{n} \hat\varepsilon_i^2
+  = \sum_{i=1}^{n} \bigl(Y_i - \hat\beta_0 - \hat\beta_1 X_i\bigr)^2.$$
 
-The resulting estimates are called the **ordinary least squares (OLS)**
-estimates.
+- The resulting estimates are called the **ordinary least squares (OLS)**
+  estimates.
 
 ## Visualizing OLS
 
-Three candidate lines are shown below. The vertical segments are the residuals.
-The OLS line has the smallest total squared length.
+- Three candidate lines are shown below.
+- The vertical segments are the **residuals**.
+- The OLS line has the smallest total squared length.
 
 ```{r}
 #| label: ols-viz
@@ -150,27 +156,70 @@ p3 <- make_fit_plot(coef(lmout)[1], coef(lmout)[2], "OLS fit")
 p1 | p2 | p3
 ```
 
+The name "least *squares*" is literal:
+
+- Each residual is the vertical distance from a point to the line.
+- Draw a square whose side length equals that residual.
+- The **area** of each square is a squared residual $\hat\varepsilon_i^2$.
+- The **RSS is the total shaded area** — OLS is the line that makes it smallest.
+
+```{r}
+#| label: ols-squares
+#| echo: false
+#| fig-width: 8
+#| fig-height: 5
+sq_dat <- tibble(x = c(1, 2, 3), y = c(1.6, 1.3, 3.1))
+
+make_square_plot <- function(dat, b0, b1, title) {
+  dat <- dat |>
+    mutate(fitted = b0 + b1 * x,
+           resid  = y - fitted,
+           side   = abs(resid))
+  rss <- round(sum(dat$resid^2), 2)
+  ggplot(dat, aes(x = x, y = y)) +
+    geom_rect(aes(xmin = x, xmax = x + side,
+                  ymin = pmin(y, fitted), ymax = pmax(y, fitted)),
+              fill = "#E69F00", alpha = 0.4, color = "#E69F00") +
+    geom_segment(aes(xend = x, yend = fitted),
+                 color = "black", linewidth = 1) +
+    geom_abline(intercept = b0, slope = b1, color = "blue") +
+    geom_point(size = 2) +
+    coord_equal() +
+    ggtitle(paste0(title, "\nRSS = ", rss)) +
+    xlim(1, 4.5)
+}
+
+ols_sq <- lm(y ~ x, data = sq_dat)
+p_poor <- make_square_plot(sq_dat, 3, -0.4, "Poor fit")
+p_ols  <- make_square_plot(sq_dat, coef(ols_sq)[[1]], coef(ols_sq)[[2]],
+                           "OLS fit")
+p_poor | p_ols
+```
+
+
+
 ## Closed-Form Solutions
 
-Using calculus one can show that the OLS estimates are:
+- Using calculus one can show that the OLS estimates are:
 
-$$\hat\beta_1 = \frac{s_Y}{s_X}\, r_{XY},
-\qquad
-\hat\beta_0 = \bar Y - \hat\beta_1 \bar X,$$
+  $$\hat\beta_1 = \frac{s_Y}{s_X}\, r_{XY},
+  \qquad
+  \hat\beta_0 = \bar Y - \hat\beta_1 \bar X,$$
 
-where $s_X$, $s_Y$ are the sample standard deviations and $r_{XY}$ is the
-sample correlation.
+  where $s_X$, $s_Y$ are the sample standard deviations and $r_{XY}$ is the
+  sample correlation.
 
 ## Estimating $\sigma^2$
 
-The residuals $\hat\varepsilon_i = Y_i - \hat\beta_0 - \hat\beta_1 X_i$
-measure leftover variability. The estimated variance is:
+- The residuals $\hat\varepsilon_i = Y_i - \hat\beta_0 - \hat\beta_1 X_i$
+  measure leftover variability.
+- The estimated variance is:
 
-$$\hat\sigma^2 = \frac{\sum_{i=1}^n \hat\varepsilon_i^2}{n - 2}
-= \frac{\text{RSS}}{n - 2}.$$
+  $$\hat\sigma^2 = \frac{\sum_{i=1}^n \hat\varepsilon_i^2}{n - 2}
+  = \frac{\text{RSS}}{n - 2}.$$
 
-We divide by $n - 2$ because two parameters ($\beta_0$ and $\beta_1$) are
-estimated — leaving $\nu = n - 2$ degrees of freedom.
+- We divide by $n - 2$ because two parameters ($\beta_0$ and $\beta_1$) are
+  estimated — leaving $\nu = n - 2$ degrees of freedom.
 
 ---
 
@@ -191,10 +240,18 @@ coef(lmout)
 sigma(lmout)
 ```
 
+As before, you can use `tidy()` and `glance()` to also get these:
+
+```{r}
+tidy(lmout)
+glance(lmout)
+```
+
 Plot the fitted line with `geom_smooth(method = "lm")`:
 
 ```{r}
 #| label: plot-fit
+#| message: false
 ggplot(case0701, aes(x = Velocity, y = Distance)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
@@ -207,9 +264,10 @@ ggplot(case0701, aes(x = Velocity, y = Distance)) +
 
 ## Sampling Distributions
 
-Because $\hat\beta_0$ and $\hat\beta_1$ depend on the random sample, they
-have **sampling distributions**. If we repeatedly drew new samples (keeping
-the $X_i$ values fixed) and re-estimated, the resulting estimates would vary.
+- Because $\hat\beta_0$ and $\hat\beta_1$ depend on the random sample, they
+  have **sampling distributions**.
+- If we repeatedly drew new samples (keeping the $X_i$ values fixed) and
+  re-estimated, the resulting estimates would vary.
 
 ```{r}
 #| label: samp-dist-sim
@@ -239,8 +297,9 @@ sim_panel <- function(i) {
 (sim_panel(1) | sim_panel(2) | sim_panel(3))
 ```
 
-Blue = true regression line; dashed red = estimated line from that simulated
-sample. The slope shifts across samples, but centers on the true $\beta_1$.
+- Blue = true regression line.
+- Dashed red = estimated line from that simulated sample.
+- The slope shifts across samples, but centers on the true $\beta_1$.
 
 The histograms below confirm that the sampling distributions of $\hat\beta_0$
 and $\hat\beta_1$ are (approximately) normal:
@@ -284,16 +343,16 @@ SE(\hat\beta_0) = \hat\sigma \sqrt{\frac{1}{n} + \frac{\bar X^2}{(n-1)s_X^2}}$$
 
 ## $t$-Tests
 
-Replacing $\hat\sigma$ for $\sigma$ introduces extra variability, so the
-standardized estimates follow a $t$ distribution:
+- Replacing $\hat\sigma$ for $\sigma$ introduces extra variability, so the
+  standardized estimates follow a $t$ distribution:
 
-$$t^* = \frac{\hat\beta_1 - \beta_1}{SE(\hat\beta_1)} \sim t_{n-2},
-\qquad
-t^* = \frac{\hat\beta_0 - \beta_0}{SE(\hat\beta_0)} \sim t_{n-2}.$$
+  $$t^* = \frac{\hat\beta_1 - \beta_1}{SE(\hat\beta_1)} \sim t_{n-2},
+  \qquad
+  t^* = \frac{\hat\beta_0 - \beta_0}{SE(\hat\beta_0)} \sim t_{n-2}.$$
 
-To test $H_0 : \beta_1 = 0$ (no linear association), compute
-$t^* = \hat\beta_1 / SE(\hat\beta_1)$ and find the two-sided $p$-value
-$2 P(t_{n-2} \leq -|t^*|)$.
+- To test $H_0 : \beta_1 = 0$ (no linear association):
+  - Compute $t^* = \hat\beta_1 / SE(\hat\beta_1)$.
+  - Find the two-sided $p$-value $2 P(t_{n-2} \leq -|t^*|)$.
 
 ## Confidence Intervals
 
@@ -320,15 +379,13 @@ tidy(lmout, conf.int = TRUE)
 
 ## Interpretation
 
-**Randomized experiment:** A one-unit increase in $X$ *causes* a $\hat\beta_1$
-unit change in the mean of $Y$.
-
-**Observational study:** Populations that differ by one unit in $X$
-differ by $\hat\beta_1$ units in $Y$ on average.
-
-For the nebula data (observational): nebulae with a recession velocity 1 km/s
-faster tend to be about 0.0014 megaparsecs farther from Earth
-($p < 0.001$, 95% CI: 0.00090 to 0.0018).
+- **Randomized experiment:** a one-unit increase in $X$ *causes* a
+  $\hat\beta_1$ unit change in the mean of $Y$.
+- **Observational study:** populations that differ by one unit in $X$
+  differ by $\hat\beta_1$ units in $Y$ on average.
+- For the nebula data (observational):
+  - Nebulae with a recession velocity 1 km/s faster tend to be about 0.0014
+    megaparsecs farther from Earth ($p < 0.001$, 95% CI: 0.00090 to 0.0018).
 
 ---
 
@@ -336,16 +393,16 @@ faster tend to be about 0.0014 megaparsecs farther from Earth
 
 ## Pointwise Confidence Intervals
 
-A **pointwise confidence interval** at $X_0$ estimates the *mean* response
-$\beta_0 + \beta_1 X_0$:
+- A **pointwise confidence interval** at $X_0$ estimates the *mean* response
+  $\beta_0 + \beta_1 X_0$:
 
-$$\hat\beta_0 + \hat\beta_1 X_0 \;\pm\; t_{n-2}(0.975) \cdot
-SE\!\left(\hat\beta_0 + \hat\beta_1 X_0\right),$$
+  $$\hat\beta_0 + \hat\beta_1 X_0 \;\pm\; t_{n-2}(0.975) \cdot
+  SE\!\left(\hat\beta_0 + \hat\beta_1 X_0\right),$$
 
-where
+  where
 
-$$SE\!\left(\hat\beta_0 + \hat\beta_1 X_0\right)
-= \hat\sigma \sqrt{\frac{1}{n} + \frac{(X_0 - \bar X)^2}{(n-1)s_X^2}}.$$
+  $$SE\!\left(\hat\beta_0 + \hat\beta_1 X_0\right)
+  = \hat\sigma \sqrt{\frac{1}{n} + \frac{(X_0 - \bar X)^2}{(n-1)s_X^2}}.$$
 
 In R, use `predict()` with `interval = "confidence"`:
 
@@ -359,6 +416,7 @@ predict(lmout, newdata = data.frame(Velocity = 100),
 
 ```{r}
 #| label: ci-band
+#| message: false
 ggplot(case0701, aes(x = Velocity, y = Distance)) +
   geom_point() +
   geom_smooth(method = "lm", formula = y ~ x) +
@@ -367,14 +425,14 @@ ggplot(case0701, aes(x = Velocity, y = Distance)) +
 
 ## Simultaneous Confidence Bands
 
-A **simultaneous confidence band** captures the *entire* regression line at
-once with 95% confidence:
+- A **simultaneous confidence band** captures the *entire* regression line at
+  once with 95% confidence:
 
-$$\hat\beta_0 + \hat\beta_1 X_0 \;\pm\; \sqrt{2 F_{2,\,n-2}(0.95)}
-\cdot SE\!\left(\hat\beta_0 + \hat\beta_1 X_0\right).$$
+  $$\hat\beta_0 + \hat\beta_1 X_0 \;\pm\; \sqrt{2 F_{2,\,n-2}(0.95)}
+  \cdot SE\!\left(\hat\beta_0 + \hat\beta_1 X_0\right).$$
 
-The wider multiplier $\sqrt{2 F_{2,n-2}(0.95)}$ replaces $t_{n-2}(0.975)$
-to account for all values of $X_0$ simultaneously.
+- The wider multiplier $\sqrt{2 F_{2,n-2}(0.95)}$ replaces $t_{n-2}(0.975)$
+  to account for all values of $X_0$ simultaneously.
 
 ::: {.callout-note}
 `geom_smooth()` draws **pointwise** intervals, not simultaneous bands. For
@@ -383,14 +441,15 @@ simultaneous bands, a third-party package such as `investr` is needed.
 
 ## Prediction Intervals
 
-A **prediction interval** gives likely values for a *future* observation at
-$X_0$, not just the mean:
+- A **prediction interval** gives likely values for a *future* observation at
+  $X_0$, not just the mean:
 
-$$\hat\beta_0 + \hat\beta_1 X_0 \;\pm\; t_{n-2}(0.975)
-\sqrt{\hat\sigma^2 + SE\!\left(\hat\beta_0 + \hat\beta_1 X_0\right)^2}.$$
+  $$\hat\beta_0 + \hat\beta_1 X_0 \;\pm\; t_{n-2}(0.975)
+  \sqrt{\hat\sigma^2 + SE\!\left(\hat\beta_0 + \hat\beta_1 X_0\right)^2}.$$
 
-The extra $\hat\sigma^2$ term accounts for individual variation around the
-mean. Prediction intervals are always wider than confidence intervals.
+- The extra $\hat\sigma^2$ term accounts for individual variation around the
+  mean.
+- Prediction intervals are always wider than confidence intervals.
 
 ::: {.callout-warning}
 ## Prediction intervals are sensitive to non-normality
@@ -456,19 +515,20 @@ ggplot(case0701, aes(x = Velocity, y = Distance)) +
   theme(legend.position = "bottom")
 ```
 
-The prediction interval is widest; the pointwise confidence interval is
-narrowest; and the simultaneous band falls between.
+- The **prediction interval** is widest.
+- The **pointwise confidence interval** is narrowest.
+- The **simultaneous band** falls between.
 
 ---
 
 # Extrapolation vs. Interpolation
 
-**Interpolation** means making estimates within the range of the observed $X$
-values. **Extrapolation** means predicting outside that range. Extrapolation
-is unreliable because:
-
-1. The linear relationship may not hold beyond the observed range.
-2. The variability may be different beyond the observed range.
+- **Interpolation** means making estimates *within* the range of the observed
+  $X$ values.
+- **Extrapolation** means predicting *outside* that range.
+- Extrapolation is unreliable because:
+  1. The linear relationship may not hold beyond the observed range.
+  2. The variability may be different beyond the observed range.
 
 ```{r}
 #| label: extrap-viz
@@ -552,6 +612,12 @@ cor(case0701$Velocity, case0701$Distance)
 ```
 
 - Guess the correlation: <https://www.guessthecorrelation.com/>
+
+::: {.callout-warning}
+Correlation is always a useful **summary measure**.
+
+Correlation is only an appropriate **inference** device if both $X$ and $Y$ are random. So **don't** use it for hypothesis testing and confidence intervals if $X$ is fixed.
+:::
 
 ---
 
@@ -638,9 +704,10 @@ The Big Bang model requires $\beta_0 = 0$. `tidy()` gives the test directly:
 tidy(lmout)
 ```
 
-The $p$-value for $H_0 : \beta_0 = 0$ is well below 0.05, so we reject the
-hypothesis that the intercept is zero. The nebula data are inconsistent with
-the simple $Y = TX$ Big Bang model (or there is systematic measurement error).
+- The $p$-value for $H_0 : \beta_0 = 0$ is well below 0.05, so we reject the
+  hypothesis that the intercept is zero.
+- The nebula data are inconsistent with the simple $Y = TX$ Big Bang model (or
+  there is systematic measurement error).
 
 ## Estimating the Age of the Universe
 
@@ -653,10 +720,11 @@ lm_noint <- lm(Distance ~ Velocity - 1, data = case0701)
 tidy(lm_noint, conf.int = TRUE)
 ```
 
-The estimated age is approximately 0.00192 megaparsec-seconds per km
-(95% CI: 0.00153 to 0.00232). Converting to years gives an estimate of
-roughly 1.9 billion years — far too young by modern standards (the universe is
-approximately 13.8 billion years old), reflecting the limited accuracy of
-Hubble's early distance measurements.
+- The estimated age is approximately 0.00192 megaparsec-seconds per km
+  (95% CI: 0.00153 to 0.00232).
+- Converting to years gives an estimate of roughly 1.9 billion years — far too
+  young by modern standards (the universe is approximately 13.8 billion years
+  old).
+- This reflects the limited accuracy of Hubble's early distance measurements.
 
 

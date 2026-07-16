@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-07-10">
+<meta name="dcterms.date" content="2026-07-16">
 
 <title>Simple Linear Regression – Stat 302: Intermediate Statistics</title>
 <style>
@@ -249,7 +249,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 10, 2026</p>
+      <p class="date">July 16, 2026</p>
     </div>
   </div>
   
@@ -279,8 +279,15 @@ window.Quarto = {
 </section>
 <section id="case-study-the-big-bang-and-the-age-of-the-universe" class="level1">
 <h1>Case Study: The Big Bang and the Age of the Universe</h1>
-<p>According to Big Bang theory, the distance <span class="math inline">\(Y\)</span> between any two celestial objects and their recession velocity <span class="math inline">\(X\)</span> (the speed at which they are moving apart) are related by the age of the universe <span class="math inline">\(T\)</span>: <span class="math display">\[Y = TX.\]</span></p>
-<p>Edwin Hubble measured recession velocities and distances for 24 nebulae beyond the Milky Way. If the Big Bang model is correct, the slope of a regression of Distance on Velocity estimates the age of the universe, and the intercept should be zero.</p>
+<ul>
+<li>According to Big Bang theory, the distance <span class="math inline">\(Y\)</span> between any two celestial objects and their recession velocity <span class="math inline">\(X\)</span> (the speed at which they are moving apart) are related by the age of the universe <span class="math inline">\(T\)</span>: <span class="math display">\[Y = TX.\]</span></li>
+<li>Edwin Hubble measured recession velocities and distances for 24 nebulae beyond the Milky Way.</li>
+<li>If the Big Bang model is correct:
+<ul>
+<li>The <strong>slope</strong> of a regression of Distance on Velocity estimates the age of the universe.</li>
+<li>The <strong>intercept</strong> should be zero.</li>
+</ul></li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>case0701 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0701.csv"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0701, <span class="fu">aes</span>(<span class="at">x =</span> Velocity, <span class="at">y =</span> Distance)) <span class="sc">+</span></span>
@@ -304,7 +311,11 @@ window.Quarto = {
 </section>
 <section id="review-lines" class="level1">
 <h1>Review: Lines</h1>
-<p>Every straight line has the equation <span class="math display">\[Y = \beta_0 + \beta_1 X,\]</span> where <span class="math inline">\(\beta_1\)</span> is the <strong>slope</strong> (rise over run) and <span class="math inline">\(\beta_0\)</span> is the <strong><span class="math inline">\(y\)</span>-intercept</strong> (the value of the line at <span class="math inline">\(X = 0\)</span>).</p>
+<p>Every straight line has the equation <span class="math display">\[Y = \beta_0 + \beta_1 X,\]</span> where</p>
+<ul>
+<li><span class="math inline">\(\beta_1\)</span> is the <strong>slope</strong> (rise over run), and</li>
+<li><span class="math inline">\(\beta_0\)</span> is the <strong><span class="math inline">\(y\)</span>-intercept</strong> (the value of the line at <span class="math inline">\(X = 0\)</span>).</li>
+</ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="ch7_fig/line_review.svg" class="img-fluid figure-img" style="width:65.0%"></p>
@@ -336,7 +347,11 @@ window.Quarto = {
 <li>Individual observations are <strong>independent</strong>.</li>
 <li>Ideally, <span class="math inline">\(Y \mid X\)</span> is <strong>normally distributed</strong>.</li>
 </ol>
-<p>The animation below illustrates assumptions 1 and 2: at each fixed velocity <span class="math inline">\(x_0\)</span>, the distance values are normally distributed around the fitted line, and the spread <span class="math inline">\(\sigma\)</span> is the same at every <span class="math inline">\(x_0\)</span>.</p>
+<p>The animation below illustrates assumptions 1 and 2:</p>
+<ul>
+<li>At each fixed velocity <span class="math inline">\(x_0\)</span>, the distance values are normally distributed around the fitted line.</li>
+<li>The spread <span class="math inline">\(\sigma\)</span> is the same at every <span class="math inline">\(x_0\)</span>.</li>
+</ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="ch7_fig/cond_dist.gif" class="img-fluid figure-img" style="width:70.0%"></p>
@@ -350,14 +365,20 @@ window.Quarto = {
 <h1>Estimating <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>: Ordinary Least Squares</h1>
 <section id="the-ols-criterion" class="level2">
 <h2 class="anchored" data-anchor-id="the-ols-criterion">The OLS Criterion</h2>
-<p>We choose <span class="math inline">\(\hat\beta_0\)</span> and <span class="math inline">\(\hat\beta_1\)</span> to minimize the <strong>sum of squared residuals</strong>:</p>
+<ul>
+<li><p>We choose <span class="math inline">\(\hat\beta_0\)</span> and <span class="math inline">\(\hat\beta_1\)</span> to minimize the <strong>sum of squared residuals</strong>:</p>
 <p><span class="math display">\[\text{RSS} = \sum_{i=1}^{n} \hat\varepsilon_i^2
-= \sum_{i=1}^{n} \bigl(Y_i - \hat\beta_0 - \hat\beta_1 X_i\bigr)^2.\]</span></p>
-<p>The resulting estimates are called the <strong>ordinary least squares (OLS)</strong> estimates.</p>
+= \sum_{i=1}^{n} \bigl(Y_i - \hat\beta_0 - \hat\beta_1 X_i\bigr)^2.\]</span></p></li>
+<li><p>The resulting estimates are called the <strong>ordinary least squares (OLS)</strong> estimates.</p></li>
+</ul>
 </section>
 <section id="visualizing-ols" class="level2">
 <h2 class="anchored" data-anchor-id="visualizing-ols">Visualizing OLS</h2>
-<p>Three candidate lines are shown below. The vertical segments are the residuals. The OLS line has the smallest total squared length.</p>
+<ul>
+<li>Three candidate lines are shown below.</li>
+<li>The vertical segments are the <strong>residuals</strong>.</li>
+<li>The OLS line has the smallest total squared length.</li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -367,21 +388,42 @@ window.Quarto = {
 </div>
 </div>
 </div>
+<p>The name “least <em>squares</em>” is literal:</p>
+<ul>
+<li>Each residual is the vertical distance from a point to the line.</li>
+<li>Draw a square whose side length equals that residual.</li>
+<li>The <strong>area</strong> of each square is a squared residual <span class="math inline">\(\hat\varepsilon_i^2\)</span>.</li>
+<li>The <strong>RSS is the total shaded area</strong> — OLS is the line that makes it smallest.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="09_ch7_files/figure-html/ols-squares-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="closed-form-solutions" class="level2">
 <h2 class="anchored" data-anchor-id="closed-form-solutions">Closed-Form Solutions</h2>
-<p>Using calculus one can show that the OLS estimates are:</p>
+<ul>
+<li><p>Using calculus one can show that the OLS estimates are:</p>
 <p><span class="math display">\[\hat\beta_1 = \frac{s_Y}{s_X}\, r_{XY},
 \qquad
 \hat\beta_0 = \bar Y - \hat\beta_1 \bar X,\]</span></p>
-<p>where <span class="math inline">\(s_X\)</span>, <span class="math inline">\(s_Y\)</span> are the sample standard deviations and <span class="math inline">\(r_{XY}\)</span> is the sample correlation.</p>
+<p>where <span class="math inline">\(s_X\)</span>, <span class="math inline">\(s_Y\)</span> are the sample standard deviations and <span class="math inline">\(r_{XY}\)</span> is the sample correlation.</p></li>
+</ul>
 </section>
 <section id="estimating-sigma2" class="level2">
 <h2 class="anchored" data-anchor-id="estimating-sigma2">Estimating <span class="math inline">\(\sigma^2\)</span></h2>
-<p>The residuals <span class="math inline">\(\hat\varepsilon_i = Y_i - \hat\beta_0 - \hat\beta_1 X_i\)</span> measure leftover variability. The estimated variance is:</p>
+<ul>
+<li><p>The residuals <span class="math inline">\(\hat\varepsilon_i = Y_i - \hat\beta_0 - \hat\beta_1 X_i\)</span> measure leftover variability.</p></li>
+<li><p>The estimated variance is:</p>
 <p><span class="math display">\[\hat\sigma^2 = \frac{\sum_{i=1}^n \hat\varepsilon_i^2}{n - 2}
-= \frac{\text{RSS}}{n - 2}.\]</span></p>
-<p>We divide by <span class="math inline">\(n - 2\)</span> because two parameters (<span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>) are estimated — leaving <span class="math inline">\(\nu = n - 2\)</span> degrees of freedom.</p>
+= \frac{\text{RSS}}{n - 2}.\]</span></p></li>
+<li><p>We divide by <span class="math inline">\(n - 2\)</span> because two parameters (<span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>) are estimated — leaving <span class="math inline">\(\nu = n - 2\)</span> degrees of freedom.</p></li>
+</ul>
 <hr>
 </section>
 </section>
@@ -403,15 +445,31 @@ window.Quarto = {
 <pre><code>[1] 0.4056302</code></pre>
 </div>
 </div>
+<p>As before, you can use <code>tidy()</code> and <code>glance()</code> to also get these:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  term        estimate std.error statistic    p.value
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+1 (Intercept)  0.399    0.119         3.36 0.00280   
+2 Velocity     0.00137  0.000228      6.02 0.00000461</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 12
+  r.squared adj.r.squared sigma statistic    p.value    df logLik   AIC   BIC
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.623         0.605 0.406      36.3 0.00000461     1  -11.4  28.7  32.2
+# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+</div>
+</div>
 <p>Plot the fitted line with <code>geom_smooth(method = "lm")</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0701, <span class="fu">aes</span>(<span class="at">x =</span> Velocity, <span class="at">y =</span> Distance)) <span class="sc">+</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Recession velocity (km/s)"</span>, <span class="at">y =</span> <span class="st">"Distance (megaparsecs)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0701, <span class="fu">aes</span>(<span class="at">x =</span> Velocity, <span class="at">y =</span> Distance)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Recession velocity (km/s)"</span>, <span class="at">y =</span> <span class="st">"Distance (megaparsecs)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -426,7 +484,10 @@ window.Quarto = {
 <h1>Inference for Regression Coefficients</h1>
 <section id="sampling-distributions" class="level2">
 <h2 class="anchored" data-anchor-id="sampling-distributions">Sampling Distributions</h2>
-<p>Because <span class="math inline">\(\hat\beta_0\)</span> and <span class="math inline">\(\hat\beta_1\)</span> depend on the random sample, they have <strong>sampling distributions</strong>. If we repeatedly drew new samples (keeping the <span class="math inline">\(X_i\)</span> values fixed) and re-estimated, the resulting estimates would vary.</p>
+<ul>
+<li>Because <span class="math inline">\(\hat\beta_0\)</span> and <span class="math inline">\(\hat\beta_1\)</span> depend on the random sample, they have <strong>sampling distributions</strong>.</li>
+<li>If we repeatedly drew new samples (keeping the <span class="math inline">\(X_i\)</span> values fixed) and re-estimated, the resulting estimates would vary.</li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -436,7 +497,11 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Blue = true regression line; dashed red = estimated line from that simulated sample. The slope shifts across samples, but centers on the true <span class="math inline">\(\beta_1\)</span>.</p>
+<ul>
+<li>Blue = true regression line.</li>
+<li>Dashed red = estimated line from that simulated sample.</li>
+<li>The slope shifts across samples, but centers on the true <span class="math inline">\(\beta_1\)</span>.</li>
+</ul>
 <p>The histograms below confirm that the sampling distributions of <span class="math inline">\(\hat\beta_0\)</span> and <span class="math inline">\(\hat\beta_1\)</span> are (approximately) normal:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -458,11 +523,17 @@ SE(\hat\beta_0) = \hat\sigma \sqrt{\frac{1}{n} + \frac{\bar X^2}{(n-1)s_X^2}}\]<
 </section>
 <section id="t-tests" class="level2">
 <h2 class="anchored" data-anchor-id="t-tests"><span class="math inline">\(t\)</span>-Tests</h2>
-<p>Replacing <span class="math inline">\(\hat\sigma\)</span> for <span class="math inline">\(\sigma\)</span> introduces extra variability, so the standardized estimates follow a <span class="math inline">\(t\)</span> distribution:</p>
+<ul>
+<li><p>Replacing <span class="math inline">\(\hat\sigma\)</span> for <span class="math inline">\(\sigma\)</span> introduces extra variability, so the standardized estimates follow a <span class="math inline">\(t\)</span> distribution:</p>
 <p><span class="math display">\[t^* = \frac{\hat\beta_1 - \beta_1}{SE(\hat\beta_1)} \sim t_{n-2},
 \qquad
-t^* = \frac{\hat\beta_0 - \beta_0}{SE(\hat\beta_0)} \sim t_{n-2}.\]</span></p>
-<p>To test <span class="math inline">\(H_0 : \beta_1 = 0\)</span> (no linear association), compute <span class="math inline">\(t^* = \hat\beta_1 / SE(\hat\beta_1)\)</span> and find the two-sided <span class="math inline">\(p\)</span>-value <span class="math inline">\(2 P(t_{n-2} \leq -|t^*|)\)</span>.</p>
+t^* = \frac{\hat\beta_0 - \beta_0}{SE(\hat\beta_0)} \sim t_{n-2}.\]</span></p></li>
+<li><p>To test <span class="math inline">\(H_0 : \beta_1 = 0\)</span> (no linear association):</p>
+<ul>
+<li>Compute <span class="math inline">\(t^* = \hat\beta_1 / SE(\hat\beta_1)\)</span>.</li>
+<li>Find the two-sided <span class="math inline">\(p\)</span>-value <span class="math inline">\(2 P(t_{n-2} \leq -|t^*|)\)</span>.</li>
+</ul></li>
+</ul>
 </section>
 <section id="confidence-intervals" class="level2">
 <h2 class="anchored" data-anchor-id="confidence-intervals">Confidence Intervals</h2>
@@ -473,7 +544,7 @@ t^* = \frac{\hat\beta_0 - \beta_0}{SE(\hat\beta_0)} \sim t_{n-2}.\]</span></p>
 <h2 class="anchored" data-anchor-id="obtaining-results-in-r">Obtaining Results in R</h2>
 <p><code>tidy()</code> from the <code>broom</code> package returns estimates, SEs, <span class="math inline">\(t\)</span>-statistics, and <span class="math inline">\(p\)</span>-values as a tidy data frame:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 5
   term        estimate std.error statistic    p.value
@@ -484,7 +555,7 @@ t^* = \frac{\hat\beta_0 - \beta_0}{SE(\hat\beta_0)} \sim t_{n-2}.\]</span></p>
 </div>
 <p><code>tidy()</code> with <code>conf.int = TRUE</code> appends 95% confidence intervals:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 7
   term        estimate std.error statistic    p.value conf.low conf.high
@@ -496,9 +567,14 @@ t^* = \frac{\hat\beta_0 - \beta_0}{SE(\hat\beta_0)} \sim t_{n-2}.\]</span></p>
 </section>
 <section id="interpretation" class="level2">
 <h2 class="anchored" data-anchor-id="interpretation">Interpretation</h2>
-<p><strong>Randomized experiment:</strong> A one-unit increase in <span class="math inline">\(X\)</span> <em>causes</em> a <span class="math inline">\(\hat\beta_1\)</span> unit change in the mean of <span class="math inline">\(Y\)</span>.</p>
-<p><strong>Observational study:</strong> Populations that differ by one unit in <span class="math inline">\(X\)</span> differ by <span class="math inline">\(\hat\beta_1\)</span> units in <span class="math inline">\(Y\)</span> on average.</p>
-<p>For the nebula data (observational): nebulae with a recession velocity 1 km/s faster tend to be about 0.0014 megaparsecs farther from Earth (<span class="math inline">\(p &lt; 0.001\)</span>, 95% CI: 0.00090 to 0.0018).</p>
+<ul>
+<li><strong>Randomized experiment:</strong> a one-unit increase in <span class="math inline">\(X\)</span> <em>causes</em> a <span class="math inline">\(\hat\beta_1\)</span> unit change in the mean of <span class="math inline">\(Y\)</span>.</li>
+<li><strong>Observational study:</strong> populations that differ by one unit in <span class="math inline">\(X\)</span> differ by <span class="math inline">\(\hat\beta_1\)</span> units in <span class="math inline">\(Y\)</span> on average.</li>
+<li>For the nebula data (observational):
+<ul>
+<li>Nebulae with a recession velocity 1 km/s faster tend to be about 0.0014 megaparsecs farther from Earth (<span class="math inline">\(p &lt; 0.001\)</span>, 95% CI: 0.00090 to 0.0018).</li>
+</ul></li>
+</ul>
 <hr>
 </section>
 </section>
@@ -506,16 +582,18 @@ t^* = \frac{\hat\beta_0 - \beta_0}{SE(\hat\beta_0)} \sim t_{n-2}.\]</span></p>
 <h1>Interval Estimates at a Given <span class="math inline">\(X_0\)</span></h1>
 <section id="pointwise-confidence-intervals" class="level2">
 <h2 class="anchored" data-anchor-id="pointwise-confidence-intervals">Pointwise Confidence Intervals</h2>
-<p>A <strong>pointwise confidence interval</strong> at <span class="math inline">\(X_0\)</span> estimates the <em>mean</em> response <span class="math inline">\(\beta_0 + \beta_1 X_0\)</span>:</p>
+<ul>
+<li><p>A <strong>pointwise confidence interval</strong> at <span class="math inline">\(X_0\)</span> estimates the <em>mean</em> response <span class="math inline">\(\beta_0 + \beta_1 X_0\)</span>:</p>
 <p><span class="math display">\[\hat\beta_0 + \hat\beta_1 X_0 \;\pm\; t_{n-2}(0.975) \cdot
 SE\!\left(\hat\beta_0 + \hat\beta_1 X_0\right),\]</span></p>
 <p>where</p>
 <p><span class="math display">\[SE\!\left(\hat\beta_0 + \hat\beta_1 X_0\right)
-= \hat\sigma \sqrt{\frac{1}{n} + \frac{(X_0 - \bar X)^2}{(n-1)s_X^2}}.\]</span></p>
+= \hat\sigma \sqrt{\frac{1}{n} + \frac{(X_0 - \bar X)^2}{(n-1)s_X^2}}.\]</span></p></li>
+</ul>
 <p>In R, use <code>predict()</code> with <code>interval = "confidence"</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(lmout, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">Velocity =</span> <span class="dv">100</span>),</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval =</span> <span class="st">"confidence"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(lmout, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">Velocity =</span> <span class="dv">100</span>),</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval =</span> <span class="st">"confidence"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        fit       lwr       upr
 1 0.5364112 0.3216131 0.7512093</code></pre>
@@ -523,10 +601,10 @@ SE\!\left(\hat\beta_0 + \hat\beta_1 X_0\right),\]</span></p>
 </div>
 <p><code>geom_smooth(method = "lm")</code> draws these pointwise intervals as a shaded band:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0701, <span class="fu">aes</span>(<span class="at">x =</span> Velocity, <span class="at">y =</span> Distance)) <span class="sc">+</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">formula =</span> y <span class="sc">~</span> x) <span class="sc">+</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Recession velocity (km/s)"</span>, <span class="at">y =</span> <span class="st">"Distance (megaparsecs)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0701, <span class="fu">aes</span>(<span class="at">x =</span> Velocity, <span class="at">y =</span> Distance)) <span class="sc">+</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">formula =</span> y <span class="sc">~</span> x) <span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Recession velocity (km/s)"</span>, <span class="at">y =</span> <span class="st">"Distance (megaparsecs)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -538,10 +616,12 @@ SE\!\left(\hat\beta_0 + \hat\beta_1 X_0\right),\]</span></p>
 </section>
 <section id="simultaneous-confidence-bands" class="level2">
 <h2 class="anchored" data-anchor-id="simultaneous-confidence-bands">Simultaneous Confidence Bands</h2>
-<p>A <strong>simultaneous confidence band</strong> captures the <em>entire</em> regression line at once with 95% confidence:</p>
+<ul>
+<li><p>A <strong>simultaneous confidence band</strong> captures the <em>entire</em> regression line at once with 95% confidence:</p>
 <p><span class="math display">\[\hat\beta_0 + \hat\beta_1 X_0 \;\pm\; \sqrt{2 F_{2,\,n-2}(0.95)}
-\cdot SE\!\left(\hat\beta_0 + \hat\beta_1 X_0\right).\]</span></p>
-<p>The wider multiplier <span class="math inline">\(\sqrt{2 F_{2,n-2}(0.95)}\)</span> replaces <span class="math inline">\(t_{n-2}(0.975)\)</span> to account for all values of <span class="math inline">\(X_0\)</span> simultaneously.</p>
+\cdot SE\!\left(\hat\beta_0 + \hat\beta_1 X_0\right).\]</span></p></li>
+<li><p>The wider multiplier <span class="math inline">\(\sqrt{2 F_{2,n-2}(0.95)}\)</span> replaces <span class="math inline">\(t_{n-2}(0.975)\)</span> to account for all values of <span class="math inline">\(X_0\)</span> simultaneously.</p></li>
+</ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -558,10 +638,13 @@ Note
 </section>
 <section id="prediction-intervals" class="level2">
 <h2 class="anchored" data-anchor-id="prediction-intervals">Prediction Intervals</h2>
-<p>A <strong>prediction interval</strong> gives likely values for a <em>future</em> observation at <span class="math inline">\(X_0\)</span>, not just the mean:</p>
+<ul>
+<li><p>A <strong>prediction interval</strong> gives likely values for a <em>future</em> observation at <span class="math inline">\(X_0\)</span>, not just the mean:</p>
 <p><span class="math display">\[\hat\beta_0 + \hat\beta_1 X_0 \;\pm\; t_{n-2}(0.975)
-\sqrt{\hat\sigma^2 + SE\!\left(\hat\beta_0 + \hat\beta_1 X_0\right)^2}.\]</span></p>
-<p>The extra <span class="math inline">\(\hat\sigma^2\)</span> term accounts for individual variation around the mean. Prediction intervals are always wider than confidence intervals.</p>
+\sqrt{\hat\sigma^2 + SE\!\left(\hat\beta_0 + \hat\beta_1 X_0\right)^2}.\]</span></p></li>
+<li><p>The extra <span class="math inline">\(\hat\sigma^2\)</span> term accounts for individual variation around the mean.</p></li>
+<li><p>Prediction intervals are always wider than confidence intervals.</p></li>
+</ul>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -576,8 +659,8 @@ Note
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(lmout, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">Velocity =</span> <span class="dv">100</span>),</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval =</span> <span class="st">"prediction"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(lmout, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">Velocity =</span> <span class="dv">100</span>),</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval =</span> <span class="st">"prediction"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        fit        lwr      upr
 1 0.5364112 -0.3318046 1.404627</code></pre>
@@ -595,17 +678,25 @@ Note
 </div>
 </div>
 </div>
-<p>The prediction interval is widest; the pointwise confidence interval is narrowest; and the simultaneous band falls between.</p>
+<ul>
+<li>The <strong>prediction interval</strong> is widest.</li>
+<li>The <strong>pointwise confidence interval</strong> is narrowest.</li>
+<li>The <strong>simultaneous band</strong> falls between.</li>
+</ul>
 <hr>
 </section>
 </section>
 <section id="extrapolation-vs.-interpolation" class="level1">
 <h1>Extrapolation vs.&nbsp;Interpolation</h1>
-<p><strong>Interpolation</strong> means making estimates within the range of the observed <span class="math inline">\(X\)</span> values. <strong>Extrapolation</strong> means predicting outside that range. Extrapolation is unreliable because:</p>
+<ul>
+<li><strong>Interpolation</strong> means making estimates <em>within</em> the range of the observed <span class="math inline">\(X\)</span> values.</li>
+<li><strong>Extrapolation</strong> means predicting <em>outside</em> that range.</li>
+<li>Extrapolation is unreliable because:
 <ol type="1">
 <li>The linear relationship may not hold beyond the observed range.</li>
 <li>The variability may be different beyond the observed range.</li>
-</ol>
+</ol></li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -653,7 +744,7 @@ Note
 </div>
 <p>In R, <code>cor()</code> computes the sample correlation:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(case0701<span class="sc">$</span>Velocity, case0701<span class="sc">$</span>Distance)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(case0701<span class="sc">$</span>Velocity, case0701<span class="sc">$</span>Distance)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.789032</code></pre>
 </div>
@@ -661,6 +752,20 @@ Note
 <ul>
 <li>Guess the correlation: <a href="https://www.guessthecorrelation.com/" class="uri">https://www.guessthecorrelation.com/</a></li>
 </ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Correlation is always a useful <strong>summary measure</strong>.</p>
+<p>Correlation is only an appropriate <strong>inference</strong> device if both <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are random. So <strong>don’t</strong> use it for hypothesis testing and confidence intervals if <span class="math inline">\(X\)</span> is fixed.</p>
+</div>
+</div>
 <hr>
 </section>
 <section id="r2" class="level1">
@@ -687,7 +792,7 @@ Note
 </ul>
 <p><code>glance()</code> from <code>broom</code> returns model-level statistics including <span class="math inline">\(R^2\)</span>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 12
   r.squared adj.r.squared sigma statistic    p.value    df logLik   AIC   BIC
@@ -717,7 +822,7 @@ Note
 <h2 class="anchored" data-anchor-id="is-the-intercept-zero">Is the Intercept Zero?</h2>
 <p>The Big Bang model requires <span class="math inline">\(\beta_0 = 0\)</span>. <code>tidy()</code> gives the test directly:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 5
   term        estimate std.error statistic    p.value
@@ -726,14 +831,17 @@ Note
 2 Velocity     0.00137  0.000228      6.02 0.00000461</code></pre>
 </div>
 </div>
-<p>The <span class="math inline">\(p\)</span>-value for <span class="math inline">\(H_0 : \beta_0 = 0\)</span> is well below 0.05, so we reject the hypothesis that the intercept is zero. The nebula data are inconsistent with the simple <span class="math inline">\(Y = TX\)</span> Big Bang model (or there is systematic measurement error).</p>
+<ul>
+<li>The <span class="math inline">\(p\)</span>-value for <span class="math inline">\(H_0 : \beta_0 = 0\)</span> is well below 0.05, so we reject the hypothesis that the intercept is zero.</li>
+<li>The nebula data are inconsistent with the simple <span class="math inline">\(Y = TX\)</span> Big Bang model (or there is systematic measurement error).</li>
+</ul>
 </section>
 <section id="estimating-the-age-of-the-universe" class="level2">
 <h2 class="anchored" data-anchor-id="estimating-the-age-of-the-universe">Estimating the Age of the Universe</h2>
 <p>If we nonetheless assume the Big Bang model and force <span class="math inline">\(\beta_0 = 0\)</span>, we fit a line through the origin with <code>- 1</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>lm_noint <span class="ot">&lt;-</span> <span class="fu">lm</span>(Distance <span class="sc">~</span> Velocity <span class="sc">-</span> <span class="dv">1</span>, <span class="at">data =</span> case0701)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_noint, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>lm_noint <span class="ot">&lt;-</span> <span class="fu">lm</span>(Distance <span class="sc">~</span> Velocity <span class="sc">-</span> <span class="dv">1</span>, <span class="at">data =</span> case0701)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_noint, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 7
   term     estimate std.error statistic  p.value conf.low conf.high
@@ -741,7 +849,11 @@ Note
 1 Velocity  0.00192  0.000191      10.0 7.05e-10  0.00153   0.00232</code></pre>
 </div>
 </div>
-<p>The estimated age is approximately 0.00192 megaparsec-seconds per km (95% CI: 0.00153 to 0.00232). Converting to years gives an estimate of roughly 1.9 billion years — far too young by modern standards (the universe is approximately 13.8 billion years old), reflecting the limited accuracy of Hubble’s early distance measurements.</p>
+<ul>
+<li>The estimated age is approximately 0.00192 megaparsec-seconds per km (95% CI: 0.00153 to 0.00232).</li>
+<li>Converting to years gives an estimate of roughly 1.9 billion years — far too young by modern standards (the universe is approximately 13.8 billion years old).</li>
+<li>This reflects the limited accuracy of Hubble’s early distance measurements.</li>
+</ul>
 
 
 </section>
