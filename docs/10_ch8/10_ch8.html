@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-25">
+<meta name="dcterms.date" content="2026-07-16">
 
 <title>Linear Model Assumptions and Transformations – Stat 302: Intermediate Statistics</title>
 <style>
@@ -210,9 +210,18 @@ window.Quarto = {
   <li><a href="#interpreting-log-transformations" id="toc-interpreting-log-transformations" class="nav-link" data-scroll-target="#interpreting-log-transformations">Interpreting Log Transformations</a>
   <ul class="collapse">
   <li><a href="#no-log-on-x-no-log-on-y" id="toc-no-log-on-x-no-log-on-y" class="nav-link" data-scroll-target="#no-log-on-x-no-log-on-y">No Log on <span class="math inline">\(X\)</span>, No Log on <span class="math inline">\(Y\)</span></a></li>
-  <li><a href="#no-log-on-x-log-on-y" id="toc-no-log-on-x-log-on-y" class="nav-link" data-scroll-target="#no-log-on-x-log-on-y">No Log on <span class="math inline">\(X\)</span>, Log on <span class="math inline">\(Y\)</span></a></li>
-  <li><a href="#log-on-x-no-log-on-y" id="toc-log-on-x-no-log-on-y" class="nav-link" data-scroll-target="#log-on-x-no-log-on-y">Log on <span class="math inline">\(X\)</span>, No Log on <span class="math inline">\(Y\)</span></a></li>
-  <li><a href="#log-on-x-log-on-y" id="toc-log-on-x-log-on-y" class="nav-link" data-scroll-target="#log-on-x-log-on-y">Log on <span class="math inline">\(X\)</span>, Log on <span class="math inline">\(Y\)</span></a></li>
+  <li><a href="#no-log-on-x-log-on-y" id="toc-no-log-on-x-log-on-y" class="nav-link" data-scroll-target="#no-log-on-x-log-on-y">No Log on <span class="math inline">\(X\)</span>, Log on <span class="math inline">\(Y\)</span></a>
+  <ul class="collapse">
+  <li><a href="#voltage-and-breakdown-time" id="toc-voltage-and-breakdown-time" class="nav-link" data-scroll-target="#voltage-and-breakdown-time">Voltage and Breakdown Time):</a></li>
+  </ul></li>
+  <li><a href="#log-on-x-no-log-on-y" id="toc-log-on-x-no-log-on-y" class="nav-link" data-scroll-target="#log-on-x-no-log-on-y">Log on <span class="math inline">\(X\)</span>, No Log on <span class="math inline">\(Y\)</span></a>
+  <ul class="collapse">
+  <li><a href="#ph-and-time-after-slaughter" id="toc-ph-and-time-after-slaughter" class="nav-link" data-scroll-target="#ph-and-time-after-slaughter">pH and time after slaughter:</a></li>
+  </ul></li>
+  <li><a href="#log-on-x-log-on-y" id="toc-log-on-x-log-on-y" class="nav-link" data-scroll-target="#log-on-x-log-on-y">Log on <span class="math inline">\(X\)</span>, Log on <span class="math inline">\(Y\)</span></a>
+  <ul class="collapse">
+  <li><a href="#island-area-and-number-of-species" id="toc-island-area-and-number-of-species" class="nav-link" data-scroll-target="#island-area-and-number-of-species">Island area and number of species</a></li>
+  </ul></li>
   <li><a href="#other-transformations" id="toc-other-transformations" class="nav-link" data-scroll-target="#other-transformations">Other Transformations</a></li>
   </ul></li>
   <li><a href="#case-study-voltage-vs.-breakdown-time" id="toc-case-study-voltage-vs.-breakdown-time" class="nav-link" data-scroll-target="#case-study-voltage-vs.-breakdown-time">Case Study: Voltage vs.&nbsp;Breakdown Time</a>
@@ -255,7 +264,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 25, 2026</p>
+      <p class="date">July 16, 2026</p>
     </div>
   </div>
   
@@ -903,15 +912,66 @@ x            0.4239793 2.903630</code></pre>
 <li><strong>Observational study:</strong> <span class="math inline">\(\exp(\beta_1)\)</span> is the ratio of medians when groups differ by one unit in <span class="math inline">\(X\)</span>.</li>
 <li><strong>Randomized experiment:</strong> <span class="math inline">\(\exp(\beta_1)\)</span> is the multiplicative change in median <span class="math inline">\(Y\)</span> when <span class="math inline">\(X\)</span> increases by one unit.</li>
 </ul>
-<p><strong>Example (Voltage and Breakdown Time):</strong> <span class="math inline">\(\hat\beta_1 = -0.51\)</span>, 95% CI <span class="math inline">\((-0.62, -0.39)\)</span>.</p>
+<section id="voltage-and-breakdown-time" class="level3">
+<h3 class="anchored" data-anchor-id="voltage-and-breakdown-time">Voltage and Breakdown Time):</h3>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>voltage <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0802.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <ul>
-<li><span class="math inline">\(\exp(-0.51) = 0.6\)</span>: a 1 kV increase is associated with 60% of the median breakdown time — a 40% decrease.</li>
-<li>95% CI for the multiplicative effect: <span class="math inline">\((\exp(-0.62), \exp(-0.39)) = (0.54,
-0.68)\)</span>.</li>
+<li><p>Two variables:</p>
+<ul>
+<li>Voltage applied to insulating fluid</li>
+<li>Time to failure.</li>
 </ul>
-<p><span class="math display">\[\text{Median}(Y \mid X+1) - \text{Median}(Y \mid X)
-= (\exp(\beta_1) - 1)\,\text{Median}(Y \mid X) = -0.4\,\text{Median}(Y \mid X)\]</span></p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(voltage, <span class="fu">aes</span>(<span class="at">x =</span> Voltage, <span class="at">y =</span> Time)) <span class="sc">+</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="10_ch8_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Log on <span class="math inline">\(Y\)</span> works best</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(voltage, <span class="fu">aes</span>(<span class="at">x =</span> Voltage, <span class="at">y =</span> Time)) <span class="sc">+</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="10_ch8_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>We fit the model</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(<span class="fu">I</span>(<span class="fu">log</span>(Time)) <span class="sc">~</span> Voltage, <span class="at">data =</span> voltage) <span class="sc">|&gt;</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  term        estimate std.error statistic  p.value
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept)   19.0      1.91        9.92 3.05e-15
+2 Voltage       -0.507    0.0574     -8.84 3.34e-13</code></pre>
+</div>
+</div></li>
+<li><p><span class="math inline">\(\hat\beta_1 = -0.51\)</span>,</p></li>
+<li><p>95% CI <span class="math inline">\((-0.62, -0.39)\)</span>.</p></li>
+<li><p><span class="math inline">\(\exp(-0.51) = 0.6\)</span>: a 1 kV increase is associated with 60% of the median breakdown time. So a 40% decrease.</p>
+<p><span class="math display">\[
+\text{Median}(Y \mid X+1) - \text{Median}(Y \mid X)
+= (\exp(\beta_1) - 1)\,\text{Median}(Y \mid X) = -0.4\,\text{Median}(Y \mid X)
+\]</span></p></li>
+<li><p>95% CI for the multiplicative effect: <span class="math inline">\((\exp(-0.62), \exp(-0.39)) = (0.54, 0.68)\)</span>. So a a 32% to 46% decrease.</p></li>
+</ul>
 <hr>
+</section>
 </section>
 <section id="log-on-x-no-log-on-y" class="level2">
 <h2 class="anchored" data-anchor-id="log-on-x-no-log-on-y">Log on <span class="math inline">\(X\)</span>, No Log on <span class="math inline">\(Y\)</span></h2>
@@ -923,12 +983,57 @@ x            0.4239793 2.903630</code></pre>
 <li><strong>Randomized experiment:</strong> <span class="math inline">\(\beta_1\log(2)\)</span> is the increase in mean <span class="math inline">\(Y\)</span> when <span class="math inline">\(X\)</span> is doubled.</li>
 </ul>
 <p>A similar interpretation holds for <span class="math inline">\(\beta_1\log(10)\)</span> and a 10-fold increase in <span class="math inline">\(X\)</span>.</p>
-<p><strong>Example (pH and time after slaughter):</strong> <span class="math inline">\(\hat\beta_1 = -0.726\)</span>, 95% CI <span class="math inline">\((-0.805, -0.646)\)</span>.</p>
+<section id="ph-and-time-after-slaughter" class="level3">
+<h3 class="anchored" data-anchor-id="ph-and-time-after-slaughter">pH and time after slaughter:</h3>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>meat <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0702.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <ul>
-<li>Doubling the time decreases pH by <span class="math inline">\(0.726\log(2) = 0.503\)</span>.</li>
-<li>95% CI: <span class="math inline">\((-0.805\log(2),\,-0.646\log(2)) = (-0.558,\,-0.448)\)</span>.</li>
+<li><p>Two variables: Time since slaughter and pH of meat</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(meat, <span class="fu">aes</span>(<span class="at">x =</span> Time, <span class="at">y =</span> pH)) <span class="sc">+</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="10_ch8_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Plot is a better with log-<span class="math inline">\(X\)</span></p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(meat, <span class="fu">aes</span>(<span class="at">x =</span> Time, <span class="at">y =</span> pH)) <span class="sc">+</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="10_ch8_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>We fit a regression on the log scale of x.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(pH <span class="sc">~</span> <span class="fu">I</span>(<span class="fu">log</span>(Time)), <span class="at">data =</span> meat) <span class="sc">|&gt;</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 7
+  term         estimate std.error statistic  p.value conf.low conf.high
+  &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)     6.98     0.0485     144.  6.08e-15    6.87      7.10 
+2 I(log(Time))   -0.726    0.0344     -21.1 2.70e- 8   -0.805    -0.646</code></pre>
+</div>
+</div></li>
+<li><p><span class="math inline">\(\hat{\beta}_1 = -0.726\)</span></p></li>
+<li><p>Doubling the time decreases pH by <span class="math inline">\(0.726\log(2) = 0.503\)</span>.</p></li>
+<li><p>95% CI: <span class="math inline">\((0.646\log(2),\,0.805\log(2)) = (0.448,\,0.558)\)</span>.</p></li>
 </ul>
 <hr>
+</section>
 </section>
 <section id="log-on-x-log-on-y" class="level2">
 <h2 class="anchored" data-anchor-id="log-on-x-log-on-y">Log on <span class="math inline">\(X\)</span>, Log on <span class="math inline">\(Y\)</span></h2>
@@ -940,7 +1045,60 @@ x            0.4239793 2.903630</code></pre>
 <li><strong>Randomized experiment:</strong> <span class="math inline">\(2^{\beta_1}\)</span> is the multiplicative change in median <span class="math inline">\(Y\)</span> when <span class="math inline">\(X\)</span> is doubled.</li>
 </ul>
 <p>A similar interpretation holds for <span class="math inline">\(10^{\beta_1}\)</span> and a 10-fold increase in <span class="math inline">\(X\)</span>.</p>
+<section id="island-area-and-number-of-species" class="level3">
+<h3 class="anchored" data-anchor-id="island-area-and-number-of-species">Island area and number of species</h3>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>species <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0801.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><p>Researchers measured the area of islands in the West Indies and counted the number of amphibian species on them.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(species, <span class="fu">aes</span>(<span class="at">x =</span> Area, <span class="at">y =</span> Species)) <span class="sc">+</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="10_ch8_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>A log-log relationship works best</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(species, <span class="fu">aes</span>(<span class="at">x =</span> Area, <span class="at">y =</span> Species)) <span class="sc">+</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="10_ch8_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>We fit the linear model</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(<span class="fu">I</span>(<span class="fu">log</span>(Species)) <span class="sc">~</span> <span class="fu">I</span>(<span class="fu">log</span>(Area)), <span class="at">data =</span> species) <span class="sc">|&gt;</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 7
+  term         estimate std.error statistic    p.value conf.low conf.high
+  &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)     1.94     0.0881      22.0 0.00000362    1.71      2.16 
+2 I(log(Area))    0.250    0.0121      20.6 0.00000496    0.219     0.281</code></pre>
+</div>
+</div></li>
+<li><p>The estimated relationship is, for <span class="math inline">\(S\)</span> the number of species and <span class="math inline">\(A\)</span> the island area: <span class="math display">\[
+S = e^{1.93}A^{0.25}
+\]</span></p></li>
+<li><p>Islands with twice the area have <span class="math inline">\(2^{0.25} = 1.19\)</span> times more species, or 19% more.</p></li>
+<li><p>The 95% confidence interval is <span class="math inline">\((2^{0.22}, 2^{0.28}) = (1.16, 1.22)\)</span>. Or, 16% to 22% more.</p></li>
+</ul>
 <hr>
+</section>
 </section>
 <section id="other-transformations" class="level2">
 <h2 class="anchored" data-anchor-id="other-transformations">Other Transformations</h2>
@@ -960,8 +1118,8 @@ x            0.4239793 2.903630</code></pre>
 <h1>Case Study: Voltage vs.&nbsp;Breakdown Time</h1>
 <p>A controlled experiment studied the relationship between voltage and the breakdown time of an electrical insulating fluid. The researchers could control the voltage level of each trial.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>case0802 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0802.csv"</span>)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(case0802)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>case0802 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0802.csv"</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(case0802)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 76
 Columns: 3
@@ -973,9 +1131,9 @@ $ Group   &lt;chr&gt; "Group1", "Group1", "Group1", "Group2", "Group2", "Group2"
 <section id="step-1-scatterplot" class="level2">
 <h2 class="anchored" data-anchor-id="step-1-scatterplot">Step 1: Scatterplot</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0802, <span class="fu">aes</span>(<span class="at">x =</span> Voltage, <span class="at">y =</span> Time)) <span class="sc">+</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0802, <span class="fu">aes</span>(<span class="at">x =</span> Voltage, <span class="at">y =</span> Time)) <span class="sc">+</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -988,12 +1146,12 @@ $ Group   &lt;chr&gt; "Group1", "Group1", "Group1", "Group2", "Group2", "Group2"
 <section id="step-2-residual-plot" class="level2">
 <h2 class="anchored" data-anchor-id="step-2-residual-plot">Step 2: Residual Plot</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(Time <span class="sc">~</span> Voltage, <span class="at">data =</span> case0802)</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(lmout) <span class="sc">|&gt;</span></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Fitted values"</span>, <span class="at">y =</span> <span class="st">"Residuals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(Time <span class="sc">~</span> Voltage, <span class="at">data =</span> case0802)</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(lmout) <span class="sc">|&gt;</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Fitted values"</span>, <span class="at">y =</span> <span class="st">"Residuals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1011,13 +1169,13 @@ $ Group   &lt;chr&gt; "Group1", "Group1", "Group1", "Group2", "Group2", "Group2"
 <section id="step-3-log-transform-and-re-evaluate" class="level2">
 <h2 class="anchored" data-anchor-id="step-3-log-transform-and-re-evaluate">Step 3: Log-Transform and Re-evaluate</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>case0802 <span class="ot">&lt;-</span> case0802 <span class="sc">|&gt;</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">logTime =</span> <span class="fu">log</span>(Time))</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0802, <span class="fu">aes</span>(<span class="at">x =</span> Voltage, <span class="at">y =</span> logTime)) <span class="sc">+</span></span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"log(Time)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>case0802 <span class="ot">&lt;-</span> case0802 <span class="sc">|&gt;</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">logTime =</span> <span class="fu">log</span>(Time))</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0802, <span class="fu">aes</span>(<span class="at">x =</span> Voltage, <span class="at">y =</span> logTime)) <span class="sc">+</span></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"log(Time)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1027,12 +1185,12 @@ $ Group   &lt;chr&gt; "Group1", "Group1", "Group1", "Group2", "Group2", "Group2"
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(logTime <span class="sc">~</span> Voltage, <span class="at">data =</span> case0802)</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(lmout) <span class="sc">|&gt;</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Fitted values"</span>, <span class="at">y =</span> <span class="st">"Residuals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(logTime <span class="sc">~</span> Voltage, <span class="at">data =</span> case0802)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(lmout) <span class="sc">|&gt;</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Fitted values"</span>, <span class="at">y =</span> <span class="st">"Residuals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1046,7 +1204,7 @@ $ Group   &lt;chr&gt; "Group1", "Group1", "Group1", "Group2", "Group2", "Group2"
 <section id="step-4-inference" class="level2">
 <h2 class="anchored" data-anchor-id="step-4-inference">Step 4: Inference</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 5
   term        estimate std.error statistic  p.value
@@ -1056,7 +1214,7 @@ $ Group   &lt;chr&gt; "Group1", "Group1", "Group1", "Group2", "Group2", "Group2"
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 7
   term        estimate std.error statistic  p.value conf.low conf.high
@@ -1070,10 +1228,10 @@ $ Group   &lt;chr&gt; "Group1", "Group1", "Group1", "Group2", "Group2", "Group2"
 <h2 class="anchored" data-anchor-id="interpretation-on-the-original-scale">Interpretation on the Original Scale</h2>
 <p>A one kV increase results in a <span class="math inline">\(\exp(-0.507) = 0.60\)</span> multiplicative change in median breakdown time — a 40% decrease.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"Voltage"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(estimate, conf.low, conf.high) <span class="sc">|&gt;</span></span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), exp))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"Voltage"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(estimate, conf.low, conf.high) <span class="sc">|&gt;</span></span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), exp))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   estimate conf.low conf.high
@@ -1082,13 +1240,13 @@ $ Group   &lt;chr&gt; "Group1", "Group1", "Group1", "Group2", "Group2", "Group2"
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"Voltage"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct_change      =</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">exp</span>(estimate)) <span class="sc">*</span> <span class="dv">100</span>,</span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct_change_low  =</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">exp</span>(conf.high)) <span class="sc">*</span> <span class="dv">100</span>,</span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct_change_high =</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">exp</span>(conf.low)) <span class="sc">*</span> <span class="dv">100</span></span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"Voltage"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct_change      =</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">exp</span>(estimate)) <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct_change_low  =</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">exp</span>(conf.high)) <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct_change_high =</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">exp</span>(conf.low)) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   pct_change pct_change_low pct_change_high
@@ -1104,12 +1262,12 @@ $ Group   &lt;chr&gt; "Group1", "Group1", "Group1", "Group2", "Group2", "Group2"
 <section id="we-could-have-viewed-this-as-an-anova-problem" class="level2">
 <h2 class="anchored" data-anchor-id="we-could-have-viewed-this-as-an-anova-problem">We Could Have Viewed This as an ANOVA Problem</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>case0802 <span class="ot">&lt;-</span> case0802 <span class="sc">|&gt;</span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">VoltageFac =</span> <span class="fu">as.factor</span>(Voltage))</span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0802, <span class="fu">aes</span>(<span class="at">x =</span> VoltageFac, <span class="at">y =</span> logTime)) <span class="sc">+</span></span>
-<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Voltage"</span>, <span class="at">y =</span> <span class="st">"log(Time)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>case0802 <span class="ot">&lt;-</span> case0802 <span class="sc">|&gt;</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">VoltageFac =</span> <span class="fu">as.factor</span>(Voltage))</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0802, <span class="fu">aes</span>(<span class="at">x =</span> VoltageFac, <span class="at">y =</span> logTime)) <span class="sc">+</span></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Voltage"</span>, <span class="at">y =</span> <span class="st">"log(Time)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1146,11 +1304,11 @@ $ Group   &lt;chr&gt; "Group1", "Group1", "Group1", "Group2", "Group2", "Group2"
 </div></li>
 <li><p>Reduced Model Estimates</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0802, <span class="fu">aes</span>(<span class="at">x =</span> jitterx, <span class="at">y =</span> logTime)) <span class="sc">+</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>, <span class="at">labels =</span> <span class="fu">levels</span>(case0802<span class="sc">$</span>VoltageFac)) <span class="sc">+</span></span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> (Voltage <span class="sc">-</span> <span class="dv">24</span>) <span class="sc">/</span> <span class="dv">2</span>, <span class="at">y =</span> fitted), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Voltage"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(case0802, <span class="fu">aes</span>(<span class="at">x =</span> jitterx, <span class="at">y =</span> logTime)) <span class="sc">+</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>, <span class="at">labels =</span> <span class="fu">levels</span>(case0802<span class="sc">$</span>VoltageFac)) <span class="sc">+</span></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> (Voltage <span class="sc">-</span> <span class="dv">24</span>) <span class="sc">/</span> <span class="dv">2</span>, <span class="at">y =</span> fitted), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Voltage"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1181,24 +1339,24 @@ $ Group   &lt;chr&gt; "Group1", "Group1", "Group1", "Group2", "Group2", "Group2"
 </div></li>
 <li><p>Lack-of-Fit <span class="math inline">\(F\)</span>-Statistic</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>case0802 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0802.csv"</span>)</span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>case0802 <span class="sc">|&gt;</span></span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">logTime =</span> <span class="fu">log</span>(Time)) <span class="ot">-&gt;</span></span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  case0802</span>
-<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(logTime <span class="sc">~</span> Voltage, <span class="at">data =</span> case0802) <span class="do">## estimates linear model</span></span>
-<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>case0802 <span class="sc">|&gt;</span></span>
-<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Voltage) <span class="sc">|&gt;</span></span>
-<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean =</span> <span class="fu">mean</span>(logTime)) <span class="sc">|&gt;</span> <span class="do">## full model means</span></span>
-<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
-<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fitted =</span> <span class="fu">fitted</span>(lmout)) <span class="ot">-&gt;</span></span>
-<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>  case0802</span>
-<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a>rss_full    <span class="ot">&lt;-</span> <span class="fu">sum</span>((case0802<span class="sc">$</span>logTime <span class="sc">-</span> case0802<span class="sc">$</span>mean)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>rss_reduced <span class="ot">&lt;-</span> <span class="fu">sum</span>((case0802<span class="sc">$</span>logTime <span class="sc">-</span> case0802<span class="sc">$</span>fitted)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a>ESS         <span class="ot">&lt;-</span> rss_reduced <span class="sc">-</span> rss_full</span>
-<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a>df_full     <span class="ot">&lt;-</span> <span class="dv">69</span></span>
-<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a>df_reduced  <span class="ot">&lt;-</span> <span class="dv">74</span></span>
-<span id="cb59-17"><a href="#cb59-17" aria-hidden="true" tabindex="-1"></a>df_extra    <span class="ot">&lt;-</span> df_reduced <span class="sc">-</span> df_full</span>
-<span id="cb59-18"><a href="#cb59-18" aria-hidden="true" tabindex="-1"></a>fstat       <span class="ot">&lt;-</span> (ESS <span class="sc">/</span> df_extra) <span class="sc">/</span> (rss_full <span class="sc">/</span> df_full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>case0802 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://dcgerard.github.io/stat_302/data/case0802.csv"</span>)</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>case0802 <span class="sc">|&gt;</span></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">logTime =</span> <span class="fu">log</span>(Time)) <span class="ot">-&gt;</span></span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>  case0802</span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(logTime <span class="sc">~</span> Voltage, <span class="at">data =</span> case0802) <span class="do">## estimates linear model</span></span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>case0802 <span class="sc">|&gt;</span></span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Voltage) <span class="sc">|&gt;</span></span>
+<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean =</span> <span class="fu">mean</span>(logTime)) <span class="sc">|&gt;</span> <span class="do">## full model means</span></span>
+<span id="cb74-9"><a href="#cb74-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb74-10"><a href="#cb74-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fitted =</span> <span class="fu">fitted</span>(lmout)) <span class="ot">-&gt;</span></span>
+<span id="cb74-11"><a href="#cb74-11" aria-hidden="true" tabindex="-1"></a>  case0802</span>
+<span id="cb74-12"><a href="#cb74-12" aria-hidden="true" tabindex="-1"></a>rss_full    <span class="ot">&lt;-</span> <span class="fu">sum</span>((case0802<span class="sc">$</span>logTime <span class="sc">-</span> case0802<span class="sc">$</span>mean)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb74-13"><a href="#cb74-13" aria-hidden="true" tabindex="-1"></a>rss_reduced <span class="ot">&lt;-</span> <span class="fu">sum</span>((case0802<span class="sc">$</span>logTime <span class="sc">-</span> case0802<span class="sc">$</span>fitted)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb74-14"><a href="#cb74-14" aria-hidden="true" tabindex="-1"></a>ESS         <span class="ot">&lt;-</span> rss_reduced <span class="sc">-</span> rss_full</span>
+<span id="cb74-15"><a href="#cb74-15" aria-hidden="true" tabindex="-1"></a>df_full     <span class="ot">&lt;-</span> <span class="dv">69</span></span>
+<span id="cb74-16"><a href="#cb74-16" aria-hidden="true" tabindex="-1"></a>df_reduced  <span class="ot">&lt;-</span> <span class="dv">74</span></span>
+<span id="cb74-17"><a href="#cb74-17" aria-hidden="true" tabindex="-1"></a>df_extra    <span class="ot">&lt;-</span> df_reduced <span class="sc">-</span> df_full</span>
+<span id="cb74-18"><a href="#cb74-18" aria-hidden="true" tabindex="-1"></a>fstat       <span class="ot">&lt;-</span> (ESS <span class="sc">/</span> df_extra) <span class="sc">/</span> (rss_full <span class="sc">/</span> df_full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
 <li><p><span class="math inline">\(RSS_{full}\)</span> = 173.7489206</p></li>
 <li><p><span class="math inline">\(df_{full} = n - I\)</span> = 76 - 7 = 69</p></li>
@@ -1219,7 +1377,7 @@ $ Group   &lt;chr&gt; "Group1", "Group1", "Group1", "Group2", "Group2", "Group2"
 </div></li>
 <li><p>Calculate <span class="math inline">\(p\)</span>-value</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pf</span>(<span class="fl">0.5024</span>, <span class="at">df1 =</span> <span class="dv">5</span>, <span class="at">df2 =</span> <span class="dv">69</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pf</span>(<span class="fl">0.5024</span>, <span class="at">df1 =</span> <span class="dv">5</span>, <span class="at">df2 =</span> <span class="dv">69</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.7734214</code></pre>
 </div>
@@ -1230,17 +1388,17 @@ $ Group   &lt;chr&gt; "Group1", "Group1", "Group1", "Group2", "Group2", "Group2"
 <h2 class="anchored" data-anchor-id="lack-of-fit-in-r">Lack of Fit in R</h2>
 <p>Create a factor variable:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>case0802 <span class="ot">&lt;-</span> case0802 <span class="sc">|&gt;</span></span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">VoltageFac =</span> <span class="fu">as.factor</span>(Voltage))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>case0802 <span class="ot">&lt;-</span> case0802 <span class="sc">|&gt;</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">VoltageFac =</span> <span class="fu">as.factor</span>(Voltage))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Fit both the ANOVA and regression models:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>aout  <span class="ot">&lt;-</span> <span class="fu">aov</span>(logTime <span class="sc">~</span> VoltageFac, <span class="at">data =</span> case0802)</span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(logTime <span class="sc">~</span> Voltage,    <span class="at">data =</span> case0802)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>aout  <span class="ot">&lt;-</span> <span class="fu">aov</span>(logTime <span class="sc">~</span> VoltageFac, <span class="at">data =</span> case0802)</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(logTime <span class="sc">~</span> Voltage,    <span class="at">data =</span> case0802)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Use <code>anova()</code> to get the ANOVA table:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lmout, aout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lmout, aout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 

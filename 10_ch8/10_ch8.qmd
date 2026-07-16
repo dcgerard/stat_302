@@ -574,16 +574,55 @@ $$\text{Median}(Y \mid X+1) = \text{Median}(Y \mid X) \cdot \exp(\beta_1)$$
   differ by one unit in $X$.
 - **Randomized experiment:** $\exp(\beta_1)$ is the multiplicative change in median $Y$ when $X$ increases by one unit.
 
-**Example (Voltage and Breakdown Time):** $\hat\beta_1 = -0.51$,
-95% CI $(-0.62, -0.39)$.
+### Voltage and Breakdown Time):
 
-- $\exp(-0.51) = 0.6$: a 1 kV increase is associated with 60% of the median
-  breakdown time — a 40% decrease.
-- 95% CI for the multiplicative effect: $(\exp(-0.62), \exp(-0.39)) = (0.54,
-  0.68)$.
+```{r}
+#| message: false
+voltage <- read_csv("https://dcgerard.github.io/stat_302/data/case0802.csv")
+```
 
-$$\text{Median}(Y \mid X+1) - \text{Median}(Y \mid X)
-= (\exp(\beta_1) - 1)\,\text{Median}(Y \mid X) = -0.4\,\text{Median}(Y \mid X)$$
+-   Two variables:
+    - Voltage applied to insulating fluid
+    - Time to failure.
+  
+    ```{r}
+    #| message: false
+    ggplot(voltage, aes(x = Voltage, y = Time)) +
+      geom_point() +
+      geom_smooth(method = lm, se = FALSE)
+    ```
+
+-   Log on $Y$ works best
+
+    ```{r}
+    #| message: false
+    ggplot(voltage, aes(x = Voltage, y = Time)) +
+      geom_point() +
+      geom_smooth(method = lm, se = FALSE) +
+      scale_y_log10()
+    ```
+
+-   We fit the model
+    ```{r}
+    lm(I(log(Time)) ~ Voltage, data = voltage) |>
+      tidy()
+    ```
+
+
+- $\hat\beta_1 = -0.51$,
+
+- 95% CI $(-0.62, -0.39)$.
+
+-   $\exp(-0.51) = 0.6$: a 1 kV increase is associated with 60% of the median breakdown time. So a 40% decrease.
+
+    $$
+    \text{Median}(Y \mid X+1) - \text{Median}(Y \mid X)
+= (\exp(\beta_1) - 1)\,\text{Median}(Y \mid X) = -0.4\,\text{Median}(Y \mid X)
+    $$
+
+- 95% CI for the multiplicative effect: $(\exp(-0.62), \exp(-0.39)) = (0.54, 0.68)$. So a a 32% to 46% decrease.
+
+
 
 ---
 
@@ -595,19 +634,45 @@ When $X$ is doubled:
 
 $$\mu(Y \mid 2X) = \beta_0 + \beta_1\log(2X) = \mu(Y \mid X) + \beta_1\log(2)$$
 
-- **Observational study:** $\beta_1\log(2)$ is the mean difference in $Y$ when
-  one group's $X$ is twice the other's.
-- **Randomized experiment:** $\beta_1\log(2)$ is the increase in mean $Y$ when $X$
-  is doubled.
+- **Observational study:** $\beta_1\log(2)$ is the mean difference in $Y$ when one group's $X$ is twice the other's.
+- **Randomized experiment:** $\beta_1\log(2)$ is the increase in mean $Y$ when $X$ is doubled.
 
 A similar interpretation holds for $\beta_1\log(10)$ and a 10-fold increase in
 $X$.
 
-**Example (pH and time after slaughter):** $\hat\beta_1 = -0.726$,
-95% CI $(-0.805, -0.646)$.
+### pH and time after slaughter:
 
+```{r}
+#| message: false
+meat <- read_csv("https://dcgerard.github.io/stat_302/data/case0702.csv")
+```
+
+-   Two variables: Time since slaughter and pH of meat
+    ```{r}
+    #| message: false
+    ggplot(meat, aes(x = Time, y = pH)) +
+      geom_point() + 
+      geom_smooth(method = lm, se = FALSE)
+    ```
+
+-   Plot is a better with log-$X$
+    ```{r}
+    #| message: false
+    ggplot(meat, aes(x = Time, y = pH)) +
+      geom_point() + 
+      geom_smooth(method = lm, se = FALSE) +
+      scale_x_log10()
+    ```
+
+-   We fit a regression on the log scale of x.
+    ```{r}
+    lm(pH ~ I(log(Time)), data = meat) |>
+      tidy(conf.int = TRUE)
+    ```
+
+- $\hat{\beta}_1 = -0.726$
 - Doubling the time decreases pH by $0.726\log(2) = 0.503$.
-- 95% CI: $(-0.805\log(2),\,-0.646\log(2)) = (-0.558,\,-0.448)$.
+- 95% CI: $(0.646\log(2),\,0.805\log(2)) = (0.448,\,0.558)$.
 
 ---
 
@@ -627,6 +692,46 @@ $$\text{Median}(Y \mid 2X) = \text{Median}(Y \mid X) \cdot 2^{\beta_1}$$
 
 A similar interpretation holds for $10^{\beta_1}$ and a 10-fold increase in
 $X$.
+
+### Island area and number of species
+
+```{r}
+#| message: false
+species <- read_csv("https://dcgerard.github.io/stat_302/data/case0801.csv")
+```
+
+-   Researchers measured the area of islands in the West Indies and counted the number of amphibian species on them.
+    ```{r}
+    #| message: false
+    ggplot(species, aes(x = Area, y = Species)) +
+      geom_point() +
+      geom_smooth(method = lm, se = FALSE)
+    ```
+
+-   A log-log relationship works best
+    ```{r}
+    #| message: false
+    ggplot(species, aes(x = Area, y = Species)) +
+      geom_point() +
+      geom_smooth(method = lm, se = FALSE) +
+      scale_x_log10() +
+      scale_y_log10()
+    ```
+
+-   We fit the linear model
+    ```{r}
+    lm(I(log(Species)) ~ I(log(Area)), data = species) |>
+      tidy(conf.int = TRUE)
+    ```
+
+-   The estimated relationship is, for $S$ the number of species and $A$ the island area:
+    $$
+    S = e^{1.93}A^{0.25}
+    $$
+
+- Islands with twice the area have $2^{0.25} = 1.19$ times more species, or 19% more.
+
+- The 95% confidence interval is $(2^{0.22}, 2^{0.28}) = (1.16, 1.22)$. Or, 16% to 22% more.
 
 ---
 
