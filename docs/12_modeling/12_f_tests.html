@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-25">
+<meta name="dcterms.date" content="2026-07-17">
 
 <title>F-tests for Nested Models – Stat 302: Intermediate Statistics</title>
 <style>
@@ -236,7 +236,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 25, 2026</p>
+      <p class="date">July 17, 2026</p>
     </div>
   </div>
   
@@ -462,17 +462,14 @@ $ Conditions  &lt;chr&gt; "Fast", "Slow", "Fast", "Fast", "Fast", "Fast", "Fast"
 <h1>Running the <span class="math inline">\(F\)</span>-Test in R</h1>
 <p>Use <code>anova()</code> with the <strong>reduced</strong> model first, the <strong>full</strong> model second:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_reduced, lm_full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_reduced, lm_full) <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Analysis of Variance Table
-
-Model 1: Speed ~ 1
-Model 2: Speed ~ Year + Year2
-  Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
-1    115 92.971                                  
-2    113 33.083  2    59.888 102.28 &lt; 2.2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<pre><code># A tibble: 2 × 7
+  term                 df.residual   rss    df sumsq statistic   p.value
+  &lt;chr&gt;                      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 Speed ~ 1                    115  93.0    NA  NA         NA  NA       
+2 Speed ~ Year + Year2         113  33.1     2  59.9      102.  4.43e-26</code></pre>
 </div>
 </div>
 <section id="reading-the-output" class="level2">
@@ -535,17 +532,14 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ex0920 <span class="ot">&lt;-</span> ex0920 <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Starters2 =</span> Starters<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>lm_full2    <span class="ot">&lt;-</span> <span class="fu">lm</span>(Speed <span class="sc">~</span> Year <span class="sc">+</span> Year2 <span class="sc">+</span> Starters <span class="sc">+</span> Starters2, <span class="at">data =</span> ex0920)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>lm_reduced2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Speed <span class="sc">~</span> Year <span class="sc">+</span> Year2,                        <span class="at">data =</span> ex0920)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_reduced2, lm_full2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_reduced2, lm_full2) <span class="sc">|&gt;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Analysis of Variance Table
-
-Model 1: Speed ~ Year + Year2
-Model 2: Speed ~ Year + Year2 + Starters + Starters2
-  Res.Df    RSS Df Sum of Sq      F  Pr(&gt;F)  
-1    113 33.083                              
-2    111 30.903  2    2.1803 3.9156 0.02274 *
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<pre><code># A tibble: 2 × 7
+  term                           df.residual   rss    df sumsq statistic p.value
+  &lt;chr&gt;                                &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+1 Speed ~ Year + Year2                   113  33.1    NA NA        NA    NA     
+2 Speed ~ Year + Year2 + Starte…         111  30.9     2  2.18      3.92  0.0227</code></pre>
 </div>
 </div>
 <ul>

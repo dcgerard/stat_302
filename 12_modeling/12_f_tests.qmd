@@ -171,7 +171,8 @@ Use `anova()` with the **reduced** model first, the **full** model second:
 
 ```{r}
 #| label: anova-derby
-anova(lm_reduced, lm_full)
+anova(lm_reduced, lm_full) |>
+  tidy()
 ```
 
 ## Reading the Output
@@ -209,7 +210,8 @@ $$\mu(\text{Speed} \mid \text{Year}, \text{Starters}) = \beta_0 + \beta_1\,\text
 ex0920 <- ex0920 |> mutate(Starters2 = Starters^2)
 lm_full2    <- lm(Speed ~ Year + Year2 + Starters + Starters2, data = ex0920)
 lm_reduced2 <- lm(Speed ~ Year + Year2,                        data = ex0920)
-anova(lm_reduced2, lm_full2)
+anova(lm_reduced2, lm_full2) |>
+  tidy()
 ```
 
 - **Conclusion**: We do have some evidence that the number of starters is associated with speed after adjusting for year ($F = 3.92$ on 2 and 111 df, $p = 0.023$).
