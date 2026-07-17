@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-25">
+<meta name="dcterms.date" content="2026-07-17">
 
 <title>Multiple Regression – Stat 302: Intermediate Statistics</title>
 <style>
@@ -223,7 +223,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 25, 2026</p>
+      <p class="date">July 17, 2026</p>
     </div>
   </div>
   
@@ -327,6 +327,21 @@ $ Litter    &lt;dbl&gt; 5.0, 1.2, 1.0, 1.3, 1.0, 2.2, 1.2, 1.1, 4.0, 1.8, 4.0, 1
 <li><span class="math inline">\(\beta_1\)</span> is the expected difference in <span class="math inline">\(Y\)</span>’s when we compare units with <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_1 + 1\)</span>.</li>
 <li>“For any subpopulation of mammal species with the same body weight, species with a one-day longer gestation length have a mean brain weight <span class="math inline">\(\beta_1\)</span> grams larger.”</li>
 </ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Controlling and Adjusting
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>It’s too verbose to say “subpopulations with the same values of <span class="math inline">\(X_2,\ldots,X_{p-1}\)</span> but one unit difference in <span class="math inline">\(X_1\)</span> differ on average by <span class="math inline">\(\beta_1\)</span>.” So nobody says this in reports/papers.</p>
+<p>Instead, they use the word “controlling” or “adjusting”. I prefer “adjusting”, but “controlling” is more common.</p>
+<p>E.g., species with on-day longer gestations length have a mean brain weight <span class="math inline">\(\beta_1\)</span> grams larger <em>adjusting for body weight</em>.</p>
+</div>
+</div>
 <section id="a-useful-notation" class="level2">
 <h2 class="anchored" data-anchor-id="a-useful-notation">A Useful Notation</h2>
 <ul>
@@ -394,6 +409,7 @@ $ Litter    &lt;dbl&gt; 5.0, 1.2, 1.0, 1.3, 1.0, 2.2, 1.2, 1.1, 4.0, 1.8, 4.0, 1
 </div>
 </div>
 </div>
+<p>Some folks call this <a href="https://en.wikipedia.org/wiki/Simpson%27s_paradox">Simpson’s Paradox</a>.</p>
 <p>The figure below shows the same idea using the real brain-size data (<code>case0902</code>):</p>
 <ul>
 <li><strong>Left:</strong> a single marginal fit line for all 96 species (<span class="math inline">\(\hat\beta_1 \approx 2.23\)</span>).</li>
@@ -497,9 +513,38 @@ Coefficients:
 <li>We are usually interested in getting confidence intervals on the <span class="math inline">\(\beta_i\)</span>’s.</li>
 <li>We can use the usual <span class="math inline">\(t\)</span>-tools to get these.</li>
 </ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span><span class="math inline">\(t\)</span>-test details.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p><span class="math inline">\(H_0: \beta_j = 0\)</span> versus <span class="math inline">\(H_A: \beta_j \neq 0\)</span></p></li>
+<li><p><span class="math inline">\(T = \hat{\beta}_j / \text{SE}(\hat{\beta}_j)\)</span></p></li>
+<li><p>If <span class="math inline">\(H_0\)</span> were true, <span class="math inline">\(T \sim t_{\nu}\)</span></p></li>
+<li><p><span class="math inline">\(\nu\)</span> is the degrees of freedom, and is <span class="math inline">\(n\)</span> minus the number of parameters.</p></li>
+<li><p><span class="math inline">\(p\)</span>-value is calculated from the tail area probability.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(T), <span class="at">df =</span> nu)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(Brain <span class="sc">~</span> Gestation <span class="sc">+</span> Body, <span class="at">data =</span> case0902)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="11_multiple_regression_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div></li>
+</ul>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>lmout <span class="ot">&lt;-</span> <span class="fu">lm</span>(Brain <span class="sc">~</span> Gestation <span class="sc">+</span> Body, <span class="at">data =</span> case0902)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 5
   term        estimate std.error statistic  p.value
@@ -551,7 +596,7 @@ Coefficients:
 </tbody>
 </table>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(lmout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 12
   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
@@ -561,7 +606,7 @@ Coefficients:
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lmout, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 7
   term        estimate std.error statistic  p.value conf.low conf.high

@@ -223,6 +223,18 @@ ggplot(case0902, aes(x = logBody, y = logBrain, size = logGestation)) +
   geom_point()
 ```
 
+My preference is to convert one of the quantitative variables into a categorical variable based on values (using `cut()`) and then color code. This is called a trellis plot.
+
+```{r}
+#| message: false
+case0902 |>
+  mutate(gest_cat = cut(logGestation, breaks = 4)) |>
+  ggplot(aes(x = logBody, y = logBrain, color = gest_cat)) +
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE)
+```
+
+
 ## Categorical Third Variable
 
 - If you have categorical explanatory variables, you can code their levels by **colors** (more preferable) and **shapes** (less preferable) and include this on a scatterplot of two quantitative variables.
@@ -243,6 +255,8 @@ ggplot(case0901, aes(x = Intensity, y = Flowers, shape = Time)) +
 ```
 
 It's polite to use colorblind-safe color palettes. The Okabe-Ito is one colorblind-safe palette.
+
+(I have my `.Rprofile` set up to always use Okabe-Ito. But you probably don't, so need to force it via the below)
 
 ```{r}
 #| label: coded-colorblind

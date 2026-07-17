@@ -15,6 +15,40 @@ knitr::opts_chunk$set(echo       = TRUE,
                       fig.width  = 5,
                       fig.align  = "center")
 ggplot2::theme_set(ggplot2::theme_bw())
+plt_t <- function(
+    mu = 0, 
+    sig = 1, 
+    lb = -Inf,
+    ub = Inf,
+    df = Inf, 
+    rng = c(-3, 3), 
+    two_sided = FALSE,
+    col = "#E69F00",
+    lwd = 1) {
+  tibble(x = seq(mu + rng[[1]] * sig, mu + rng[[2]] * sig, length.out = 500)) |>
+    mutate(y = dt(x = (x - mu) / sig, df = df)) ->
+    df1
+  df1 |>
+    filter(x > lb, x < ub) ->
+    df2
+  ggplot() +
+    geom_line(data = df1, mapping = aes(x = x, y = y), linewidth = lwd) +
+    geom_area(data = df2, mapping = aes(x = x, y = y), fill = col) +
+    geom_line(data = df2, mapping = aes(x = x, y = y), color = col, linewidth = lwd) +
+    theme_classic() +
+    theme(axis.title = element_blank()) ->
+    pl
+  
+  if (two_sided) {
+    df1 |>
+      filter(x > -ub, x < -lb) ->
+      df3
+    pl <- pl + 
+      geom_area(data = df3, mapping = aes(x = x, y = y), fill = col) +
+      geom_line(data = df3, mapping = aes(x = x, y = y), color = col, linewidth = lwd)
+  }
+  pl
+}
 set.seed(1)
 ```
 
@@ -104,6 +138,15 @@ To interpret $\beta_1$ in an **observational study**:
 - $\beta_1$ is the expected difference in $Y$'s when we compare units with $X_1$ and $X_1 + 1$.
 - "For any subpopulation of mammal species with the same body weight, species with a one-day longer gestation length have a mean brain weight $\beta_1$ grams larger."
 
+::: {.callout-warning}
+# Controlling and Adjusting
+It's too verbose to say "subpopulations with the same values of $X_2,\ldots,X_{p-1}$ but one unit difference in $X_1$ differ on average by $\beta_1$." So nobody says this in reports/papers.
+
+Instead, they use the word "controlling" or "adjusting". I prefer "adjusting", but "controlling" is more common.
+
+E.g., species with on-day longer gestations length have a mean brain weight $\beta_1$ grams larger *adjusting for body weight*.
+:::
+
 ## A Useful Notation
 
 - $\mu(\text{brain} \mid \text{gestation}) = \beta_0 + \beta_1\,\text{gestation}$
@@ -156,6 +199,8 @@ ggplot(df_fake, aes(x = x1, y = y, color = x2)) +
   guides(color = guide_legend(keywidth = 0.1, keyheight = 0.1,
                                default.unit = "inch"))
 ```
+
+Some folks call this [Simpson's Paradox](https://en.wikipedia.org/wiki/Simpson%27s_paradox).
 
 The figure below shows the same idea using the real brain-size data (`case0902`):
 
@@ -274,6 +319,32 @@ We would interpret this output as:
 - We are usually interested in testing if $\beta_i = 0$.
 - We are usually interested in getting confidence intervals on the $\beta_i$'s.
 - We can use the usual $t$-tools to get these.
+
+::: {.callout-warning}
+## $t$-test details.
+
+- $H_0: \beta_j = 0$ versus $H_A: \beta_j \neq 0$
+
+- $T = \hat{\beta}_j / \text{SE}(\hat{\beta}_j)$
+
+- If $H_0$ were true, $T \sim t_{\nu}$
+
+- $\nu$ is the degrees of freedom, and is $n$ minus the number of parameters.
+
+-   $p$-value is calculated from the tail area probability.
+
+    ```r
+    2 * pt(-abs(T), df = nu)
+    ```
+    
+    ```{r}
+    #| echo: false
+    plt_t(lb = 1.5, two_sided = TRUE) +
+      geom_vline(xintercept = 1.5, linetype = "dashed") +
+      scale_x_continuous(breaks = c(-1.5, 0, 1.5), labels = c("-T", "0", "T"))
+    ```
+
+:::
 
 ```{r}
 #| label: inference-tidy

@@ -117,6 +117,7 @@ Model: $\mu(\text{Flowers} \mid \text{Time},\,\text{Intensity}) = \beta_0 + \bet
 
 ```{r}
 #| label: flowers-scatter
+#| echo: false
 case0901 <- case0901 |>
   mutate(Time = as.factor(Time))
 ggplot(case0901, aes(x = Intensity, y = Flowers, color = Time)) +
