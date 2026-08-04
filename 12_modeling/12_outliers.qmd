@@ -175,8 +175,7 @@ aug_rich |>
        title = "Dashed line = 2p/n threshold")
 ```
 
-- Several observations exceed the $2p/n$ threshold — worth noting, but not automatically
-  alarming.
+- If you see any points exceeding the $2p/n$ rule of thumb, then it is worth noting, but not automatically alarming.
 
 ---
 
@@ -249,7 +248,7 @@ The `augment()` function from `broom` adds model diagnostics directly to the dat
 | `.fitted` | Fitted values $\hat{Y}_i$ |
 | `.resid` | Residuals $Y_i - \hat{Y}_i$ |
 | `.hat` | Leverage values |
-| `.std.resid` | Standardized residuals (similar to studentized) |
+| `.std.resid` | Studentized residuals |
 | `.cooksd` | Cook's distance |
 
 ```{r}

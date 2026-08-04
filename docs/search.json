@@ -228,7 +228,7 @@
     "href": "12_modeling/12_outliers.html#computing-leverage-in-r",
     "title": "Outliers and Influential Observations",
     "section": "Computing Leverage in R",
-    "text": "Computing Leverage in R\n\nn &lt;- nrow(aug_rich)\np &lt;- length(coef(lm_rich))\n\naug_rich |&gt;\n  mutate(obs = row_number()) |&gt;\n  ggplot(aes(x = obs, y = .hat)) +\n  geom_point() +\n  geom_hline(yintercept = 2 * p / n, linetype = \"dashed\", color = \"tomato\") +\n  labs(x = \"Observation number\", y = \"Leverage\",\n       title = \"Dashed line = 2p/n threshold\")\n\n\n\n\n\n\n\n\n\nSeveral observations exceed the \\(2p/n\\) threshold — worth noting, but not automatically alarming."
+    "text": "Computing Leverage in R\n\nn &lt;- nrow(aug_rich)\np &lt;- length(coef(lm_rich))\n\naug_rich |&gt;\n  mutate(obs = row_number()) |&gt;\n  ggplot(aes(x = obs, y = .hat)) +\n  geom_point() +\n  geom_hline(yintercept = 2 * p / n, linetype = \"dashed\", color = \"tomato\") +\n  labs(x = \"Observation number\", y = \"Leverage\",\n       title = \"Dashed line = 2p/n threshold\")\n\n\n\n\n\n\n\n\n\nIf you see any points exceeding the \\(2p/n\\) rule of thumb, then it is worth noting, but not automatically alarming."
   },
   {
     "objectID": "12_modeling/12_outliers.html#definition-1",
@@ -263,7 +263,7 @@
     "href": "12_modeling/12_outliers.html#using-augment-for-diagnostics",
     "title": "Outliers and Influential Observations",
     "section": "Using augment() for Diagnostics",
-    "text": "Using augment() for Diagnostics\nThe augment() function from broom adds model diagnostics directly to the data frame:\n\n\n\nColumn\nDescription\n\n\n\n\n.fitted\nFitted values \\(\\hat{Y}_i\\)\n\n\n.resid\nResiduals \\(Y_i - \\hat{Y}_i\\)\n\n\n.hat\nLeverage values\n\n\n.std.resid\nStandardized residuals (similar to studentized)\n\n\n.cooksd\nCook’s distance\n\n\n\n\naugment(lm_rich) |&gt;\n  select(.fitted, .resid, .hat, .std.resid, .cooksd) |&gt;\n  arrange(desc(.cooksd)) |&gt;\n  glimpse()\n\nRows: 34\nColumns: 5\n$ .fitted    &lt;dbl&gt; 0.7525731, 0.5031866, -4.1148668, 1.2177072, 0.7879681, 1.9…\n$ .resid     &lt;dbl&gt; 1.15473188, -1.39119508, -0.46339887, -0.53456014, 0.771023…\n$ .hat       &lt;dbl&gt; 0.4978708, 0.3749781, 0.5863339, 0.4619573, 0.3251558, 0.43…\n$ .std.resid &lt;dbl&gt; 2.9551482, -3.1911428, -1.3065796, -1.3215817, 1.7020472, -…\n$ .cooksd    &lt;dbl&gt; 0.721569998, 0.509121954, 0.201644148, 0.124965985, 0.11631…"
+    "text": "Using augment() for Diagnostics\nThe augment() function from broom adds model diagnostics directly to the data frame:\n\n\n\nColumn\nDescription\n\n\n\n\n.fitted\nFitted values \\(\\hat{Y}_i\\)\n\n\n.resid\nResiduals \\(Y_i - \\hat{Y}_i\\)\n\n\n.hat\nLeverage values\n\n\n.std.resid\nStudentized residuals\n\n\n.cooksd\nCook’s distance\n\n\n\n\naugment(lm_rich) |&gt;\n  select(.fitted, .resid, .hat, .std.resid, .cooksd) |&gt;\n  arrange(desc(.cooksd)) |&gt;\n  glimpse()\n\nRows: 34\nColumns: 5\n$ .fitted    &lt;dbl&gt; 0.7525731, 0.5031866, -4.1148668, 1.2177072, 0.7879681, 1.9…\n$ .resid     &lt;dbl&gt; 1.15473188, -1.39119508, -0.46339887, -0.53456014, 0.771023…\n$ .hat       &lt;dbl&gt; 0.4978708, 0.3749781, 0.5863339, 0.4619573, 0.3251558, 0.43…\n$ .std.resid &lt;dbl&gt; 2.9551482, -3.1911428, -1.3065796, -1.3215817, 1.7020472, -…\n$ .cooksd    &lt;dbl&gt; 0.721569998, 0.509121954, 0.201644148, 0.124965985, 0.11631…"
   },
   {
     "objectID": "12_modeling/12_outliers.html#step-1-investigate",
