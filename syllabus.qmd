@@ -63,17 +63,17 @@ This course builds on the basic tools of data analysis and methods of statistica
 
 # Grading
 
-- 30% Homework
+- 25% Homework
   - These will be self-graded.
 - 15% Participation
   - Pay attention
   - Come to class
   - Answer questions
   - Stay off your phones, stay off social media, etc
-- 25% Final Project
+- 20% Final Project
   - Apply these statistical methods to a real-world dataset of your choice.
-- 30% In-class Exams
-  - We'll have two midterms, each worth about 15%.
+- 40% In-class Exams
+  - We'll have two midterms, each worth about 20%.
 
 Usual grade cutoffs will be used:
 ```{r, echo = FALSE}
