@@ -2,22 +2,25 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Gerard">
-<meta name="dcterms.date" content="2026-06-26">
+<meta name="dcterms.date" content="2026-08-27">
 
 <title>Introduction to R – Stat 302: Intermediate Statistics</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -95,12 +98,13 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-33269adcf1721b81efc5ea7fcfe7f0ee.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-3419ea62b3ca2d77d3d547f86109e84e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe.min.js"></script>
 <script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
 <script id="quarto-axe-checker-options" type="text/plain">dHJ1ZQ==</script>
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-0e01d36e12aedd38e6bb7bd9a7358603.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-aed2293aa4199f313050c42c21daff90.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -130,7 +134,7 @@ div.csl-indent {
 }</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -206,6 +210,12 @@ window.Quarto = {
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a></li>
   <li><a href="#before-we-begin" id="toc-before-we-begin" class="nav-link" data-scroll-target="#before-we-begin">Before we begin</a></li>
+  <li><a href="#a-tiny-guide-to-using-ai-for-learning-to-code" id="toc-a-tiny-guide-to-using-ai-for-learning-to-code" class="nav-link" data-scroll-target="#a-tiny-guide-to-using-ai-for-learning-to-code">A Tiny Guide to Using AI for Learning to Code</a>
+  <ul class="collapse">
+  <li><a href="#never-copy-and-paste-hw-questions-into-ai" id="toc-never-copy-and-paste-hw-questions-into-ai" class="nav-link" data-scroll-target="#never-copy-and-paste-hw-questions-into-ai">Never copy and paste HW questions into AI</a></li>
+  <li><a href="#phrase-your-goal-to-the-the-ai-to-learn-general-strategies" id="toc-phrase-your-goal-to-the-the-ai-to-learn-general-strategies" class="nav-link" data-scroll-target="#phrase-your-goal-to-the-the-ai-to-learn-general-strategies">Phrase your goal to the the AI to learn general strategies</a></li>
+  <li><a href="#totally-paste-errors-into-ai" id="toc-totally-paste-errors-into-ai" class="nav-link" data-scroll-target="#totally-paste-errors-into-ai">Totally paste errors into AI</a></li>
+  </ul></li>
   <li><a href="#r-basics" id="toc-r-basics" class="nav-link" data-scroll-target="#r-basics">R Basics</a>
   <ul class="collapse">
   <li><a href="#r-script" id="toc-r-script" class="nav-link" data-scroll-target="#r-script">R Script</a></li>
@@ -243,7 +253,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 26, 2026</p>
+      <p class="date">August 27, 2026</p>
     </div>
   </div>
   
@@ -280,8 +290,52 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">help</span>(log)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
 <li><p>Alternatively, if you do not know the name of the function, you can Google the functionality you want. Googling coding solutions is a lot of what real data scientists do. Just append what you are Googling with “in R”. So, for example, “linear mixed effects models in R”.</p></li>
-<li><p>Nowadays, folks also use generative AI. You are all familiar with this. I think this is fine, but make sure you understand its output. Remember, <strong>I can call you in and reduce your grade if it spits out something weird and you can’t explain it to me.</strong></p></li>
+<li><p>Nowadays, folks also use generative AI. You are all familiar with this. I think this is fine, but make sure you understand its output.</p></li>
 </ul>
+</section>
+<section id="a-tiny-guide-to-using-ai-for-learning-to-code" class="level1">
+<h1>A Tiny Guide to Using AI for Learning to Code</h1>
+<ul>
+<li><p>Since this is not a coding class, I have no qualms with you using AI to help you with your code.</p></li>
+<li><p>Here are some suggestions for proper usage.</p></li>
+</ul>
+<section id="never-copy-and-paste-hw-questions-into-ai" class="level2">
+<h2 class="anchored" data-anchor-id="never-copy-and-paste-hw-questions-into-ai">Never copy and paste HW questions into AI</h2>
+<ul>
+<li>You won’t learn anything by doing this. HW is meant to reinforce your understanding. If you use AI to do your homework, you are subverting the learning process.
+<ul>
+<li>There are no official penalties for doing this, though. You just won’t do well on the exams.</li>
+</ul></li>
+</ul>
+</section>
+<section id="phrase-your-goal-to-the-the-ai-to-learn-general-strategies" class="level2">
+<h2 class="anchored" data-anchor-id="phrase-your-goal-to-the-the-ai-to-learn-general-strategies">Phrase your goal to the the AI to learn general strategies</h2>
+<p>Example: If the question is</p>
+<blockquote class="blockquote">
+<p>Is there an association between student SAT and their freshman GPA? Make an appropriate plot.</p>
+</blockquote>
+<p>You should <strong>not</strong> do the following prompts</p>
+<blockquote class="blockquote">
+<p>“Is there an association between student SAT and their freshman GPA? Make an appropriate plot.”</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>“What plot is appropriate for exploring the association between student SAT and their freshman GPA.”</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>“Make a plot exploring association between student SAT and their freshman GPA.”</p>
+</blockquote>
+<p>You <strong>should</strong> do the following prompt.</p>
+<blockquote class="blockquote">
+<p>“I want to make a scatterplot of two variables using ggplot. Give me the syntax to do so.”</p>
+</blockquote>
+<p>You can then try to use that syntax in your situation.</p>
+</section>
+<section id="totally-paste-errors-into-ai" class="level2">
+<h2 class="anchored" data-anchor-id="totally-paste-errors-into-ai">Totally paste errors into AI</h2>
+<ul>
+<li>Errors are frustrating. Paste those things into AI after making a good faith effort to fix them first.</li>
+</ul>
+</section>
 </section>
 <section id="r-basics" class="level1">
 <h1>R Basics</h1>

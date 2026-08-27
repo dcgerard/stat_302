@@ -48,7 +48,42 @@ the `help()` function. For example, to learn more about `log()` type
 Google the functionality you want. Googling coding solutions is a
 lot of what real data scientists do. Just append what you are Googling with "in R". So, for example, "linear mixed effects models in R".
 
-- Nowadays, folks also use generative AI. You are all familiar with this. I think this is fine, but make sure you understand its output. Remember, **I can call you in and reduce your grade if it spits out something weird and you can't explain it to me.**
+- Nowadays, folks also use generative AI. You are all familiar with this. I think this is fine, but make sure you understand its output. 
+
+# A Tiny Guide to Using AI for Learning to Code
+
+- Since this is not a coding class, I have no qualms with you using AI to help you with your code.
+
+- Here are some suggestions for proper usage.
+
+## Never copy and paste HW questions into AI
+
+- You won't learn anything by doing this. HW is meant to reinforce your understanding. If you use AI to do your homework, you are subverting the learning process.
+  - There are no official penalties for doing this, though. You just won't do well on the exams.
+  
+## Phrase your goal to the the AI to learn general strategies
+
+Example: If the question is
+
+> Is there an association between student SAT and their freshman GPA? Make an appropriate plot.
+
+You should **not** do the following prompts
+
+> "Is there an association between student SAT and their freshman GPA? Make an appropriate plot."
+
+> "What plot is appropriate for exploring the association between student SAT and their freshman GPA."
+
+> "Make a plot exploring association between student SAT and their freshman GPA."
+
+You **should** do the following prompt.
+
+> "I want to make a scatterplot of two variables using ggplot. Give me the syntax to do so."
+
+You can then try to use that syntax in your situation.
+
+## Totally paste errors into AI
+
+- Errors are frustrating. Paste those things into AI after making a good faith effort to fix them first.
 
 # R Basics
 

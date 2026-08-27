@@ -2007,5 +2007,26 @@
     "title": "Linear Model Assumptions and Transformations",
     "section": "Lack-of-Fit Test in R",
     "text": "Lack-of-Fit Test in R\nCreate a factor variable:\n\ncase0802 &lt;- case0802 |&gt;\n  mutate(VoltageFac = as.factor(Voltage))\n\nFit both the ANOVA and regression models:\n\naout  &lt;- aov(logTime ~ VoltageFac, data = case0802)\nlmout &lt;- lm(logTime ~ Voltage,    data = case0802)\n\nUse anova() to get the ANOVA table:\n\nanova(lmout, aout)\n\nAnalysis of Variance Table\n\nModel 1: logTime ~ Voltage\nModel 2: logTime ~ VoltageFac\n  Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)\n1     74 180.07                           \n2     69 173.75  5    6.3259 0.5024 0.7734"
+  },
+  {
+    "objectID": "01_r/01_r_intro.html#never-copy-and-paste-hw-questions-into-ai",
+    "href": "01_r/01_r_intro.html#never-copy-and-paste-hw-questions-into-ai",
+    "title": "Introduction to R",
+    "section": "Never copy and paste HW questions into AI",
+    "text": "Never copy and paste HW questions into AI\n\nYou won’t learn anything by doing this. HW is meant to reinforce your understanding. If you use AI to do your homework, you are subverting the learning process.\n\nThere are no official penalties for doing this, though. You just won’t do well on the exams."
+  },
+  {
+    "objectID": "01_r/01_r_intro.html#phrase-your-goal-to-the-the-ai-to-learn-general-strategies",
+    "href": "01_r/01_r_intro.html#phrase-your-goal-to-the-the-ai-to-learn-general-strategies",
+    "title": "Introduction to R",
+    "section": "Phrase your goal to the the AI to learn general strategies",
+    "text": "Phrase your goal to the the AI to learn general strategies\nExample: If the question is\n\nIs there an association between student SAT and their freshman GPA? Make an appropriate plot.\n\nYou should not do the following prompts\n\n“Is there an association between student SAT and their freshman GPA? Make an appropriate plot.”\n\n\n“What plot is appropriate for exploring the association between student SAT and their freshman GPA.”\n\n\n“Make a plot exploring association between student SAT and their freshman GPA.”\n\nYou should do the following prompt.\n\n“I want to make a scatterplot of two variables using ggplot. Give me the syntax to do so.”\n\nYou can then try to use that syntax in your situation."
+  },
+  {
+    "objectID": "01_r/01_r_intro.html#totally-paste-errors-into-ai",
+    "href": "01_r/01_r_intro.html#totally-paste-errors-into-ai",
+    "title": "Introduction to R",
+    "section": "Totally paste errors into AI",
+    "text": "Totally paste errors into AI\n\nErrors are frustrating. Paste those things into AI after making a good faith effort to fix them first."
   }
 ]
