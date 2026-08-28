@@ -119,6 +119,12 @@ I'll be using RStudio in class. But Positron is built on top of VS Code. So if y
 
 R and RStudio are also available on computers in the Anderson Computing Complex in addition to various labs across campus. R Studio may also be run from your web browser using American University's [Virtual Applications System](https://americanuniversity.service-now.com/help/?id=sc_cat_item&sys_id=1fdf972fdbb3db00771cfce9af961985). Please see me during office hours if you have questions regarding R.
 
+# Additional Support
+
+The [Quantitative Support](https://www.american.edu/provost/eagle-learning-center/quantitative.cfm) area provides help for this class, both mathematical and programming. Please see their website for their office hours.
+
+The [Online Statistical Software Support](https://american.mywconline.net/) allows students to get individual tutoring on statistical software (such as R).
+
 # Academic Integrity
 
 Standards of academic conduct are set forth in the university’s [Academic Integrity Code](http://www.american.edu/academics/integrity/index.cfm). By registering for this course, students have acknowledged their awareness of the Academic Integrity Code and they are obliged to become familiar with their rights and responsibilities as defined by the Code. Violations of the Academic Integrity Code will not be treated lightly and disciplinary action will be taken should violations occur. This includes cheating, fabrication, and plagiarism.
