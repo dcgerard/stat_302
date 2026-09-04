@@ -186,7 +186,7 @@
     "href": "12_modeling/12_outliers.html#three-concepts",
     "title": "Outliers and Influential Observations",
     "section": "Three Concepts",
-    "text": "Three Concepts\n\n\n\n\n\n\n\n\nType\nWhat makes it unusual\nEffect on the fit\n\n\n\n\nOutlier\nLarge residual — unusual \\(Y\\) for its \\(X\\) values\nMay or may not influence the line\n\n\nHigh-leverage point\nUnusual \\(X\\) values — far from the center of the predictor space\nMay or may not have a large residual\n\n\nInfluential observation\nRemoving it noticeably changes the fitted line\nHigh leverage and an outlier\n\n\n\n\nHigh leverage alone is not harmful if the point happens to fall on the regression line.\nAn outlier at the center of the \\(X\\) range tugs the intercept but not the slope.\nA point with both high leverage and a large residual is the dangerous combination."
+    "text": "Three Concepts\n\n\n\n\n\n\n\n\nType\nWhat makes it unusual\nEffect on the fit\n\n\n\n\nOutlier\nLarge residual — unusual \\(Y\\) for its \\(X\\) values\nMay or may not influence the line\n\n\nHigh-leverage point\nUnusual \\(X\\) values — far from the center of the predictor space\ninfluential on fit — fit potentially unstable\n\n\nInfluential observation\nHigh leverage and an outlier\nRemoving it noticeably changes the fitted line\n\n\n\n\nHigh leverage alone is not harmful if the point happens to fall on the regression line.\nAn outlier at the center of the \\(X\\) range tugs the intercept but not the slope.\nA point with both high leverage and a large residual is the dangerous combination."
   },
   {
     "objectID": "12_modeling/12_outliers.html#why-high-leverage-is-hard-to-spot-marginally",

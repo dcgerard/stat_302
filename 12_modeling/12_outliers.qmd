@@ -42,8 +42,8 @@ library(broom)
 | Type | What makes it unusual | Effect on the fit |
 |:--|:--|:--|
 | **Outlier** | Large residual — unusual $Y$ for its $X$ values | May or may not influence the line |
-| **High-leverage point** | Unusual $X$ values — far from the center of the predictor space | May or may not have a large residual |
-| **Influential observation** | Removing it noticeably changes the fitted line | High leverage *and* an outlier |
+| **High-leverage point** | Unusual $X$ values — far from the center of the predictor space | influential on fit --- fit potentially unstable |
+| **Influential observation** | High leverage *and* an outlier | Removing it noticeably changes the fitted line |
 
 - High leverage alone is not harmful if the point happens to fall on the regression line.
 - An outlier at the center of the $X$ range tugs the intercept but not the slope.
