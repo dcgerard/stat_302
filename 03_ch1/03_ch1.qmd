@@ -49,8 +49,7 @@ library(broom)
 - **Design**:
   - Obtain all clerical employees at a bank and record their sex and income.
   - Compare mean income between the sexes.
-  - Can differences be attributed to random assignment? **No** — sex is
-    not determined by the investigators.
+  - Can differences be attributed to random assignment?
 
 # Two Types of Study Design
 
