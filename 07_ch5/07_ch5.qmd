@@ -662,10 +662,10 @@ rss_inter <- case0502 |>
   pull(rss)
 
 seg_inter <- data.frame(
-  x    = c(0.65, 6.65),
-  xend = c(6.35, 7.35),
-  y    = c(other_mean, spock_mean),
-  yend = c(other_mean, spock_mean)
+  x    = c(0.65, 1.65),
+  xend = c(1.35, 7.35),
+  y    = c(spock_mean, other_mean),
+  yend = c(spock_mean, other_mean)
 )
 
 p_null2 <- ggplot(case0502, aes(x = Judge, y = Percent)) +
