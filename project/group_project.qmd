@@ -25,9 +25,9 @@ The project will entail:
 
 | Deliverable                       | Due Date          |
 |-----------------------------------|-------------------|
-| Project Proposal                  | Friday, Nov 6     |
-| Group Meetings                    | Week of Nov 9--13 |
-| Initial Exploratory Data Analysis | Tuesday, Nov 17   |
+| Project Proposal                  | Tuesday, Nov 10     |
+| Group Meetings                    | Week of Nov 16--20 |
+| Initial Exploratory Data Analysis | Tuesday, Nov 24   |
 | Initial Statistical Model         | Tuesday, Nov 24   |
 | Revised Model                     | Friday, Dec 11    |
 | Final Poster Presentation         | Friday, Dec 18    |
